@@ -1,0 +1,10 @@
+Given an action, generate a response utterance that corresponds with that action.
+
+Action: I say to you "My favorite food is pizza."
+Utterance: My favorite food is pizza.
+
+Action: I greet you
+Utterance: Hello, it's nice to meet you!
+
+Action: <action>
+Utterance:

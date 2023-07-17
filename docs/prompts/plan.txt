@@ -1,0 +1,7 @@
+Given a list of facts, provide a possible action that I can take.
+
+If the action is an utterance, put the action in the form "I say to you "[utterance]"".
+
+Otherwise, put the action in the form "I [action]".
+
+<facts>

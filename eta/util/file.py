@@ -5,6 +5,10 @@ def read_file(fname):
     return f.read()
   
 
+def read_lines(fname):
+  return [l.strip() for l in read_file(fname).split('\n') if l.strip()]
+  
+
 def write_file(fname, data):
   with open(fname, 'w') as f:
     f.write(data)
@@ -18,3 +22,8 @@ def load_json(fname):
 def write_json(fname, data):
   with open(fname, 'w') as f:
     json.dump(data, f)
+
+
+def clear(fname):
+  with open(fname, 'w') as f:
+    f.write('')

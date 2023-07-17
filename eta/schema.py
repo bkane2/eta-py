@@ -1,6 +1,7 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/schema.py
 
 from eta.util.sexpr import parse_s_expr, list_to_s_expr as ls
+from eta.util.general import *
 
 sec_name_id_prefixes = {
 	'preconds': '?I',
@@ -20,6 +21,8 @@ section_order = [
 	'episode-relations'
 ]
 
+
+
 class ELFormula:
 	def __init__(self, formula_list):
 		if type(formula_list) == str:
@@ -30,6 +33,8 @@ class ELFormula:
 	def __str__(self):
 		return ls(self.formula)
 
+
+
 class SectionFormula:
 	def __init__(self, formula_list):
 		self.episode_id = formula_list[0]
@@ -37,6 +42,8 @@ class SectionFormula:
 
 	def __str__(self):
 		return '(%s %s)' % (self.episode_id, str(self.formula))
+
+
 
 class Section:
 	def __init__(self, section_list):
@@ -68,32 +75,7 @@ class Section:
 
 		return '\n'.join(buf)
 
-def rec_replace(old, new, lst):
-	if lst == old:
-		return new
 
-	new_lst = []
-	for e in lst:
-		if e == old:
-			new_lst.append(new)
-		elif type(e) == list:
-			new_lst.append(rec_replace(old, new, e))
-		else:
-			new_lst.append(e)
-
-	return new_lst
-
-def rec_remove(target, lst):
-	new_lst = []
-	for e in lst:
-		if e == target:
-			continue
-		elif type(e) == list:
-			new_lst.append(rec_remove(target, e))
-		else:
-			new_lst.append(e)
-
-	return new_lst
 
 class Schema:
 	def __init__(self, s_expr):
@@ -249,6 +231,8 @@ class Schema:
 
 		return '\n'.join(buf)
 
+
+
 def schema_from_file(fn):
 	with open(fn, 'r') as f:
 		txt = f.read()
@@ -258,6 +242,8 @@ def schema_from_file(fn):
 		s_expr = parse_s_expr(txt)
 		return Schema(s_expr[0])
 
+
+
 def schema_and_protos_from_file(fn):
 	with open(fn, 'r') as f:
 		txt = f.read()
@@ -266,3 +252,16 @@ def schema_and_protos_from_file(fn):
 		txt = '\n'.join(lines)
 		s_expr = parse_s_expr(txt)
 		return (Schema(s_expr[0]), [(proto_pair[0], Schema(proto_pair[1])) for proto_pair in s_expr[1]])
+	
+
+
+def main():
+	test = "(epi-schema ((?x test_schema.v) ** ?e) (:Roles (!r1 (?a person.n)) (!r2 (?b song.n))) (:Steps (?e1 (?a sing.v ?b)) (?e2 (?a leave.v))) (:Goals (?g1 (?a (want.v (ka (experience.v (k pleasure.n))))))) (:Episode-relations (!w1 (?e1 before ?e2))))"
+	schema = Schema(test)
+
+	print(schema)
+
+
+if __name__ == "__main__":
+  main()
+

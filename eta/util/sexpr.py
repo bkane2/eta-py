@@ -81,3 +81,17 @@ def list_to_s_expr(lst):
 	buf.append(')')
 
 	return ''.join(buf)
+
+
+
+def main():
+	test = "(|John| ((past go.v) (to.p (the.d store.n))))"
+	s_expr = parse_s_expr(test)
+
+	print(s_expr)
+
+	print(list_to_s_expr(s_expr))
+
+
+if __name__ == "__main__":
+  main()
