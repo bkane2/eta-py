@@ -4,6 +4,7 @@ from openai.error import RateLimitError, Timeout, ServiceUnavailableError, APICo
 from transformers import GPT2Tokenizer
 
 import eta.util.file as file
+import eta.sessioninfo as sessioninfo
 
 openai.api_key = file.read_file('_keys/openai.txt')
 
@@ -38,6 +39,10 @@ def generate_gpt(prompt, preamble=None, examples=[], model='gpt-3.5-turbo', stop
       stop=stop,
       max_tokens=max_tokens
     )
+
+    if 'usage' in resp and resp['usage']:
+      sessioninfo.COST += cost_tokens(model, resp['usage']['total_tokens'])
+
     if 'choices' in resp and resp['choices'] and 'message' in resp['choices'][0]:
       result = resp['choices'][0]['message']['content']
 
@@ -66,8 +71,14 @@ def cost_gpt(prompt, avg_resp_len, preamble=None, examples=[], model='gpt-3.5-tu
 
 
 
+def cost_tokens(model, n_tokens):
+  return (MODEL_COSTS[model] / 1000) * n_tokens
+
+
+
 def main():
   print(generate_gpt('test:'))
+  print(sessioninfo.COST)
 
 
 if __name__ == "__main__":

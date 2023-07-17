@@ -1,3 +1,14 @@
+GENTEMP = {}
+
+def gentemp(str):
+	if not str in GENTEMP:
+		GENTEMP[str] = 1
+	else:
+		GENTEMP[str] += 1
+	return f'{str}{GENTEMP[str]}'
+
+
+
 def rec_replace(old, new, lst):
 	if lst == old:
 		return new
@@ -50,6 +61,9 @@ def main():
 	print(append([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
 	print(flatten([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
 	print(flatten([[['test string 1'], ['test string 2', 'test string 3']], ['test string 4', 'test string 5']]))
+
+	print(gentemp('teststr5'))
+	print(gentemp('teststr5'))
 	
 
 if __name__ == "__main__":
