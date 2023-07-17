@@ -1,5 +1,7 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 
+from eta.util.general import *
+
 def balanced_substr(s):
 	count = 1
 	for i in range(1, len(s)):
@@ -84,8 +86,17 @@ def list_to_s_expr(lst):
 
 
 
+def list_to_str(lst):
+	if type(lst) != list:
+		return str(lst)
+	
+	return ' '.join(flatten(lst))
+
+
+
 def main():
-	test = "(|John| ((past go.v) (to.p (the.d store.n))))"
+	# test = "((^you go.v (to.p (the.d store.n))) ** E1)"
+	test = "test string"
 	s_expr = parse_s_expr(test)
 
 	print(s_expr)
