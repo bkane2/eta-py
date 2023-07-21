@@ -8,6 +8,7 @@ KEYWORDS = ['not', 'plur', 'past', 'pres', 'perf', 'prog', 'pasv', 'k', 'ka', 'k
 
 KEYWORDS_R = [k for k in KEYWORDS if k not in ['not', 'that', "'s", '?', '!']]
 
+
 def remove_type(atm):
   if atm == '.':
     return atm
@@ -31,8 +32,10 @@ class ULF(LF):
     super().__init__(formula)
 
   def to_nl(self):
-    # TODO
-    return ' '.join([remove_type(w) for w in list_to_str(self.formula).split() if w not in KEYWORDS_R])
+    # TODO - replace naive implementation with ULF2English
+    words = ' '.join([remove_type(w) for w in list_to_str(self.formula).split() if w not in KEYWORDS_R])
+    words = ' '.join(flatten([w.split('-') for w in words.split()]))
+    return words
     
 
 class ELF(LF):

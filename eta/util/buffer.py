@@ -1,7 +1,10 @@
 import heapq
 
-def enqueue(item, buffer, importance=1):
-  heapq.heappush(buffer, (-importance, item))
+def enqueue(item, buffer):
+  if isinstance(item, tuple) and len(item) == 2 and isinstance(item[0], (int, float)):
+    heapq.heappush(buffer, (-item[0], item[1]))
+  else:
+    heapq.heappush(buffer, (-1, item))
 
 
 def enqueue_ordered(items, buffer, inc_val=0.0001):
@@ -15,7 +18,7 @@ def enqueue_ordered(items, buffer, inc_val=0.0001):
     else:
       importance = cur_max
     importance += inc
-    enqueue(item, buffer, importance)
+    enqueue((importance, item), buffer)
     inc += inc_val
 
 
