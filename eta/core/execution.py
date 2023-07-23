@@ -9,7 +9,7 @@ def execute(plan):
   action = plan[0]
   rest = plan[1:]
   prompt = PROMPT_EXECUTE.replace('<action>', action)
-  utt = generate_gpt(prompt)
+  utt, _ = generate_gpt(prompt)
   return rest, utt
 
 

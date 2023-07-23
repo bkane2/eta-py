@@ -3,13 +3,12 @@ from time import sleep
 import eta.util.file as file
 from eta.util.gpt import generate_gpt
 from eta.util.general import *
-from eta.lf import Fact
+from eta.lf import Eventuality
 import eta.util.buffer as buffer
-import eta.sessioninfo as sessioninfo
 
 PROMPT_GIST = file.read_file('docs/prompts/gist.txt')
 
-def perception_loop(ds, cost):
+def perception_loop(ds):
   while not ds.get_quit_conversation():
     sleep(.1)
 
@@ -32,22 +31,19 @@ def perception_loop(ds, cost):
     # 3. Interpret other facts in context of current plan, adding new facts to context
     # and to queue for further processing
 
-  with cost.get_lock():
-    cost.value += sessioninfo.COST
-
     
     
 
 
 def observe(source, speech=False):
-  """str -> List[Fact]"""
+  """str -> List[Eventuality]"""
   inputs = file.read_lines(source)
   file.clear(source)
   
   if speech:
-    facts = [Fact.from_input(f'(^you say-to.v ^me "{input}")') for input in inputs]
+    facts = [Eventuality.from_input(f'(^you say-to.v ^me "{input}")') for input in inputs]
   else:
-    facts = [Fact.from_input(input) for input in inputs]
+    facts = [Eventuality.from_input(input) for input in inputs]
   return facts
   # if 'user' in source and facts:
   #   return flatten([process_utterance(utt) for utt in facts])
@@ -69,7 +65,7 @@ def gist_interpretation(utt, prev_utt=None):
   if not prev_utt:
     prev_utt = 'Hello.'
   prompt = PROMPT_GIST.replace('<utt>', utt).replace('<prev-utt>', prev_utt)
-  gist = generate_gpt(prompt)
+  gist, _ = generate_gpt(prompt)
   if gist == 'NONE':
     return None
   return gist

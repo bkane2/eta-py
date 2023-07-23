@@ -43,8 +43,9 @@ class ELF(LF):
     super().__init__(formula)
     
 
-class Fact:
-  def __init__(self, nl, ulf, elf):
+class Eventuality:
+  def __init__(self, ep, nl, ulf, elf):
+    self.ep = ep
     self.nl = nl
     self.set_ulf(ulf)
     self.set_elf(elf)
@@ -64,24 +65,33 @@ class Fact:
   def from_input(s):
     parsed = parse_s_expr(s)
     if isinstance(parsed, list):
-      ulf = ULF(parsed)
-      return Fact(ulf.to_nl(), ulf, None)
+      if len(parsed) >= 2 and parsed[1] == '**':
+        ulf = ULF(parsed[0])
+        ep = parsed[2]
+      else:
+        ulf = ULF(parsed)
+        ep = gentemp('E')
+      return Eventuality(ep, ulf.to_nl(), ulf, None)
     else:
-      return Fact(s, None, None)
+      return Eventuality(gentemp("E"), s, None, None)
 
   def __str__(self):
-    return f'Fact:\n  nl: {self.nl}\n  ulf: {self.ulf}\n  elf: {self.elf}'
+    return f'Eventuality:\n  ep: {self.ep}\n  nl: {self.nl}\n  ulf: {self.ulf}\n  elf: {self.elf}'
   
 
 def main():
-  fact = Fact('John went to the store yesterday.',
+  fact = Eventuality('E5',
+              'John went to the store yesterday.',
               '(|John| ((past go.v) (to.p (the.d store.n)) (adv-e yesterday.pro)))',
               '(((|John| go.v (to.p |Store1|)) ** E1) (E1 during |Yesterday|))')
   
   print(fact)
 
-  fact2 = Fact.from_input('(|John| ((past go.v) (to.p (the.d store.n)) (adv-e yesterday.pro)))')
+  fact2 = Eventuality.from_input('(|John| ((past go.v) (to.p (the.d store.n)) (adv-e yesterday.pro)))')
   print(fact2)
+
+  fact3 = Eventuality.from_input('((|Mary| leave.v) ** E3)')
+  print(fact3)
 
 
 if __name__ == '__main__':

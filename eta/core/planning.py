@@ -6,7 +6,7 @@ PROMPT_PLAN = file.read_file('docs/prompts/plan.txt')
 
 def plan(facts):
   prompt = PROMPT_PLAN.replace('<facts>', '\n'.join(facts))
-  action = generate_gpt(prompt)
+  action, _ = generate_gpt(prompt)
   return [action]
 
 

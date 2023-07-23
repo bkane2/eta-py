@@ -1,11 +1,30 @@
-GENTEMP = {}
+import eta.util.file as file
+
+SYMTAB_PATH = 'io/symtab.json'
+
+def clear_symtab():
+	file.write_json(SYMTAB_PATH, {})
+
+
 
 def gentemp(str):
-	if not str in GENTEMP:
-		GENTEMP[str] = 1
+	"""
+	str -> str
+	````````````````
+	Generates a unique copy of a "symbol" (string) that hasn't been
+	used before by appending an integer suffix i and then incrementing i.
+	NOTE: this relies on read/writes to an external symbol table, which exploits the
+	fact that race conditions with a shared file cannot occur with Python multiprocess
+	(see: https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2)
+	However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.
+	"""
+	symtab = file.load_json(SYMTAB_PATH)
+	if not str in symtab:
+		symtab[str] = 1
 	else:
-		GENTEMP[str] += 1
-	return f'{str}{GENTEMP[str]}'
+		symtab[str] += 1
+	file.write_json(SYMTAB_PATH, symtab)
+	return f'{str}{symtab[str]}'
 
 
 
@@ -61,6 +80,8 @@ def main():
 	print(append([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
 	print(flatten([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
 	print(flatten([[['test string 1'], ['test string 2', 'test string 3']], ['test string 4', 'test string 5']]))
+
+	clear_symtab()
 
 	print(gentemp('teststr5'))
 	print(gentemp('teststr5'))
