@@ -11,7 +11,7 @@ def reasoning_validator(prompt, resp):
   return facts
 
 PROMPTS = {
-  'reasoning' : file.read_file('docs/prompts/reasoning.txt')
+  'reasoning' : file.read_file('resources/prompts/reasoning.txt')
 }
 
 VALIDATORS = {
