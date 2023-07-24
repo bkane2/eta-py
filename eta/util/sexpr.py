@@ -1,6 +1,7 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 
-from eta.util.general import *
+from eta.util.general import flatten, replaceall
+import eta.util.file as file
 
 def balanced_substr(s):
 	count = 1
@@ -17,15 +18,12 @@ def balanced_substr(s):
 	return None
 
 
-
 def clean_s_expr(s_expr):
 	s_expr = s_expr.replace('\n', '')
 	s_expr = s_expr.replace('\t', '')
 	while '  ' in s_expr:
 		s_expr = s_expr.replace('  ', ' ')
-
 	return s_expr
-
 
 
 def parse_s_expr(s_expr):
@@ -68,7 +66,6 @@ def parse_s_expr(s_expr):
 	return items
 
 
-
 def list_to_s_expr(lst):
 	if type(lst) != list:
 		return str(lst)
@@ -85,7 +82,6 @@ def list_to_s_expr(lst):
 	return ''.join(buf)
 
 
-
 def list_to_str(lst):
 	if type(lst) != list:
 		return str(lst)
@@ -93,15 +89,43 @@ def list_to_str(lst):
 	return ' '.join(flatten(lst))
 
 
+def clean_lisp(str):
+	"""Cleans S-expressions from a .lisp file by removing comments and
+	   removing escape characters."""
+	lines = [l.replace('\;', '[TEMP]') for l in str.split('\n')]
+	lines = [l.split(';')[0].strip() for l in lines]
+	lines = [l.replace('[TEMP]', '\;') for l in lines if l]
+	return replaceall('\n'.join(lines), [
+		('\.', '.', False),
+		('\,', ',', False),
+		('\:', ':', False),
+		('\;', ';', False),
+		("\\'", "'", False)
+	])
+
+
+def read_lisp(fname):
+  contents = '(' + clean_lisp(file.read_file(fname)) + ')'
+  sexpr = parse_s_expr(contents)
+  return sexpr[0] if len(sexpr) == 1 else sexpr
+  
+
+def write_lisp(fname, sexpr):
+  file.write_file(fname, list_to_s_expr(sexpr))
+
 
 def main():
-	# test = "((^you go.v (to.p (the.d store.n))) ** E1)"
-	test = "test string"
-	s_expr = parse_s_expr(test)
 
-	print(s_expr)
+	sexpr = read_lisp('tests/test2.lisp')
+	print(sexpr)
 
-	print(list_to_s_expr(s_expr))
+	# # test = "((^you go.v (to.p (the.d store.n))) ** E1)"
+	# test = "test string"
+	# s_expr = parse_s_expr(test)
+
+	# print(s_expr)
+
+	# print(list_to_s_expr(s_expr))
 
 
 if __name__ == "__main__":

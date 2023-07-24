@@ -1,5 +1,5 @@
 from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr
-from eta.util.general import *
+from eta.util.general import flatten, gentemp
 
 KEYWORDS = ['not', 'plur', 'past', 'pres', 'perf', 'prog', 'pasv', 'k', 'ka', 'ke', 'to', 'that', 'tht', 'fquan', 'nquan',
             'nmod', 'amod', '*h', '*s', '*p', 'set-of', 'n+preds', 'np+preds', 'sub', 'rep', "'s", 'poss-by', 'adv-a',

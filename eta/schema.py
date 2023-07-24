@@ -1,7 +1,7 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/schema.py
 
 from eta.util.sexpr import parse_s_expr, list_to_s_expr as ls
-from eta.util.general import *
+from eta.util.general import rec_replace
 
 sec_name_id_prefixes = {
 	'preconds': '?I',

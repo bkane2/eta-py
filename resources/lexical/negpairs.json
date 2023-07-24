@@ -1,0 +1,17 @@
+{
+  "do" : "don't",
+  "did" : "didn't",
+  "does" : "doesn't",
+  "will" : "won't",
+  "can" : "can't",
+  "could" : "couldn't",
+  "would" : "wouldn't",
+  "should" : "shouldn't",
+  "are" : "aren't",
+  "is" : "isn't",
+  "was" : "wasn't",
+  "were" : "weren't",
+  "have" : "haven't",
+  "has" : "hasn't",
+  "had" : "hadn't"
+}

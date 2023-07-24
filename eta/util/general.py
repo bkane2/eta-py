@@ -1,10 +1,15 @@
+import re
+
 import eta.util.file as file
+
+# ``````````````````````````````````````
+# "Symbol" util
+# ``````````````````````````````````````
 
 SYMTAB_PATH = 'io/symtab.json'
 
 def clear_symtab():
 	file.write_json(SYMTAB_PATH, {})
-
 
 
 def gentemp(str):
@@ -27,6 +32,24 @@ def gentemp(str):
 	return f'{str}{symtab[str]}'
 
 
+# ``````````````````````````````````````
+# String util
+# ``````````````````````````````````````
+
+
+def replaceall(str, replist):
+	for a, b, is_regex in replist:
+		if is_regex:
+			str = re.sub(a, b, str)
+		else:
+			str = str.replace(a, b)
+	return str
+
+
+# ``````````````````````````````````````
+# List util
+# ``````````````````````````````````````
+
 
 def rec_replace(old, new, lst):
 	if lst == old:
@@ -44,7 +67,6 @@ def rec_replace(old, new, lst):
 	return new_lst
 
 
-
 def rec_remove(target, lst):
 	new_lst = []
 	for e in lst:
@@ -58,10 +80,8 @@ def rec_remove(target, lst):
 	return new_lst
 
 
-
 def append(lst):
   return [x for l in lst for x in l]
-
 
 
 def flatten(lst):
@@ -69,22 +89,123 @@ def flatten(lst):
 		return [lst]
 	else:
 		return append([flatten(x) for x in lst])
+	
+
+# ``````````````````````````````````````
+# Discourse util
+# ``````````````````````````````````````
+
+CONTRACTIONS = file.load_json('resources/lexical/contractions.json')
+NEGPAIRS = file.load_json('resources/lexical/negpairs.json')
+DUALS = file.load_json('resources/lexical/duals.json')
 
 
+def decompress(str):
+	"""Replaces contractions (e.g. 'don't' or 'dont' by 'do not')"""
+	def decompress_rec(words):
+		if not words:
+			return []
+		elif words[0] in CONTRACTIONS:
+			return [CONTRACTIONS[words[0]]] + decompress_rec(words[1:])
+		else:
+			return [words[0]] + decompress_rec(words[1:])
+	return ' '.join(decompress_rec(str.split()))
+
+
+def compress(str):
+	"""Replaces auxiliary-NOT combinations by -N'T contractions"""
+	def compress_rec(words):
+		if not words:
+			return []
+		elif not words[1:]:
+			return words
+		elif words[1] == 'not' and words[0] in NEGPAIRS:
+			return [NEGPAIRS[words[0]]] + compress_rec(words[2:])
+		else:
+			return [words[0]] + compress_rec(words[1:])
+	return ' '.join(compress_rec(str.split()))
+
+
+def presubst(str):
+	"""
+	This function is applied to a string prior to calling the
+	dual function. It helps avoid ungrammatical substitutions
+	such as "why do you say i are stupid", while still correctly
+	producing "why do you say your brothers are stupid".
+
+	It replaces "are" by "are2" when preceded or followed by "you";
+	similarly, it replaces "were" by "were2" and "was" by "was2".
+
+	It also replaces "you" by "you2" when it is the last word, or
+	when it is not one of the first two words and is not preceded by
+	certain conjunctions ("and", "or", "but", "that", "because", "if",
+	"when", "then", "why", ...), or certain subordinating verbs ("think",
+	"believe", "know", ...), or when it follows "to".
+
+	This is in preparation for replacement of "you2" by "me" (rather than "i")
+	when dual is applied.
+	"""
+	re_punct = ['?','!',',','.',':',';']
+	re_blocker = ['and', 'or', 'but', 'that', 'because', 'if', 'so', 'when', 'then', 'why',
+			  				'think', 'see', 'guess', 'believe', 'hope', 'do', 'can', 'would', 'should',
+								'than', 'know', 'i', 'you', '-', '--']
+	str = replaceall(str, [
+		("you are", "you1 are2", False),
+		("are you", "are2 you1", False),
+		("i was", "i was2", False),
+		("was i", "was2 i", False),
+		("you were", "you1 were2", False),
+		("were you", "were2 you1", False),
+		(fr"you ([{'|'.join(re_punct)}])", r"you2 \1", True),
+		("to you", "to you2", False),
+	])
+	str = str.replace('you', 'you0')
+	str = replaceall(str, [
+		(r"^you0", r"you", True),
+		(r"^([\S]+) you0", r"\1 you", True),
+		(fr"([{'|'.join(re_punct)}]) you0", r"\1 you", True),
+		(fr"([{'|'.join(re_punct)}]) ([\S]+) you0", r"\1 \2 you", True),
+		(fr"({'|'.join(re_blocker)}) you0", r"\1 you", True)
+	])
+	return str.replace('you0', 'you2')
+
+
+def swap_duals(str):
+	"""Replaces 'I' by 'you', 'you' by 'I', 'my' by 'your', etc."""
+	def swap_duals_rec(words):
+		if not words:
+			return []
+		elif words[0] in DUALS:
+			return [DUALS[words[0]]] + swap_duals_rec(words[1:])
+		else:
+			return [words[0]] + swap_duals_rec(words[1:])
+	str = presubst(str)
+	return ' '.join(swap_duals_rec(str.split()))
+
+
+# ``````````````````````````````````````
+# 
+# ``````````````````````````````````````
 
 def main():
-	print(append(['a', 'b', 'c']))
-	print(flatten(['a', 'b', 'c']))
-	print(append([['a', 'b'], ['c', 'd']]))
-	print(flatten([['a', 'b'], ['c', 'd']]))
-	print(append([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
-	print(flatten([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
-	print(flatten([[['test string 1'], ['test string 2', 'test string 3']], ['test string 4', 'test string 5']]))
+	print(swap_duals("i told you that i think you know that's not true ."))
+	print(swap_duals("but you said that i think you know that's not true ."))
 
-	clear_symtab()
+	# print(decompress("i'm gonna go to the store tomorrow, what're you doing?"))
+	# print(compress("you are not going to do that. you can not do that."))
 
-	print(gentemp('teststr5'))
-	print(gentemp('teststr5'))
+	# print(append(['a', 'b', 'c']))
+	# print(flatten(['a', 'b', 'c']))
+	# print(append([['a', 'b'], ['c', 'd']]))
+	# print(flatten([['a', 'b'], ['c', 'd']]))
+	# print(append([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
+	# print(flatten([[['a', 'b'], ['c', 'd']], ['e', 'd']]))
+	# print(flatten([[['test string 1'], ['test string 2', 'test string 3']], ['test string 4', 'test string 5']]))
+
+	# clear_symtab()
+
+	# print(gentemp('teststr5'))
+	# print(gentemp('teststr5'))
 	
 
 if __name__ == "__main__":

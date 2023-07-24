@@ -2,7 +2,6 @@ from time import sleep
 
 import eta.util.file as file
 from eta.util.gpt import generate_gpt
-from eta.util.general import *
 from eta.lf import Eventuality
 import eta.util.buffer as buffer
 

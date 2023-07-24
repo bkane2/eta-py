@@ -6,7 +6,7 @@ from multiprocessing import Lock
 from multiprocessing import Value
 from multiprocessing.managers import BaseManager
 
-from eta.util.general import *
+from eta.util.general import gentemp, clear_symtab
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer

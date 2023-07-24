@@ -1,0 +1,17 @@
+{
+  "i" : "you",
+  "you" : "i",
+  "me" : "you",
+  "you1" : "i",
+  "you2" : "me",
+  "my" : "your",
+  "your" : "my",
+  "mine" : "yours",
+  "yours" : "mine",
+  "myself" : "yourself",
+  "yourself" : "myself",
+  "am" : "are",
+  "are2" : "am",
+  "was2" : "were",
+  "were2" : "was"
+}

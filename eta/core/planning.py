@@ -1,6 +1,5 @@
 import eta.util.file as file
 from eta.util.gpt import generate_gpt
-from eta.util.general import *
 
 PROMPT_PLAN = file.read_file('docs/prompts/plan.txt')
 
