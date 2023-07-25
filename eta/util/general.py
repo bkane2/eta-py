@@ -80,12 +80,27 @@ def rec_remove(target, lst):
 	return new_lst
 
 
+def listp(lst):
+	return isinstance(lst, list)
+
+
+def cons(lst1, lst2):
+	if listp(lst2):
+		return [lst1] + lst2
+	else:
+		return [lst1, lst2]
+	
+
+def atom(lst):
+	return not lst or not listp(lst)
+
+
 def append(lst):
   return [x for l in lst for x in l]
 
 
 def flatten(lst):
-	if not isinstance(lst, list):
+	if not listp(lst):
 		return [lst]
 	else:
 		return append([flatten(x) for x in lst])
@@ -106,9 +121,9 @@ def decompress(str):
 		if not words:
 			return []
 		elif words[0] in CONTRACTIONS:
-			return [CONTRACTIONS[words[0]]] + decompress_rec(words[1:])
+			return cons(CONTRACTIONS[words[0]], decompress_rec(words[1:]))
 		else:
-			return [words[0]] + decompress_rec(words[1:])
+			return cons(words[0], decompress_rec(words[1:]))
 	return ' '.join(decompress_rec(str.split()))
 
 
@@ -120,9 +135,9 @@ def compress(str):
 		elif not words[1:]:
 			return words
 		elif words[1] == 'not' and words[0] in NEGPAIRS:
-			return [NEGPAIRS[words[0]]] + compress_rec(words[2:])
+			return cons(NEGPAIRS[words[0]], compress_rec(words[2:]))
 		else:
-			return [words[0]] + compress_rec(words[1:])
+			return cons(words[0], compress_rec(words[1:]))
 	return ' '.join(compress_rec(str.split()))
 
 
@@ -176,9 +191,9 @@ def swap_duals(str):
 		if not words:
 			return []
 		elif words[0] in DUALS:
-			return [DUALS[words[0]]] + swap_duals_rec(words[1:])
+			return cons(DUALS[words[0]], swap_duals_rec(words[1:]))
 		else:
-			return [words[0]] + swap_duals_rec(words[1:])
+			return cons(words[0], swap_duals_rec(words[1:]))
 	str = presubst(str)
 	return ' '.join(swap_duals_rec(str.split()))
 
@@ -191,8 +206,8 @@ def main():
 	print(swap_duals("i told you that i think you know that's not true ."))
 	print(swap_duals("but you said that i think you know that's not true ."))
 
-	# print(decompress("i'm gonna go to the store tomorrow, what're you doing?"))
-	# print(compress("you are not going to do that. you can not do that."))
+	print(decompress("i'm gonna go to the store tomorrow, what're you doing?"))
+	print(compress("you are not going to do that. you can not do that."))
 
 	# print(append(['a', 'b', 'c']))
 	# print(flatten(['a', 'b', 'c']))
