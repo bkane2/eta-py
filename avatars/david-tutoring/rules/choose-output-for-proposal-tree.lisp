@@ -1,0 +1,55 @@
+(MAPC 'ATTACHFEAT
+'(
+  (SOME a)
+  (PUT putting)
+  (MOVE moving)
+  (MAKE making)
+))
+
+
+(READRULES '*output-for-proposal-tree*
+'(
+  1 (the next .STEP .BE 0 \.)
+    ; corrections (e.g. "make the Twitter block by one block to the left")
+    2 (0 .MAKE 6 .NOUN-BW 0 \.)
+      ; unary change to a block
+      3 (0 .MAKE 6 .BLOCK by 6 .NOUN-BW 0 \.)
+        4 (Can you move 3 4 6 7 8 ?) (4 :out)
+        4 (Well \, 3 4 should be 6 7 8 \.) (4 :out)
+        4 (You are almost right \. 3 4 should be 6 7 8 \.) (4 :out)
+        4 (Move 3 4 6 7 8 \.) (0 :out)
+      ; unary change to some other structure (e.g. a chimney)
+      3 (0 .MAKE 6 .NOUN-BW by 6 .NOUN-BW 0 \.)
+        4 (Well \, 3 4 should be 6 7 8 \.) (4 :out)
+        4 (You are almost right \. 3 4 should be 6 7 8 \.) (4 :out)
+        4 (Can you make 3 4 6 7 8 ?) (4 :out)
+        4 (3 4 should be 6 7 8 \.) (0 :out)
+      ; relative change to something
+      3 (Well \, 3 4 should be 5 \.) (4 :out)
+      3 (You are almost right \. 3 4 should be 5 \.) (4 :out)
+      3 (Can you move 3 4 so that it\'s 5 ?) (4 :out)
+      3 (3 4 should be 5 \.) (0 :out)
+    ; undo commands (e.g. "move the Twitter block back on the Target block")
+    2 (0 .MOVE 6 back 0 \.)
+      3 (Not quite \. Can you put 3 back 5 ?) (4 :out)
+      3 (Move 3 back 5 \.) (4 :out)
+      3 (You need to put 3 back 5 \.) (4 :out)
+      3 (Move 3 back 5 \.) (0 :out)
+    ; ordinary proposals
+    2 (0 .PUT 0 \.)
+      ; indefinite reference (e.g. "put some block on the Twitter block")
+      ; TODO: need to support adj modifiers, but planner doesn't yet support these
+      3 (.PUT .SOME .BLOCK 0 \.)
+        4 (Put a block 5 \.) (4 :out)
+        4 (Good \. Now place another block 5 \.) (5 :out)
+        4 (Very good \. Now put another block 5 \.) (7 :out)
+        4 (Next \, put a block 5 \.) (4 :out)
+        4 (Put a block 5 \.) (0 :out)
+      ; specific reference (e.g. "put the Twitter block on the Texaco block")
+      3 (0 .PUT 0 \.)
+        4 (Put 3 \.) (4 :out)
+        4 (Good \. Now place 3 \.) (5 :out)
+        4 (Very good \. Now put 3 \.) (7 :out)
+        4 (Next \, put 3 \.) (4 :out)
+        4 (Put 3 \.) (0 :out)
+))

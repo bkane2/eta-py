@@ -1,0 +1,15 @@
+(READRULES '*reaction-to-question*
+'(
+  1 (0 .WH_ 1 .SELF name 0)
+    2 (My creators have named me david \.) (0 :out)
+  1 (0 .AUX .SELF 1 .ANSWER 1 .QUESTION 0)
+    2 (0 past .QUESTION 0)
+      3 (Sorry \, but I am not quite smart enough to answer follow up questions yet \.) (0 :out)
+    2 (I can try my best to answer your questions \.) (0 :out)
+  1 (0 .WH_ 1 questions 1 .AUX .SELF 1 .ANSWER 0)
+    2 (I can try my best to answer most simple questions \.) (0 :out)
+  1 (0 can .SELF 0)
+    2 (I can try my best to answer most simple questions \.) (0 :out)
+  1 (0 will .SELF 0)
+    2 (I can try my best to answer most simple questions \.) (0 :out)
+))

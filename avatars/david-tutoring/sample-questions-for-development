@@ -1,0 +1,567 @@
+My transcripts of the blocks QA videos provided by Georgiy:
+https://drive.google.com/drive/folders/1sH4R9n55IrJUSyJbILOcLcaS7UPnMwfV?usp=sharing
+
+I sketchily checked whether the questions asked in the videos are also included 
+below in Georgiy's made-up set (or transcripts). But only a smallish subset are
+included, seemingly selected from Gene's, Ben's & especially Georgiy's own questions.
+Or maybe that's coincidental.
+
+A point about answering: Answers to yes-no questions and numeric questions
+(especially when the answer is a small number) should explicitly supply
+the evidence -- i.e., the block names -- that justify the answer. There
+are many cases where one can disagree with a simple yes/no or "two" answer,
+and the user should be made aware of the basis of the answer given!
+
+Ben Kane 
+`````````
+Where is the McDonalds block? {and likewise with other block names}
+
+Where is the leftmost red block?
+
+Where is the rightmost red block?
+
+What block is to the left of the Burger King block?
+
+Is there a red block to the right of a blue block?
+
+Is there a green block on top of a red block?
+
+Which block is the Mercedes block on top of?
+
+Which is the highest block?  {SR seemed to work poorly}
+
+What color block is under the McDonalds block?
+
+What color blocks are under the Mercedes block?
+
+Which block is to the right of the Mercedes block?
+
+What is the leftmost green block?  {Georgiy, testing}
+
+What color is the block on the rightmost blue block? {Georgiy, testing}
+
+Sophie
+``````
+Where is the Toyota block?
+
+?? unclear
+
+What block is to the left of the Starbucks block?
+
+What block is below the Texaco block?
+
+Is the Toyota block in front of anything?
+
+Is the SRI block next to anything?
+
+What is below the Starbucks block?
+
+Georgiy
+```````
+How many blocks are on the rightmost red block?
+
+What color is the block next to the leftmost red block?
+
+Is there a clear blue block on the table?
+
+What color is the block behind all the blue blocks?
+
+What are the blocks on top of McDonalds block?
+
+Which block is between two green blocks?
+
+What color are the blocks under the Starbucks block?
+
+What color is the block on top of two blue blocks?
+
+What color is the block right behind the blue block?
+
+What color is the block to the right of the blue block?
+
+How many blocks are under the Mercedes block? {Georgiy says "MERcedes"}
+
+How many blocks are directly on top of Texaco block?
+
+How many blocks are uder the SRI block?
+
+What color is the block between the blue and the red block?
+
+What is the block next to the farthest blue block?
+
+What color is the block next to the closest green one?
+
+How many blocks on the table have other blocks on top of them? {Here the answer didn't
+                                                             count a level-2 block
+                                                             supporting a level-3 one}
+Is there a block in front of the leftmost red block?
+
+Ben again
+`````````
+Which is the rightmost block?
+
+Which block is between a blue block and a red block?
+
+Is there a green block next to a green block?
+
+Which two blocks are the green blocks on top of?
+
+Is there a block between two red blocks? {Georgiy answers "yes" -- say more!!}
+
+Which block is the highest?
+
+Is there a blue block near another blue block? {Again, Georgiy just answers "yes}
+
+Is the SRI block touching the Texaco block?
+
+Is the Mercedes block above a blue block?
+
+Muskaan
+````````
+Where is the Target block?
+
+Where is the green block -- the Target green block?
+
+Where is the Toyota block?
+
+How many boxes [sic] are under the Target block?
+
+How many boxes [sic] are touching the SRI International block?
+
+What blocks is the Target block touching?
+
+How many blocks are on the table? {Geogiy's answer is all-inclusive}
+
+Are the two green blocks touching?
+
+
+Gene
+````
+What block is rotated with respect to the other ones?
+
+Which blocks are on exactly two other blocks?
+
+Which block is farthest from the Texaco block?
+
+Which block is the Toyota block touching?
+
+Which blocks are touching the table?
+
+Which blocks are not supporting any other block?
+
+Which block -- or blocks -- is behind the Burger King block?
+
+Which blocks are behind the Mercedes block?
+
+Muskaan again
+``````````````
+Which blocks are sitting on just one edge? {some are leaning at a tilt against another}
+
+How many blocks are not touching any other blocks? {Georgiy says "one" -- too terse!}
+
+How many blocks are on top of another block?
+
+Where is the Mercedes block?
+
+How many blue blocks are there?
+
+Where is the SRI International block?
+
+How many blocks are touching the Starbucks block?
+
+How many blocks are touching the NVidia block?
+
+On how many blocks is the Target block placed?
+
+Gene again {an arrangement with tilted blocks}
+``````````
+Which block is rotated 45 degrees with respect to the plane that is formed
+by the remaining blocks?
+
+How many blocks are supported by two other blocks? {Muskaan answers informatively}
+
+How many blocks make up the bottom line of blocks?
+
+Which blocks are only supported by their edges, and not their face?
+
+How many blocks are above the target block? 
+
+How many blocks are below the Starbucks block? {Muskaan names 5 blocks, 
+                                                & adds "5 blocks"}
+Which blocks are to the right of the Starbucks block?
+
+How many blocks are in between the SRI block and the Burger King block?o
+
+What blocks are next to this one (pointing right to McDonalds block)?
+
+=======================================================================
+From /u/schubert/platonov/research/sr-transcripts/ 
+(SR transcripts for 3 microphones??)
+
+Reference texts, and misrecognitions in 9 trials (by Ben, Georgiy, & Sophie)
+````````````````````````````````````````````````````````````````````````````
+how many blue blocks are on the table
+         ```````````
+   how many blocks are on the table
+            ``````
+are there two green blocks on the table that are near each other
+              ````````````
+   are there two envelopes on the table that are near each other 
+                 `````````
+   are there two Green Glass on the table that are near each other
+                 ```````````
+is there anything behind the Toyota block  [no misrecognitions]
+
+what color is the block on top of the blue block 
+                  ``````              ``````````
+   what color is the block on top of the blue black
+                                              `````
+   what color is a block on top of the blue black
+                                            `````
+   what color is the black on top of the Blue Block
+                     `````
+   what color is the block on top of the block
+                                        ```````
+   what color is the block on top of the blue black
+                                              `````
+are there any clear blocks on the table
+          `````````
+   are there clear blocks on the table
+             `````
+   are there clear blocks on the table
+             `````
+   are there clear blocks on the table
+             `````
+what color is the rightmost block on the table  [no misrecognitions]
+
+what is the tallest structure on the table      [no misrecognitions]
+
+are there three blocks on the table that form a row
+````````` `````                     ```````````````
+   are the three blocks on the table before my bro 
+       ```                           `````````````
+   are there three blocks on the table that for Moreau
+                                       ```````````````
+   are the three blocks in the table that form a row
+       ```
+           three blocks on the table that form Arrow
+   ```````                           ```````````````
+   are there three blocks on the table that for Arrow
+                                       ``````````````
+   are there free books on the table that form a euro
+             ````                    ````````````````
+   are there three blocks on the table that for Marrero 
+                                       ````````````````
+what color is the block that is closest to me
+                  `````
+   what color is the blood that is closest to me
+                     `````
+what are the blocks under the leftmost blue block  
+                    `````                   `````
+   what are the blocks under the leftmost blue black
+                                 ````````      `````
+   what are the blocks under the left of the Blue Block
+                                 ```````````
+   what are the blocks on the leftmost Blue Block
+                       ``
+=======================================================================
+From platonov/temp (I think I speculated about these, but with phrases like
+"from your partner's perspective" included.)
+
+Is the yellow block above the red block?
+
+Is the purple block (clearly) visible?
+
+Is the blue block in front of the red block
+
+Is the yellow block in a stack?
+
+Is the orange block to the right of the green block
+
+======================================================================
+
+From /u/schubert/darpa/proposals/cwc-james15/blocks-world/eta/blocks-world-transcripts/
+phrases-and-transcripts-june29-18
+
+
+Where is the NVidia block?
+
+What block is to the left of the Nvidia block?
+
+Is there a red block to the right of a blue block?
+
+Which/what block is the NVidia block on top of?
+
+Which is the highest block?
+
+What color block is under the Nvidia block?
+
+What color blocks are under the NVidia block?
+
+Is the NVidia block in front of anything?
+
+What is below the NVidia block?
+
+How many blocks are on the rightmost red block?
+
+Is there a clear blue block on the table?
+
+What color is the block behind all the green blocks?
+
+What color is the block on top of two blue blocks?
+
+How many blocks on the table have other blocks on top of them?
+
+Which two blocks are the green blocks on top of?
+
+Which block is the highest?
+
+Are the two green blocks touching?
+
+Where is the green block?
+
+How many blocks are touching the NVidia block?
+
+How many blocks are on the table?
+
+What block is rotated with respect to the other blocks?
+
+Which blocks are on exactly two other blocks?
+
+Which blocks are touching the table?
+
+Which are not supporting any other blocks?
+
+Which block or blocks are behind NVidia block?
+
+Which block or blocks are behind NVidia block?
+
+Which blocks are sitting on just one edge?
+
+How many blocks are not touching any other blocks?
+
+How many blue blocks are there?
+
+On how many blocks is the target block placed?
+
+Which block is rotated 45 degrees with respect to the plane that is formed by the remaining blocks?
+
+How many blocks are supported by two other blocks?
+
+How many blocks make up the bottom line of blocks?
+
+Which blocks are all supported by their edges but not their faces
+
+What block is next to THIS block?
+
+
+
+
+=======================================================================
+From 2018-09/07/18:.. transcripts
+
+how many blue blocks are on the table
+
+are there two green blocks on the table that are near each other
+
+is there anything behind the Toyota block
+
+what color is the block on top of the blue black
+
+are there any clear blocks on the table
+
+what color is the rightmost block on the table
+
+what is the tallest structure on the table
+
+are the three blocks on the table before my bro
+
+what color is the block that is closest to me
+
+what are the blocks under the leftmost blue black
+
+TBC -- see platonov/research/sr-transcripts/Ben_Plantronics, etc.
+                      Note:  sr-transcripts-oct2018 give the word-by-word SR output
+
+=========================================================================
+
+
+How many blocks are facing any corner of the table?
+
+((((nquan (how.mod-a many.a)) (plur block.n))
+       ((pres prog) (face.v (any.d (corner-of.n (the.d table.n)))))) ?)
+
+How many stacks are on the table?
+
+((((nquan (how.mod-a many.a)) (plur block.n)) ((pres be.v) (on.p (the.d table.n)))) ?)
+
+How many rows are on the table?
+
+((((nquan (how.mod-a many.a)) (plur row.n)) ((pres be.v) (on.p (the.d table.n)))) ?)
+
+How many blocks are on the left side of the table?
+
+((((nquan (how.mod-a many.a)) (plur block.n))
+     ((pres be.v) (on.p (the.d (left.a (side-of.n (the.d table.n))))))) ?)
+
+How many blocks are in the tallest stack?
+
+((((nquan (how.mod-a many.a)) (plur block.n))
+     ((pres be.v) (in.p (the.d (most-n long.a row.n))))) ?)
+
+How many blocks are between any two stacks?
+
+((((nquan (how.mod-a many.a)) (plur block.n))
+     ((pres be.v) (between.p (any.d (two.a (plur stack.n)))))) ?)
+
+How many blocks are clear?
+
+((((nquan (how.mod-a many.a)) (plur block.n)) ((pres be.v) clear.a)) ?)
+
+How many blocks are in some row or stack?
+
+((((nquan (how.mod-a many.a)) (plur block.n))
+     ((pres be.v) (in.p (some.d (row.n or.cc stack.n))))) ?)
+
+How many blocks are not touching the table?
+
+((((nquan (how.mod-a many.a)) (plur block.n))
+     ((pres prog) not.adv-s (touch.v (the.d table.n)))) ?)
+
+What are the blocks on top of the Toyota block?
+
+((What.pro ((pres be.v) 
+   (= (the.d (n+preds (plur block.n) (on_top_of.p (the.d (|Toyota| block.n)))))))) ?)
+
+What are the blocks that are not on top of any other block?
+
+((What.pro ((pres be.v) 
+            (= (the.d (n+preds (plur block.n) 
+                        (that.rel ((pres be.v) not.adv-s 
+                                   (on_top_of.p (any.d (other.a block.n)))))))))) ?)
+
+What is the block closest to the rightmost red block?
+
+((What.pro 
+  ((pres be.v)
+      (= (the.d 
+           (n+preds block.n
+              (most-n 
+                 (close.a (to.p-arg (the.d (most-n right.a (red.a block.n)))))
+                 {block}.n)))))) ?)
+
+What is the block between the Toyota and the SRI block?
+
+((What.pro ((pres be.v) 
+            (= (the.d (n+preds block.n (between.p ((the.d (|Toyota| {block}.n)) and.cc
+                                                   (the.d (|SRI| block.n))))))))) ?)
+
+What are the blocks near the corners of the table?
+
+((What.pro ((pres be.v) 
+            (= (the.d (plur (n+preds block.n 
+                              (near.p (the.d (plur (corner-of.n 
+                                                     (the.d table.n))))))))))) ?)
+
+What is the block closest to the front edge of the table?
+
+((What.pro ((pres be.v) 
+            (= (the.d (n+preds block.n 
+                (most-n 
+                 (close.a (to.p (the.d (front.n (edge-of.n
+                                                  (the.d table.n)))))) block}.n)))))) ?)
+
+What is the block on top of the tallest stack?
+
+((What.pro ((pres be.v) 
+            (= (the.d (n+preds block.n (on_top_of.p 
+                                         (the.d (most-n tall.a stack.n)))))))) ?)
+
+What are the blocks behind the Nvidia block?
+
+((What.pro ((pres be.v) 
+            (= (the.d (n+preds (plur block.n)
+                       (behind.p (the.d (|Nvidia| block.n)))))))) ?)
+
+What is the block that is at the rightmost red block?
+
+((What.pro ((pres be.v) 
+            (= (the.d (n+preds block.n 
+                       (that.rel ((pres be.v) 
+                                  (at.p (the.d (most-n 
+                                                 right.a (red.a block.n))))))))))) ?)
+
+Which block is the highest?
+
+(((Which.d block.n) ((pres be.v) (= (the.d (most-n high.a {block}.n))))) ?)
+
+
+Which block is on two other blocks?
+
+(((Which.d block.n) ((pres be.v) (on.p (two.d (other.a (plur block.n)))))) ?)
+
+
+Which block is in the center of the table?
+
+(((Which.d block.n) ((pres be.v) (in.p (the.d (center-of.n (the.d table.n)))))) ?)
+
+
+What blocks are in the longest row?
+
+(((What.d (plur block.n)) ((pres be.v) (in.p (the.d (most-n long.a row.n))))) ?)
+
+
+What block is halfway on top of any other block?
+
+(((What.d block.n) ((pres be.v) 
+                    (halfway.adv-a (on_top_of.p (any.d (other.a block.n)))))) ?)
+
+Which block is side by side with the Texaco block?
+
+(((Which.d block.n) ((pres be.v) 
+                     (side-by-side-with.p (the.d (|Texaco| block.n))))) ?)
+
+What is the farthest block from the center of the table? {NB: "dislocated" PP[from]}
+
+((What.pro ((pres be.v) 
+            (the.d (most-n (far.adv-a (from.p (the.d (n+preds center-of.n
+                                                       (the.d table.n))))) 
+                           block.n)))) ?)
+
+On top of which block is the Nvidia block? 
+
+((sub (on_top_of.p (which.d block)) ((pres be.v) (the.d (|Nvidia| block.n)) *h)) ?)
+
+
+Which block is the Nvidia block on top of?
+
+((sub (which.d block.n) ((pres be.v) (the.d (|Nvidia| block.n)) (on_top_of.n *h))) ?)
+
+
+Which block is very close to the front edge of the table? {"very" is a degree-adv}
+
+(((Which.d block.n) 
+  ((pres be.v) (very.adv-d 
+                 (close.a (to.p (the.d (front.n 
+                                         (edge-of.n (of.p (the.d table.n)))))))))) ?)
+
+What is in the middle of the table?
+
+((What.pro ((pres be.v) 
+            (in.p (the.d (middle-of.n (the.d table.n)))))) ?)
+
+
+Which red block is the closest to the Toyota block?
+
+(((Which.d (red.a block.n)) 
+  ((pres be.v) (the.d (most-n (close.a (to.p (the.d |Toyota| block.n))) 
+                              ({red}.a {block}.n))))) ?)
+
+
+Which red blocks are directly on the table?
+
+(((Which.d (red.a (plur block.n))) 
+  ((pres be.v) (directly.adv-a (on.p (the.d table.n))))) ?)
+
+
+
+
