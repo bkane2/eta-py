@@ -70,17 +70,21 @@ class Eventuality:
         ep = parsed[2]
       else:
         ulf = ULF(parsed)
-        ep = gentemp('E')
+        ep = gentemp('e')
       return Eventuality(ep, ulf.to_nl(), ulf, None)
     else:
-      return Eventuality(gentemp("E"), s, None, None)
+      return Eventuality(gentemp("e"), s, None, None)
 
   def __str__(self):
     return f'Eventuality:\n  ep: {self.ep}\n  nl: {self.nl}\n  ulf: {self.ulf}\n  elf: {self.elf}'
   
+  def __eq__(self, other):
+    # Assume that two Eventualities are equivalent if their surface realizations are the same
+    return self.nl == other.nl
+  
 
 def main():
-  fact = Eventuality('E5',
+  fact = Eventuality('e5',
               'John went to the store yesterday.',
               '(|John| ((past go.v) (to.p (the.d store.n)) (adv-e yesterday.pro)))',
               '(((|John| go.v (to.p |Store1|)) ** E1) (E1 during |Yesterday|))')
@@ -92,6 +96,9 @@ def main():
 
   fact3 = Eventuality.from_input('((|Mary| leave.v) ** E3)')
   print(fact3)
+
+  fact4 = Eventuality.from_input('John went to the store yesterday')
+  print(fact4)
 
 
 if __name__ == '__main__':
