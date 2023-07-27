@@ -35,6 +35,7 @@ class ULF(LF):
     # TODO - replace naive implementation with ULF2English
     words = ' '.join([remove_type(w) for w in list_to_str(self.formula).split() if w not in KEYWORDS_R])
     words = ' '.join(flatten([w.split('-') for w in words.split()]))
+    words = ' '.join([w.replace('_', ' ') for w in words.split()])
     return words
     
 
@@ -63,7 +64,13 @@ class Eventuality:
       self.elf = ELF(elf)
 
   def from_input(s):
-    parsed = parse_s_expr(s)
+    # s is already an s-expr
+    if isinstance(s, list):
+      parsed = s
+    else:
+      parsed = parse_s_expr(s)
+
+    # s encodes a valid s-expr
     if isinstance(parsed, list):
       if len(parsed) >= 2 and parsed[1] == '**':
         ulf = ULF(parsed[0])
@@ -72,6 +79,7 @@ class Eventuality:
         ulf = ULF(parsed)
         ep = gentemp('e')
       return Eventuality(ep, ulf.to_nl(), ulf, None)
+    # otherwise s is a natural language string
     else:
       return Eventuality(gentemp("e"), s, None, None)
 
@@ -99,6 +107,9 @@ def main():
 
   fact4 = Eventuality.from_input('John went to the store yesterday')
   print(fact4)
+
+  fact5 = Eventuality.from_input([[['the.d', ["|McDonald's|", 'block.n']], [['pres', 'be.v'], ['to_the_left_of.p', ['the.d', ['|Twitter|', 'block.n']]]]], '?'])
+  print(fact5)
 
 
 if __name__ == '__main__':
