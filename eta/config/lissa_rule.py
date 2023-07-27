@@ -8,7 +8,8 @@ def config():
     'specialist_servers': [],
     'emotion_tags': False,
     'transducers': {
-        'reasoning' : TTReasoningTransducer()
+        'reasoning' : [TTReasoningTransducer('avatars/test/rules', 'reasoning-split', split=True),
+                       TTReasoningTransducer('avatars/test/rules', 'reasoning')]
     },
     'session_number': 1
   }

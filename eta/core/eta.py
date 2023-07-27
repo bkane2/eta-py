@@ -6,7 +6,7 @@ from multiprocessing import Lock
 from multiprocessing import Value
 from multiprocessing.managers import BaseManager
 
-from eta.util.general import gentemp, clear_symtab
+from eta.util.general import gentemp, clear_symtab, remove_duplicates, append
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
@@ -151,7 +151,10 @@ class DialogueState():
     
   def apply_transducer(self, type, data):
     with self._lock:
-      return self.transducers[type](data)
+      if isinstance(self.transducers[type], list):
+        return remove_duplicates(append([t(data) for t in self.transducers[type]]), order=True)
+      else:
+        return self.transducers[type](data)
     
   # === other ===
 
@@ -159,7 +162,10 @@ class DialogueState():
     cost = 0.
     with self._lock:
       for t in self.transducers.values():
-        cost += t.cost()
+        if isinstance(t, list):
+          cost += sum([t1.cost() for t1 in t])
+        else:
+          cost += t.cost()
     return cost
 
   # === helpers ===

@@ -220,7 +220,6 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
       return choose_result_for1(clause, parts, rule_node['next'], visited, trees, feats)
     # Otherwise, go to subtree and add subtree to list of visited subtrees
     subtree = pattern.strip('*')
-    print(subtree)
     if not subtree in trees:
       return []
     return choose_result_for1(clause, parts, trees[subtree], cons(subtree, visited), trees, feats)
@@ -283,29 +282,33 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
         result = subst(ulf, str(i+1), result)
     return result
   
-  # :ulf directive
-  # ````````````````````````````
-  # In the case of ULF computation we don't prefix the result with
-  # the directive symbol; this is in contrast with  cases like :out,
-  # :gist, :schema, etc., where the schema executor needs to know
-  # what it's getting back as result for an input, and hence what
-  # to do with it
-  if directive == ':ulf':
-    result = fill_template(pattern, parts)
-    result = eval_lexical_ulfs(result)
-    return result
-  
   # :misc non-recursive directives
   # ``````````````````````````````````
-  # TODO: with the reorganization of the system architecture with
-  # transducers, it may be possible to consolidate these.
-  if directive in [':out', ':subtrees', ':schema', ':schemas', ':schema+args', ':gist', ':prompt-examples']:
+  # For any other directive, we concatenate the directive to the result and return,
+  # allowing the transducer implementation to handle the directive appropriately. Some
+  # common examples of directives used by the avatars may be (but are not limited to):
+  # :out -> creates a (^me say-to.v ^you <result>) ULF Eventuality
+  # :gist -> creates a (^you paraphrase-to.v ^me <result>) ULF Eventuality
+  # :nl  -> creates a <result> natural language Eventuality
+  # :ulf -> creates a <result> ULF Eventuality
+  # :schema -> selects the schema corresponding to <result> with no arguments
+  # :schemas -> selects a list of schemas corresponding to <result>
+  # :schema+args -> selects a schema with arguments specified by <result>
+  # :subtrees -> returns a list of subtrees to try for further matching
+  #              (redundant with below, but kept for legacy support)
+  # :raw -> returns the result as a raw list
+  if directive and isinstance(directive, str) and directive[0] == ':':
     result = fill_template(pattern, parts)
+    # In the case of ULF, we need to evaluate any lex-ulf@ expressions
+    if directive == ':ulf':
+      result = eval_lexical_ulfs(result)
     # If result is disjunctive, randomly choose one element
     if listp(result) and result[0] == ':or':
       result = random_element(result[1:])
-    result = cons(directive, result)
-    return result
+    # If result is conjunctive, return conjunction with :and prefix
+    if listp(result) and result[0] == ':and':
+      return cons(':and', [(directive, r) for r in result[1:]])
+    return (directive, result)
 
   # Unexpected
   raise Exception(f'Unsupported directive {directive} encountered for rule with pattern {pattern} for clause {clause}')

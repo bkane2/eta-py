@@ -40,9 +40,9 @@ def observe(source, speech=False):
   file.clear(source)
   
   if speech:
-    facts = [Eventuality.from_input(f'(^you say-to.v ^me "{input}")') for input in inputs]
+    facts = [Eventuality.from_input(f'(^you say-to.v ^me "{input.lower()}")') for input in inputs]
   else:
-    facts = [Eventuality.from_input(input) for input in inputs]
+    facts = [Eventuality.from_input(input.lower()) for input in inputs]
   return facts
   # if 'user' in source and facts:
   #   return flatten([process_utterance(utt) for utt in facts])

@@ -63,7 +63,7 @@ class Eventuality:
     else:
       self.elf = ELF(elf)
 
-  def from_input(s):
+  def from_input(s, expectation=False):
     # s is already an s-expr
     if isinstance(s, list):
       parsed = s
@@ -77,11 +77,12 @@ class Eventuality:
         ep = parsed[2]
       else:
         ulf = ULF(parsed)
-        ep = gentemp('e')
+        ep = gentemp('?e') if expectation else gentemp('e')
       return Eventuality(ep, ulf.to_nl(), ulf, None)
     # otherwise s is a natural language string
     else:
-      return Eventuality(gentemp("e"), s, None, None)
+      ep = gentemp('?e') if expectation else gentemp('e')
+      return Eventuality(ep, s, None, None)
 
   def __str__(self):
     return f'Eventuality:\n  ep: {self.ep}\n  nl: {self.nl}\n  ulf: {self.ulf}\n  elf: {self.elf}'
@@ -89,6 +90,9 @@ class Eventuality:
   def __eq__(self, other):
     # Assume that two Eventualities are equivalent if their surface realizations are the same
     return self.nl == other.nl
+  
+  def __hash__(self):
+    return hash(self.nl)
   
 
 def main():
@@ -110,6 +114,9 @@ def main():
 
   fact5 = Eventuality.from_input([[['the.d', ["|McDonald's|", 'block.n']], [['pres', 'be.v'], ['to_the_left_of.p', ['the.d', ['|Twitter|', 'block.n']]]]], '?'])
   print(fact5)
+
+  fact6 = Eventuality.from_input('I say to you "test"', expectation=True)
+  print(fact6)
 
 
 if __name__ == '__main__':

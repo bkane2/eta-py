@@ -19,7 +19,7 @@ def latency_test():
 
 def david_test():
   trees, feats = from_lisp_dirs('avatars/david-qa/rules')
-  print(trees.keys())
+  # print(trees.keys())
 
   print(choose_result_for("that is enough for now .".split(),
                           'spatial-question-input',
@@ -84,8 +84,8 @@ def sophie_test():
 
 def main():
   latency_test()
-  # david_test()
-  # sophie_test()
+  david_test()
+  sophie_test()
 
 
 if __name__ == '__main__':
