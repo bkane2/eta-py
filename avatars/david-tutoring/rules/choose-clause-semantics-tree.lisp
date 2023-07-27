@@ -7,9 +7,9 @@
 (READRULES '*clause-semantics-tree*
 '(
   1 (spatial-question 0)
-    2 (*spatial-question-ulf-tree* (2)) (0 :subtree)
+    2 (*spatial-question-ulf-tree* (2)) (0 :subtree+clause)
   1 (your name is 0)
-    2 (*name-ulf-tree* (1 2 3 4)) (0 :subtree)
+    2 (*name-ulf-tree* (1 2 3 4)) (0 :subtree+clause)
   1 (0 .SPECIAL-REQUEST 0)
-    2 (*request-ulf-tree* (1 2 3)) (0 :subtree)
+    2 (*request-ulf-tree* (1 2 3)) (0 :subtree+clause)
 ))
