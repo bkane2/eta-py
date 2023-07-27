@@ -259,14 +259,14 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
     newclause = fill_template(pattern[0], parts)
     # Interpret recursive phrases; the car of each nonatomic phrase
     # either gives the name of the relevant rule tree to use, or it is
-    # 'lex-ulf!'; in the former case we proceed recursively; in the
-    # latter we keep the phrase as-is
+    # a ULF; in the former case we proceed recursively; in the latter
+    # case we keep as-is
     ulfs = []
     for phrase in newclause:
-      if atom(phrase) or phrase[0] == 'lex-ulf!':
-        ulf = phrase
+      if phrase and listp(phrase) and phrase[0][0] == '*':
+        ulf = choose_result_for(phrase[1:], phrase[0], trees, feats)[1]
       else:
-        ulf = choose_result_for(phrase[1:], phrase[0], trees, feats)
+        ulf = phrase
       # Failure case
       if not ulf:
         return []
@@ -278,7 +278,7 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
       result = pattern[1]
       for i, ulf in enumerate(ulfs):
         result = subst(ulf, str(i+1), result)
-    return result
+    return (':ulf', result)
   
   # :misc non-recursive directives
   # ``````````````````````````````````
