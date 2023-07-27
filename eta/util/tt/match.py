@@ -198,6 +198,7 @@ def isa(x, feat, feats):
         ff = [x for x in ff if x != f]
       if not ff:
         return False
+  return False
   # END isa
 
 

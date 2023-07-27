@@ -1,0 +1,17 @@
+{
+  "block" : "block.n", "blocks" : ["plur", "block.n"],
+  "cube" : "cube.n", "cubes" : ["plur", "cubes.n"],
+  "book_shelf" : ["book.n", "shelf.n"], "book_shelves" : ["plur", ["book.n", "shelf.n"]],
+  "coffee_table" : ["coffee.n", "table.n"], "coffee_tables" : ["plur", ["coffee.n", "table.n"]],
+  "pine_tree" : ["pine.n", "tree.n"], "pine_trees" : ["plur", ["pine.n", "tree.n"]],
+  "analog_clock" : ["analog.n", "clock.n"], "analog_clocks" : ["plur", ["analog.n", "clock.n"]],
+  "tooth_brush" : ["tooth.n", "brush.n"], "tooth_brushes" : ["plur", ["tooth.n", "brush.n"]],
+  "recycle_bin" : ["recycle.n", "bin.n"], "recycle_bins" : ["plur", ["recycle.n", "bin.n"]],
+  "ceiling_fan" : ["ceiling.n", "fan.n"], "ceiling_fans" : ["plur", ["ceiling.n", "fan.n"]],
+  "ceiling_light" : ["ceiling.n", "light.n"], "ceiling_lights" : ["plur", ["ceiling.n", "light.n"]],
+  "card_box" : ["card.n", "box.n"], "card_boxes" : ["plur", ["card.n", "box.n"]],
+  "foot_rest" : ["foot.n", "rest.n"], "foot_rests" : ["plur", ["foot.n", "rest.n"]],
+  "pencil_holder" : ["pencil.n", "holder.n"], "pencil_holders" : ["plur", ["pencil.n", "holder.n"]],
+  "floor_lamp" : ["floor.n", "lamp.n"], "floor_lamps" : ["plur", ["floor.n", "lamp.n"]],
+  "rocking_chair" : "rocking_chair.n", "rocking_chairs" : ["plur", "rocking_chair.n"]
+}

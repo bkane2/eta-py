@@ -1,0 +1,22 @@
+{
+  "leftmost" : "left.a",
+  "rightmost" : "right.a",
+  "furthest" : "far.a",
+  "farthest" : "far.a",
+  "closest" : "close.a",
+  "highest" : "high.a",
+  "tallest" : "tall.a",
+  "nearest" : "near.a",
+  "topmost" : "top.a",
+  "top" : "top.a",
+  "uppermost" : "upper.a",
+  "smallest" : "small.a",
+  "lowest" : "low.a",
+  "largest" : "large.a",
+  "centermost" : "centered.a",
+  "shortest" : "short.a",
+  "backmost" : "back.a",
+  "longest" : "long.a",
+  "fewest" : "few.a",
+  "frontmost" : "front.a"
+}

@@ -1,0 +1,8 @@
+{
+  "moved" : ["past", ["pasv", "move.v"]],
+  "put" : ["past", ["pasv", "put.v"]],
+  "changed" : ["past", ["pasv", "change.v"]],
+  "picked_up" : ["past", ["pasv", "pick_up.v"]],
+  "rotated" : ["past", ["pasv", "rotate.v"]],
+  "placed" : ["past", ["pasv", "place.v"]]
+}

@@ -1,4 +1,5 @@
 import re
+import random
 
 import eta.util.file as file
 
@@ -30,6 +31,14 @@ def gentemp(str):
 		symtab[str] += 1
 	file.write_json(SYMTAB_PATH, symtab)
 	return f'{str}{symtab[str]}'
+
+
+def escaped_symbol_p(s):
+	return isinstance(s, str) and len(s) >= 2 and s.count('|') == 2
+
+
+def symbolp(s):
+	return isinstance(s, str)
 
 
 # ``````````````````````````````````````
@@ -87,6 +96,8 @@ def listp(lst):
 def cons(lst1, lst2):
 	if listp(lst2):
 		return [lst1] + lst2
+	elif isinstance(lst2, set):
+		return {lst1} | lst2
 	else:
 		return [lst1, lst2]
 	
@@ -105,6 +116,36 @@ def flatten(lst):
 	else:
 		return append([flatten(x) for x in lst])
 	
+
+def remove_duplicates(lst, order=False):
+	"""Remove duplicate items in a list.
+		 If preserving order is important, specify order=True"""
+	if order:
+		visited = set()
+		lst1 = []
+		for l in lst:
+			if not l in visited:
+				lst1.append(l)
+				visited.add(l)
+		return lst1
+	else:
+		return list(set(lst))
+	
+
+def subst(a, b, lst):
+	def subst_rec(a, b, x):
+		if x == b:
+			return a
+		elif atom(x):
+			return x
+		else:
+			return [subst_rec(a, b, y) for y in x]
+	return subst_rec(a, b, lst)
+
+
+def random_element(lst):
+	return random.choice(lst)
+
 
 # ``````````````````````````````````````
 # Discourse util
@@ -208,6 +249,10 @@ def main():
 
 	print(decompress("i'm gonna go to the store tomorrow, what're you doing?"))
 	print(compress("you are not going to do that. you can not do that."))
+
+	print(subst('a', 'b', ['a', 'b', ['x', 'y', 'b', ['b'], 'c', 'b']]))
+	print(subst('x', ['a', 'b'], ['a', 'b', ['c', ['a', 'b'], ['a', 'b'], 'a', 'b', 'c', [['a', 'b']]]]))
+	print(subst('a', 'b', 'b'))
 
 	# print(append(['a', 'b', 'c']))
 	# print(flatten(['a', 'b', 'c']))

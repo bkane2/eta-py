@@ -1,0 +1,4 @@
+{
+  "where" : ["at.p", ["what.d", "place.n"]],
+  "when" : ["at.p", ["what.d", "time.n"]]
+}

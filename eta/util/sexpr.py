@@ -1,6 +1,6 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 
-from eta.util.general import flatten, replaceall
+from eta.util.general import flatten, replaceall, symbolp, escaped_symbol_p
 import eta.util.file as file
 
 def balanced_substr(s):
@@ -26,7 +26,27 @@ def clean_s_expr(s_expr):
 	return s_expr
 
 
+def standardize_symbols(s_expr):
+	"""Standardizes the symbols in an s-expr by mapping to lowercase,
+	   unless enclosed in |...|."""
+	def standardize_rec(e):
+		if symbolp(e) and not escaped_symbol_p(e):
+			return e.lower()
+		elif symbolp(e):
+			parts = e.split('|')
+			return parts[0].lower() + parts[1] + parts[2].lower()
+		else:
+			return [standardize_rec(x) for x in e]
+	return standardize_rec(s_expr)
+
+
 def parse_s_expr(s_expr):
+	"""Wrapper function for parse_s_expr1"""
+	return standardize_symbols(parse_s_expr1(s_expr))
+
+
+def parse_s_expr1(s_expr):
+	"""Parses a string containing an s-expr into a structured list"""
 	s_expr = clean_s_expr(s_expr)
 
 	if len(s_expr) == 0:
@@ -56,7 +76,7 @@ def parse_s_expr(s_expr):
 				items.append(''.join(item_buf))
 				item_buf = []
 			inner = balanced_substr(s_expr[i:])
-			items.append(parse_s_expr(inner))
+			items.append(parse_s_expr1(inner))
 			i += len(inner)
 
 	if len(item_buf) > 0:
@@ -95,6 +115,7 @@ def clean_lisp(str):
 	lines = [l.replace('\;', '[TEMP]') for l in str.split('\n')]
 	lines = [l.split(';')[0].strip() for l in lines]
 	lines = [l.replace('[TEMP]', '\;') for l in lines if l]
+	lines = [' '+l if l and l[0] not in ['(', ')', "'"] else l for l in lines]
 	return replaceall('\n'.join(lines), [
 		('\.', '.', False),
 		('\,', ',', False),
@@ -107,7 +128,7 @@ def clean_lisp(str):
 def read_lisp(fname):
   contents = '(' + clean_lisp(file.read_file(fname)) + ')'
   sexpr = parse_s_expr(contents)
-  return sexpr[0] if len(sexpr) == 1 else sexpr
+  return sexpr
   
 
 def write_lisp(fname, sexpr):
@@ -116,13 +137,11 @@ def write_lisp(fname, sexpr):
 
 def main():
 
-	sexpr = read_lisp('tests/test2.lisp')
+	sexpr = read_lisp('tests/tt/test2.lisp')
 	print(sexpr)
 
-	# # test = "((^you go.v (to.p (the.d store.n))) ** E1)"
-	# test = "test string"
+	# test = "((^you go.v (to.p (the.d |Store|.n))) ** E1)"
 	# s_expr = parse_s_expr(test)
-
 	# print(s_expr)
 
 	# print(list_to_s_expr(s_expr))
