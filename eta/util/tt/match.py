@@ -606,9 +606,9 @@ def fill_template(template, match_result):
     else:
       return cons(flatten_sequences(val), fill_template(template[1:], match_result))
   if spec_function(template[0]):
-    fname = template[0][:-1]
+    fname = template[0][:-1].replace('-', '_')
     f = getattr(preds, fname)
-    return f(fill_template(template[1:], match_result))
+    return f(*fill_template(template[1:], match_result))
   
   return cons(template[0], fill_template(template[1:], match_result))  
   # END fill_template
@@ -713,6 +713,11 @@ def test_match():
              ['x', ['a', 'b', ['u'], ['v', 'w'], 'c'], 'd'])
   print(fill_template(['1', '2', '2.1', '2.3'], m))
   # --> ['x', ['a', 'b', ['u'], ['v', 'w'], 'c'], 'a', ['u'], ['v', 'w']]
+
+  m = match1(['where', '1', 'the', 'twitter', 'block', '?'],
+             ['where', 'is', 'the', 'twitter', 'block', '?'])
+  print(fill_template([['where.pro', [['lex-ulf!', 'v', '2'], ['the.d', [['lex-ulf!', 'name', '4'], 'block.n']]]], '?'], m))
+  # --> [['where.pro', [['pres', 'be.v'], ['the.d', ['|Twitter|', 'block.n']]]], '?']
 
 
  

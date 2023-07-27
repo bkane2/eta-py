@@ -5,7 +5,6 @@
 # must be explicitly provided as arguments to this function, as opposed to stored as global variables.
 
 from eta.util.general import listp, atom, cons, subst, random_element
-from eta.util.tt.lex_ulf import eval_lexical_ulfs
 from eta.util.tt.match import match1, fill_template
 
 
@@ -260,11 +259,11 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
     newclause = fill_template(pattern[0], parts)
     # Interpret recursive phrases; the car of each nonatomic phrase
     # either gives the name of the relevant rule tree to use, or it is
-    # 'lex-ulf@'; in the former case we proceed recursively; in the
+    # 'lex-ulf!'; in the former case we proceed recursively; in the
     # latter we keep the phrase as-is
     ulfs = []
     for phrase in newclause:
-      if atom(phrase) or phrase[0] == 'lex-ulf@':
+      if atom(phrase) or phrase[0] == 'lex-ulf!':
         ulf = phrase
       else:
         ulf = choose_result_for(phrase[1:], phrase[0], trees, feats)
@@ -278,7 +277,6 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
     if ulfs:
       result = pattern[1]
       for i, ulf in enumerate(ulfs):
-        ulf = eval_lexical_ulfs(ulf)
         result = subst(ulf, str(i+1), result)
     return result
   
@@ -299,9 +297,6 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
   # :raw -> returns the result as a raw list
   if directive and isinstance(directive, str) and directive[0] == ':':
     result = fill_template(pattern, parts)
-    # In the case of ULF, we need to evaluate any lex-ulf@ expressions
-    if directive == ':ulf':
-      result = eval_lexical_ulfs(result)
     # If result is disjunctive, randomly choose one element
     if listp(result) and result[0] == ':or':
       result = random_element(result[1:])

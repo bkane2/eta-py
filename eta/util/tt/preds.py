@@ -11,6 +11,7 @@
 # order to avoid the redundant loading of lexical data into the core code.
 
 import eta.util.general as gute
+import eta.util.ulf.lex as lex
 
 NEG = ['neg', 'deny', 'disagree', 'no', 'nah', 'nope', 'not', 'never', 'zero', 'hardly',
              'little', 'barely', 'scarcely', 'incorrect', 'inaccurate', 'untrue', 'disagreed', 'doubt']
@@ -61,5 +62,8 @@ def not_non_alcoholic(x):
 def not_medicine_gen(x):
   return x not in MEDICINE_GEN
 
-def test(lst):
+def test(*lst):
   return ' '.join(lst) + '_test'
+
+def lex_ulf(cat, word):
+  return lex.to_ulf(cat, word)

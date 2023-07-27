@@ -14,23 +14,7 @@ SUP_ADJS = file.load_json('resources/lexical/ulf/sup_adjs.json')
 ADV_ADJS = file.load_json('resources/lexical/ulf/adv_adjs.json')
 
 
-def eval_lexical_ulfs(ulf):
-  """
-  'ulf' is an arbitrary ULF that may contain items of form
-        (lex-ulf@ <lex-cat> <part-number>)
-  to be replaced by atomic ULFs.
-  """
-  if atom(ulf):
-    return ulf
-  elif ulf[0] == 'lex-ulf@':
-    if len(ulf) != 3:
-      raise Exception(f'Malformed lex-ulf@ expression: {ulf}')
-    return lex_ulf(ulf[1], ulf[2])
-  else:
-    return cons(eval_lexical_ulfs(ulf[0]), eval_lexical_ulfs(ulf[1:]))
-
-
-def lex_ulf(cat, word):
+def to_ulf(cat, word):
   """
   Construct a ulf of the appropriate type out of 'word-sym' (a symbol such
   as MERCEDES, ARE, ON-TOP-OF), given the lexical category (such as NAME,
@@ -84,7 +68,7 @@ def lex_ulf(cat, word):
       return ['pasv', f'{word}.v']
   if cat in ['v-', 'verb-untensed']:
     # This is a bit hacky...
-    w1 = lex_ulf('v', word)
+    w1 = to_ulf('v', word)
     if atom(w1):
       return w1
     else:
@@ -110,7 +94,7 @@ def lex_ulf(cat, word):
     else:
       return f'{word}.a'
   return f'{word}.{cat}'
-  # END lex_ulf
+  # END to_ulf
 
 
 def stem_superlative(sup_adv):
@@ -130,8 +114,7 @@ def stem_superlative(sup_adv):
 
 
 def main():
-  print(lex_ulf('noun', 'parrots'))
-  print(eval_lexical_ulfs([['lex-ulf@', 'pro', 'i'], ['recently.adv-a', [['past', 'saw.v'], ['lex-ulf@', 'n', 'bats']]]]))
+  print(to_ulf('noun', 'parrots'))
 
 
 if __name__ == '__main__':
