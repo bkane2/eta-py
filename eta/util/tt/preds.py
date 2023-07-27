@@ -29,6 +29,8 @@ MEDICINE_GEN = ['medicine', 'medicines', 'medication', 'medications', 'drug', 'd
                 'pills', 'med', 'meds', 'dose', 'doses', 'dosage', 'dosages', 'lortab', 'vicodin',
                 'norco', 'ibuprofen', 'aleve', 'cozar', 'narcotic', 'narcotics', 'oxycodone', 'morphine']
 
+SENTENCE_CONJUNCTIONS = ['but' ,'and', 'however', 'because', 'since', 'although', 'as', 'if']
+
 def expr(x):
   return True
 
@@ -67,3 +69,37 @@ def test(*lst):
 
 def lex_ulf(cat, word):
   return lex.to_ulf(cat, word)
+
+def split_sentences(wordlist):
+  result = []
+  cur = []
+  for word in wordlist:
+    if word in ['.', '?', '!']:
+      cur.append(word)
+      result.append(cur)
+      cur = []
+    else:
+      cur.append(word)
+  if cur:
+    result.append(cur)
+  cur = []
+  # Loop through each word with lookahead to split sentences conjoined by a comma+connective
+  result1 = result.copy()
+  for words in result:
+    for word, lookahead in zip(words, words[1:]+[None]):
+      if word in [','] and lookahead in SENTENCE_CONJUNCTIONS:
+        cur.append('.')
+        result1.append(cur)
+        cur = []
+      else:
+        cur.append(word)
+    if cur:
+      result1.append(cur)
+    cur = []
+  return gute.remove_duplicates(result1, order=True)
+
+def main():
+  print(split_sentences('this is a test sentence . this is another test sentence , and it is for testing .'.split()))
+
+if __name__ == '__main__':
+  main()

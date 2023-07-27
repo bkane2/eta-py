@@ -121,12 +121,12 @@ def remove_duplicates(lst, order=False):
 	"""Remove duplicate items in a list.
 		 If preserving order is important, specify order=True"""
 	if order:
-		visited = set()
+		visited = []
 		lst1 = []
 		for l in lst:
 			if not l in visited:
 				lst1.append(l)
-				visited.add(l)
+				visited.append(l)
 		return lst1
 	else:
 		return list(set(lst))
