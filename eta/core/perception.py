@@ -5,7 +5,7 @@ from eta.util.gpt import generate_gpt
 from eta.lf import Eventuality
 import eta.util.buffer as buffer
 
-PROMPT_GIST = file.read_file('docs/prompts/gist.txt')
+PROMPT_GIST = file.read_file('resources/prompts/gist.txt')
 
 def perception_loop(ds):
   while not ds.get_quit_conversation():

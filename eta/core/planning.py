@@ -1,7 +1,7 @@
 import eta.util.file as file
 from eta.util.gpt import generate_gpt
 
-PROMPT_PLAN = file.read_file('docs/prompts/plan.txt')
+PROMPT_PLAN = file.read_file('resources/prompts/plan.txt')
 
 def plan(facts):
   prompt = PROMPT_PLAN.replace('<facts>', '\n'.join(facts))

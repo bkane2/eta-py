@@ -1,7 +1,7 @@
 import eta.util.file as file
 from eta.util.gpt import generate_gpt
 
-PROMPT_EXECUTE = file.read_file('docs/prompts/execute.txt')
+PROMPT_EXECUTE = file.read_file('resources/prompts/execute.txt')
 
 def execute(plan):
   """List[str] -> List[str], str"""
