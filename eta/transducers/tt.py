@@ -1,48 +1,35 @@
 from eta.transducers.base import *
 from eta.lf import Eventuality
 
-from eta.util.general import listp, cons
+from eta.util.general import listp, cons, remove_duplicates
 from eta.util.tt.choice import choose_result_for
 from eta.util.tt.parse import from_lisp_dirs
 
 class TTTransducer(Transducer):
-  def __init__(self, rule_dirs, root, split=False):
+  def __init__(self, rule_dirs, roots):
     self.trees, self.feats = from_lisp_dirs(rule_dirs)
-    self.root = root
-    self.split = split
+    if isinstance(roots, str):
+      self.roots = [roots]
+    else:
+      self.roots = roots
 
   def __call__(self, inputs):
     """str | List[str] | List[List] -> List"""
-    # TODO: this function can likely be consolidated
     ret = []
-    if self.split:
-      if isinstance(inputs, str):
-        inputs = [inputs]
-      for input in inputs:
-        if isinstance(input, str):
-          clause = input.split()
-        else:
-          clause = input
-        choice = choose_result_for(clause, self.root, self.trees, self.feats)
-        choice = self.process_choice(choice)
-        if choice and listp(choice) and choice[0] == ':and':
-          ret = ret + choice[1:]
-        else:
-          ret.append(choice)
+    if isinstance(inputs, str):
+      clause = inputs.split()
+    elif inputs and listp(inputs) and all([isinstance(x, str) for x in inputs]):
+      clause = ' '.join(inputs).split()
     else:
-      if isinstance(inputs, str):
-        clause = inputs.split()
-      elif inputs and listp(inputs) and all([isinstance(x, str) for x in inputs]):
-        clause = ' '.join(inputs).split()
-      else:
-        clause = inputs
-      choice = choose_result_for(clause, self.root, self.trees, self.feats)
+      clause = inputs
+    for root in self.roots:
+      choice = choose_result_for(clause, root, self.trees, self.feats)
       choice = self.process_choice(choice)
       if choice and listp(choice) and choice[0] == ':and':
         ret = ret + choice[1:]
       else:
         ret.append(choice)
-    return [r for r in ret if r]
+    return remove_duplicates([r for r in ret if r], order=True)
 
   def process_choice(self, choice):
     """TODO: this should be reworked to allow transducer implementations to override
@@ -74,8 +61,8 @@ class TTTransducer(Transducer):
     
 
 class TTReasoningTransducer(TTTransducer, ReasoningTransducer):
-  def __init__(self, rule_dirs, root, split=False):
-    super().__init__(rule_dirs, root, split=split)
+  def __init__(self, rule_dirs, roots):
+    super().__init__(rule_dirs, roots)
 
   def __call__(self, facts):
     """List[Eventuality] -> List[Eventuality]"""
@@ -83,14 +70,9 @@ class TTReasoningTransducer(TTTransducer, ReasoningTransducer):
   
 
 def main():
-  facts = ['it is snowing outside', 'i am mortal', 'i own skiis', '^you say-to ^me "I like to go skiing"']
+  facts = ['it is snowing outside .', 'i am mortal .', 'i own a cat , and my cat is nice .', 'i own skiis .', '^you say-to ^me "I like to go skiing" .']
 
-  test = TTReasoningTransducer('avatars/test/rules', 'reasoning-split', split=True)
-  new_facts = test([Eventuality.from_input(f) for f in facts])
-  for f in new_facts:
-    print(f)
-
-  test = TTReasoningTransducer('avatars/test/rules', 'reasoning', split=False)
+  test = TTReasoningTransducer('avatars/test/rules', ['reasoning-split', 'reasoning'])
   new_facts = test([Eventuality.from_input(f) for f in facts])
   for f in new_facts:
     print(f)

@@ -8,6 +8,16 @@ from eta.util.general import listp, atom, cons, subst, random_element
 from eta.util.tt.match import match1, fill_template
 
 
+def is_tree_root(x):
+  return x and isinstance(x, str) and x[0] == '*'
+
+def is_tree_root_clause(x):
+  return x and listp(x) and is_tree_root(x[0])
+
+def is_tree_root_list(x):
+  return x and listp(x) and all([is_tree_root(y) for y in x])
+
+
 def choose_result_for(clause, root, trees, feats):
   """Wrapper function for calling choose_result_for1"""
   root = root.strip('*')
@@ -19,6 +29,7 @@ def choose_result_for(clause, root, trees, feats):
 def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
   """
   TODO: update description
+
   This is a generic choice-tree search program, used both for
   (i) finding gist clauses in user inputs (starting with selection
   of appropriate subtrees as a function of Eta's preceding
@@ -155,6 +166,9 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
   (for a particular path) to avoid entering infinite recursion, as well
   as a list of matched nodes that are returned for debugging purposes.
   (NOTE: the latter is not yet implemented for ULF directives)
+
+  TODO: some of this is rather messy and can be cleaned/standardized;
+        particularly some of the various :subtree directives
   """
   if not rule_node:
     return []
@@ -227,7 +241,7 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
   # ````````````````````````````
   # Similar to :subtree, except that 'pattern' is not simply the root
   # name of a tree to be searched, but rather a pair of form
-  # (<root name of tree> <reassembly pattern>), indicating that the
+  # [<root name of tree>, <reassembly pattern>], indicating that the
   # reassembly pattern should be used together with 'parts' to reassemble
   # some portion of 'clause', whose results should then be used
   if directive == ':subtree+clause':
@@ -239,6 +253,87 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
     if not subtree in trees:
       return []
     return choose_result_for1(newclause, [], trees[subtree], cons(subtree, visited), trees, feats)
+  
+  # :subtree-permute directive
+  # ``````````````````````````````
+  # Given a pattern of the form [<root name of tree>, <reassembly pattern>],
+  # where <reassembly pattern> here is assumed to contain a list of sub-lists,
+  # recursively search the subtree for each sub-list and conjoin the results
+  # as [:and ...].
+  if directive == ':subtree-permute':
+    # Pattern is in wrong format
+    if not listp(pattern) or not len(pattern) == 2 or not listp(pattern[1]):
+      return []
+    newclause = fill_template(pattern[1], parts)
+    subtree = pattern[0].strip('*')
+    if not subtree in trees:
+      return []
+    ret = [':and']
+    for choice in [choose_result_for1(x, [], trees[subtree], cons(subtree, visited), trees, feats) for x in newclause]:
+      if choice and listp(choice) and choice[0] == ':and':
+        ret = ret + choice[1:]
+      else:
+        ret.append(choice)
+    return ret
+
+  # :subtrees directive
+  # ````````````````````````````
+  # Given a pattern of the form [<expr>, <reassembly pattern>], use each subtree
+  # specified by <expr> to match the pattern, conjoining the results as [:and ...].
+  # Here, <expr> may be in one of the following formats:
+  # [*subtree*, <clause>], in which case *subtree* is searched using the given clause as input.
+  # [*tree1*, *tree2*, ..., *treek*], in which case they specify root trees to be used directly.
+  if directive == ':subtrees':
+    # Pattern is in wrong format
+    if not listp(pattern) or not len(pattern) == 2 or not listp(pattern[0]):
+      return []
+    newpattern = fill_template(pattern, parts)
+    newclause = newpattern[1]
+    # [*subtree*, <clause>]
+    if not is_tree_root_list(newpattern[0]):
+      tree = newpattern[0][0].strip('*')
+      _, subtrees = choose_result_for1(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+    # [*tree1*, *tree2*, ..., *treek*]
+    else:
+      subtrees = newpattern[0]
+    if not is_tree_root_list(subtrees):
+      return []
+    subtrees = [x.strip('*') for x in subtrees]
+    ret = [':and']
+    for choice in [choose_result_for1(newclause, [], trees[x], cons(x, visited), trees, feats) for x in subtrees]:
+      if choice and listp(choice) and choice[0] == ':and':
+        ret = ret + choice[1:]
+      else:
+        ret.append(choice)
+    return ret
+  
+  # :subtrees-permute directive
+  # ````````````````````````````
+  # Combines the :subtrees and :subtree-permute directives, applying many subtrees
+  # to multiple sub-lists, returning all results in one conjoined [:and ...] list.
+  if directive == ':subtrees-permute':
+    # Pattern is in wrong format
+    if not listp(pattern) or not len(pattern) == 2 or not listp(pattern[0]) or not listp(pattern[1]):
+      return []
+    newpattern = fill_template(pattern, parts)
+    newclause = newpattern[1]
+    # [*subtree*, <clause>]
+    if not is_tree_root_list(newpattern[0]):
+      tree = newpattern[0][0].strip('*')
+      _, subtrees = choose_result_for1(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+    # [*tree1*, *tree2*, ..., *treek*]
+    else:
+      subtrees = newpattern[0]
+    if not is_tree_root_list(subtrees):
+      return []
+    subtrees = [x.strip('*') for x in subtrees]
+    ret = [':and']
+    for choice in [choose_result_for1(x, [], trees[y], cons(y, visited), trees, feats) for x in newclause for y in subtrees]:
+      if choice and listp(choice) and choice[0] == ':and':
+        ret = ret + choice[1:]
+      else:
+        ret.append(choice)
+    return ret
   
   # :ulf-recur directive
   # ````````````````````````````
@@ -263,7 +358,7 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
     # case we keep as-is
     ulfs = []
     for phrase in newclause:
-      if phrase and listp(phrase) and phrase[0][0] == '*':
+      if is_tree_root_clause(phrase):
         ulf = choose_result_for(phrase[1:], phrase[0], trees, feats)[1]
       else:
         ulf = phrase
