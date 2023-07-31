@@ -47,11 +47,15 @@ class ELF(LF):
     
 
 class Eventuality:
-  def __init__(self, ep, nl, ulf, elf):
+  def __init__(self, ep, nl, ulf, elf, certainty=1.):
     self.ep = ep
     self.nl = nl
     self.set_ulf(ulf)
     self.set_elf(elf)
+    self.certainty = certainty
+
+  def set_ep(self, ep):
+    self.ep = ep
 
   def set_ulf(self, ulf):
     if isinstance(ulf, ULF):
@@ -64,6 +68,9 @@ class Eventuality:
       self.elf = elf
     else:
       self.elf = ELF(elf)
+
+  def set_certainty(self, certainty):
+    self.certainty = certainty
 
   def from_input(s, expectation=False):
     # s is already an s-expr
@@ -87,7 +94,7 @@ class Eventuality:
       return Eventuality(ep, s, None, None)
 
   def __str__(self):
-    return f'Eventuality:\n  ep: {self.ep}\n  nl: {self.nl}\n  ulf: {self.ulf}\n  elf: {self.elf}'
+    return f'Eventuality:\n  ep: {self.ep}\n  nl: {self.nl}\n  ulf: {self.ulf}\n  elf: {self.elf}\n  certainty: {self.certainty}'
   
   def __eq__(self, other):
     # Assume that two Eventualities are equivalent if their surface realizations are the same
