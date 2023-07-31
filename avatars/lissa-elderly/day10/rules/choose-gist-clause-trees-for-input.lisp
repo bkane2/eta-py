@@ -27,27 +27,34 @@
 ;;
 ;;   This is why we don't simply use a verbatim match to Lissa's
 ;;   output.
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ; home
   1 (3 .DO you live 2 apartment 2 house 3)
-    2 (*place-you-live-input*) (0 :subtrees)
+    2 (*place-you-live-input*) (0 :raw)
   1 (3 what 2 you .DO 2 make you feel comfortable 2 home 3)
-    2 (*things-comfortable-home-input*) (0 :subtrees)
+    2 (*things-comfortable-home-input*) (0 :raw)
   1 (3 what 2 memory 6 your homes 3)
-    2 (*memory-from-home-input*) (0 :subtrees)
+    2 (*memory-from-home-input*) (0 :raw)
   ; staying-active
   1 (3 how 2 stay physically active 3)
-    2 (*stay-physically-active-input*) (0 :subtrees)
+    2 (*stay-physically-active-input*) (0 :raw)
   1 (3 how 2 keep your brain active 3)
-    2 (*keep-brain-active-input*) (0 :subtrees)
+    2 (*keep-brain-active-input*) (0 :raw)
   1 (3 how 2 cope with hearing 2 vision loss 3)
-    2 (*hearing-vision-loss-cope-input*) (0 :subtrees)
+    2 (*hearing-vision-loss-cope-input*) (0 :raw)
   ; spirituality
   1 (3 .DO you 3 religious services 3)
-    2 (*religious-services-input*) (0 :subtrees)
+    2 (*religious-services-input*) (0 :raw)
   1 (3 what ways 2 spirituality a part of your life 3)
-    2 (*spirituality-part-of-life-input*) (0 :subtrees)
+    2 (*spirituality-part-of-life-input*) (0 :raw)
   1 (3 how does spirituality .HELP you 3)
-    2 (*spirituality-helps-you-input*) (0 :subtrees)
+    2 (*spirituality-helps-you-input*) (0 :raw)
 ))

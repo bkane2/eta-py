@@ -48,3 +48,27 @@ class GPTReasoningTransducer(GPTTransducer, ReasoningTransducer):
       new_facts_str = super().__call__({'facts': '\n'.join([fact.nl for fact in facts])})
       new_facts = [Eventuality.from_input(fact) for fact in new_facts_str]
     return new_facts
+  
+
+class GPTGistTransducer(GPTTransducer, GistTransducer):
+  def __init__(self):
+    # TODO
+    pass
+    # super().__init__(PROMPTS['gist'], [])
+
+  def __call__(self, utt, prev_gist, history):
+    """str, str, List[str] -> Eventuality"""
+    # TODO
+    pass
+
+
+class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
+  def __init__(self):
+    # TODO
+    pass
+    # super().__init__(PROMPTS['gist'], [])
+
+  def __call__(self, gist, prev_gist, history):
+    """str, str, List[str] -> Eventuality"""
+    # TODO
+    pass

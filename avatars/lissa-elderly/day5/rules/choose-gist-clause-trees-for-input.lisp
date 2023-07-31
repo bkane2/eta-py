@@ -27,27 +27,34 @@
 ;;
 ;;   This is why we don't simply use a verbatim match to Lissa's
 ;;   output.
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ; outdoors
   1 (2 what 2 recent outdoor activity 4)
-    2 (*recent-outdoor-activity-input*) (0 :subtrees)
+    2 (*recent-outdoor-activity-input*) (0 :raw)
   1 (2 what 2 favorite season 2 outdoors 2)
-    2 (*favorite-season-outdoors-input*) (0 :subtrees)
+    2 (*favorite-season-outdoors-input*) (0 :raw)
   1 (2 what 2 .ENJOY 3 weather keeps you indoors 2)
-    2 (*things-enjoy-doing-indoors-input*) (0 :subtrees)
+    2 (*things-enjoy-doing-indoors-input*) (0 :raw)
   ; travel
   1 (2 what types of travel 2 .ENJOY 2)
-    2 (*travel-enjoy-input*) (0 :subtrees)
+    2 (*travel-enjoy-input*) (0 :raw)
   1 (2 what 2 favorite .VACATION 4)
-    2 (*favorite-vacation-input*) (0 :subtrees)
+    2 (*favorite-vacation-input*) (0 :raw)
   1 (3 if you won 1 free trip 1 where 2 you go 3)
-    2 (*free-trip-input*) (0 :subtrees)
+    2 (*free-trip-input*) (0 :raw)
   ; plan-for-today
   1 (2 what 2 .PLAN after this session 2)
-    2 (*plan-after-this-session-input*) (0 :subtrees)
+    2 (*plan-after-this-session-input*) (0 :raw)
   1 (2 what 2 you .HAVE 2 .DINNER tonight 2)
-    2 (*dinner-tonight-input*) (0 :subtrees)
+    2 (*dinner-tonight-input*) (0 :raw)
   1 (2 what 2 .DO 3 .WIND down before bed 2)
-    2 (*wind-down-before-bed-input*) (0 :subtrees)
+    2 (*wind-down-before-bed-input*) (0 :raw)
 ))

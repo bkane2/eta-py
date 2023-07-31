@@ -28,31 +28,38 @@
 ;;
 ;;   This is why we don't simply use a verbatim match to Lissa's
 ;;   output.
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ; rochester1
   1 (2 how long 6 in rochester 0)
-    2 (*how-long-in-rochester-input*) (0 :subtrees)
+    2 (*how-long-in-rochester-input*) (0 :raw)
   1 (6 you not 2 .LIKE 4 rochester 1)
-    2 (*not-like-about-rochester-input*) (0 :subtrees)
+    2 (*not-like-about-rochester-input*) (0 :raw)
   1 (2 what 2 you .LIKE 4 rochester 0)
-    2 (*like-about-rochester-input*) (0 :subtrees)
+    2 (*like-about-rochester-input*) (0 :raw)
   1 (2 what 2 you 2 change 4 rochester 0)
-    2 (*changing-rochester-input*) (0 :subtrees)
+    2 (*changing-rochester-input*) (0 :raw)
   ; rochester2
   1 (2 what 3 we 1 .DO 4 tour of rochester 0)
-    2 (*tour-of-rochester-input* *thematic-tour-of-rochester-input*) (0 :subtrees)
+    2 (*tour-of-rochester-input* *thematic-tour-of-rochester-input*) (0 :raw)
   1 (2 what 2 your favorite .RESTAURANT 4 in rochester 0)
-    2 (*favorite-eatery-input*) (0 :subtrees)
+    2 (*favorite-eatery-input*) (0 :raw)
   1 (2 what 3 is 2 .GARBAGE plate 0)
-    2 (*garbage-plate-input* *thematic-garbage-plate-input*) (0 :subtrees)
+    2 (*garbage-plate-input* *thematic-garbage-plate-input*) (0 :raw)
   1 (3 you 5 dinosaur .BARBECUE 0)
-    2 (*dinosaur-bbq-input*) (0 :subtrees)
+    2 (*dinosaur-bbq-input*) (0 :raw)
   ; pets
   1 (2 .DO 1 .HAVE 1 pet 3)
-    2 (*have-a-pet-input*) (0 :subtrees)
+    2 (*have-a-pet-input*) (0 :raw)
   1 (1 tell me about 2 pet 3 .FAMILY 2 neighbor 3)
-    2 (*family-neighbor-pet-input*) (0 :subtrees)
+    2 (*family-neighbor-pet-input*) (0 :raw)
   1 (1 how 2 pets .HELP 3)
-    2 (*pets-help-owners-input*) (0 :subtrees)
+    2 (*pets-help-owners-input*) (0 :raw)
 ))

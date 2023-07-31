@@ -292,7 +292,11 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
     # [*subtree*, <clause>]
     if not is_tree_root_list(newpattern[0]):
       tree = newpattern[0][0].strip('*')
-      _, subtrees = choose_result_for1(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+      result = choose_result_for1(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+      if not result:
+        return []
+      else:
+        _, subtrees = result
     # [*tree1*, *tree2*, ..., *treek*]
     else:
       subtrees = newpattern[0]
@@ -320,7 +324,11 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
     # [*subtree*, <clause>]
     if not is_tree_root_list(newpattern[0]):
       tree = newpattern[0][0].strip('*')
-      _, subtrees = choose_result_for1(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+      result = choose_result_for1(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+      if not result:
+        return []
+      else:
+        _, subtrees = result
     # [*tree1*, *tree2*, ..., *treek*]
     else:
       subtrees = newpattern[0]

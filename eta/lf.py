@@ -12,6 +12,8 @@ KEYWORDS_R = [k for k in KEYWORDS if k not in ['not', 'that', "'s", '?', '!']]
 def remove_type(atm):
   if atm == '.':
     return atm
+  elif atm == '."':
+    return atm
   else:
     return atm.split('.')[0].replace('|', '')
 

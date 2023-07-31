@@ -601,7 +601,7 @@ def fill_template(template, match_result):
   ii = position_index(template[0])
   if ii:
     val = indexed_element_of(match_result, ii)
-    if listp(val) and val[0] == ':seq':
+    if val and listp(val) and val[0] == ':seq':
       return flatten_sequences(val[1:]) + fill_template(template[1:], match_result)
     else:
       return cons(flatten_sequences(val), fill_template(template[1:], match_result))

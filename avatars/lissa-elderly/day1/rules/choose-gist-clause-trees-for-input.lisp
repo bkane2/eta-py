@@ -29,37 +29,45 @@
 ;;
 ;;   This is why we don't simply use a verbatim match to Lissa's
 ;;   output.
+
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ; getting-to-know
   1 (2 what 1 your name 1)
-    2 (*name-input*) (0 :subtrees)
+    2 (*name-input*) (0 :raw)
   1 (2 what 1 you .HAVE 2 breakfast 1)
-    2 (*breakfast-today-input*) (0 :subtrees)
+    2 (*breakfast-today-input*) (0 :raw)
   1 (1 what 2 favorite 2 ice cream 1)
-    2 (*favorite-icecream-input*) (0 :subtrees)
+    2 (*favorite-icecream-input*) (0 :raw)
   1 (1 what 2 favorite 2 food 1)
-    2 (*favorite-food-input*) (0 :subtrees)
+    2 (*favorite-food-input*) (0 :raw)
   1 (1 how 2 get here 1)
-    2 (*how-you-got-here-input*) (0 :subtrees)
+    2 (*how-you-got-here-input*) (0 :raw)
   ; where-are-you-from
   1 (3 where are you from 0)
-    2 (*hometown-input*) (0 :subtrees)
+    2 (*hometown-input*) (0 :raw)
   1 (3 tell me more 4 hometown 0)
-    2 (*describe-hometown-input*) (0 :subtrees)
+    2 (*describe-hometown-input*) (0 :raw)
   1 (3 how 2 .LIKE the weather 2 hometown 0)
-    2 (*hometown-weather-input*) (0 :subtrees)
+    2 (*hometown-weather-input*) (0 :raw)
   1 (3 how 2 end up in rochester 0)
-    2 (*endup-in-rochester-input*) (0 :subtrees)
+    2 (*endup-in-rochester-input*) (0 :raw)
   ; activities
   1 (3 what are 1 hobbies 0)
-    2 (*hobbies-input*) (0 :subtrees)
+    2 (*hobbies-input*) (0 :raw)
   1 (3 .DO 1 .LIKE to .READ 0)
-    2 (*like-to-read-input*) (0 :subtrees)
+    2 (*like-to-read-input*) (0 :raw)
   1 (3 what 2 things you .LIKE to .READ 0)
-    2 (*things-like-to-read-input*) (0 :subtrees)
+    2 (*things-like-to-read-input*) (0 :raw)
   1 (3 how 2 you spend 1 days 0)
-    2 (*spend-your-days-input*) (0 :subtrees)
+    2 (*spend-your-days-input*) (0 :raw)
   1 (3 what 4 you .LIKE 4 neighborhood 0)
-    2 (*things-in-neighborhood-input*) (0 :subtrees)
+    2 (*things-in-neighborhood-input*) (0 :raw)
 ))

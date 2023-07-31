@@ -1,15 +1,22 @@
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   1 (2 what 1 your name 1)
-    2 (*name-input*) (0 :subtrees)
+    2 (*name-input*) (0 :raw)
   1 (2 .DO 1 .HAVE 2 spatial .QUESTION 3)
-    2 (*spatial-question-input*) (0 :subtrees)
+    2 (*spatial-question-input*) (0 :raw)
   1 (0 .DO 1 .WANT 2 resume 1)
-    2 (*request-input*) (0 :subtrees)
+    2 (*request-input*) (0 :raw)
   1 (.DO you .UNDERSTAND 1 concept 1)
-    2 (*understand-concept-input*) (0 :subtrees)
+    2 (*understand-concept-input*) (0 :raw)
   1 (.DO you .WANT to .MAKE 1 .BIGGER .EXAMPLE of 1 concept 1)
-    2 (*bigger-example-input*) (0 :subtrees)
+    2 (*bigger-example-input*) (0 :raw)
   1 (0)
-    2 (*spatial-question-input*) (0 :subtrees)
+    2 (*spatial-question-input*) (0 :raw)
 ))

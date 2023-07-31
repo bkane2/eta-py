@@ -27,27 +27,34 @@
 ;;
 ;;   This is why we don't simply use a verbatim match to Lissa's
 ;;   output.
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ; weather
   1 (2 how 2 weather 3)
-    2 (*how-is-weather-input*) (0 :subtrees)
+    2 (*how-is-weather-input*) (0 :raw)
   1 (1 how 3 weather forecast 4)
-    2 (*weather-forecast-input*) (0 :subtrees)
+    2 (*weather-forecast-input*) (0 :raw)
   1 (1 what 2 favorite weather 3)
-    2 (*favorite-weather-input*) (0 :subtrees)
+    2 (*favorite-weather-input*) (0 :raw)
   ; driving
   1 (2 what 1 you .REMEMBER 2 first car 3)
-    2 (*first-car-input*) (0 :subtrees)
+    2 (*first-car-input*) (0 :raw)
   1 (1 .HAVE you 4 road trip 4)
-    2 (*road-trips-input*) (0 :subtrees)
+    2 (*road-trips-input*) (0 :raw)
   1 (1 how 2 cope 1 giving up driving 3)
-    2 (*giving-up-driving-input*) (0 :subtrees)
+    2 (*giving-up-driving-input*) (0 :raw)
   ; cooking
   1 (2 what 2 dishes 2 .LIKE to .COOK 3)
-    2 (*dishes-like-to-cook-input*) (0 :subtrees)
+    2 (*dishes-like-to-cook-input*) (0 :raw)
   1 (1 how 2 learn to .COOK 4)
-    2 (*learn-to-cook-input*) (0 :subtrees)
+    2 (*learn-to-cook-input*) (0 :raw)
   1 (1 how 2 shared cooking 1 people 4)
-    2 (*share-cooking-with-others-input*) (0 :subtrees)
+    2 (*share-cooking-with-others-input*) (0 :raw)
 ))

@@ -27,27 +27,34 @@
 ;;
 ;;   This is why we don't simply use a verbatim match to Lissa's
 ;;   output.
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ; household-chores
   1 (3 what 3 .HOUSEHOLD chores 4 today 3)
-    2 (*householdchores-today-input*) (0 :subtrees)
+    2 (*householdchores-today-input*) (0 :raw)
   1 (3 what 2 .HOUSEHOLD chore 2 .ENJOY 3)
-    2 (*householdchore-enjoy-input*) (0 :subtrees)
+    2 (*householdchore-enjoy-input*) (0 :raw)
   1 (3 how 4 feel 3 helped 4 .HOUSEHOLD chore 3)
-    2 (*householdchore-help-others-input*) (0 :subtrees)
+    2 (*householdchore-help-others-input*) (0 :raw)
   ; money
   1 (2 what 2 ways 1 manage 1 .MONEY 2)
-    2 (*manage-money-ways-input*) (0 :subtrees)
+    2 (*manage-money-ways-input*) (0 :raw)
   1 (2 is managing .MONEY 2 stressful 5)
-    2 (*manage-money-stressful-input*) (0 :subtrees)
+    2 (*manage-money-stressful-input*) (0 :raw)
   1 (2 how 2 learn 2 managing 2 .MONEY 2)
-    2 (*manage-money-learn-input*) (0 :subtrees)
+    2 (*manage-money-learn-input*) (0 :raw)
   ; growing-older
   1 (2 what changes 1 happen 1 you 2 next few years 2)
-    2 (*life-changes-next-years-input*) (0 :subtrees)
+    2 (*life-changes-next-years-input*) (0 :raw)
   1 (2 what 2 hardest part 2 growing older 2)
-    2 (*growing-older-hardest-part-input*) (0 :subtrees)
+    2 (*growing-older-hardest-part-input*) (0 :raw)
   1 (2 what 2 best part 2 growing older 2)
-    2 (*growing-older-best-part-input*) (0 :subtrees)
+    2 (*growing-older-best-part-input*) (0 :raw)
 ))

@@ -27,27 +27,34 @@
 ;;
 ;;   This is why we don't simply use a verbatim match to Lissa's
 ;;   output.
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ; sleep
   1 (3 how 2 sleep 2 night 3)
-    2 (*sleep-quality-input*) (0 :subtrees)
+    2 (*sleep-quality-input*) (0 :raw)
   1 (3 .DO you think 2 naps 5 .HELPFUL 3)
-    2 (*opinion-about-nap-input*) (0 :subtrees)
+    2 (*opinion-about-nap-input*) (0 :raw)
   1 (3 what 4 improve your sleep 3)
-    2 (*improve-sleep-input*) (0 :subtrees)
+    2 (*improve-sleep-input*) (0 :raw)
   ; health
   1 (3 .DO you think 2 doctor takes 3 concerns seriously 3)
-    2 (*doctor-attitude-concerns-input*) (0 :subtrees)
+    2 (*doctor-attitude-concerns-input*) (0 :raw)
   1 (3 what 2 qualities of a good doctor 3)
-    2 (*good-doctor-qualities-input*) (0 :subtrees)
+    2 (*good-doctor-qualities-input*) (0 :raw)
   1 (3 how 2 you managing 2 health concerns 3)
-    2 (*managing-health-concerns-input*) (0 :subtrees)
+    2 (*managing-health-concerns-input*) (0 :raw)
   ; exercise
   1 (3 what 2 exercise 2 you .DO 3)
-    2 (*exercises-you-do-input*) (0 :subtrees)
+    2 (*exercises-you-do-input*) (0 :raw)
   1 (3 .DO you .LIKE 2 exercise alone or with other people 3)
-    2 (*exercise-alone-vs-withothers-input*) (0 :subtrees)
+    2 (*exercise-alone-vs-withothers-input*) (0 :raw)
   1 (3 .DO you 2 exercise outdoors or 2 gym 3)
-    2 (*exercise-outdoors-vs-gym-input*) (0 :subtrees)
+    2 (*exercise-outdoors-vs-gym-input*) (0 :raw)
 ))

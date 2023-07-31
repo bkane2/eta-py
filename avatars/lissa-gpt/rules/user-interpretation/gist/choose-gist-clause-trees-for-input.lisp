@@ -2,6 +2,13 @@
 ; the context of LISSA's previous question or statement. If a match fails here, the system falls back to a
 ; general subtree intended to match generic questions from the user.
 ;
+(READRULES '*gist*
+'(
+  1 (!expr !expr) ; previous gist clause + utterance
+    2 ((*gist-clause-trees-for-input* 1) (split-sentences! 2)) (0 :subtrees-permute)
+))
+
+
 (READRULES '*gist-clause-trees-for-input*
 '(
   ;; 1 (:or
@@ -12,13 +19,13 @@
   ;;   (my .PAIN has .RECENTLY been getting worse \.)
   ;;   (I .BELIEVE my cancer has gotten worse .BECAUSE my .PAIN has also gotten worse \.))
   ;;   2 (*pain-input*
-  ;;      *general-input*) (0 :subtrees)
+  ;;      *general-input*) (0 :raw)
 
   1 (:or
     (Goodbye \.))
     2 (*say-bye-input*
-       *general-input*) (0 :subtrees)
+       *general-input*) (0 :raw)
 
   1 (0)
-    2 (*general-input*) (0 :subtrees)
+    2 (*general-input*) (0 :raw)
 ))

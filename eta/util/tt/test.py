@@ -70,6 +70,11 @@ def sophie_test():
                           'gist-clause-trees-for-input',
                           trees,
                           feats))
+
+  print(choose_result_for([],
+                          'gist-clause-trees-for-input',
+                          trees,
+                          feats))
   
   print(choose_result_for('i wish i could say no , but unfortunately your cancer has spread .'.split(),
                           '*cancer-worse-input*',
@@ -80,6 +85,16 @@ def sophie_test():
                           '*general-input*',
                           trees,
                           feats))
+  
+  print(choose_result_for([[], 'yes , i think that would be the best option .'.split()],
+                           '*interpret-input*',
+                           trees,
+                           feats))
+  
+  print(choose_result_for([[], 'where is your pain located ?'.split()],
+                           '*interpret-input*',
+                           trees,
+                           feats))
   
 
 def main():

@@ -1,11 +1,16 @@
+(READRULES '*reasoning*
+'(
+  1 (0)
+    2 ((*reasoning-split* *reasoning-thematic*) (1)) (0 :subtrees)
+))
+
 (READRULES '*reasoning-split*
 '(
   1 (0)
-    ;; 2 ((*choose-subtrees-split* (1)) (1)) (0 :subtrees)
     2 ((*choose-subtrees-split* (1)) (split-sentences! (1))) (0 :subtrees-permute)
 ))
 
-(READRULES '*reasoning*
+(READRULES '*reasoning-thematic*
 '(
   1 (0)
     2 ((*reasoning-sub5* *reasoning-sub6*) (1)) (0 :subtrees)
