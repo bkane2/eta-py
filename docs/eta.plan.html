@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module plan</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>plan</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/bkane2/Repositories/eta-py/eta/plan.py">/Users/bkane2/Repositories/eta-py/eta/plan.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="graphviz.html">graphviz</a><br>
+</td><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="plan.html#PlanNode">PlanNode</a>
+</font></dt><dt><font face="helvetica, arial"><a href="plan.html#PlanStep">PlanStep</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PlanNode">class <strong>PlanNode</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#PlanNode">PlanNode</a>(step)<br>
+&nbsp;<br>
+Defines&nbsp;a&nbsp;top-level&nbsp;node&nbsp;in&nbsp;Eta's&nbsp;plan&nbsp;(a&nbsp;doubly&nbsp;linked&nbsp;list).<br>
+Each&nbsp;node&nbsp;has&nbsp;a&nbsp;plan&nbsp;step&nbsp;associated,&nbsp;which&nbsp;may&nbsp;be&nbsp;linked&nbsp;to&nbsp;other<br>
+plan&nbsp;steps&nbsp;in&nbsp;a&nbsp;tree-like&nbsp;structure.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PlanNode-__init__"><strong>__init__</strong></a>(self, step)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-add_schema_to_subplan"><strong>add_schema_to_subplan</strong></a>(self, schema_id)</dt><dd><tt>Adds&nbsp;the&nbsp;given&nbsp;schema-id&nbsp;to&nbsp;each&nbsp;plan-step&nbsp;in&nbsp;a&nbsp;subplan&nbsp;structure<br>
+headed&nbsp;by&nbsp;this&nbsp;node.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-add_superstep_to_subplan"><strong>add_superstep_to_subplan</strong></a>(self, node)</dt><dd><tt>Add&nbsp;the&nbsp;step&nbsp;of&nbsp;a&nbsp;given&nbsp;plan-node&nbsp;as&nbsp;a&nbsp;superstep&nbsp;of&nbsp;each&nbsp;node&nbsp;within&nbsp;the<br>
+subplan&nbsp;headed&nbsp;by&nbsp;this&nbsp;node.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-add_supersteps"><strong>add_supersteps</strong></a>(self, start_node, end_node)</dt><dd><tt>Given&nbsp;a&nbsp;sequence&nbsp;of&nbsp;plan&nbsp;nodes&nbsp;bounded&nbsp;between&nbsp;a&nbsp;given&nbsp;start&nbsp;and&nbsp;end&nbsp;node,<br>
+add&nbsp;each&nbsp;plan&nbsp;node&nbsp;as&nbsp;a&nbsp;superstep&nbsp;of&nbsp;this&nbsp;node.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-get_all_roots"><strong>get_all_roots</strong></a>(self)</dt><dd><tt>Get&nbsp;all&nbsp;root&nbsp;plan-steps&nbsp;in&nbsp;a&nbsp;plan&nbsp;structure.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-serialize_from_roots"><strong>serialize_from_roots</strong></a>(self, schema_instances=None)</dt><dd><tt>Prints&nbsp;the&nbsp;subtrees&nbsp;of&nbsp;the&nbsp;plan&nbsp;structure&nbsp;reachable&nbsp;from&nbsp;each&nbsp;root&nbsp;step.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-serialize_subtree"><strong>serialize_subtree</strong></a>(self, schema_instances=None)</dt><dd><tt>Prints&nbsp;the&nbsp;subtree&nbsp;of&nbsp;the&nbsp;plan&nbsp;structure&nbsp;reachable&nbsp;from&nbsp;the&nbsp;current&nbsp;node.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-status"><strong>status</strong></a>(self, before=3, after=5, schema_instances=None)</dt><dd><tt>Prints&nbsp;the&nbsp;current&nbsp;plan&nbsp;status&nbsp;(i.e.,&nbsp;steps&nbsp;that&nbsp;are&nbsp;currently&nbsp;in<br>
+the&nbsp;surface&nbsp;plan,&nbsp;with&nbsp;a&nbsp;pointer&nbsp;to&nbsp;the&nbsp;currently&nbsp;due&nbsp;step).&nbsp;Allows<br>
+the&nbsp;number&nbsp;of&nbsp;steps&nbsp;to&nbsp;be&nbsp;shown&nbsp;before&nbsp;and&nbsp;after&nbsp;this&nbsp;pointer&nbsp;to&nbsp;be<br>
+specified&nbsp;as&nbsp;key&nbsp;arguments.</tt></dd></dl>
+
+<dl><dt><a name="PlanNode-to_graph"><strong>to_graph</strong></a>(self, before=3, after=5, schema_instances=None)</dt><dd><tt>Converts&nbsp;a&nbsp;(sub)plan&nbsp;(possibly&nbsp;bounded&nbsp;by&nbsp;some&nbsp;number&nbsp;of&nbsp;plan&nbsp;nodes&nbsp;before/after<br>
+the&nbsp;current&nbsp;node)&nbsp;into&nbsp;a&nbsp;graph&nbsp;structure,&nbsp;i.e.,&nbsp;a&nbsp;list&nbsp;of&nbsp;nodes&nbsp;and&nbsp;edges.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PlanStep">class <strong>PlanStep</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#PlanStep">PlanStep</a>(event=None)<br>
+&nbsp;<br>
+Defines&nbsp;a&nbsp;plan-step,&nbsp;which&nbsp;is&nbsp;an&nbsp;expectation&nbsp;or&nbsp;intention&nbsp;within<br>
+Eta's&nbsp;plan.&nbsp;Each&nbsp;plan-step&nbsp;may&nbsp;be&nbsp;a&nbsp;top-level&nbsp;concrete&nbsp;step&nbsp;(i.e.,<br>
+corresponding&nbsp;to&nbsp;a&nbsp;plan-node),&nbsp;or&nbsp;an&nbsp;abstract&nbsp;step&nbsp;linked&nbsp;to&nbsp;a&nbsp;more<br>
+concrete&nbsp;step&nbsp;through&nbsp;a&nbsp;superstep&nbsp;relation.<br>
+&nbsp;<br>
+In&nbsp;general,&nbsp;each&nbsp;plan-step&nbsp;corresponds&nbsp;to&nbsp;an&nbsp;Eventuality&nbsp;(an&nbsp;expected<br>
+event,&nbsp;with&nbsp;certainty&nbsp;in&nbsp;[0,1]),&nbsp;and&nbsp;has&nbsp;both&nbsp;a&nbsp;list&nbsp;of&nbsp;substeps&nbsp;and<br>
+a&nbsp;list&nbsp;of&nbsp;supersteps.&nbsp;Additionally,&nbsp;we&nbsp;maintain&nbsp;any&nbsp;obligation(s)&nbsp;(i.e.,<br>
+Eventualities&nbsp;that&nbsp;are&nbsp;obligated&nbsp;by&nbsp;the&nbsp;plan-step,&nbsp;but&nbsp;not&nbsp;yet&nbsp;expectations<br>
+in&nbsp;the&nbsp;plan),&nbsp;and&nbsp;a&nbsp;list&nbsp;of&nbsp;schema&nbsp;instances&nbsp;that&nbsp;generated&nbsp;the&nbsp;plan-step.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PlanStep-__init__"><strong>__init__</strong></a>(self, event=None)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="PlanStep-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="PlanStep-add_superstep"><strong>add_superstep</strong></a>(self, superstep)</dt><dd><tt>Adds&nbsp;bidirectional&nbsp;supplan/superplan&nbsp;links&nbsp;between&nbsp;a&nbsp;plan-step&nbsp;and&nbsp;a<br>
+given&nbsp;superstep.&nbsp;Also&nbsp;add&nbsp;the&nbsp;schemas&nbsp;of&nbsp;the&nbsp;superstep&nbsp;to&nbsp;the&nbsp;plan-step<br>
+in&nbsp;the&nbsp;case&nbsp;where&nbsp;the&nbsp;plan-step&nbsp;doesn't&nbsp;have&nbsp;any&nbsp;associated&nbsp;schemas&nbsp;(e.g.,<br>
+if&nbsp;it&nbsp;was&nbsp;created&nbsp;from&nbsp;an&nbsp;episode&nbsp;list&nbsp;in&nbsp;expanding&nbsp;an&nbsp;action).<br>
+TODO:&nbsp;should&nbsp;we&nbsp;instead&nbsp;always&nbsp;append&nbsp;the&nbsp;schemas&nbsp;of&nbsp;the&nbsp;superstep?</tt></dd></dl>
+
+<dl><dt><a name="PlanStep-format"><strong>format</strong></a>(self, schema_instances=None)</dt><dd><tt>Formats&nbsp;the&nbsp;step&nbsp;corresponding&nbsp;to&nbsp;a&nbsp;given&nbsp;plan&nbsp;node,&nbsp;as<br>
+"((ep-name&nbsp;wff)&nbsp;certainty)"<br>
+Or,&nbsp;if&nbsp;a&nbsp;hash&nbsp;table&nbsp;of&nbsp;schema&nbsp;instances&nbsp;is&nbsp;given,&nbsp;as<br>
+"((ep-name&nbsp;wff)&nbsp;certainty)&nbsp;(:schemas&nbsp;schema-preds)"<br>
+Where&nbsp;schema-preds&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;schema&nbsp;predicates&nbsp;corresponding<br>
+to&nbsp;the&nbsp;schemas&nbsp;in&nbsp;which&nbsp;this&nbsp;step&nbsp;appears.</tt></dd></dl>
+
+<dl><dt><a name="PlanStep-get_obligations"><strong>get_obligations</strong></a>(self)</dt><dd><tt>Gets&nbsp;any&nbsp;obligations&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular&nbsp;step&nbsp;in&nbsp;a&nbsp;plan&nbsp;in&nbsp;the<br>
+schema&nbsp;that&nbsp;the&nbsp;step&nbsp;is&nbsp;part&nbsp;of&nbsp;(look&nbsp;at&nbsp;the&nbsp;parent&nbsp;step&nbsp;as&nbsp;well&nbsp;in&nbsp;case&nbsp;of<br>
+no&nbsp;obligations).<br>
+TODO:&nbsp;this&nbsp;is&nbsp;a&nbsp;bit&nbsp;hacky&nbsp;currently&nbsp;because&nbsp;say-to.v&nbsp;actions&nbsp;may&nbsp;need&nbsp;to&nbsp;access<br>
+the&nbsp;parent&nbsp;paraphrase-to.v&nbsp;actions&nbsp;in&nbsp;order&nbsp;to&nbsp;access&nbsp;obligations.&nbsp;Rather,&nbsp;it&nbsp;seems<br>
+that&nbsp;the&nbsp;say-to.v&nbsp;actions&nbsp;should&nbsp;inherit&nbsp;the&nbsp;obligations&nbsp;upon&nbsp;creation.</tt></dd></dl>
+
+<dl><dt><a name="PlanStep-get_parent_ep"><strong>get_parent_ep</strong></a>(self)</dt><dd><tt>If&nbsp;the&nbsp;current&nbsp;step&nbsp;is&nbsp;a&nbsp;subplan&nbsp;of&nbsp;another&nbsp;step,&nbsp;get&nbsp;the&nbsp;episode&nbsp;name/var<br>
+corresponding&nbsp;to&nbsp;that&nbsp;step.<br>
+NOTE:&nbsp;in&nbsp;case&nbsp;there&nbsp;are&nbsp;multiple&nbsp;supersteps,&nbsp;this&nbsp;currently&nbsp;just&nbsp;returns&nbsp;the&nbsp;first.</tt></dd></dl>
+
+<dl><dt><a name="PlanStep-serialize"><strong>serialize</strong></a>(self, reverse=False, schema_instances=None)</dt><dd><tt>Serializes&nbsp;a&nbsp;tree&nbsp;of&nbsp;plan-steps&nbsp;using&nbsp;a&nbsp;DFS,&nbsp;maintaining&nbsp;a&nbsp;record&nbsp;of&nbsp;nodes<br>
+so&nbsp;that&nbsp;variables&nbsp;can&nbsp;be&nbsp;inserted&nbsp;in&nbsp;place&nbsp;of&nbsp;nodes&nbsp;that&nbsp;appear&nbsp;more&nbsp;than&nbsp;once<br>
+in&nbsp;the&nbsp;tree.<br>
+If&nbsp;reverse=True&nbsp;is&nbsp;given,&nbsp;print&nbsp;the&nbsp;tree&nbsp;"above"&nbsp;the&nbsp;current&nbsp;step&nbsp;rather&nbsp;than&nbsp;below.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-certainty_to_period"><strong>certainty_to_period</strong></a>(certainty)</dt><dd><tt>Maps&nbsp;a&nbsp;certainty&nbsp;from&nbsp;[0,1]&nbsp;to&nbsp;a&nbsp;period&nbsp;corresponding&nbsp;to&nbsp;the<br>
+period&nbsp;(in&nbsp;seconds)&nbsp;that&nbsp;Eta&nbsp;must&nbsp;wait&nbsp;to&nbsp;consider&nbsp;an&nbsp;expected&nbsp;episode<br>
+failed&nbsp;and&nbsp;move&nbsp;on&nbsp;in&nbsp;the&nbsp;plan.<br>
+The&nbsp;proportion&nbsp;between&nbsp;the&nbsp;period&nbsp;(in&nbsp;task&nbsp;cycles)&nbsp;and&nbsp;the<br>
+quantity&nbsp;-log(1&nbsp;-&nbsp;certainty)&nbsp;is&nbsp;determined&nbsp;by&nbsp;the&nbsp;global<br>
+constant&nbsp;*expected-step-failure-period-coefficient*.</tt></dd></dl>
+ <dl><dt><a name="-expand_plan_node"><strong>expand_plan_node</strong></a>(plan_node, subplan_node_start)</dt><dd><tt>Given&nbsp;a&nbsp;plan-node&nbsp;and&nbsp;the&nbsp;start/end&nbsp;plan-nodes&nbsp;of&nbsp;some&nbsp;subplan,&nbsp;insert&nbsp;the<br>
+subplan&nbsp;into&nbsp;the&nbsp;plan&nbsp;in&nbsp;place&nbsp;of&nbsp;the&nbsp;given&nbsp;plan-node.&nbsp;This&nbsp;modifies&nbsp;the<br>
+pointers&nbsp;of&nbsp;the&nbsp;previous/next&nbsp;steps&nbsp;in&nbsp;the&nbsp;plan&nbsp;(if&nbsp;any),&nbsp;and&nbsp;also&nbsp;adds&nbsp;the<br>
+plan-step&nbsp;of&nbsp;the&nbsp;original&nbsp;plan-node&nbsp;to&nbsp;the&nbsp;list&nbsp;of&nbsp;supersteps&nbsp;of&nbsp;each&nbsp;substep.<br>
+Returns&nbsp;the&nbsp;start&nbsp;node&nbsp;of&nbsp;the&nbsp;subplan.</tt></dd></dl>
+ <dl><dt><a name="-get_first_plan_node"><strong>get_first_plan_node</strong></a>(plan_node)</dt><dd><tt>Gets&nbsp;the&nbsp;first&nbsp;plan-node&nbsp;in&nbsp;the&nbsp;plan&nbsp;structure,&nbsp;given&nbsp;an&nbsp;arbitrary&nbsp;plan-node.</tt></dd></dl>
+ <dl><dt><a name="-get_last_plan_node"><strong>get_last_plan_node</strong></a>(plan_node)</dt><dd><tt>Gets&nbsp;the&nbsp;last&nbsp;plan-node&nbsp;in&nbsp;the&nbsp;plan&nbsp;structure,&nbsp;given&nbsp;an&nbsp;arbitrary&nbsp;plan-node.</tt></dd></dl>
+ <dl><dt><a name="-insert_before_plan_node"><strong>insert_before_plan_node</strong></a>(plan_node, new_plan_node_start)</dt><dd><tt>Inserts&nbsp;a&nbsp;new&nbsp;plan&nbsp;before&nbsp;the&nbsp;given&nbsp;plan&nbsp;node&nbsp;(adjusting&nbsp;the&nbsp;pointers),<br>
+and&nbsp;returns&nbsp;the&nbsp;new&nbsp;plan&nbsp;node.</tt></dd></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt></dl>
+ <dl><dt><a name="-make_test_plan"><strong>make_test_plan</strong></a>()</dt><dd><tt>Creates&nbsp;an&nbsp;artificial&nbsp;plan&nbsp;structure&nbsp;for&nbsp;testing&nbsp;purposes.</tt></dd></dl>
+ <dl><dt><a name="-make_test_plan_tree"><strong>make_test_plan_tree</strong></a>()</dt><dd><tt>Creates&nbsp;an&nbsp;artificial&nbsp;plan&nbsp;tree&nbsp;for&nbsp;testing&nbsp;purposes.</tt></dd></dl>
+ <dl><dt><a name="-merge_plan_nodes"><strong>merge_plan_nodes</strong></a>(plan_node_start, plan_node_end, new_plan_node)</dt><dd><tt>Merges&nbsp;a&nbsp;sequence&nbsp;of&nbsp;plan&nbsp;nodes&nbsp;(bounded&nbsp;between&nbsp;plan-node-start&nbsp;and&nbsp;plan-node-end)<br>
+into&nbsp;a&nbsp;given&nbsp;subplan&nbsp;node.&nbsp;Returns&nbsp;the&nbsp;new&nbsp;subplan&nbsp;node.<br>
+TODO:&nbsp;do&nbsp;we&nbsp;also&nbsp;need&nbsp;to&nbsp;deal&nbsp;with&nbsp;cases&nbsp;where&nbsp;the&nbsp;plan-nodes&nbsp;are&nbsp;discontiguous&nbsp;in&nbsp;the&nbsp;plan?</tt></dd></dl>
+ <dl><dt><a name="-print_plan_var_table"><strong>print_plan_var_table</strong></a>(plan_var_table)</dt><dd><tt>Prints&nbsp;the&nbsp;entries&nbsp;in&nbsp;the&nbsp;plan&nbsp;variable&nbsp;table.</tt></dd></dl>
+ <dl><dt><a name="-test_formatting"><strong>test_formatting</strong></a>()</dt></dl>
+ <dl><dt><a name="-visualize_plan"><strong>visualize_plan</strong></a>(plan_node, before=3, after=5, schema_instances=None, vert=False)</dt><dd><tt>Visualizes&nbsp;a&nbsp;plan&nbsp;using&nbsp;graphviz&nbsp;dot.<br>
+TODO:&nbsp;may&nbsp;want&nbsp;to&nbsp;move&nbsp;this&nbsp;function&nbsp;elsewhere&nbsp;in&nbsp;order&nbsp;to&nbsp;have&nbsp;cleaner&nbsp;dependency&nbsp;structure.<br>
+TODO:&nbsp;try&nbsp;to&nbsp;fix&nbsp;order&nbsp;of&nbsp;top-level&nbsp;nodes</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT</strong> = 30</td></tr></table>
+</body></html>
