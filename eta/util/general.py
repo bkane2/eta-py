@@ -1,5 +1,6 @@
 import re
 import random
+import string
 
 import eta.util.file as file
 
@@ -33,6 +34,14 @@ def gentemp(str):
 	return f'{str}{symtab[str]}'
 
 
+def episode_name():
+	return gentemp('e')
+
+
+def episode_var():
+	return gentemp('?e')
+
+
 def escaped_symbol_p(s):
 	return isinstance(s, str) and len(s) >= 2 and s.count('|') == 2
 
@@ -41,18 +50,51 @@ def symbolp(s):
 	return isinstance(s, str)
 
 
+def variablep(s):
+	"""Check whether a symbol is a variable, i.e., starts with '?' or '!'.
+		 NOTE: for now, this excludes indexical variables, such as '^you'."""
+	return symbolp(s) and s[0] in ['?', '!'] and s not in ['?', '!']
+
+
+def dual_var(ep_var):
+	"""Given an episode variable like ?e1, return the non-fluent dual
+		 of that variable, e.g., !e1 (and vice-versa if !e1 is given)."""
+	if variablep(ep_var):
+		return '!'+ep_var[1:] if ep_var[0] == '?' else '?'+ep_var[1:]
+	else:
+		return ''
+	
+
+def duplicate_var(var):
+	"""Given a variable, duplicate the variable by generating a new variable
+	   symbol with the initial variable as a prefix (stripping any trailing numbers)."""
+	if not variablep(var):
+		return var
+	else:
+		return gentemp(var.rstrip(string.digits))
+
+
 # ``````````````````````````````````````
 # String util
 # ``````````````````````````````````````
 
 
 def replaceall(str, replist):
-	for a, b, is_regex in replist:
+	for tup in replist:
+		if len(tup) == 3:
+			a, b, is_regex = tup
+		else:
+			a, b = tup
+			is_regex = False
 		if is_regex:
 			str = re.sub(a, b, str)
 		else:
 			str = str.replace(a, b)
 	return str
+
+
+def indent(n):
+	return "  "*(n-1)
 
 
 # ``````````````````````````````````````
@@ -143,8 +185,36 @@ def subst(a, b, lst):
 	return subst_rec(a, b, lst)
 
 
+def substall(lst, replist):
+	# Note that the order of var/val in replist is reversed
+	for (b, a) in replist:
+		lst = subst(a, b, lst)
+	return lst
+
+
 def random_element(lst):
 	return random.choice(lst)
+
+
+def get_keyword_contents(lst, keys):
+	"""Gets the contents corresponding to a list of keywords in a record structure
+	   (assuming the contents are a single element initially following the keyword)."""
+	return [e2 for (e1, e2) in zip(lst, lst[1:]+[None]) if e1 in keys and e2]
+
+
+
+# ``````````````````````````````````````
+# Dict util
+# ``````````````````````````````````````
+
+
+
+def dict_substall_keys(dct, replist):
+	# Rep b with a
+	for (b, a) in replist:
+		dct = { (a if var==b else var):val for var, val in dct.items() }
+	return dct
+
 
 
 # ``````````````````````````````````````

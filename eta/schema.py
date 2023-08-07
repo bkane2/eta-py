@@ -1,267 +1,463 @@
-# Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/schema.py
+import glob
+from copy import deepcopy
 
-from eta.util.sexpr import parse_s_expr, list_to_s_expr as ls
-from eta.util.general import rec_replace
-
-sec_name_id_prefixes = {
-	'preconds': '?I',
-	'postconds': '?P',
-	'steps': '?E',
-	'roles': '!R',
-	'episode-relations': '!W',
-	'goals': '?G'
-}
-
-section_order = [
-	'roles',
-	'steps',
-	'goals',
-	'preconds',
-	'postconds',
-	'episode-relations'
-]
-
-
-
-class ELFormula:
-	def __init__(self, formula_list):
-		if type(formula_list) == str:
-			self.formula = parse_s_expr(formula_list)
-		else:
-			self.formula = formula_list
-
-	def __str__(self):
-		return ls(self.formula)
-
-
-
-class SectionFormula:
-	def __init__(self, formula_list):
-		self.episode_id = formula_list[0]
-		self.formula = ELFormula(formula_list[1])
-
-	def __str__(self):
-		return '(%s %s)' % (self.episode_id, str(self.formula))
-
-
-
-class Section:
-	def __init__(self, section_list):
-		self.name = section_list[0][1:].lower()
-		self.formulas = []
-		for formula in section_list[1:]:
-			self.formulas.append(SectionFormula(formula))
-
-	def add_formula(self, formula):
-		prefix = '?Q'
-		if self.name in sec_name_id_prefixes.keys():
-			prefix = sec_name_id_prefixes[self.name]
-
-		new_num = 1
-		if len(self.formulas) > 0:
-			new_num = max([int(''.join([c for c in str(x.episode_id) if c in '0123456789'])) for x in self.formulas]) + 1
-
-		new_id = '%s%d' % (prefix, new_num)
-
-		self.formulas.append(SectionFormula([new_id, formula]))
-
-	def __str__(self):
-		buf = []
-
-		buf.append('\t(:%s%s' % (self.name[0].upper(), self.name[1:]))
-		for formula in self.formulas:
-			buf.append('\t\t%s' % formula)
-		buf.append('\t)')
-
-		return '\n'.join(buf)
-
-
+from eta.util.general import (gentemp, remove_duplicates, get_keyword_contents, append, 
+                              cons, flatten, subst, substall, dict_substall_keys, variablep, dual_var, duplicate_var)
+from eta.util.sexpr import read_lisp, list_to_s_expr
+from eta.lf import ULF, parse_eventuality_list
 
 class Schema:
-	def __init__(self, s_expr):
-		if type(s_expr) == str:
-			s_expr = parse_s_expr(s_expr)
+  """
+  Defines a basic schema, which contains the following fields:
+  id            : a unique ID for this schema
+  predicate     : the main predicate of the schema
+  participants  : the participant roles of a schema present in the header (e.g., '(^me ^you))
+  vars          : the variables scoped within a schema
+  bindings      : current bindings for each variable in the schema (initialized to empty hash table)
+  header        : the full header of the schema
+  contents      : the contents of the schema as an s-expr list
+  """
+  def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[]):
+    self.id = gentemp('SCHEMA')
+    self.predicate = predicate
+    self.participants = participants
+    self.vars = vars
+    self.bindings = bindings
+    self.header = header
+    self.contents = contents
+    self.sections = {}
 
-		if s_expr[0].lower() != 'epi-schema':
-			return None
+  def read_param_dict(predicate, schema_contents):
+    """Reads an s-expr of the schema contents into a parameter dict."""
+    kwargs = {}
+    kwargs['predicate'] = predicate
+    header = get_keyword_contents(schema_contents, [':header'])[0]
+    kwargs['participants'] = [x for x in flatten(header)[:-2] if x not in ['set-of', predicate]]
+    kwargs['vars'] = remove_duplicates([x for x in flatten(schema_contents) if variablep(x)])
+    kwargs['contents'] = schema_contents
+    kwargs['header'] = header
+    return kwargs
+  
+  def to_probability_dict(self, eventualities, swap_duals=False):
+    """Given a list of eventualities (i.e., certainty or necessity formulas), create a
+       probability dict with entries of form {<ep>:<prob>}."""
+    probabilities = {}
+    for e in eventualities:
+      pair = e.get_wff()
+      if isinstance(pair, list) and len(pair) == 2:
+        if swap_duals:
+          var = dual_var(pair[0])
+        else:
+          var = pair[0]
+        probabilities[var] = float(pair[1])
+    return probabilities
+  
+  def duplicate_variables(self):
+    """Duplicate all variables across a schema's sections."""
+    mappings = [(var, duplicate_var(var)) for var in self.vars]
+    self.participants = substall(self.participants, mappings)
+    self.vars = [m[1] for m in mappings]
+    self.bindings = dict_substall_keys(self.bindings, mappings)
+    self.header = substall(self.header, mappings)
+    self.contents = substall(self.contents, mappings)
+    for sec in self.sections.values():
+      for (var1, var2) in mappings:
+        [e.replacevar(var1, var2) for e in sec]
 
-		self.s_expr = s_expr
+  def instantiate(self, args):
+    """
+    Instantiates a specific instance of a schema given a list of arguments
+    corresponding to the variables in the schema header. This creates a copy
+    of the general schema with specific variable bindings. All variables in
+    the schema are first duplicated to ensure that there are no collisions when
+    binding a variable in the plan.
+    TODO: previously, this also attempted to instantiate objects from the :types
+    and :rigid-conds of the schema based on the dialogue context, adding further
+    inferences to the context. This step is still necessary, but should happen
+    elsewhere directly after instantiation of a schema.
+    """
+    schema_instance = deepcopy(self)
+    schema_instance.duplicate_variables()
+    schema_instance.bind_args(args)
+    return schema_instance
 
-		self.header_formula = s_expr[1][0]
-		self.header_episode = s_expr[1][2]
+  def bind(self, var, val):
+    """Binds a variable to a value within a schema and all sub-formulas."""
+    if not var in self.vars:
+      return self
+    self.bindings[var] = val
+    for sec in self.sections.values():
+      for eventuality in sec:
+        eventuality.bind(var, val)
+    return self
+  
+  def bind_args(self, args):
+    """
+    Substitute the successive arguments in the 'args' list for successive
+    variables occurring in the schema or plan header exclusive of the 
+    episode variable characterized by the header predication (for 
+    episodic headers).
+   
+    Generally, 'args' should correspond to the variables in the participants
+    list of the schema, but we allow for the possibility of ^me and ^you as
+    implicit arguments if fewer arguments than variables are given - in which
+    case, they're added to the arguments list in that order.
+   
+    On the other hand, if more arguments than variables are given, we assume that
+    ^me and ^you might be provided as redundant arguments, and remove those from
+    the front of the list if present. Otherwise, we remove superfluous arguments
+    starting from the end of the list.
+    """
+    participants = self.participants
+    vars = [p for p in participants if variablep(p)]
 
-		# Hack to fix duplicate variable for now
-		if self.header_episode == '?e':
-			self.header_episode = '?ee'
-			self.s_expr[1][2] = '?ee'
+    # Return with warning if no variables in participants list
+    if not vars:
+      print(f'@@@ Warning: Attempt to substitute values \n    {args}\n    in participants {participants}, which has no variables.')
+      return self
+    
+    # Case 1: More args than variables
+    if len(args) > len(vars):
+      print(f'@@@ Warning: More values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
 
-		self.sections = list()
-		self.sections_by_name = dict()
-		for section in s_expr[2:]:
-			sec = Section(section)
-			self.sections.append(sec)
-			self.sections_by_name[sec.name.lower()] = sec
+      # If ^me or ^you are already in participants of the schema, remove them from the args list
+      args = [x for x in args if x != '^me'] if '^me' in participants else args
+      args = [x for x in args if x != '^you'] if '^you' in participants else args
+      # Otherwise remove superfluous arguments from end of list
+      if len(args) > len(vars):
+        args = args[:(len(vars)-len(args))]
 
-	def get_section(self, sec_name):
-		if sec_name.lower() in self.sections_by_name:
-			return self.sections_by_name[sec_name.lower()]
-		else:
-			new_sec = Section([':%s%s' % (sec_name[0].upper(), sec_name[1:])])
-			self.sections.append(new_sec)
-			self.sections_by_name[sec_name.lower()] = new_sec
-			return new_sec
+      print(f'@@@ Now using args: {args}')
 
-	def sort_sections(self):
-		self.sections = sorted(self.sections, key=lambda x: section_order.index(x.name) if x.name in section_order else float('inf'))
+    # Case 2: Fewer args than variables
+    elif len(args) < len(vars):
+      print(f'@@@ Warning: Fewer values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
 
-	def dedupe(self):
-		new_sections = []
-		episode_rename_map = dict()
-		removed = set()
-		for section in self.sections:
-			if section.name not in ['steps', 'roles']:
-				new_sections.append(section)
-				continue
-			id_prefix = section.formulas[0].episode_id[:2]
-			formulas = [formula.formula.formula for formula in section.formulas]
-			formulas = [ls(f) for f in formulas]
-			seen = set()
-			new_formulas = []
-			num = 1
-			old_f_num = 0
-			for f in formulas:
-				old_f_num += 1
-				if f in seen:
-					if section.name == 'steps':
-						removed.add('%s%d' % (id_prefix, old_f_num))
-					continue
-				seen.add(f)
-				# new_formulas.append('(%s%d %s)' % (id_prefix, num, f))
-				new_formulas.append(['%s%d' % (id_prefix, num), parse_s_expr(f)])
-				if old_f_num != num:
-					episode_rename_map['%s%d' % (id_prefix, old_f_num)] = '%s%d' % (id_prefix, num)
-				num += 1
-			# formulas = [ls(f) for f in new_formulas]
-			new_sections.append(Section([':%s'%section.name] + new_formulas))
-			# print('%s: %s' % (section.name, formulas))
-			self.sections_by_name[section.name] = new_sections[-1]
-		self.sections = new_sections
+      # Assume first two missing args are ^me and ^you if they don't appear in the header
+      if (len(vars)-len(args)) >= 2 and not '^you' in participants:
+        args = cons('^you', args)
+      if not '^me' in participants:
+        args = cons('^me', args)
+      if len(args) < len(vars):
+        vars = vars[:(len(args)-len(vars))]
 
-		# First, remove all ep rels that reference the step numbers of removed steps
-		new_ep_rels = Section([':Episode-relations'])
-		for er in self.get_section('episode-relations').formulas:
-			er = er.formula.formula
-			if er[2] in removed:
-				continue
-			if er[2] in episode_rename_map.keys():
-				er[2] = episode_rename_map[er[2]]
-			new_ep_rels.add_formula(ls(er))
-		self.set_section(new_ep_rels)
+      print(f'@@@ Now using args: {args}, for vars: {vars}')
 
-		# Next, remove all goal/precond/postcond formulas
-		# that only referred to duplicate, removed steps
-		forms_in_ep_rels = set([e.formula.formula[0] for e in self.get_section('episode-relations').formulas])
-		for section in self.sections:
-			if section.name not in ['goals', 'preconds', 'postconds']:
-				continue
-			id_prefix = section.formulas[0].episode_id[:2]
-			renamed = dict()
-			new_sec = Section([':%s%s' % (section.name[0].upper(), section.name[1:])])
-			added = 0
-			for fi in range(len(section.formulas)):
-				formula = section.formulas[fi]
-				if formula.episode_id in forms_in_ep_rels:
-					added += 1
-					new_sec.add_formula(formula.formula)
-					renamed[formula.episode_id] = '%s%d' % (id_prefix, added)
+    # Length of 'args' and 'vars' are equal (or have just been equalized)
+    for var, arg in zip(vars, args):
+      self.bind(var, arg)
+      self.participants = subst(arg, var, self.participants)
+    
+    return self
+    # END bind_args
 
-			self.set_section(new_sec)
+  def get_contents(self, no_bind=False):
+    if no_bind:
+      return self.contents
+    return substall(self.contents, list(self.bindings.items()))
+  
+  def get_section(self, sec):
+    if isinstance(sec, str):
+      sec = [sec]
+    return append([self.sections[s] if s in self.sections else [] for s in sec])
+  
+  def get_section_eps(self, sec, no_bind=False):
+    section = self.get_section(sec)
+    if no_bind:
+      return [e.ep for e in section]
+    return [e.get_ep() for e in section]
+  
+  def get_section_wffs(self, sec, no_bind=False):
+    section = self.get_section(sec)
+    return [e.get_wff(no_bind) for e in section]
+  
+  def format(self, no_bind=False):
+    return list_to_s_expr(self.get_contents(no_bind))
 
-			# Also, rename references to the kept ones ep-rels section
-			new_ep_rels = Section([':Episode-relations'])
-			for er in self.get_section('episode-relations').formulas:
-				er = er.formula.formula
-				if er[0] in renamed.keys():
-					er[0] = renamed[er[0]]
-				new_ep_rels.add_formula(ls(er))
-			self.set_section(new_ep_rels)
-
-
-		# Next, for all formulas that have been re-numbered, update the numbers
-		'''
-		new_ep_rels = parse_s_expr(str(self.get_section('episode-relations')))
-		undo_tmp = []
-		for k in episode_rename_map.keys():
-			if k[0] != '?':
-				continue
-			new_ep_rels = rec_replace(k, 'tmp_%s' % episode_rename_map[k], new_ep_rels)
-			undo_tmp.append('tmp_%s' % episode_rename_map[k])
-			# print('replacing %s with %s' % (k, 'tmp_%s' % episode_rename_map[k]))
-		for u in undo_tmp:
-			new_ep_rels = rec_replace(u, u.split('_')[-1], new_ep_rels)
-			# print('replacing %s with %s' % (u, u.split('_')[-1]))
-		'''
-
-		# print('old ep rels: %s' % self.get_section('episode-relations'))
-		# print('new ep rels: %s' % ls(new_ep_rels))
-
-		# self.sections_by_name['episode-relations'] = Section(new_ep_rels)
-		# self.set_section(Section(new_ep_rels))
-
-	def set_section(self, section):
-		sec_name = section.name
-		self.sections = [sec for sec in self.sections if sec.name != sec_name]
-		self.sections.append(section)
-		self.sections_by_name[sec_name] = section
-
-	def bind_var(self, var, value):
-		return Schema(rec_replace(var, value, self.s_expr))
-
-	def __str__(self):
-		buf = []
-
-		buf.append('(epi-schema (%s ** %s)' % (ls(self.header_formula), self.header_episode))
-
-		for i in range(len(self.sections)):
-			if i > 0:
-				buf.append('')
-			buf.append(str(self.sections[i]))
-
-		buf.append(')')
-
-		return '\n'.join(buf)
-
-
-
-def schema_from_file(fn):
-	with open(fn, 'r') as f:
-		txt = f.read()
-		lines = txt.strip().split('\n')
-		lines = [line.split(';')[0] for line in lines]
-		txt = '\n'.join(lines)
-		s_expr = parse_s_expr(txt)
-		return Schema(s_expr[0])
+  def __str__(self):
+    return self.format()
 
 
+class EpiSchema(Schema):
+  """
+  Defines an episode schema, which contains the following additional fields:
+  types             : the nominal types of each participant/variable
+  rigid-conds       : non-fluent conditions relevant to episode
+  static-conds      : fluent conditions that are not expected to change during episode
+  preconds          : fluent conditions that are expected to hold at the beginning of episode
+  postconds         : fluent conditions that are expected to hold at end of episode
+  goals             : goals of participants in schema (e.g., (^me want.v (that ...)))
+  episodes          : the expected/intended sub-episodes of the schema episode
+  episode-relations : the temporal/causal relations between episodes of schema
+  obligations       : dialogue obligations associated with particular episodes
+  necessities       : probabilities associated with schema formulas
+  certainties       : probabilities associated with schema episodes
+  """
+  def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
+               types=[], rigid_conds=[], static_conds=[], preconds=[], postconds=[], goals=[],
+               episodes=[], episode_relations=[], necessities=[], certainties=[]):
+    super().__init__(predicate, participants, vars, bindings, header, contents)
 
-def schema_and_protos_from_file(fn):
-	with open(fn, 'r') as f:
-		txt = f.read()
-		lines = txt.strip().split('\n')
-		lines = [line.split(';')[0] for line in lines]
-		txt = '\n'.join(lines)
-		s_expr = parse_s_expr(txt)
-		return (Schema(s_expr[0]), [(proto_pair[0], Schema(proto_pair[1])) for proto_pair in s_expr[1]])
-	
+    self.sections['necessities'] = parse_eventuality_list(necessities)
+    self.sections['certainties'] = parse_eventuality_list(certainties)
+    prob_dict = {**self.to_probability_dict(self.sections['necessities']),
+                 **self.to_probability_dict(self.sections['certainties'], swap_duals=True)}
+    
+    self.sections['types'] = parse_eventuality_list(types, prob_dict)
+    self.sections['rigid-conds'] = parse_eventuality_list(rigid_conds, prob_dict)
+    self.sections['static-conds'] = parse_eventuality_list(static_conds, prob_dict)
+    self.sections['preconds'] = parse_eventuality_list(preconds, prob_dict)
+    self.sections['postconds'] = parse_eventuality_list(postconds, prob_dict)
+    self.sections['goals'] = parse_eventuality_list(goals, prob_dict)
+    self.sections['episodes'] = parse_eventuality_list(episodes, prob_dict)
+    self.sections['episode-relations'] = parse_eventuality_list(episode_relations, prob_dict)
+
+  def read_param_dict(predicate, schema_contents):
+    """Reads an s-expr of the schema contents into a parameter dict."""
+    kwargs = Schema.read_param_dict(predicate, schema_contents)
+    for section in [':types', ':rigid-conds', ':static-conds', ':preconds', ':postconds', ':goals',
+                    ':episodes', ':episode-relations', ':necessities', ':certainties']:
+      section_contents = get_keyword_contents(schema_contents, [section])
+      if section_contents:
+        kwargs[section[1:].replace('-', '_')] = section_contents[0]
+    return kwargs
+
+
+class DialSchema(EpiSchema):
+  """
+  Defines a dialogue schema, which is a specific type of episode schema that defines an
+  expected dialogue event.
+  """
+  def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
+               types=[], rigid_conds=[], static_conds=[], preconds=[], postconds=[], goals=[],
+               episodes=[], episode_relations=[], obligations=[], necessities=[], certainties=[]):
+    super().__init__(predicate, participants, vars, bindings, header, contents,
+                     types, rigid_conds, static_conds, preconds, postconds, goals,
+                     episodes, episode_relations, necessities, certainties)
+    
+    self.sections['obligations'] = parse_eventuality_list(obligations)
+    
+  def read_param_dict(predicate, schema_contents):
+    """Reads an s-expr of the schema contents into a parameter dict."""
+    kwargs = EpiSchema.read_param_dict(predicate, schema_contents)
+    for section in [':obligations']:
+      section_contents = get_keyword_contents(schema_contents, [section])
+      if section_contents:
+        kwargs[section[1:].replace('-', '_')] = section_contents[0]
+    return kwargs
+  
+  def get_obligations_of_ep(self, ep):
+    """
+    Given an ep var/name, return all obligations attached to that ep via the corresponding
+    formulas in :obligations.
+    TODO: eventually we may wish to generalize this accessor function to other types of schema
+    annotations/episode relations.
+    """
+    obligations = []
+    for wff in self.get_section_wffs('obligations'):
+      if wff[0] == ep and len(wff) == 3 and wff[1] == 'obligates':
+        obligations.append(ULF(wff[2]))
+    return obligations
+  
+      
+class ObjSchema(Schema):
+  """
+  Defines an object schema, which contains the following additional fields:
+  types              : the nominal types of each participant/variable
+  rigid-conds        : non-fluent conditions relevant to object
+  skeletal-prototype : 3D mesh decomposition of object (.obj filenames)
+  purposes           : telic purpose associated with object
+  necessities        : probabilities associated with schema formulas
+  """
+  def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
+               types=[], rigid_conds=[], skeletal_prototype='', purposes=[], necessities=[]):
+    super().__init__(predicate, participants, vars, bindings, header, contents)
+
+    self.sections['necessities'] = parse_eventuality_list(necessities)
+    prob_dict = self.to_probability_dict(self.sections['necessities'])
+    
+    self.sections['types'] = parse_eventuality_list(types, prob_dict)
+    self.sections['rigid-conds'] = parse_eventuality_list(rigid_conds, prob_dict)
+    self.sections['skeletal-prototype'] = parse_eventuality_list(skeletal_prototype, prob_dict)
+    self.sections['purposes'] = parse_eventuality_list(purposes, prob_dict)
+
+  def read_param_dict(predicate, schema_contents):
+    """Reads an s-expr of the schema contents into a parameter dict."""
+    kwargs = Schema.read_param_dict(predicate, schema_contents)
+    for section in [':types', ':rigid-conds', ':skeletal-prototype', ':purposes', ':necessities']:
+      section_contents = get_keyword_contents(schema_contents, [section])
+      if section_contents:
+        kwargs[section[1:].replace('-', '_')] = section_contents[0]
+    return kwargs
+  
+
+def store_schema(predicate, schema_contents, schemas={}):
+  """Creates a Schema object from a predicate and s-expr of schema contents,
+     and stores it in a dictionary of generic schemas."""
+  if schema_contents[0] in ['dialogue-schema', 'dial-schema']:
+    typ = DialSchema
+    typ_str = 'dial-schema'
+  elif schema_contents[0] in ['event-schema', 'episode-schema', 'epi-schema']:
+    typ = EpiSchema
+    typ_str = 'epi-schema'
+  elif schema_contents[0] in ['object-schema', 'obj-schema']:
+    typ = ObjSchema
+    typ_str = 'obj-schema'
+  else:
+    raise Exception(f'schema for {predicate} must begin with either dial-schema, epi-schema or obj-schema')
+  schema = typ(**typ.read_param_dict(predicate, schema_contents))
+  schemas[typ_str][predicate] = schema
+  return schemas
+
+
+def from_lisp_file(fname, schemas):
+  """Reads a set of schemas from a .lisp file."""
+  for expr in read_lisp(fname):
+    if expr[0] == 'store-schema':
+      predicate = expr[1].strip("'")
+      contents = expr[2]
+      if predicate:
+        store_schema(predicate, contents, schemas)
+
+
+def from_lisp_dirs(dirs):
+  """Recursively reads all .lisp files in a given dir or list of dirs,
+     returning a dict of generic schemas."""
+  schemas = {
+    'dial-schema' : {},
+    'epi-schema' : {},
+    'obj-schema' : {}
+  }
+  if isinstance(dirs, str):
+    dirs = [dirs]
+  for dir in dirs:
+    fnames = glob.glob(dir + '/**/*.lisp', recursive=True)
+    for fname in fnames:
+      from_lisp_file(fname, schemas)
+  return schemas
+
+
+def testschema(schemas):
+  sep = '\n----------------------------\n'
+  print(sep)
+
+  schema = schemas['dial-schema']['test.v']
+  print(schema, sep)
+
+  print(schema.participants)
+  schema.bind_args(['^me', '^you', '"this is another test string ."'])
+  print(schema.participants)
+  for f in schema.get_section('episodes'):
+    print(f)
+  print(sep)
+
+  print(schema.vars, sep)
+
+  schema.bind('?e1', 'e5')
+  print(schema.bindings, sep)
+
+  for f in schema.get_section('episodes'):
+    print(f)
+  print(sep)
+
+  print(schema, sep)
+
+  print(schema.get_section_eps('episodes'), sep)
+  print(schema.get_section_wffs('episodes'), sep)
+  print(schema.get_section_wffs(['rigid-conds', 'static-conds', 'preconds']), sep)
+
+
+def testcopy(schemas):
+  sep = '\n----------------------------\n'
+  print(sep)
+
+  schema = schemas['dial-schema']['test.v']
+  print(schema, sep)
+
+  print(schema.vars, sep)
+
+  schema.bind('?e1', 'e5')
+  print(schema.bindings, sep)
+
+  for f in schema.get_section('episodes'):
+    print(f)
+  print(sep)
+
+  schema_clone = schema.instantiate(['^me', '^you', '"this is another test string ."'])
+  print(schema_clone.bindings, sep)
+
+  var = schema_clone.get_section('episodes')[1].get_ep()
+  schema_clone.bind(var, 'e7')
+  print(schema.bindings)
+  print(schema_clone.bindings, sep)
+
+  for f in schema.get_section('episodes'):
+    print(f)
+  print(sep)
+
+  for f in schema_clone.get_section('episodes'):
+    print(f)
+  print(sep)
+
+
+def testcond(schemas):
+  sep = '\n----------------------------\n'
+  print(sep)
+
+  schema = schemas['dial-schema']['test-cond.v']
+  print(schema, sep)
+
+  print(schema.participants)
+  schema.bind_args(['^me', '^you', '"this is another test string ."'])
+  print(schema.participants, sep)
+
+  for f in schema.get_section('episodes'):
+    print('>', f)
+  print(sep)
+
+  print(schema.get_section('episodes')[1].condition, sep)
+  for f in schema.get_section('episodes')[1].eventualities:
+    print('>', f)
+  print(sep)
+
+  for c, fs in schema.get_section('episodes')[1].eventualities[2].conditions:
+    print(c)
+    for f in fs:
+      print('>', f)
+  print(sep)
+
+  print(schema.vars, sep)
+
+  schema.bind('?e1', 'e5')
+  schema.bind('?e8', 'e90')
+  schema.bind('?response', ['test', 'response', '.'])
+  print(schema.bindings, sep)
+
+  for f in schema.get_section('episodes'):
+    print(f)
+  print(sep)
+
+  for c, fs in schema.get_section('episodes')[1].eventualities[2].conditions:
+    print(c)
+    for f in fs:
+      print('>', f)
+  print(sep)
+
+  print(schema, sep)
+
+  print(schema.get_section_eps('episodes'), sep)
+  print(schema.get_section_wffs('episodes'), sep)
+  print(schema.get_section_wffs(['rigid-conds', 'static-conds', 'preconds']), sep)
 
 
 def main():
-	test = "(epi-schema ((?x test_schema.v) ** ?e) (:Roles (!r1 (?a person.n)) (!r2 (?b song.n))) (:Steps (?e1 (?a sing.v ?b)) (?e2 (?a leave.v))) (:Goals (?g1 (?a (want.v (ka (experience.v (k pleasure.n))))))) (:Episode-relations (!w1 (?e1 before ?e2))))"
-	schema = Schema(test)
+  schemas = from_lisp_dirs(['avatars/test/schemas'])
 
-	print(schema)
+  # print_schema_predicates(schemas)
+  # testschema(schemas)
+  testcopy(schemas)
+  # testcond(schemas)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
   main()
-

@@ -2,3 +2,4 @@ backoff
 openai
 transformers
 nltk
+graphviz

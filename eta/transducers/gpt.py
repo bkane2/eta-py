@@ -3,7 +3,7 @@ import re
 import eta.util.file as file
 from eta.transducers.base import *
 from eta.util.gpt import generate_gpt
-from eta.lf import Eventuality
+from eta.lf import parse_eventuality
 
 def reasoning_validator(prompt, resp):
   facts = [l.strip() for l in resp.split('\n') if l.strip()]
@@ -45,8 +45,8 @@ class GPTReasoningTransducer(GPTTransducer, ReasoningTransducer):
     """List[Eventuality] -> List[Eventuality]"""
     new_facts = []
     if facts:
-      new_facts_str = super().__call__({'facts': '\n'.join([fact.nl for fact in facts])})
-      new_facts = [Eventuality.from_input(fact) for fact in new_facts_str]
+      new_facts_str = super().__call__({'facts': '\n'.join([fact.get_nl() for fact in facts])})
+      new_facts = [parse_eventuality(fact) for fact in new_facts_str]
     return new_facts
   
 

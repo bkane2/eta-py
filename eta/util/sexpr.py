@@ -1,6 +1,6 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 
-from eta.util.general import flatten, replaceall, symbolp, escaped_symbol_p
+from eta.util.general import flatten, replaceall, cons, symbolp, atom, escaped_symbol_p
 import eta.util.file as file
 
 def balanced_substr(s):
@@ -40,9 +40,28 @@ def standardize_symbols(s_expr):
 	return standardize_rec(s_expr)
 
 
+def convert_quotes(s_expr):
+	"""Convert any quoted word lists (i.e., single ' symbol
+	   followed by a list of symbols) to a string."""
+	def convert_quotes_rec(e):
+		if atom(e):
+			return e
+		elif len(e) == 1:
+			return [convert_quotes_rec(e[0])]
+		else:
+			e1 = []
+			for x1, x2 in zip([None]+e[:-1], e):
+				if x1 == "'" and x2 and isinstance(x2, list) and all([isinstance(x, str) for x in x2]):
+					e1.append('"'+' '.join(x2)+'"')
+				elif x2 != "'":
+					e1.append(x2)
+			return [convert_quotes_rec(x) for x in e1]
+	return convert_quotes_rec(s_expr)
+
+
 def parse_s_expr(s_expr):
 	"""Wrapper function for parse_s_expr1"""
-	return standardize_symbols(parse_s_expr1(s_expr))
+	return convert_quotes(standardize_symbols(parse_s_expr1(s_expr)))
 
 
 def parse_s_expr1(s_expr):
@@ -105,8 +124,9 @@ def list_to_s_expr(lst):
 def list_to_str(lst):
 	if type(lst) != list:
 		return str(lst)
-	
-	return ' '.join(flatten(lst))
+	words = [str(w) for w in flatten(lst)]
+
+	return ' '.join(words)
 
 
 def clean_lisp(str):
@@ -137,14 +157,22 @@ def write_lisp(fname, sexpr):
 
 def main():
 
-	sexpr = read_lisp('tests/tt/test2.lisp')
-	print(sexpr)
+	# sexpr = read_lisp('tests/tt/test2.lisp')
+	# print(sexpr)
 
 	# test = "((^you go.v (to.p (the.d |Store|.n))) ** E1)"
 	# s_expr = parse_s_expr(test)
 	# print(s_expr)
 
 	# print(list_to_s_expr(s_expr))
+
+	test = "(^you paraphrase-to.v ^me '(this is a test quote .))"
+	s_expr = parse_s_expr(test)
+	print(s_expr)
+
+	test = "((^you paraphrase-to.v ^me '(this is a test quote .)) ** E1)"
+	s_expr = parse_s_expr(test)
+	print(s_expr)
 
 
 if __name__ == "__main__":

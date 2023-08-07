@@ -2,7 +2,7 @@ from time import sleep
 
 import eta.util.file as file
 from eta.util.gpt import generate_gpt
-from eta.lf import Eventuality
+from eta.lf import parse_eventuality
 import eta.util.buffer as buffer
 
 PROMPT_GIST = file.read_file('resources/prompts/gist.txt')
@@ -40,9 +40,9 @@ def observe(source, speech=False):
   file.clear(source)
   
   if speech:
-    facts = [Eventuality.from_input(f'(^you say-to.v ^me "{input.lower()}")') for input in inputs]
+    facts = [parse_eventuality(f'(^you say-to.v ^me "{input.lower()}")') for input in inputs]
   else:
-    facts = [Eventuality.from_input(input.lower()) for input in inputs]
+    facts = [parse_eventuality(input.lower()) for input in inputs]
   return facts
   # if 'user' in source and facts:
   #   return flatten([process_utterance(utt) for utt in facts])

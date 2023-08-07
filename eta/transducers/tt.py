@@ -1,5 +1,5 @@
 from eta.transducers.base import *
-from eta.lf import Eventuality
+from eta.lf import parse_eventuality
 
 from eta.util.general import listp, cons, remove_duplicates
 from eta.util.tt.choice import choose_result_for
@@ -44,18 +44,18 @@ class TTTransducer(Transducer):
     directive, result = choice
     if directive == ':out':
       result = ' '.join(result)
-      return Eventuality.from_input(f'(^me say-to.v ^you "{result}")', expectation=True)
+      return parse_eventuality(f'(^me say-to.v ^you "{result}")', expectation=True)
     elif directive == ':gist':
       # The legacy choice tree format supported 'topic keys', but we ignore those for now
       if listp(result[0]):
         result = result[0]
       result = ' '.join(result)
-      return Eventuality.from_input(f'(^you paraphrase-to.v ^me "{result}")')
+      return parse_eventuality(f'(^you paraphrase-to.v ^me "{result}")')
     elif directive == ':nl':
       result = ' '.join(result)
-      return Eventuality.from_input(result)
+      return parse_eventuality(result)
     elif directive == ':ulf':
-      return Eventuality.from_input(result)
+      return parse_eventuality(result)
     elif directive in [':schema', ':schemas', ':schema+args', ':subtrees', ':raw']:
       return result
 
@@ -69,7 +69,7 @@ class TTReasoningTransducer(TTTransducer, ReasoningTransducer):
 
   def __call__(self, facts):
     """List[Eventuality] -> List[Eventuality]"""
-    return super().__call__([fact.nl for fact in facts])
+    return super().__call__([fact.get_nl() for fact in facts])
   
 
 class TTGistTransducer(TTTransducer, GistTransducer):
@@ -99,7 +99,7 @@ class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
 def test1():
   facts = ['it is snowing outside .', 'i am mortal .', 'i own a cat , and my cat is nice .', 'i own skiis .', '^you say-to ^me "I like to go skiing" .']
   test = TTReasoningTransducer('avatars/test/rules')
-  new_facts = test([Eventuality.from_input(f) for f in facts])
+  new_facts = test([parse_eventuality(f) for f in facts])
   for f in new_facts:
     print(f)
 

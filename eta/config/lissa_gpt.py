@@ -4,6 +4,8 @@ def config():
   return {
     'avatar': 'lissa-gpt',
     'avatar_name': 'Lissa',
+    'schema_dirs': 'avatars/lissa-gpt/schemas',
+    'start_schema': 'discuss-activities.v',
     'perception_servers': ['audio', 'world'],
     'specialist_servers': [],
     'emotion_tags': False,

@@ -11,7 +11,8 @@ import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
 from eta.lf import Eventuality
-import eta.schema as schema
+from eta.schema import from_lisp_dirs
+from eta.plan import init_plan_from_eventualities
 # import eta.core.execution as execution
 # import eta.core.perception as perception
 # import eta.core.planning as planning
@@ -20,6 +21,7 @@ from eta.core.perception import perception_loop
 from eta.core.reasoning import reasoning_loop
 
 IO_PATH = 'io/'
+DEFAULT_START = 'have-eta-dialog.v'
 
 
 class DialogueState():
@@ -30,6 +32,7 @@ class DialogueState():
     self.id = gentemp('SESSION')
     self.config_agent = config_agent
     self.config_user = config_user
+    self.start_schema = config_agent['start_schema'] if 'start_schema' in config_agent else DEFAULT_START
     self.io_path = IO_PATH + config_agent['avatar'] + '/' + config_user['user_id'] + '/'
     self.me = config_agent['avatar_name']
     self.you = config_user['user_name']
@@ -38,16 +41,16 @@ class DialogueState():
     self.step_failure_timer = time.now()
     self.quit_conversation = False
 
-    # === TODO ===
-    self.schemas = None
-    self.concept_aliases = None
-    self.concept_sets = None
-    self.init_knowledge = None
+    self.schemas = from_lisp_dirs(config_agent['schema_dirs'])
+    self.concept_aliases = None # TODO
+    self.concept_sets = None # TODO
+    self.init_knowledge = None # TODO
 
     # === dialogue variables ===
-    self.plan = [] # TODO: replace with plan struct
+    if not self.start_schema in self.schemas['dial-schema']:
+      raise Exception('Start schema for session not found.')
     self.schema_instances = {}
-    self.plan_var_table = {}
+    self.plan = self.init_plan_from_schema(self.start_schema)
     self.buffers = self._make_buffers()
     self.reference_list = []
     self.equality_sets = {}
@@ -58,8 +61,6 @@ class DialogueState():
     self.timegraph = self._make_timegraph()
     self.time = gentemp("NOW")
     self.transducers = self.config_agent.pop('transducers')
-    # self.count = 0
-    # self.rule_last_used = {}
   
   # === session accessors ===
 
@@ -104,19 +105,9 @@ class DialogueState():
 
   # === dialogue accessors ===
 
-  # def get_rule_last_used(self, rule_node):
-  #   with self._lock:
-  #     if rule_node not in self.rule_last_used:
-  #       self.set_rule_last_used(rule_node, -10000)
-  #     return self.rule_last_used[rule_node]
-  
-  # def set_rule_last_used(self, rule_node, t):
-  #   with self._lock:
-  #     self.rule_last_used[rule_node] = t
-
-  def has_plan():
-    # (if *sessions* (ds-curr-plan (session-ds (car *sessions*))))
-    pass
+  def has_plan(self):
+    with self._lock:
+      return self.plan is not None
 
   def get_context(self):
     with self._lock:
@@ -158,7 +149,46 @@ class DialogueState():
     
   # === other ===
 
+  def bind(self, var, val):
+    """
+    Bind a variable throughout the current dialogue plan.
+    """
+    with self._lock:
+      if self.plan:
+        self.plan.bind(var, val)
+      return self
+    
+  def init_plan_from_schema(self, predicate, args=[]):
+    """
+    Given a schema predicate, find the schema corresponding to that predicate and instantiate
+    that schema (replacing variables occurring in the header with the supplied args, if any),
+    and then instantiate a plan structure from the episodes list of that schema. By default,
+    we assume that the episodes of the schema define sequential steps.
+
+    TODO: the plan structure created when instantiating a schema is currently
+    "flat" - in the future, we might want to add support for annotating abstraction
+    hierarchies in the schema, in which case these would be added as supersteps to
+    the steps of the plan-nodes that are created.
+
+    TODO: add support for using schema episode-relations when chaining together plan-nodes.
+
+    TODO: add support for binding types in schema to objects in context / inferring facts
+    from other schema sections based on context.
+    """
+    with self._lock:
+      if predicate not in self.schemas['dial-schema']:
+        raise Exception(f'Attempting to instantiate a dialogue schema, {predicate}, that does not exist.')
+      schema = self.schemas['dial-schema'][predicate]
+      if not schema.get_section('episodes'):
+        raise Exception(f'Attempting to initialize a plan from a schema, {predicate}, that has no episodes.')
+
+      schema_instance = schema.instantiate(args)
+      self.schema_instances[schema_instance.id] = schema_instance
+      
+      return init_plan_from_eventualities(schema_instance.get_section('episodes'), schema=schema_instance)
+
   def cost(self):
+    """Compute the accumulated (monetary) cost of each transducer for this session."""
     cost = 0.
     with self._lock:
       for t in self.transducers.values():
@@ -167,6 +197,29 @@ class DialogueState():
         else:
           cost += t.cost()
     return cost
+  
+  def print_schema_predicates(self, surface_english=False):
+    """Prints all of the stored schema predicates 
+      (if :surface-english t is given, convert from ULF to words))."""
+    for predicate in self.schemas.keys():
+      if surface_english:
+        print(predicate.split('.')[0].replace('-', ' ').lower())
+      else:
+        print(predicate)
+  
+  def print_schema_instances(self, no_bind=False):
+    """Prints all schema instances."""
+    for schema in self.schema_instances.values():
+      print(schema.format(no_bind))
+
+  def print_plan_var_table(self):
+    """Prints the entries in the plan variable table."""
+    print(' ---- PLAN VAR TABLE: ----------')
+    for var, pairs in self.plan_var_table.items():
+      print(f'{var}:')
+      for pair in pairs:
+        print(f'  {pair}')
+    print('---------------------------------')
 
   # === helpers ===
 

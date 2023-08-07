@@ -87,20 +87,24 @@ def sophie_test():
                           feats))
   
   print(choose_result_for([[], 'yes , i think that would be the best option .'.split()],
-                           '*interpret-input*',
+                           '*gist*',
                            trees,
                            feats))
   
   print(choose_result_for([[], 'where is your pain located ?'.split()],
-                           '*interpret-input*',
+                           '*gist*',
                            trees,
                            feats))
   
 
 def main():
+  sep = '\n----------------------------\n'
   latency_test()
+  print(sep)
   david_test()
+  print(sep)
   sophie_test()
+  print(sep)
 
 
 if __name__ == '__main__':
