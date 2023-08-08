@@ -1,0 +1,218 @@
+from eta.constants import DEFAULT_IMPORTANCE
+from eta.util.general import get_time, cons_dict, listp, atom, cons, variablep, to_key, dict_get, dict_rem, dict_rem_val
+from eta.lf import parse_eventuality
+
+
+class Memory:
+  """
+  Represents a single memory, which consists of a temporally bounded event with some importance value.
+
+  Note that the start time only marks the earliest time point at which an episode is known to be true;
+  likewise for the end time. Thus, their logical interpretation should be as follows:
+  (<start_time> during <event>.ep)
+  (<end_time> during <event>.ep)
+  Where <end_time> is to be read as an indexical variable ^now if no value is supplied.
+  """
+  def __init__(self, event, importance=DEFAULT_IMPORTANCE):
+    self.event = event
+    self.start_time = get_time()
+    self.end_time = None
+    self.last_access = self.start_time
+    self.importance = importance
+
+  def update_last_access(self):
+    self.last_access = get_time()
+
+  def end(self):
+    self.end_time = get_time()
+
+  def get_ep(self):
+    return self.event.get_ep()
+  
+  def get_wff(self):
+    return self.event.get_wff()
+
+  def get_time_wffs(self):
+    start_wff = [self.start_time, 'during', self.event.get_ep()]
+    if self.end_time:
+      end_wff = [self.end_time, 'during', self.event.get_ep()]
+    else:
+      end_wff = ['^now', 'during', self.event.get_ep()]
+    return (start_wff, end_wff)
+  
+  def __hash__(self):
+    return hash(self.event)
+  
+  def __eq__(self, other):
+    return isinstance(other, Memory) and self.event == other.event
+  
+  def __str__(self):
+    return self.event.format()
+
+
+class MemoryStorage:
+  """
+  Stores memories, keyed on the episode names as well as predicates of the ULF formula (if any).
+  """
+  def __init__(self):
+    self.memories = set()
+    self.ep_ht = {}
+    self.wff_ht = {}
+
+  def _get_wff_keys(self, wff):
+    """
+    Create keys for storing a given WFF, provided the WFF is a logical formula and not a string.
+    If wff is single predicate, keys = [(pred), pred]
+    If wff is binary predicate, keys = [(subj, pred), pred]
+    Otherwise, add all permutations of single pred+arg pairs, i.e., keys = 
+    (subj, pred, None, None, ...)
+    (None, pred, obj1, None, ...)
+    (None, pred, None, obj2, ...)
+    """
+    if not wff or not listp(wff):
+      return []
+    if len(wff) == 1:
+      return [to_key(wff), to_key(wff[0])]
+    keys = [to_key(wff), to_key(wff[1])]
+    if len(wff) > 2:
+      keys.append(to_key(wff[:2]+[None for _ in wff[2:]]))
+      for i in range(2, len(wff)):
+        keys.append(to_key([None, wff[1]]+[None for _ in wff[2:i]]+[wff[i]]+[None for _ in wff[i+1:]]))
+    return keys
+
+  def store(self, memory):
+    """TBC"""
+    self.memories.add(memory)
+    ep = memory.get_ep()
+    wff = memory.get_wff()
+    cons_dict(self.ep_ht, ep, memory)
+    for key in self._get_wff_keys(wff):
+      cons_dict(self.wff_ht, key, memory)
+
+  def store_all(self, memories):
+    """TBC"""
+    [self.store(memory) for memory in memories]
+
+  def remove(self, memory):
+    """TBC"""
+    if not memory in self.memories:
+      return
+    self.memories.remove(memory)
+    ep = memory.get_ep()
+    wff = memory.get_wff()
+    dict_rem_val(self.ep_ht, ep, memory)
+    for key in self._get_wff_keys(wff):
+      dict_rem_val(self.wff_ht, key, memory)
+
+  def remove_all(self, memories):
+    """TBC"""
+    [self.remove(memory) for memory in memories]
+
+  def instantiate(self, event, importance=DEFAULT_IMPORTANCE):
+    """TBC"""
+    memory = Memory(event, importance=importance)
+    self.store(memory)
+
+  def instantiate_all(self, events, importances=[]):
+    """TBC"""
+    if not importances:
+      importances = [DEFAULT_IMPORTANCE for _ in events]
+    [self.instantiate(event) for event in events]
+
+  def get_episode(self, ep):
+    """TBC"""
+    return dict_get(self.ep_ht, ep)
+
+  def get_matching(self, pred_patt):
+    """Retrieve a list of memories according to a given pred_patt, which
+       is an s-expr with variables such as [b, between.p, ?x, c]"""
+    if atom(pred_patt):
+      return dict_get(self.wff_ht, to_key(pred_patt))
+    elif len(pred_patt) == 1:
+      return dict_get(self.wff_ht, to_key(pred_patt[0]))
+    else:
+      arglist = cons(pred_patt[0], pred_patt[2:])
+      pred = pred_patt[1]
+      nvars = len([arg for arg in arglist if variablep(arg)])
+      nconst = len(arglist) - nvars
+      if nvars == 0:
+        return dict_get(self.wff_ht, to_key(cons(arglist[0], cons(pred, arglist[1:]))))
+      elif nconst == 0:
+        return dict_get(self.wff_ht, to_key(pred))
+      elif nconst == 1:
+        return dict_get(self.wff_ht, to_key([None if variablep(x) else x for x in pred_patt]))
+      else:
+        const = [arg for arg in arglist if not variablep(arg)][0]
+        key = [arg if arg == const else None for arg in arglist]
+        key = cons(key[0], cons(pred, key[1:]))
+        memories = dict_get(self.wff_ht, to_key(key))
+        # Filter out memories whose constant args don't match pred_patt
+        selected = []
+        for m in memories:
+          wff = m.get_wff()
+          if all([(variablep(x) or x == y) for x, y in zip(arglist, cons(wff[0], wff[2:]))]):
+            selected.append(m)
+        return selected
+      
+  def remove_episode(self, ep):
+    """TBC"""
+    memories = self.get_episode(ep)
+    self.remove_all(memories)
+
+  def remove_matching(self, pred_patt):
+    """TBC"""
+    memories = self.get_matching(pred_patt)
+    self.remove_all(memories)
+
+  def retrieve(self, query=None):
+    """TBC"""
+    pass
+
+  def forget(self):
+    """
+    TODO: this function should be implemented to permanently evict facts from memory as memory
+    sizes become too large for tractable retrieval. It should remove facts where the retrieval
+    score (combined relevance/importance/salience) falls below a certain threshold.
+    """
+    pass
+
+  
+
+def main():
+  sep = '\n----------------------------\n'
+
+  test = MemoryStorage()
+  fact1 = parse_eventuality('(raining-outside.v)', ep='e1')
+  fact2 = parse_eventuality('(me laugh.v)', ep='e2')
+  fact3 = parse_eventuality('(me go-to.v (the.d store.n) yesterday.adv-e)', ep='e3')
+  fact4 = parse_eventuality('(me go-to.v (the.d store.n) tuesday.adv-e)', ep='e4')
+  fact5 = parse_eventuality('(you go-to.v (the.d store.n) tuesday.adv-e)', ep='e4')
+  test.instantiate(fact1)
+  test.instantiate(fact2)
+  test.instantiate(fact3)
+  test.instantiate(fact4)
+  test.instantiate(fact5)
+
+  for k,v in test.wff_ht.items():
+    print(k)
+    for i in v:
+      print(i)
+  print(sep)
+
+  for m in test.get_episode('e4'):
+    print(m)
+  print(sep)
+
+  for m in test.get_matching(['?x', 'go-to.v', '?y', '?z']):
+    print(m)
+  print(sep)
+
+  test.remove_matching(['?x', 'go-to.v', '?y', 'tuesday.adv-e'])
+
+  for m in test.get_matching('go-to.v'):
+    print(m)
+  print(sep)
+  
+
+if __name__ == '__main__':
+  main()

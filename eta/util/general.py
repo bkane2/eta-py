@@ -1,6 +1,8 @@
 import re
 import random
 import string
+from datetime import datetime
+from copy import copy
 
 import eta.util.file as file
 
@@ -202,6 +204,16 @@ def get_keyword_contents(lst, keys):
 	return [e2 for (e1, e2) in zip(lst, lst[1:]+[None]) if e1 in keys and e2]
 
 
+def to_key(lst):
+	"""Converts a list to a valid dict key consisting of only tuples and strings."""
+	if lst is None:
+		return None
+	if atom(lst):
+		return str(lst)
+	else:
+		return tuple([to_key(x) for x in lst])
+
+
 
 # ``````````````````````````````````````
 # Dict util
@@ -216,10 +228,44 @@ def dict_substall_keys(dct, replist):
 	return dct
 
 
+def cons_dict(dct, k, v):
+	"""Adds v to the list at key k in dct, creating a new list if none exists."""
+	if k in dct:
+		dct[k].append(v)
+	else:
+		dct[k] = [v]
+
+
+def dict_get(dct, k):
+	"""Safe version of dict accessor that returns an empty list if key is not found."""
+	if k in dct:
+		return copy(dct[k])
+	else:
+		return []
+
+
+def dict_rem_val(dct, k, val):
+	"""Safe version of dict remove that removes val from the list stored at key (or pops
+	   the key if it stores an atom)."""
+	if k in dct:
+		if isinstance(dct[k], list):
+			dct[k].remove(val)
+		else:
+			dct.pop(k)
+
+
+def dict_rem(dct, k):
+	"""Safe version of dict pop that removes a key from the dict."""
+	if k in dct:
+		dct.pop(k)
+
+
 
 # ``````````````````````````````````````
 # Discourse util
 # ``````````````````````````````````````
+
+
 
 CONTRACTIONS = file.load_json('resources/lexical/contractions.json')
 NEGPAIRS = file.load_json('resources/lexical/negpairs.json')
@@ -309,6 +355,20 @@ def swap_duals(str):
 	return ' '.join(swap_duals_rec(str.split()))
 
 
+
+# ``````````````````````````````````````
+# Time util
+# ``````````````````````````````````````
+
+
+
+def get_time():
+	now = datetime.now()
+	time = now.strftime(":year/%Y/:month/%m/:day/%d/:hour/%H/:minute/%M/:sec/%S").split('/')
+	return ['$', 'date+time']+time
+
+
+
 # ``````````````````````````````````````
 # 
 # ``````````````````````````````````````
@@ -323,6 +383,10 @@ def main():
 	print(subst('a', 'b', ['a', 'b', ['x', 'y', 'b', ['b'], 'c', 'b']]))
 	print(subst('x', ['a', 'b'], ['a', 'b', ['c', ['a', 'b'], ['a', 'b'], 'a', 'b', 'c', [['a', 'b']]]]))
 	print(subst('a', 'b', 'b'))
+
+	print(get_time())
+
+	print(to_key([None, 'test.v', ['a', 'b']]))
 
 	# print(append(['a', 'b', 'c']))
 	# print(flatten(['a', 'b', 'c']))

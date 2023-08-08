@@ -24,5 +24,14 @@ CERTAINTY_THRESHOLD = 0.7
 # A list of supported speech acts
 SPEECH_ACTS = ['say-to.v', 'paraphrase-to.v', 'reply-to.v', 'react-to.v']
 
-# If *emotions* is T, Eta will allow use of emotion tags at beginning of outputs.
-EMOTIONS_LIST = ['[NEUTRAL]', '[SAD]', '[HAPPY]', '[WORRIED]', '[ANGRY]']
+# A list of emotions supported by Eta, where the first element is assumed to be the default.
+EMOTIONS_LIST = ['neutral', 'sad', 'happy', 'worried', 'angry']
+
+# Path for input/outputs to be written to and read from
+IO_PATH = 'io/'
+
+# The default start schema if none is provided in agent-config
+DEFAULT_START = 'have-eta-dialog.v'
+
+# The default importance for new facts stored in memory
+DEFAULT_IMPORTANCE = 0.5

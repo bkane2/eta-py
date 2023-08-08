@@ -193,7 +193,7 @@ class Eventuality:
     return self.get_nl() == other.get_nl()
   
   def __hash__(self):
-    return hash(self.get_nl())
+    return hash(f'({self.get_ep()} {self.get_wff()})')
   # END Eventuality
 
 
