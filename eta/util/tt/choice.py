@@ -187,9 +187,9 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
   # No directive, i.e., pattern node
   # ````````````````````````````````````
   if not directive:
+    newparts = []
     # If pattern is disjunctive, try to match any option within the disjunction
     if pattern[0] == ':or':
-      newparts = []
       for pattern_option in pattern[1:]:
         newparts_option = match1(pattern_option, clause, feats)
         if not newparts and newparts_option:
