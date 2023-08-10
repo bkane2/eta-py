@@ -103,7 +103,7 @@ def standardize(str):
 	str = str.replace('--', '-').replace('_', ' ')
 	str = re.sub(r'([.|,|!|?|:|;|-])', r' \1 ', str)
 	str = re.sub(r'[\s]+', ' ', str)
-	return str.strip()
+	return str.lower().strip()
 
 
 
