@@ -1,6 +1,8 @@
 import re
 
 import eta.util.file as file
+from eta.util.general import standardize
+from eta.discourse import Utterance, DialogueTurn
 from eta.transducers.base import *
 from eta.util.gpt import generate_gpt
 from eta.lf import parse_eventuality
@@ -11,11 +13,13 @@ def reasoning_validator(prompt, resp):
   return facts
 
 PROMPTS = {
-  'reasoning' : file.read_file('resources/prompts/reasoning.txt')
+  'reasoning' : file.read_file('resources/prompts/reasoning.txt'),
+  'gist' : file.read_file('resources/prompts/gist.txt')
 }
 
 VALIDATORS = {
-  'reasoning' : [reasoning_validator]
+  'reasoning' : [reasoning_validator],
+  'gist' : []
 }
 
 
@@ -46,20 +50,26 @@ class GPTReasoningTransducer(GPTTransducer, ReasoningTransducer):
     new_facts = []
     if facts:
       new_facts_str = super().__call__({'facts': '\n'.join([fact.get_nl() for fact in facts])})
-      new_facts = [parse_eventuality(fact) for fact in new_facts_str]
+      new_facts = [parse_eventuality(standardize(fact)) for fact in new_facts_str]
     return new_facts
   
 
 class GPTGistTransducer(GPTTransducer, GistTransducer):
   def __init__(self):
-    # TODO
-    pass
-    # super().__init__(PROMPTS['gist'], [])
+    super().__init__(PROMPTS['gist'], VALIDATORS['gist'])
 
-  def __call__(self, utt, prev_gist, history):
-    """str, str, List[str] -> Eventuality"""
-    # TODO
-    pass
+  def __call__(self, utt, conversation_log):
+    """str, List[DialogueTurn] -> List"""
+    prev_utt = 'Hello.'
+    eta_turns = [t for t in conversation_log if t.agent == '^me']
+    if eta_turns:
+      prev_utt = eta_turns[-1].utterance.words
+    gist = super().__call__({'prev-utt': prev_utt, 'utt': utt})
+    if gist == 'NONE':
+      return []
+    # TODO: ultimately we should split each sentence into a separate gist clause,
+    # but this likely requires coref.
+    return [['^you', 'paraphrase-to.v', '^me', f"{standardize(gist)}"]]
 
 
 class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
@@ -72,3 +82,55 @@ class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
     """str, str, List[str] -> Eventuality"""
     # TODO
     pass
+
+
+def test1():
+  facts = ['it is snowing outside .', 'i am mortal .', 'i own a cat , and my cat is nice .', 'i own skiis .', '^you say-to ^me "I like to go skiing" .']
+  test = GPTReasoningTransducer()
+  new_facts = test([parse_eventuality(f) for f in facts])
+  for f in new_facts:
+    print(f)
+
+
+def test2():
+  test = GPTGistTransducer()
+
+  clog = []
+  utt = 'where is your pain ?'
+  print(test(utt, clog))
+
+  clog = [
+    DialogueTurn('^me', Utterance('do i really need chemotherapy ?'), gists=['do i need chemotherapy ?']),
+    DialogueTurn('^you', Utterance('hmm ...'))
+  ]
+  utt = 'yes , i would recommend it . did you come here with anyone today ?'
+  print(test(utt, clog))
+
+
+def test3():
+  test = GPTParaphraseTransducer()
+
+  prev_gist = ''
+  gist = 'this is an out of domain gist clause .'
+  hist = []
+  print(test(gist, prev_gist, hist))
+
+  prev_gist = 'the prognosis is that i cannot be cured .'
+  gist = 'i drove here today .'
+  hist = []
+  print(test(gist, prev_gist, hist))
+
+  prev_gist = 'the prognosis is that i cannot be cured .'
+  gist = 'what is my prognosis ?'
+  hist = []
+  print(test(gist, prev_gist, hist))
+
+
+def main():
+  # test1()
+  test2()
+  # test3()
+
+
+if __name__ == '__main__':
+  main()

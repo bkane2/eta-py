@@ -1,5 +1,6 @@
 from eta.transducers.base import *
 from eta.lf import parse_eventuality
+from eta.discourse import Utterance, DialogueTurn
 
 from eta.util.general import listp, cons, remove_duplicates
 from eta.util.tt.choice import choose_result_for
@@ -44,18 +45,18 @@ class TTTransducer(Transducer):
     directive, result = choice
     if directive == ':out':
       result = ' '.join(result)
-      return parse_eventuality(f'(^me say-to.v ^you "{result}")', expectation=True)
+      return ['^me', 'say-to.v', '^you', f"{result}"]
     elif directive == ':gist':
       # The legacy choice tree format supported 'topic keys', but we ignore those for now
       if listp(result[0]):
         result = result[0]
       result = ' '.join(result)
-      return parse_eventuality(f'(^you paraphrase-to.v ^me "{result}")')
+      return ['^you', 'paraphrase-to.v', '^me', f"{result}"]
     elif directive == ':nl':
       result = ' '.join(result)
-      return parse_eventuality(result)
+      return result
     elif directive == ':ulf':
-      return parse_eventuality(result)
+      return result
     elif directive in [':schema', ':schemas', ':schema+args', ':subtrees', ':raw']:
       return result
 
@@ -69,19 +70,23 @@ class TTReasoningTransducer(TTTransducer, ReasoningTransducer):
 
   def __call__(self, facts):
     """List[Eventuality] -> List[Eventuality]"""
-    return super().__call__([fact.get_nl() for fact in facts])
+    new_facts = super().__call__([fact.get_nl() for fact in facts])
+    return [parse_eventuality(fact) for fact in new_facts]
   
 
 class TTGistTransducer(TTTransducer, GistTransducer):
   def __init__(self, rule_dirs):
     super().__init__(rule_dirs, 'gist')
 
-  def __call__(self, utt, prev_gist, history):
-    """str, str, List[str] -> Eventuality"""
-    ret = super().__call__([prev_gist.split(), utt.split()])
-    if ret:
-      return ret[0]
-    return ret
+  def __call__(self, utt, conversation_log):
+    """str, List[DialogueTurn] -> List"""
+    prev_gist = ''
+    eta_turns = [t for t in conversation_log if t.agent == '^me']
+    if eta_turns:
+      prev_gists = eta_turns[-1].gists
+      if prev_gists:
+        prev_gist = prev_gists[0]
+    return super().__call__([prev_gist.split(), utt.split()])
   
 
 class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
@@ -107,15 +112,16 @@ def test1():
 def test2():
   test = TTGistTransducer('avatars/sophie-gpt/rules')
 
-  prev_gist = ''
+  clog = []
   utt = 'where is your pain ?'
-  hist = []
-  print(test(utt, prev_gist, hist))
+  print(test(utt, clog))
 
-  prev_gist = 'do i need chemotherapy ?'
-  utt = 'yes , i would recommend it .'
-  hist = []
-  print(test(utt, prev_gist, hist))
+  clog = [
+    DialogueTurn('^me', Utterance('do i really need chemotherapy ?'), gists=['do i need chemotherapy ?']),
+    DialogueTurn('^you', Utterance('hmm ...'))
+  ]
+  utt = 'yes , i would recommend it . did you come here with anyone today ?'
+  print(test(utt, clog))
 
 
 def test3():
@@ -139,10 +145,8 @@ def test3():
 
 def main():
   # test1()
-  # test2()
-  test3()
-
-
+  test2()
+  # test3()
 
 
 if __name__ == '__main__':
