@@ -79,6 +79,17 @@ class PlanNode:
     bind_rec(self, var, val, True, True)
     return self
   
+  def unbind(self, var):
+    """Recursively unbinds a variable throughout a plan structure."""
+    def unbind_rec(node, var, left, right):
+      node.step.unbind(var)
+      if node.prev and left:
+        unbind_rec(node.prev, var, True, False)
+      if node.next and right:
+        unbind_rec(node.next, var, False, True)
+    unbind_rec(self, var, True, True)
+    return self
+  
   def status(self, before=3, after=5, schemas=False):
     """
     Prints the current plan status (i.e., steps that are currently in
@@ -212,8 +223,7 @@ class PlanStep:
     obligations = self.obligations
     if self.supersteps and not obligations:
       obligations = self.supersteps[0].obligations
-    obligations = [o for o in obligations if o != 'and']
-    return [obligations] if obligations else []
+    return obligations
 
   def add_superstep(self, superstep):
     """
@@ -244,10 +254,20 @@ class PlanStep:
     """Recursively binds a variable throughout a plan-step subtree."""
     def bind_rec(step, var, val):
       step.event.bind(var, val)
-      step.obligations = subst(val, var, step.obligations)
+      [o.bind(var, val) for o in step.obligations]
       [schema.bind(var, val) for schema in self.schemas]
       [superstep.bind(var, val) for superstep in self.supersteps]
     bind_rec(self, var, val)
+    return self
+  
+  def unbind(self, var):
+    """Recursively unbinds a variable throughout a plan-step subtree."""
+    def unbind_rec(step, var):
+      step.event.unbind(var)
+      [o.unbind(var) for o in step.obligations]
+      [schema.unbind(var) for schema in self.schemas]
+      [superstep.unbind(var) for superstep in self.supersteps]
+    unbind_rec(self, var)
     return self
 
   def serialize(self, reverse=False, schemas=False):

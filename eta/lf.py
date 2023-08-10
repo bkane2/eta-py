@@ -56,6 +56,11 @@ class Var:
   
   def bind(self, val):
     self.val = val
+    return self
+
+  def unbind(self):
+    self.val = None
+    return self
 
   def __str__(self):
     if self.val:
@@ -74,6 +79,11 @@ class LF:
 
   def bind(self, var, val):
     self.bindings[var] = val
+    return self
+  
+  def unbind(self, var):
+    if var in self.bindings:
+      self.bindings.pop(var)
     return self
   
   def replacevar(self, var1, var2):
@@ -145,6 +155,16 @@ class Eventuality:
       self.ulf.bind(var, val)
     if self.elf:
       self.elf.bind(var, val)
+    return self
+
+  def unbind(self, var):
+    if var in self.bindings:
+      self.bindings.pop(var)
+    if self.ulf:
+      self.ulf.unbind(var)
+    if self.elf:
+      self.elf.unbind(var)
+    return self
 
   def replacevar(self, var1, var2):
     self.bindings = dict_substall_keys(self.bindings, [(var1, var2)])
@@ -215,6 +235,16 @@ class Condition(Eventuality):
         cond.bind(var, val)
       for e in eventualities:
         e.bind(var, val)
+    return self
+
+  def unbind(self, var):
+    super().unbind(var)
+    for (cond, eventualities) in self.conditions:
+      if isinstance(cond, ULF):
+        cond.unbind(var)
+      for e in eventualities:
+        e.unbind(var)
+    return self
 
   def replacevar(self, var1, var2):
     super().replacevar(var1, var2)
@@ -243,6 +273,15 @@ class Repetition(Eventuality):
       self.condition.bind(var, val)
     for e in self.eventualities:
       e.bind(var, val)
+    return self
+
+  def unbind(self, var):
+    super().unbind(var)
+    if isinstance(self.condition, ULF):
+      self.condition.unbind(var)
+    for e in self.eventualities:
+      e.unbind(var)
+    return self
 
   def replacevar(self, var1, var2):
     super().replacevar(var1, var2)

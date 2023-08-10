@@ -91,6 +91,17 @@ class Schema:
         eventuality.bind(var, val)
     return self
   
+  def unbind(self, var):
+    """Unbinds a variable within a schema and all sub-formulas."""
+    if not var in self.vars:
+      return self
+    if var in self.bindings:
+      self.bindings.pop(var)
+    for sec in self.sections.values():
+      for eventuality in sec:
+        eventuality.unbind(var)
+    return self
+  
   def bind_args(self, args):
     """
     Substitute the successive arguments in the 'args' list for successive
