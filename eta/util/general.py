@@ -99,9 +99,18 @@ def indent(n):
 	return "  "*(n-1)
 
 
+def standardize(str):
+	str = str.replace('--', '-').replace('_', ' ')
+	str = re.sub(r'([.|,|!|?|:|;|-])', r' \1 ', str)
+	str = re.sub(r'[\s]+', ' ', str)
+	return str
+
+
+
 # ``````````````````````````````````````
 # List util
 # ``````````````````````````````````````
+
 
 
 def rec_replace(old, new, lst):
