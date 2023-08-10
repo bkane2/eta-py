@@ -1,4 +1,4 @@
-from eta.constants import DEFAULT_IMPORTANCE
+from eta.constants import DEFAULT_IMPORTANCE, TELIC_VERBS
 from eta.util.general import get_time, cons_dict, listp, atom, cons, variablep, to_key, dict_get, dict_rem, dict_rem_val
 from eta.lf import parse_eventuality
 
@@ -40,6 +40,10 @@ class Memory:
       end_wff = ['^now', 'during', self.event.get_ep()]
     return (start_wff, end_wff)
   
+  def is_telic(self):
+    wff = self.get_wff()
+    return listp(wff) and any([v in wff for v in TELIC_VERBS])
+  
   def __hash__(self):
     return hash(self.event)
   
@@ -53,11 +57,13 @@ class Memory:
 class MemoryStorage:
   """
   Stores memories, keyed on the episode names as well as predicates of the ULF formula (if any).
+  Also maintain a set of facts that are "true now", i.e., whose end time is None.
   """
   def __init__(self):
     self.memories = set()
     self.ep_ht = {}
     self.wff_ht = {}
+    self.context = set()
 
   def _get_wff_keys(self, wff):
     """
@@ -79,7 +85,23 @@ class MemoryStorage:
       for i in range(2, len(wff)):
         keys.append(to_key([None, wff[1]]+[None for _ in wff[2:i]]+[wff[i]]+[None for _ in wff[i+1:]]))
     return keys
-
+  
+  def access(self, memory):
+    """
+    'Accesses' a memory by updating the most recent access date of that memory.
+    If the event is telic (i.e., assumed to be "instantaneous"), remove it from the context.
+    """
+    if memory not in self.memories:
+      return None
+    memory.update_last_access()
+    if memory.is_telic():
+      self.remove_from_context(memory)
+    return memory
+  
+  def access_all(self, memories):
+    """TBC"""
+    return [self.access(memory) for memory in memories]
+    
   def store(self, memory):
     """TBC"""
     self.memories.add(memory)
@@ -88,6 +110,7 @@ class MemoryStorage:
     cons_dict(self.ep_ht, ep, memory)
     for key in self._get_wff_keys(wff):
       cons_dict(self.wff_ht, key, memory)
+    self.context.add(memory)
 
   def store_all(self, memories):
     """TBC"""
@@ -103,11 +126,22 @@ class MemoryStorage:
     dict_rem_val(self.ep_ht, ep, memory)
     for key in self._get_wff_keys(wff):
       dict_rem_val(self.wff_ht, key, memory)
+    if memory in self.context:
+      self.context.remove(memory)
 
   def remove_all(self, memories):
     """TBC"""
     [self.remove(memory) for memory in memories]
 
+  def remove_from_context(self, memory):
+    """TBC"""
+    ep = memory.get_ep()
+    memories = self.ep_ht[ep]
+    for m in memories:
+      if m in self.context:
+        m.end()
+        self.context.remove(m)
+      
   def instantiate(self, event, importance=DEFAULT_IMPORTANCE):
     """TBC"""
     memory = Memory(event, importance=importance)
@@ -122,6 +156,10 @@ class MemoryStorage:
   def get_episode(self, ep):
     """TBC"""
     return dict_get(self.ep_ht, ep)
+  
+  def access_episode(self, ep):
+    """TBC"""
+    return self.access_all(self.get_episode(ep))
 
   def get_matching(self, pred_patt):
     """Retrieve a list of memories according to a given pred_patt, which
@@ -154,6 +192,19 @@ class MemoryStorage:
             selected.append(m)
         return selected
       
+  def access_matching(self, pred_patt):
+    """TBC"""
+    return self.access_all(self.get_matching(pred_patt))
+      
+  def get_from_context(self, pred_patt):
+    """TBC"""
+    memories = self.get_matching(pred_patt)
+    return [m for m in memories if m in self.context]
+  
+  def access_from_context(self, pred_patt):
+    """TBC"""
+    return self.access_all(self.get_from_context(pred_patt))
+      
   def remove_episode(self, ep):
     """TBC"""
     memories = self.get_episode(ep)
@@ -176,9 +227,59 @@ class MemoryStorage:
     """
     pass
 
+  def __str__(self):
+    return '\n'.join([str(memory) for memory in self.memories])
   
 
-def main():
+def test2():
+  sep = '\n----------------------------\n'
+
+  test = MemoryStorage()
+  fact1 = parse_eventuality('(me say-to.v you "Test")', ep='e1')
+  fact2 = parse_eventuality('(me be.v happy.a)', ep='e2')
+  fact3 = parse_eventuality('(you reply-to.v e1)', ep='e3')
+  test.instantiate(fact1)
+  test.instantiate(fact2)
+  test.instantiate(fact3)
+
+  for m in test.context:
+    print(m)
+  print(sep)
+
+  for m in test.get_matching(['?x', 'say-to.v', '?y', '?words']):
+    print(m)
+  print(sep)
+
+  for m in test.context:
+    print(m)
+  print(sep)
+
+  for m in test.access_matching(['?x', 'say-to.v', '?y', '?words']):
+    print(m)
+  print(sep)
+
+  for m in test.context:
+    print(m)
+  print(sep)
+
+  for m in test.access_matching(['?x', 'be.v', 'happy.a']):
+    print(m)
+  print(sep)
+
+  for m in test.context:
+    print(m)
+  print(sep)
+
+  for m in test.access_from_context(['?x', 'reply-to.v', '?y']):
+    print(m)
+  print(sep)
+
+  for m in test.access_from_context(['?x', 'reply-to.v', '?y']):
+    print(m)
+  print(sep)
+
+
+def test1():
   sep = '\n----------------------------\n'
 
   test = MemoryStorage()
@@ -212,6 +313,13 @@ def main():
   for m in test.get_matching('go-to.v'):
     print(m)
   print(sep)
+
+  print(test.context)
+
+
+def main():
+  # test1()
+  test2()
   
 
 if __name__ == '__main__':
