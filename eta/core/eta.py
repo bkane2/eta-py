@@ -16,12 +16,11 @@ from eta.discourse import Utterance, DialogueTurn
 from eta.memory import MemoryStorage
 from eta.schema import from_lisp_dirs
 from eta.plan import init_plan_from_eventualities
-# import eta.core.execution as execution
-# import eta.core.perception as perception
-# import eta.core.planning as planning
-# import eta.core.reasoning as reasoning
+
 from eta.core.perception import perception_loop
 from eta.core.reasoning import reasoning_loop
+from eta.core.planning import planning_loop
+from eta.core.execution import execution_loop
 
 
 class DialogueState():
@@ -115,6 +114,12 @@ class DialogueState():
   def get_plan(self):
     with self._lock:
       return self.plan
+    
+  def set_plan(self, plan):
+    if plan is None:
+      return
+    with self._lock:
+      self.plan = plan
     
   def do_continue(self):
     """Check whether to continue with the current dialogue."""
@@ -319,17 +324,25 @@ def eta(config_agent, config_user):
 
     perception = Process(target=perception_loop, args=(ds,))
     reasoning = Process(target=reasoning_loop, args=(ds,))
+    planning = Process(target=planning_loop, args=(ds,))
+    execution = Process(target=execution_loop, args=(ds,))
 
     perception.start()
     reasoning.start()
+    planning.start()
+    execution.start()
 
     perception.join()
     reasoning.join()
+    planning.join()
+    execution.join()
 
     # Write any remaining output
     ds.write_output_buffer()
 
     print(ds.get_memory())
+    print()
+    print(ds.get_plan())
 
     print(f'total cost of session: ${ds.cost()}')
 
