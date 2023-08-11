@@ -3,10 +3,8 @@ from time import sleep
 from eta.constants import *
 import eta.util.file as file
 from eta.discourse import Utterance, DialogueTurn, get_prior_turn
-from eta.util.general import standardize, episode_name, append, push, remove_duplicates
-from eta.util.gpt import generate_gpt
+from eta.util.general import standardize, episode_name, append, remove_duplicates
 from eta.lf import parse_eventuality
-import eta.util.buffer as buffer
 
 PROMPT_GIST = file.read_file('resources/prompts/gist.txt')
 
