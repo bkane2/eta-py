@@ -3,6 +3,6 @@
 ))
 
 
-(READRULES '*clause-semantics-tree*
+(READRULES '*semantic*
 '(
 ))

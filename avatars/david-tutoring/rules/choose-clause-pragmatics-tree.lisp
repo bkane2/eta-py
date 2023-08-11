@@ -6,7 +6,7 @@
 ))
 
 
-(READRULES '*clause-pragmatics-tree*
+(READRULES '*pragmatic*
 ; TODO: It seems that the ungainly 'spatial-question' in the gist clause here can
 ; now be removed, since we can resolve such a gist clause to an ask-question.v action,
 ; adding an appropriate conditional in the tutoring/QA schemas.

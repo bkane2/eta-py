@@ -1,4 +1,4 @@
-(READRULES '*clause-pragmatics-tree*
+(READRULES '*pragmatic*
 ;``````````````````````````````````````````````````
 ; Transduction tree for inferring additional facts from the
 ; gist-clause interpretations of user input.

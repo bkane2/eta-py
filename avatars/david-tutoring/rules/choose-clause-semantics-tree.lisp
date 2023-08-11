@@ -4,7 +4,7 @@
 ))
 
 
-(READRULES '*clause-semantics-tree*
+(READRULES '*semantic*
 '(
   1 (spatial-question 0)
     2 (*spatial-question-ulf-tree* (2)) (0 :subtree+clause)

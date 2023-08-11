@@ -29,7 +29,7 @@
 ;
 ; 2 (^me know.v (ans-to ')) (0 :ulf)
 ;
-(READRULES '*clause-pragmatics-tree*
+(READRULES '*pragmatic*
 '(
   1 (0 my cancer 2 gotten worse 0)
     2 (^me know.v (ans-to '(Has the cancer gotten worse ?))) (0 :ulf)
