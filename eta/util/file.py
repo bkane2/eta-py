@@ -1,4 +1,6 @@
 import json
+import os
+from pathlib import Path
 
 def read_file(fname):
   with open(fname, 'r') as f:
@@ -10,7 +12,7 @@ def read_lines(fname):
   
 
 def write_file(fname, data):
-  with open(fname, 'w') as f:
+  with open(fname, 'w+') as f:
     f.write(data)
   
 
@@ -20,10 +22,28 @@ def load_json(fname):
   
 
 def write_json(fname, data):
-  with open(fname, 'w') as f:
+  with open(fname, 'w+') as f:
     json.dump(data, f)
 
 
 def clear(fname):
-  with open(fname, 'w') as f:
+  with open(fname, 'w+') as f:
     f.write('')
+
+
+def exists(fname):
+  return os.path.isfile(fname)
+
+
+def remove(fname):
+  if exists(fname):
+    os.remove(fname)
+
+
+def ensure_dir_exists(dirname):
+  Path(dirname).mkdir(parents=True, exist_ok=True)
+
+
+def ensure_file_exists(fname):
+  ensure_dir_exists('/'.join(fname.split('/')[:-1]))
+  clear(fname)

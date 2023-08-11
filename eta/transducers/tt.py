@@ -1,7 +1,8 @@
 from eta.transducers.base import *
 from eta.lf import parse_eventuality
-from eta.discourse import Utterance, DialogueTurn
+from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 
+from eta.constants import ME
 from eta.util.general import listp, cons, remove_duplicates
 from eta.util.tt.choice import choose_result_for
 from eta.util.tt.parse import from_lisp_dirs
@@ -45,13 +46,13 @@ class TTTransducer(Transducer):
     directive, result = choice
     if directive == ':out':
       result = ' '.join(result)
-      return ['^me', 'say-to.v', '^you', f"{result}"]
+      return result
     elif directive == ':gist':
       # The legacy choice tree format supported 'topic keys', but we ignore those for now
       if listp(result[0]):
         result = result[0]
       result = ' '.join(result)
-      return ['^you', 'paraphrase-to.v', '^me', f"{result}"]
+      return result
     elif directive == ':nl':
       result = ' '.join(result)
       return result
@@ -79,14 +80,32 @@ class TTGistTransducer(TTTransducer, GistTransducer):
     super().__init__(rule_dirs, 'gist')
 
   def __call__(self, utt, conversation_log):
-    """str, List[DialogueTurn] -> List"""
+    """str, List[DialogueTurn] -> str"""
     prev_gist = ''
-    eta_turns = [t for t in conversation_log if t.agent == '^me']
-    if eta_turns:
-      prev_gists = eta_turns[-1].gists
+    prior_turn = get_prior_turn(conversation_log, ME)
+    if prior_turn:
+      prev_gists = prior_turn.gists
       if prev_gists:
         prev_gist = prev_gists[0]
     return super().__call__([prev_gist.split(), utt.split()])
+  
+
+class TTSemanticTransducer(TTTransducer, SemanticTransducer):
+  def __init__(self, rule_dirs):
+    super().__init__(rule_dirs, 'semantic')
+
+  def __call__(self, gist):
+    """str -> List"""
+    return super().__call__(gist.split())
+  
+
+class TTPragmaticTransducer(TTTransducer, PragmaticTransducer):
+  def __init__(self, rule_dirs):
+    super().__init__(rule_dirs, 'pragmatic')
+
+  def __call__(self, gist):
+    """str -> List"""
+    return super().__call__(gist.split())
   
 
 class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):

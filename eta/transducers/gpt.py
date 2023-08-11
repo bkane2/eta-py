@@ -1,8 +1,9 @@
 import re
 
 import eta.util.file as file
+from eta.constants import ME
 from eta.util.general import standardize
-from eta.discourse import Utterance, DialogueTurn
+from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 from eta.transducers.base import *
 from eta.util.gpt import generate_gpt
 from eta.lf import parse_eventuality
@@ -59,17 +60,41 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
     super().__init__(PROMPTS['gist'], VALIDATORS['gist'])
 
   def __call__(self, utt, conversation_log):
-    """str, List[DialogueTurn] -> List"""
+    """str, List[DialogueTurn] -> str"""
     prev_utt = 'Hello.'
-    eta_turns = [t for t in conversation_log if t.agent == '^me']
-    if eta_turns:
-      prev_utt = eta_turns[-1].utterance.words
+    prior_turn = get_prior_turn(conversation_log, ME)
+    if prior_turn:
+      prev_utt = prior_turn.utterance.words
     gist = super().__call__({'prev-utt': prev_utt, 'utt': utt})
     if gist == 'NONE':
       return []
     # TODO: ultimately we should split each sentence into a separate gist clause,
     # but this likely requires coref.
-    return [['^you', 'paraphrase-to.v', '^me', f"{standardize(gist)}"]]
+    return [standardize(gist)]
+  
+
+class GPTSemanticTransducer(GPTTransducer, GistTransducer):
+  def __init__(self):
+    # TODO
+    pass
+
+  def __call__(self, gist):
+    """str -> List"""
+    # TODO
+    ulf = []
+    return ulf
+  
+
+class PragmaticTransducer(GPTTransducer, GistTransducer):
+  def __init__(self):
+    # TODO
+    pass
+
+  def __call__(self, gist):
+    """str -> List"""
+    # TODO
+    ulf = []
+    return ulf
 
 
 class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):

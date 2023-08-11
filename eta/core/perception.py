@@ -1,6 +1,9 @@
 from time import sleep
 
+from eta.constants import *
 import eta.util.file as file
+from eta.discourse import Utterance, DialogueTurn, get_prior_turn
+from eta.util.general import standardize, episode_name, append, push, remove_duplicates
 from eta.util.gpt import generate_gpt
 from eta.lf import parse_eventuality
 import eta.util.buffer as buffer
@@ -8,71 +11,83 @@ import eta.util.buffer as buffer
 PROMPT_GIST = file.read_file('resources/prompts/gist.txt')
 
 def perception_loop(ds):
-  while not ds.get_quit_conversation():
+  while ds.do_continue():
     sleep(.1)
 
-    # 1. Observe all facts from registered perception servers
+    # Observe all facts from registered perception servers
     for source in ds.get_perception_servers():
-      speech = True if source in ['terminal', 'audio'] else False
-      facts = observe(ds.get_io_path(f'{source}.txt'), speech=speech)
-      if facts:
-        ds.add_all_to_context(facts)
-        ds.add_all_to_buffer(facts, 'perceptions')
+      inputs = observe(ds.get_io_path(f'in/{source}.txt'))
 
-        if any(['bye' in fact.nl for fact in facts]):
-          ds.set_quit_conversation(True)
+      # Shortcut for quitting conversation
+      if any([input == ':q' for input in inputs]):
+        ds.set_quit_conversation(True)
 
-    # perception = ds.pop_buffer('perceptions')
-
-    # 2. Interpret gist clauses for speech using previous conversation history,
-    # adding "you paraphrase to me" fact to context and to queue for further processing
-
-    # 3. Interpret other facts in context of current plan, adding new facts to context
-    # and to queue for further processing
-
-    
-    
+      # Process utterances/observations
+      if source == 'speech':
+        observations = process_utterances(inputs, ds)
+      else:
+        observations = process_observations(inputs)
+      ds.add_all_to_context(observations)
+      ds.add_all_to_buffer(observations, 'observations')
+      ds.add_all_to_buffer(observations, 'inferences')
 
 
-def observe(source, speech=False):
-  """str -> List[Eventuality]"""
+def observe(source):
+  """str -> List[str]"""
+  if not file.exists(source):
+    return []
   inputs = file.read_lines(source)
-  file.clear(source)
+  file.remove(source)
+  return inputs
+
+
+def process_utterances(inputs, ds):
+  """List[str], List[DialogueTurn] -> List[Eventuality]"""
+  observations = []
+  for input in inputs:
+    ep = episode_name()
+    input = standardize(input)
+    observations += [parse_eventuality([YOU, SAY_TO, ME, f'"{input}"'], ep=ep)]
+
+    # Interpret gist clauses using conversation log
+    conversation_log = ds.get_conversation_log()
+    gists = ds.apply_transducer('gist', input, conversation_log)
+    observations += [parse_eventuality([YOU, PARAPHRASE_TO, ME, f'"{gist}"'], ep=ep) for gist in gists]
+
+    # Interpret semantic meanings of gist clauses
+    semantics = append([ds.apply_transducer('semantic', gist) for gist in gists])
+    observations += [parse_eventuality([YOU, ARTICULATE_TO, ME, semantic], ep=ep) for semantic in semantics]
+
+    # Interpret pragmatic meanings of gist clauses
+    pragmatics = append([ds.apply_transducer('pragmatic', gist) for gist in gists])
+    observations += [parse_eventuality(pragmatic, ep=ep) for pragmatic in pragmatics]
+
+    # An utterance may always be considered a reply to the preceeding Eta turn, if any
+    prior_turn = get_prior_turn(conversation_log, ME)
+    if prior_turn:
+      prior_ep = prior_turn.ep
+      observations += [parse_eventuality([YOU, REPLY_TO, prior_ep], ep=ep)]
+
+    # Add user turn to conversation log
+    ds.log_turn(DialogueTurn(
+      agent=YOU,
+      utterance=Utterance(input),
+      gists=gists,
+      semantics=semantics,
+      pragmatics=pragmatics,
+      ep=ep
+    ))
+
+  return remove_duplicates(observations, order=True)
+
   
-  if speech:
-    facts = [parse_eventuality(f'(^you say-to.v ^me "{input.lower()}")') for input in inputs]
-  else:
-    facts = [parse_eventuality(input.lower()) for input in inputs]
-  return facts
-  # if 'user' in source and facts:
-  #   return flatten([process_utterance(utt) for utt in facts])
-  # else:
-  #   return facts
-
-
-def process_utterance(utt):
-  """str -> (str, str)"""
-  facts = [f'you say to me "{utt}"']
-  gist = gist_interpretation(utt, prev_utt="I like skiing.")
-  if gist:
-    facts.append(f'you paraphrase to me "{gist}"')
-  return facts
-
-
-def gist_interpretation(utt, prev_utt=None):
-  """str, Optional[str] -> str"""
-  if not prev_utt:
-    prev_utt = 'Hello.'
-  prompt = PROMPT_GIST.replace('<utt>', utt).replace('<prev-utt>', prev_utt)
-  gist, _ = generate_gpt(prompt)
-  if gist == 'NONE':
-    return None
-  return gist
-
+def process_observations(inputs):
+  """List[str] -> List[Eventuality]"""
+  return [parse_eventuality(standardize(input)) for input in inputs]
+    
 
 def main():
-  for fact in observe('io/user.txt', speech=True):
-    print(fact)
+  pass
 
 
 if __name__ == "__main__":

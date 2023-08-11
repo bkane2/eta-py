@@ -6,11 +6,14 @@ from multiprocessing import Lock
 from multiprocessing import Value
 from multiprocessing.managers import BaseManager
 
+from eta.constants import IO_PATH, DEFAULT_START
 from eta.util.general import gentemp, clear_symtab, remove_duplicates, append
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
 from eta.lf import Eventuality
+from eta.discourse import Utterance, DialogueTurn
+from eta.memory import MemoryStorage
 from eta.schema import from_lisp_dirs
 from eta.plan import init_plan_from_eventualities
 # import eta.core.execution as execution
@@ -19,9 +22,6 @@ from eta.plan import init_plan_from_eventualities
 # import eta.core.reasoning as reasoning
 from eta.core.perception import perception_loop
 from eta.core.reasoning import reasoning_loop
-
-IO_PATH = 'io/'
-DEFAULT_START = 'have-eta-dialog.v'
 
 
 class DialogueState():
@@ -55,12 +55,11 @@ class DialogueState():
     self.reference_list = []
     self.equality_sets = {}
     self.conversation_log = []
-    self.memory = []
-    self.context = []
-    self.kb = []
+    self.memory = MemoryStorage()
     self.timegraph = self._make_timegraph()
-    self.time = gentemp("NOW")
     self.transducers = self.config_agent.pop('transducers')
+
+    self._create_session_io_files()
   
   # === session accessors ===
 
@@ -103,60 +102,27 @@ class DialogueState():
     with self._lock:
       self.quit_conversation = quit
 
-  # === dialogue accessors ===
+  # === schema accessors ===
+
+  # TODO
+
+  # === plan accessors ===
 
   def has_plan(self):
     with self._lock:
       return self.plan is not None
-
-  def get_context(self):
-    with self._lock:
-      return self.context
     
-  def add_to_context(self, fact):
+  def do_continue(self):
+    """Check whether to continue with the current dialogue."""
+    return self.has_plan() and not self.get_quit_conversation()
+  
+  def advance_plan(self):
+    """Advances the plan to the next step, or signals to quit the conversation if none exists."""
     with self._lock:
-      self.context.append(fact)
-
-  def add_all_to_context(self, facts):
-    [self.add_to_context(fact) for fact in facts]
-
-  def add_to_buffer(self, fact, type):
-    with self._lock:
-      buffer.enqueue(fact, self.buffers[type])
-
-  def add_all_to_buffer(self, facts, type):
-    with self._lock:
-      buffer.enqueue_ordered(facts, self.buffers[type])
-
-  def get_buffer(self, type):
-    with self._lock:
-      return buffer.iterate(self.buffers[type])
-    
-  def pop_buffer(self, type):
-    with self._lock:
-      return buffer.pop_item(self.buffers[type])
-    
-  def pop_all_buffer(self, type):
-    with self._lock:
-      return buffer.pop_all(self.buffers[type])
-    
-  def apply_transducer(self, type, data):
-    with self._lock:
-      if isinstance(self.transducers[type], list):
-        return remove_duplicates(append([t(data) for t in self.transducers[type]]), order=True)
+      if self.has_plan() and self.plan.next:
+        self.plan = self.plan.next
       else:
-        return self.transducers[type](data)
-    
-  # === other ===
-
-  def bind(self, var, val):
-    """
-    Bind a variable throughout the current dialogue plan.
-    """
-    with self._lock:
-      if self.plan:
-        self.plan.bind(var, val)
-      return self
+        self.quit_conversation = True
     
   def init_plan_from_schema(self, predicate, args=[]):
     """
@@ -186,6 +152,88 @@ class DialogueState():
       self.schema_instances[schema_instance.id] = schema_instance
       
       return init_plan_from_eventualities(schema_instance.get_section('episodes'), schema=schema_instance)
+    
+  # === buffer accessors ===
+
+  def add_to_buffer(self, fact, type):
+    with self._lock:
+      buffer.enqueue(fact, self.buffers[type])
+
+  def add_all_to_buffer(self, facts, type):
+    with self._lock:
+      buffer.enqueue_ordered(facts, self.buffers[type])
+
+  def get_buffer(self, type):
+    with self._lock:
+      return buffer.iterate(self.buffers[type])
+    
+  def pop_buffer(self, type):
+    with self._lock:
+      return buffer.pop_item(self.buffers[type])
+    
+  def pop_all_buffer(self, type):
+    with self._lock:
+      return buffer.pop_all(self.buffers[type])
+
+  # === reference list accessors ===
+
+  # TODO 
+
+  # === equality set accessors ===
+
+  # TODO 
+
+  # === conversation log accessors ===
+
+  def get_conversation_log(self):
+    with self._lock:
+      return self.conversation_log
+    
+  def log_turn(self, turn):
+    with self._lock:
+      self.conversation_log.append(turn)
+
+  # === memory accessors ===
+
+  def add_to_context(self, fact):
+    with self._lock:
+      self.memory.instantiate(fact)
+
+  def add_all_to_context(self, facts):
+    [self.add_to_context(fact) for fact in facts]
+
+  def get_memory(self):
+    with self._lock:
+      return self.memory
+
+  # === timegraph accessors ===
+
+  # TODO
+
+  # === transducer accessors ===
+    
+  def apply_transducer(self, type, *args):
+    with self._lock:
+      if isinstance(self.transducers[type], list):
+        return remove_duplicates(append([t(*args) for t in self.transducers[type]]), order=True)
+      else:
+        return self.transducers[type](*args)
+    
+  # === other ===
+
+  def bind(self, var, val):
+    """Bind a variable throughout the current dialogue state."""
+    with self._lock:
+      if self.plan:
+        self.plan.bind(var, val)
+      return self
+    
+  def unbind(self, var):
+    """Unbinds a variable throughout the current dialogue state."""
+    with self._lock:
+      if self.plan:
+        self.plan.unbind(var)
+      return self
 
   def cost(self):
     """Compute the accumulated (monetary) cost of each transducer for this session."""
@@ -198,9 +246,18 @@ class DialogueState():
           cost += t.cost()
     return cost
   
+  def write_output_buffer(self):
+    """Writes the output buffer (a list of Utterances)"""
+    output = ' '.join([utt.words for utt in self.output_buffer])
+    affects = [utt.affect for utt in self.output_buffer if utt.affect != 'neutral']
+    affect = affects[0] if affects else 'neutral'
+    affect = 'neutral'
+    file.write_file(self.get_io_path('turn-output.txt'), output)
+    file.write_file(self.get_io_path('turn-affect.txt'), affect)
+    self.output_buffer = []
+  
   def print_schema_predicates(self, surface_english=False):
-    """Prints all of the stored schema predicates 
-      (if :surface-english t is given, convert from ULF to words))."""
+    """Prints all of the stored schema predicates."""
     for predicate in self.schemas.keys():
       if surface_english:
         print(predicate.split('.')[0].replace('-', ' ').lower())
@@ -212,30 +269,38 @@ class DialogueState():
     for schema in self.schema_instances.values():
       print(schema.format(no_bind))
 
-  def print_plan_var_table(self):
-    """Prints the entries in the plan variable table."""
-    print(' ---- PLAN VAR TABLE: ----------')
-    for var, pairs in self.plan_var_table.items():
-      print(f'{var}:')
-      for pair in pairs:
-        print(f'  {pair}')
-    print('---------------------------------')
-
   # === helpers ===
 
   def _make_buffers(self):
     return {
-      'perceptions' : [],
-      'gists' : [],
-      'semantics' : [],
-      'pragmatics' : [],
+      'observations' : [],
+      # 'interpretations' : [],
       'inferences' : [],
-      'actions' : []
+      'actions' : [],
+      'plans' : []
     }
   
   def _make_timegraph(self):
     return None
   
+  def _create_session_io_files(self):
+    file.ensure_dir_exists(self.get_io_path())
+    file.ensure_dir_exists(self.get_io_path('in/'))
+    file.ensure_dir_exists(self.get_io_path('out/'))
+    file.ensure_dir_exists(self.get_io_path('conversation-log/'))
+    for system in self.get_perception_servers()+self.get_specialist_servers():
+      file.ensure_file_exists(self.get_io_path(f'in/{system}.txt'))
+      file.ensure_file_exists(self.get_io_path(f'out/{system}.txt'))
+    file.ensure_file_exists(self.get_io_path('conversation-log/text.txt'))
+    file.ensure_file_exists(self.get_io_path('conversation-log/affect.txt'))
+    file.ensure_file_exists(self.get_io_path('conversation-log/gist.txt'))
+    file.ensure_file_exists(self.get_io_path('conversation-log/semantic.txt'))
+    file.ensure_file_exists(self.get_io_path('conversation-log/pragmatic.txt'))
+    file.ensure_file_exists(self.get_io_path('conversation-log/obligations.txt'))
+    file.ensure_file_exists(self.get_io_path('output.txt'))
+    file.ensure_file_exists(self.get_io_path('turn-output.txt'))
+    file.ensure_file_exists(self.get_io_path('turn-affect.txt'))
+    
 
 class ProcessManager(BaseManager):
   """Manager to handle multiprocessing"""
@@ -258,8 +323,10 @@ def eta(config_agent, config_user):
     perception.join()
     reasoning.join()
 
-    for fact in ds.get_context():
-      print(fact)
+    # Write any remaining output
+    ds.write_output_buffer()
+
+    print(ds.get_memory())
 
     print(f'total cost of session: ${ds.cost()}')
 

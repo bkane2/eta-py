@@ -18,3 +18,11 @@ class DialogueTurn:
     self.pragmatics = pragmatics
     self.obligations = obligations
     self.ep = ep
+
+
+def get_prior_turn(turns, agent=None):
+  if agent:
+    agent_turns = [t for t in turns if t.agent == agent]
+    return agent_turns[-1] if agent_turns else None
+  else:
+    return turns[-1] if turns else None

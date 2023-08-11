@@ -24,9 +24,29 @@ class GistTransducer(Transducer):
     pass
 
   def __call__(self, utt, conversation_log):
-    """str, List[DialogueTurn] -> List"""
+    """str, List[DialogueTurn] -> str"""
     gists = []
     return gists
+  
+
+class SemanticTransducer(Transducer):
+  def __init__(self):
+    pass
+
+  def __call__(self, gist):
+    """str -> List"""
+    ulf = []
+    return ulf
+  
+
+class PragmaticTransducer(Transducer):
+  def __init__(self):
+    pass
+
+  def __call__(self, gist):
+    """str -> List"""
+    ulf = []
+    return ulf
   
 
 class ParaphraseTransducer(Transducer):

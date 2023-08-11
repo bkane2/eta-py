@@ -4,14 +4,12 @@ def config():
   return {
     'avatar': 'lissa-gpt',
     'avatar_name': 'Lissa',
-    'schema_dirs': 'avatars/test/schemas',
-    'start_schema': 'test.v',
-    'perception_servers': ['audio', 'world'],
+    'schema_dirs': 'avatars/lissa-gpt/schemas',
+    'start_schema': 'discuss-activities.v',
+    'perception_servers': ['speech', 'world'],
     'specialist_servers': [],
-    'emotion_tags': False,
     'transducers': {
-        'reasoning' : [TTReasoningTransducer('avatars/test/rules', 'reasoning-split', split=True),
-                       TTReasoningTransducer('avatars/test/rules', 'reasoning')]
+        'reasoning' : TTReasoningTransducer('avatars/lissa-gpt/rules')
     },
     'session_number': 1
   }
