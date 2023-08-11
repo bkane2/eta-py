@@ -70,10 +70,10 @@ def test(*lst):
 def lex_ulf(cat, word):
   return lex.to_ulf(cat, word)
 
-def string_to_list(s):
+def quote_to_list(s):
   if not isinstance(s, str):
     return s
-  return s.split()
+  return s.strip('"').split()
 
 def split_sentences(wordlist):
   result = []
