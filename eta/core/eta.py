@@ -160,6 +160,8 @@ class DialogueState():
   # === buffer accessors ===
 
   def add_to_buffer(self, x, type):
+    if x is None:
+      return
     with self._lock:
       buffer.enqueue(x, self.buffers[type])
 
