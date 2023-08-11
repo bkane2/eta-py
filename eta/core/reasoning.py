@@ -60,7 +60,14 @@ def infer_bottom_up(facts, ds):
 
 
 def suggest_possible_actions(observations, ds):
-  """Suggest possible actions to take in reaction to a list of observations."""
+  """Suggest possible actions to take in reaction to a list of observations.
+  TODO:
+  Reconsidering previous plan steps that failed to realize intended goal.
+  Considering the system's desires.
+  Suggestions from knowledge-based inference.
+  Allow urgency scores to be returned by pattern transduction rules.
+  Modify urgency scores in some way according to the order of the gist clauses (and statement vs. question)?
+  """
   actions = []
   for observation in observations:
     actions += ds.apply_transducer('reaction', observation)
