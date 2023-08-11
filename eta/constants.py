@@ -21,9 +21,6 @@ EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT = 30
 # Certainty cutoff used to generate responses given a list of relations+certainties from the blocks world
 CERTAINTY_THRESHOLD = 0.7
 
-# A list of supported speech acts
-SPEECH_ACTS = ['say-to.v', 'paraphrase-to.v', 'reply-to.v', 'react-to.v']
-
 # A list of emotions supported by Eta, where the first element is assumed to be the default.
 EMOTIONS_LIST = ['neutral', 'sad', 'happy', 'worried', 'angry']
 
@@ -35,3 +32,23 @@ DEFAULT_START = 'have-eta-dialog.v'
 
 # The default importance for new facts stored in memory
 DEFAULT_IMPORTANCE = 0.5
+
+# Common indexical variables
+ME = '^me'
+YOU = '^you'
+NOW = '^now'
+HERE = '^here'
+
+# Common predicates
+SAY_TO = 'say-to.v'
+PARAPHRASE_TO = 'paraphrase-to.v'
+REPLY_TO = 'reply-to.v'
+REACT_TO = 'react-to.v'
+ARTICULATE_TO = 'articulate-to.v'
+
+# A list of supported speech acts
+SPEECH_ACTS = [SAY_TO, PARAPHRASE_TO, REPLY_TO, REACT_TO, ARTICULATE_TO]
+
+# Telic predicates, i.e., predicates that denote events that are assumed to be "instantaneous".
+# TODO: create a more systematic classification
+TELIC_VERBS = SPEECH_ACTS + ['move.v']

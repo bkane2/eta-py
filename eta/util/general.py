@@ -155,6 +155,15 @@ def cons(lst1, lst2):
 		return [lst1, lst2]
 	
 
+def push(lst1, lst2):
+	if listp(lst2):
+		return lst2 + [lst1]
+	elif isinstance(lst2, set):
+		return lst2 | {lst1}
+	else:
+		return [lst2, lst1]
+	
+
 def atom(lst):
 	return not lst or not listp(lst)
 
