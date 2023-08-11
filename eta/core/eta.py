@@ -112,6 +112,10 @@ class DialogueState():
     with self._lock:
       return self.plan is not None
     
+  def get_plan(self):
+    with self._lock:
+      return self.plan
+    
   def do_continue(self):
     """Check whether to continue with the current dialogue."""
     return self.has_plan() and not self.get_quit_conversation()

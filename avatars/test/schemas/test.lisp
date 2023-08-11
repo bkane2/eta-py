@@ -33,11 +33,18 @@
 
 :episodes (
 
-?e1 (?s paraphrase-to.v ?h '(This is a test string \.))
+
+?e1 (?s say-to.v ?h '(This is a test string \.))
  
 ?e2 (?h reply-to.v ?e1)
 
-?e3 (?s say-to.v ?h ?words)
+?e3 (?s say-to.v ?h '(Bye \.))
+
+;; ?e1 (?s paraphrase-to.v ?h '(This is a test string \.))
+ 
+;; ?e2 (?h reply-to.v ?e1)
+
+;; ?e3 (?s say-to.v ?h ?words)
 
 )
 
