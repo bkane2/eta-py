@@ -1,6 +1,7 @@
 import glob
 from copy import deepcopy
 
+from eta.constants import ME, YOU
 from eta.util.general import (gentemp, remove_duplicates, get_keyword_contents, append, 
                               cons, flatten, subst, substall, dict_substall_keys, variablep, dual_var, duplicate_var)
 from eta.util.sexpr import read_lisp, list_to_s_expr
@@ -132,8 +133,8 @@ class Schema:
       print(f'@@@ Warning: More values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
 
       # If ^me or ^you are already in participants of the schema, remove them from the args list
-      args = [x for x in args if x != '^me'] if '^me' in participants else args
-      args = [x for x in args if x != '^you'] if '^you' in participants else args
+      args = [x for x in args if x != ME] if ME in participants else args
+      args = [x for x in args if x != YOU] if YOU in participants else args
       # Otherwise remove superfluous arguments from end of list
       if len(args) > len(vars):
         args = args[:(len(vars)-len(args))]
@@ -145,10 +146,10 @@ class Schema:
       print(f'@@@ Warning: Fewer values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
 
       # Assume first two missing args are ^me and ^you if they don't appear in the header
-      if (len(vars)-len(args)) >= 2 and not '^you' in participants:
-        args = cons('^you', args)
-      if not '^me' in participants:
-        args = cons('^me', args)
+      if (len(vars)-len(args)) >= 2 and not YOU in participants:
+        args = cons(YOU, args)
+      if not ME in participants:
+        args = cons(ME, args)
       if len(args) < len(vars):
         vars = vars[:(len(args)-len(vars))]
 
@@ -356,7 +357,7 @@ def testschema(schemas):
   print(schema, sep)
 
   print(schema.participants)
-  schema.bind_args(['^me', '^you', '"this is another test string ."'])
+  schema.bind_args([ME, YOU, '"this is another test string ."'])
   print(schema.participants)
   for f in schema.get_section('episodes'):
     print(f)
@@ -394,7 +395,7 @@ def testcopy(schemas):
     print(f)
   print(sep)
 
-  schema_clone = schema.instantiate(['^me', '^you', '"this is another test string ."'])
+  schema_clone = schema.instantiate([ME, YOU, '"this is another test string ."'])
   print(schema_clone.bindings, sep)
 
   var = schema_clone.get_section('episodes')[1].get_ep()
@@ -419,7 +420,7 @@ def testcond(schemas):
   print(schema, sep)
 
   print(schema.participants)
-  schema.bind_args(['^me', '^you', '"this is another test string ."'])
+  schema.bind_args([ME, YOU, '"this is another test string ."'])
   print(schema.participants, sep)
 
   for f in schema.get_section('episodes'):
