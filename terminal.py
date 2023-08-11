@@ -10,11 +10,10 @@ def main(args):
   while True:
     sleep(.1)
     utt = input()
+    with open(fname_out, 'w+') as f:
+      f.write(utt)
     if utt == ':q':
       break
-    else:
-      with open(fname_out, 'w+') as f:
-        f.write(utt)
 
     while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
       sleep(.1)
