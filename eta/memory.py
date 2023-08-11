@@ -91,19 +91,21 @@ class MemoryStorage:
     'Accesses' a memory by updating the most recent access date of that memory.
     If the event is telic (i.e., assumed to be "instantaneous"), remove it from the context.
     """
+    if listp(memory):
+      return [self.access(m) for m in memory]
+    
     if memory not in self.memories:
       return None
     memory.update_last_access()
     if memory.is_telic():
       self.remove_from_context(memory)
     return memory
-  
-  def access_all(self, memories):
-    """TBC"""
-    return [self.access(memory) for memory in memories]
     
   def store(self, memory):
     """TBC"""
+    if listp(memory):
+      return [self.store(m) for m in memory]
+    
     self.memories.add(memory)
     ep = memory.get_ep()
     wff = memory.get_wff()
@@ -111,15 +113,24 @@ class MemoryStorage:
     for key in self._get_wff_keys(wff):
       cons_dict(self.wff_ht, key, memory)
     self.context.add(memory)
-
-  def store_all(self, memories):
-    """TBC"""
-    [self.store(memory) for memory in memories]
+    
+    # TODO: need to refine the following code. In addition to removing the negated WFF,
+    # should the negative WFF then be kept in context? In that case, we would need to
+    # remove the negative WFF once the positive version is added, and so on...
+    # It seems like, in general, we need some sort of contradiction detection for removing
+    # facts from context once contradicting facts are added.
+    # if negative_wff(wff):
+    #   self.remove_matching_from_context(wff[1])
+    # else:
+    #   self.context.add(memory)
 
   def remove(self, memory):
     """TBC"""
+    if listp(memory):
+      return [self.remove(m) for m in memory]
+
     if not memory in self.memories:
-      return
+      return None
     self.memories.remove(memory)
     ep = memory.get_ep()
     wff = memory.get_wff()
@@ -129,12 +140,11 @@ class MemoryStorage:
     if memory in self.context:
       self.context.remove(memory)
 
-  def remove_all(self, memories):
-    """TBC"""
-    [self.remove(memory) for memory in memories]
-
   def remove_from_context(self, memory):
     """TBC"""
+    if listp(memory):
+      return [self.remove_from_context(m) for m in memory]
+    
     ep = memory.get_ep()
     memories = self.ep_ht[ep]
     for m in memories:
@@ -144,14 +154,13 @@ class MemoryStorage:
       
   def instantiate(self, event, importance=DEFAULT_IMPORTANCE):
     """TBC"""
+    if listp(event):
+      if not (listp(importance) and len(event) == len(importance)):
+        importance = [DEFAULT_IMPORTANCE for _ in event]
+      return [self.instantiate(e, i) for e, i in zip(event, importance)]
+    
     memory = Memory(event, importance=importance)
     self.store(memory)
-
-  def instantiate_all(self, events, importances=[]):
-    """TBC"""
-    if not importances:
-      importances = [DEFAULT_IMPORTANCE for _ in events]
-    [self.instantiate(event) for event in events]
 
   def get_episode(self, ep):
     """TBC"""
@@ -159,7 +168,7 @@ class MemoryStorage:
   
   def access_episode(self, ep):
     """TBC"""
-    return self.access_all(self.get_episode(ep))
+    return self.access(self.get_episode(ep))
 
   def get_matching(self, pred_patt):
     """Retrieve a list of memories according to a given pred_patt, which
@@ -194,7 +203,7 @@ class MemoryStorage:
       
   def access_matching(self, pred_patt):
     """TBC"""
-    return self.access_all(self.get_matching(pred_patt))
+    return self.access(self.get_matching(pred_patt))
       
   def get_from_context(self, pred_patt):
     """TBC"""
@@ -203,17 +212,28 @@ class MemoryStorage:
   
   def access_from_context(self, pred_patt):
     """TBC"""
-    return self.access_all(self.get_from_context(pred_patt))
+    return self.access(self.get_from_context(pred_patt))
       
   def remove_episode(self, ep):
     """TBC"""
     memories = self.get_episode(ep)
-    self.remove_all(memories)
+    self.remove(memories)
 
   def remove_matching(self, pred_patt):
     """TBC"""
     memories = self.get_matching(pred_patt)
-    self.remove_all(memories)
+    self.remove(memories)
+
+  def remove_episode_from_context(self, ep):
+    """TBC"""
+    memories = self.get_episode(ep)
+    self.remove_from_context(memories)
+
+  def remove_matching_from_context(self, pred_patt):
+    """TBC"""
+    memories = self.get_matching(pred_patt)
+    self.remove_from_context(memories)
+
 
   def retrieve(self, query=None):
     """TBC"""
@@ -229,6 +249,10 @@ class MemoryStorage:
 
   def __str__(self):
     return '\n'.join([str(memory) for memory in self.memories])
+  
+
+def negative_wff(wff):
+  return listp(wff) and len(wff) == 2 and wff[0] == 'not'
   
 
 def test2():
@@ -314,12 +338,23 @@ def test1():
     print(m)
   print(sep)
 
-  print(test.context)
+  for m in test.context:
+    print(m)
+  print(sep)
+
+  # fact6 = parse_eventuality('(not (me laugh.v))', ep='e5')
+  # test.instantiate(fact6)
+
+  # for m in test.context:
+  #   print(m)
+  # print(sep)
+
+  # print(test)
 
 
 def main():
-  # test1()
-  test2()
+  test1()
+  # test2()
   
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ def reasoning_loop(ds):
     new_facts = []
     new_facts += infer_top_down(facts, ds)
     new_facts += infer_bottom_up(facts, ds)
-    ds.add_all_to_context(new_facts)
+    ds.add_to_context(new_facts)
     ds.add_all_to_buffer(new_facts, 'inferences')
 
     # Infer possible actions to take based on observations

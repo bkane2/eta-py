@@ -203,9 +203,6 @@ class DialogueState():
     with self._lock:
       self.memory.instantiate(fact)
 
-  def add_all_to_context(self, facts):
-    [self.add_to_context(fact) for fact in facts]
-
   def get_memory(self):
     with self._lock:
       return self.memory

@@ -25,7 +25,7 @@ def perception_loop(ds):
         observations = process_utterances(inputs, ds)
       else:
         observations = process_observations(inputs)
-      ds.add_all_to_context(observations)
+      ds.add_to_context(observations)
       ds.add_all_to_buffer(observations, 'observations')
       ds.add_all_to_buffer(observations, 'inferences')
 
