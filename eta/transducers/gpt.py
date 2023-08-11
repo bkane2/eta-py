@@ -73,7 +73,7 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
     return [standardize(gist)]
   
 
-class GPTSemanticTransducer(GPTTransducer, GistTransducer):
+class GPTSemanticTransducer(GPTTransducer, SemanticTransducer):
   def __init__(self):
     # TODO
     pass
@@ -85,7 +85,7 @@ class GPTSemanticTransducer(GPTTransducer, GistTransducer):
     return ulf
   
 
-class PragmaticTransducer(GPTTransducer, GistTransducer):
+class GPTPragmaticTransducer(GPTTransducer, PragmaticTransducer):
   def __init__(self):
     # TODO
     pass
@@ -95,6 +95,18 @@ class PragmaticTransducer(GPTTransducer, GistTransducer):
     # TODO
     ulf = []
     return ulf
+  
+
+class GPTReactionTransducer(GPTTransducer, ReactionTransducer):
+  def __init__(self, rule_dirs):
+    # TODO
+    pass
+
+  def __call__(self, observation):
+    """Eventuality -> List"""
+    # TODO
+    action = []
+    return action
 
 
 class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):

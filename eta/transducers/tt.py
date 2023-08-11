@@ -3,7 +3,7 @@ from eta.lf import parse_eventuality
 from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 
 from eta.constants import ME
-from eta.util.general import listp, cons, remove_duplicates
+from eta.util.general import listp, cons, remove_duplicates, isquote
 from eta.util.tt.choice import choose_result_for
 from eta.util.tt.parse import from_lisp_dirs
 
@@ -20,7 +20,7 @@ class TTTransducer(Transducer):
     ret = []
     if isinstance(inputs, str):
       clause = inputs.split()
-    elif inputs and listp(inputs) and all([isinstance(x, str) for x in inputs]):
+    elif inputs and listp(inputs) and all([isinstance(x, str) and not isquote(x) for x in inputs]):
       clause = ' '.join(inputs).split()
     else:
       clause = inputs
@@ -106,6 +106,16 @@ class TTPragmaticTransducer(TTTransducer, PragmaticTransducer):
   def __call__(self, gist):
     """str -> List"""
     return super().__call__(gist.split())
+  
+
+class TTReactionTransducer(TTTransducer, ReactionTransducer):
+  def __init__(self, rule_dirs):
+    super().__init__(rule_dirs, 'reaction')
+
+  def __call__(self, observation):
+    """Eventuality -> List"""
+    wff = observation.get_wff()
+    return super().__call__(wff)
   
 
 class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):

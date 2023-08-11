@@ -49,6 +49,16 @@ class PragmaticTransducer(Transducer):
     return ulf
   
 
+class ReactionTransducer(Transducer):
+  def __init__(self):
+    pass
+
+  def __call__(self, observation):
+    """Eventuality -> List"""
+    action = []
+    return action
+  
+
 class ParaphraseTransducer(Transducer):
   def __init__(self):
     pass

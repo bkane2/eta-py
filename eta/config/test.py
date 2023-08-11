@@ -1,5 +1,5 @@
-from eta.transducers.tt import TTReasoningTransducer, TTGistTransducer, TTPragmaticTransducer, TTSemanticTransducer
-from eta.transducers.gpt import GPTGistTransducer
+from eta.transducers.tt import *
+from eta.transducers.gpt import *
 
 def config():
   return {
@@ -14,7 +14,8 @@ def config():
         # 'gist' : [TTGistTransducer('avatars/test/rules'), GPTGistTransducer()],
         'gist' : TTGistTransducer('avatars/test/rules'),
         'semantic' : TTSemanticTransducer('avatars/test/rules'),
-        'pragmatic' : TTPragmaticTransducer('avatars/test/rules')
+        'pragmatic' : TTPragmaticTransducer('avatars/test/rules'),
+        'reaction' : TTReactionTransducer('avatars/test/rules')
     },
     'session_number': 1
   }

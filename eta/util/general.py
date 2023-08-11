@@ -106,6 +106,10 @@ def standardize(str):
 	return str.lower().strip()
 
 
+def isquote(s):
+	return isinstance(s, str) and len(s) >= 2 and s[0] == '"' and s[-1] == '"'
+
+
 
 # ``````````````````````````````````````
 # List util

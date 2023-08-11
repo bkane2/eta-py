@@ -10,14 +10,18 @@ def reasoning_loop(ds):
   while ds.do_continue():
     sleep(.1)
 
+    # Infer new facts from prior facts/inferences
     facts = ds.pop_all_buffer('inferences')
     new_facts = []
-
     new_facts += infer_top_down(facts, ds)
     new_facts += infer_bottom_up(facts, ds)
-    
     ds.add_all_to_context(new_facts)
     ds.add_all_to_buffer(new_facts, 'inferences')
+
+    # Infer possible actions to take based on observations
+    observations = ds.pop_all_buffer('observations')
+    actions = suggest_possible_actions(observations, ds)
+    ds.add_all_to_buffer(actions, 'actions')
 
 
 def infer_top_down(facts, ds):
@@ -53,6 +57,14 @@ def infer_bottom_up(facts, ds):
   
   new_facts = ds.apply_transducer('reasoning', facts)
   return new_facts
+
+
+def suggest_possible_actions(observations, ds):
+  """Suggest possible actions to take in reaction to a list of observations."""
+  actions = []
+  for observation in observations:
+    actions += ds.apply_transducer('reaction', observation)
+  return actions
 
 
 def reply_to_wff(wff):
