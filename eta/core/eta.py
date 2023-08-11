@@ -159,13 +159,13 @@ class DialogueState():
     
   # === buffer accessors ===
 
-  def add_to_buffer(self, fact, type):
+  def add_to_buffer(self, x, type):
     with self._lock:
-      buffer.enqueue(fact, self.buffers[type])
+      buffer.enqueue(x, self.buffers[type])
 
-  def add_all_to_buffer(self, facts, type):
+  def add_all_to_buffer(self, xs, type):
     with self._lock:
-      buffer.enqueue_ordered(facts, self.buffers[type])
+      buffer.enqueue_ordered(xs, self.buffers[type])
 
   def get_buffer(self, type):
     with self._lock:
