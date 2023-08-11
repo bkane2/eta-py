@@ -1,5 +1,5 @@
 from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr
-from eta.util.general import listp, flatten, episode_name, episode_var, subst, substall, dict_substall_keys, replaceall, dual_var, remove_duplicates
+from eta.util.general import listp, atom, cons, flatten, episode_name, episode_var, subst, substall, dict_substall_keys, replaceall, dual_var, remove_duplicates
 
 KEYWORDS = ['not', 'plur', 'past', 'pres', 'perf', 'prog', 'pasv', 'k', 'ka', 'ke', 'to', 'that', 'tht', 'fquan', 'nquan',
             'nmod', 'amod', '*h', '*s', '*p', 'set-of', 'n+preds', 'np+preds', 'sub', 'rep', "'s", 'poss-by', 'adv-a',
@@ -358,6 +358,24 @@ def parse_eventuality_list(lst, prob_dict={}):
   for ep, wff in zip(lst[::2], lst[1::2]):
     ret.append(parse_eventuality(wff, ep=ep, prob_dict=prob_dict))
   return ret
+
+
+def extract_set(lst):
+  """Extracts a set from a formula of form [set-of, 'a', 'b', ...]"""
+  if atom(lst):
+    return [lst]
+  elif lst[0] == 'set-of':
+    return lst[1:]
+  else:
+    return lst
+  
+
+def make_set(lst):
+  """Creates a set from a list of values"""
+  if atom(lst):
+    return lst
+  else:
+    return cons('set-of', lst),
 
 
 def main():
