@@ -27,6 +27,8 @@ def is_empty(buffer):
 
 
 def pop_item(buffer, importance=False):
+  if is_empty(buffer):
+    return None
   item = heapq.heappop(buffer)
   if importance:
     return (-item[0], item[1])
