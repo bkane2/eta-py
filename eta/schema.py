@@ -53,9 +53,8 @@ class Schema:
         probabilities[var] = float(pair[1])
     return probabilities
   
-  def duplicate_variables(self):
-    """Duplicate all variables across a schema's sections."""
-    mappings = [(var, duplicate_var(var)) for var in self.vars]
+  def subst_mappings(self, mappings):
+    """Given a list of variable mappings, apply the mappings to each part of the schema."""
     self.participants = substall(self.participants, mappings)
     self.vars = [m[1] for m in mappings]
     self.bindings = dict_substall_keys(self.bindings, mappings)
@@ -64,6 +63,15 @@ class Schema:
     for sec in self.sections.values():
       for (var1, var2) in mappings:
         [e.replacevar(var1, var2) for e in sec]
+  
+  def duplicate_variables(self):
+    """Duplicate all variables across a schema's sections. Note that this needs to be done
+       in two steps in order to avoid a variable getting mapped to another variable in the mappings."""
+    mappings = [(var, duplicate_var(var)) for var in self.vars]
+    m1 = [(m[0], f'?{m[0]}') for m in mappings]
+    m2 = [(f'?{m[0]}', m[1]) for m in mappings]
+    self.subst_mappings(m1)
+    self.subst_mappings(m2)
 
   def instantiate(self, args):
     """
