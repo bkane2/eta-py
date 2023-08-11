@@ -1,5 +1,5 @@
 from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr
-from eta.util.general import listp, flatten, episode_name, episode_var, subst, substall, dict_substall_keys, replaceall, dual_var
+from eta.util.general import listp, flatten, episode_name, episode_var, subst, substall, dict_substall_keys, replaceall, dual_var, remove_duplicates
 
 KEYWORDS = ['not', 'plur', 'past', 'pres', 'perf', 'prog', 'pasv', 'k', 'ka', 'ke', 'to', 'that', 'tht', 'fquan', 'nquan',
             'nmod', 'amod', '*h', '*s', '*p', 'set-of', 'n+preds', 'np+preds', 'sub', 'rep', "'s", 'poss-by', 'adv-a',
@@ -210,7 +210,7 @@ class Eventuality:
   
   def __eq__(self, other):
     # Assume that two Eventualities are equivalent if their surface realizations are the same
-    return self.get_nl() == other.get_nl()
+    return self.get_wff() == other.get_wff()
   
   def __hash__(self):
     return hash(f'({self.get_ep()} {self.get_wff()})')
@@ -398,6 +398,11 @@ def main():
                                   '?e1', ['^you', 'meet.v', '^me']])
   for f in facts:
     print(f)
+
+  facta = parse_eventuality('(|person| run.v)')
+  factb = parse_eventuality('(|person| run.v)')
+  print(remove_duplicates([facta, factb], order=True))
+
 
 
 if __name__ == '__main__':
