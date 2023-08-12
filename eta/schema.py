@@ -166,10 +166,15 @@ class Schema:
     # Length of 'args' and 'vars' are equal (or have just been equalized)
     for var, arg in zip(vars, args):
       self.bind(var, arg)
-      self.participants = subst(arg, var, self.participants)
     
     return self
     # END bind_args
+
+  def get_participants(self, no_bind=False):
+    if no_bind:
+      return self.participants
+    else:
+      return substall(self.participants, list(self.bindings.items()))
 
   def get_contents(self, no_bind=False):
     if no_bind:
@@ -364,9 +369,9 @@ def testschema(schemas):
   schema = schemas['dial-schema']['test.v']
   print(schema, sep)
 
-  print(schema.participants)
+  print(schema.get_participants())
   schema.bind_args([ME, YOU, '"this is another test string ."'])
-  print(schema.participants)
+  print(schema.get_participants())
   for f in schema.get_section('episodes'):
     print(f)
   print(sep)
@@ -474,8 +479,8 @@ def main():
   schemas = from_lisp_dirs(['avatars/test/schemas'])
 
   # print_schema_predicates(schemas)
-  # testschema(schemas)
-  testcopy(schemas)
+  testschema(schemas)
+  # testcopy(schemas)
   # testcond(schemas)
 
 
