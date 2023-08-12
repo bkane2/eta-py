@@ -6,6 +6,6 @@
 
 (READRULES '*reaction-gist*
 '(
-  1 (0 test gist clause 0)
-    2 (^me test.v (the.d system.n)) (0 :ulf)
+  ;; 1 (0 test gist clause 0)
+  ;;   2 (^me test.v (the.d system.n)) (0 :ulf)
 ))

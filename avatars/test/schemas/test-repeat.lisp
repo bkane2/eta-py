@@ -5,9 +5,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(store-schema 'test-cond.v
+(store-schema 'test-repeat.v
 
-'(dial-schema :header (((set-of ?s ?h) test-cond.v ?words) ** ?e)
+'(dial-schema :header (((set-of ?s ?h) test-repeat.v ?words) ** ?e)
 ;````````````````````````````````````````````````````````````````````````````````
 
 :types (
@@ -32,20 +32,12 @@
 )
 
 :episodes (
+ 
+?e2 (:repeat-until (not (?h ((pres prog) test.v (the.d system.n))))
 
-?e1 (:try-in-sequence
+  ?e3 (?s say-to.v ?h '(Test one \.))
 
-  (:if (?h ((pres prog) test.v (the.d system.n)))
-
-    ?e2 (?s say-to.v ?h '(Test one \.))
-  
-  )
-
-  (:else
-  
-    ?e3 (?s say-to.v ?h '(Test two \.))
-
-  )
+  ?e4 (?s say-to.v ?h '(Test two \.))
 
 )
 
@@ -57,4 +49,4 @@
 :necessities (
 )
 
-)) ; END test-cond.v
+)) ; END test-repeat.v

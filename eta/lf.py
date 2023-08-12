@@ -334,10 +334,14 @@ def parse_eventuality(s, ep=None, expectation=False, prob_dict={}):
   
 
 def parse_condition(s, ulf, ep, prob, prob_dict={}):
+  conditions = []
   if s[0] == ':if':
-    conditions = [(ULF(s[1]), parse_eventuality_list(s[2:], prob_dict=prob_dict))]
+    if len(s) >= 4 and s[-2] == ':else':
+      conditions.append((ULF(s[1]), parse_eventuality_list(s[2:-2], prob_dict=prob_dict)))
+      conditions.append((True, parse_eventuality_list(s[-1], prob_dict=prob_dict)))
+    else:
+      conditions.append((ULF(s[1]), parse_eventuality_list(s[2:], prob_dict=prob_dict)))
   else:
-    conditions = []
     for cond in s[1:]:
       if cond[0] == ':if':
         conditions.append((ULF(cond[1]), parse_eventuality_list(cond[2:], prob_dict=prob_dict)))
@@ -360,14 +364,14 @@ def parse_eventuality_list(lst, prob_dict={}):
   return ret
 
 
-def extract_set(lst):
+def extract_set(ulf):
   """Extracts a set from a formula of form [set-of, 'a', 'b', ...]"""
-  if atom(lst):
-    return [lst]
-  elif lst[0] == 'set-of':
-    return lst[1:]
+  if atom(ulf):
+    return [ulf]
+  elif ulf[0] == 'set-of':
+    return ulf[1:]
   else:
-    return lst
+    return ulf
   
 
 def make_set(lst):
@@ -375,7 +379,24 @@ def make_set(lst):
   if atom(lst):
     return lst
   else:
-    return cons('set-of', lst),
+    return cons('set-of', lst)
+  
+
+# Some type-checking predicates
+def equal_prop_p(ulf):
+  return listp(ulf) and len(ulf) == 3 and ulf[1] == '='
+
+def not_prop_p(ulf):
+  return listp(ulf) and len(ulf) == 2 and ulf[0] == 'not'
+
+def and_prop_p(ulf):
+  return listp(ulf) and len(ulf) == 3 and ulf[1] == 'and'
+
+def or_prop_p(ulf):
+  return listp(ulf) and len(ulf) == 3 and ulf[1] == 'or'
+
+def characterizes_prop_p(ulf):
+  return listp(ulf) and len(ulf) == 3 and ulf[1] == '**'
 
 
 def main():

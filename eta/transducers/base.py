@@ -59,6 +59,16 @@ class ReactionTransducer(Transducer):
     return action
   
 
+class ExpandStepTransducer(Transducer):
+  def __init__(self):
+    pass
+
+  def __call__(self, step):
+    """Eventuality -> List[Eventuality]"""
+    substeps = []
+    return substeps
+  
+
 class ParaphraseTransducer(Transducer):
   def __init__(self):
     pass

@@ -7,11 +7,12 @@ from multiprocessing import Value
 from multiprocessing.managers import BaseManager
 
 from eta.constants import IO_PATH, DEFAULT_START
-from eta.util.general import gentemp, clear_symtab, remove_duplicates, append
+from eta.util.general import gentemp, clear_symtab, remove_duplicates, append, variablep, episode_name, listp
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
-from eta.lf import Eventuality
+from eta.lf import Condition, Repetition, Eventuality
+from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p
 from eta.discourse import Utterance, DialogueTurn
 from eta.memory import MemoryStorage
 from eta.schema import from_lisp_dirs
@@ -103,7 +104,13 @@ class DialogueState():
 
   # === schema accessors ===
 
-  # TODO
+  def is_schema(self, predicate):
+    with self._lock:
+      return all([predicate in dct for dct in self.schemas.values()])
+    
+  def is_dial_schema(self, predicate):
+    with self._lock:
+      return predicate in self.schemas['dial-schema']
 
   # === plan accessors ===
 
@@ -124,14 +131,6 @@ class DialogueState():
   def do_continue(self):
     """Check whether to continue with the current dialogue."""
     return self.has_plan() and not self.get_quit_conversation()
-  
-  def advance_plan(self):
-    """Advances the plan to the next step, or signals to quit the conversation if none exists."""
-    with self._lock:
-      if self.has_plan() and self.plan.next:
-        self.plan = self.plan.next
-      else:
-        self.quit_conversation = True
     
   def init_plan_from_schema(self, predicate, args=[]):
     """
@@ -162,6 +161,43 @@ class DialogueState():
       
       return init_plan_from_eventualities(schema_instance.get_section('episodes'), schema=schema_instance)
     
+  def advance_plan(self):
+    """Advances the plan to the next step, or signals to quit the conversation if none exists."""
+    with self._lock:
+      if self.has_plan() and self.plan.next:
+        self.plan = self.plan.next
+      else:
+        self.quit_conversation = True
+
+  def instantiate_curr_step(self):
+    """Instantiates the current plan step, binding it everywhere in the dialogue state and adding it to memory."""
+    with self._lock:
+      def instantiate_step_recur(step):
+        event = step.event
+        ep_var = event.get_ep()
+        if not variablep(ep_var):
+          return []
+        substeps = step.substeps
+
+        # Only instantiate if no substeps, or all substeps have already been instantiated
+        if all([not variablep(substep.event.get_ep()) for substep in substeps]):
+
+          # If single substep, share same episode name
+          if substeps and len(substeps) == 1:
+            ep = substeps[0].event.get_ep()
+            ep = episode_name() if variablep(ep) else ep
+          else:
+            ep = episode_name()
+
+          event.bind(ep_var, ep)
+          self.bind(ep_var, ep)
+          self.add_to_context(event)
+
+        # Recur for supersteps
+        return [instantiate_step_recur(superstep) for superstep in step.supersteps]
+
+      instantiate_step_recur(self.plan.step)
+    
   # === buffer accessors ===
 
   def add_to_buffer(self, x, type):
@@ -177,6 +213,10 @@ class DialogueState():
   def get_buffer(self, type):
     with self._lock:
       return buffer.iterate(self.buffers[type])
+    
+  def buffer_empty(self, type):
+    with self._lock:
+      return buffer.is_empty(self.buffers[type])
     
   def pop_buffer(self, type):
     with self._lock:
@@ -213,6 +253,30 @@ class DialogueState():
   def get_memory(self):
     with self._lock:
       return self.memory
+    
+  def eval_truth_value(self, wff):
+    """Evaluates the truth value of a WFF in memory/context."""
+    with self._lock:
+      def eval_truth_value_recur(wff):
+        # (wff1 = wff2)
+        if equal_prop_p(wff):
+          return wff[0] == wff[2]
+        # (not wff1)
+        elif not_prop_p(wff):
+          blarf = not eval_truth_value_recur(wff[1])
+          return blarf
+        # (wff1 and wff2)
+        elif and_prop_p(wff):
+          return eval_truth_value_recur(wff[0]) and eval_truth_value_recur(wff[2])
+        # (wff1 or wff2)
+        elif or_prop_p(wff):
+          return eval_truth_value_recur(wff[0]) or eval_truth_value_recur(wff[2])
+        # (wff1 ** e)
+        elif characterizes_prop_p(wff):
+          return self.memory.does_characterize_episode(wff[0], wff[2])
+        # Otherwise, check to see if wff is true in context
+        return True if self.memory.get_from_context(wff) else False
+      eval_truth_value_recur(wff)
 
   # === timegraph accessors ===
 
@@ -234,14 +298,12 @@ class DialogueState():
     with self._lock:
       if self.plan:
         self.plan.bind(var, val)
-      return self
     
   def unbind(self, var):
     """Unbinds a variable throughout the current dialogue state."""
     with self._lock:
       if self.plan:
         self.plan.unbind(var)
-      return self
 
   def cost(self):
     """Compute the accumulated (monetary) cost of each transducer for this session."""

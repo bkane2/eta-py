@@ -75,6 +75,8 @@ class MemoryStorage:
     (None, pred, obj1, None, ...)
     (None, pred, None, obj2, ...)
     """
+    if isinstance(wff, str):
+      return [wff]
     if not wff or not listp(wff):
       return []
     if len(wff) == 1:
@@ -234,6 +236,11 @@ class MemoryStorage:
     memories = self.get_matching(pred_patt)
     self.remove_from_context(memories)
 
+  def does_characterize_episode(self, pred_patt, ep):
+    """TBC"""
+    memories1 = self.get_matching(pred_patt)
+    memories2 = self.get_episode(ep)
+    return True if set(memories1).intersection(set(memories2)) else False
 
   def retrieve(self, query=None):
     """TBC"""
@@ -312,11 +319,13 @@ def test1():
   fact3 = parse_eventuality('(me go-to.v (the.d store.n) yesterday.adv-e)', ep='e3')
   fact4 = parse_eventuality('(me go-to.v (the.d store.n) tuesday.adv-e)', ep='e4')
   fact5 = parse_eventuality('(you go-to.v (the.d store.n) tuesday.adv-e)', ep='e4')
+  fact6 = parse_eventuality('test string fact', ep='e5')
   test.instantiate(fact1)
   test.instantiate(fact2)
   test.instantiate(fact3)
   test.instantiate(fact4)
   test.instantiate(fact5)
+  test.instantiate(fact6)
 
   for k,v in test.wff_ht.items():
     print(k)
@@ -339,6 +348,10 @@ def test1():
   print(sep)
 
   for m in test.context:
+    print(m)
+  print(sep)
+
+  for m in test.get_matching('test string fact'):
     print(m)
   print(sep)
 

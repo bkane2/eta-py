@@ -118,6 +118,18 @@ class TTReactionTransducer(TTTransducer, ReactionTransducer):
     return super().__call__(wff)
   
 
+class TTExpandStepTransducer(TTTransducer, ExpandStepTransducer):
+  def __init__(self, rule_dirs):
+    # TODO
+    pass
+
+  def __call__(self, step):
+    """Eventuality -> List[Eventuality]"""
+    # TODO
+    substeps = []
+    return substeps
+  
+
 class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
   def __init__(self, rule_dirs):
     super().__init__(rule_dirs, 'paraphrase')

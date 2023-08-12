@@ -33,28 +33,38 @@
 
 :episodes (
 
-?e1 (:try-in-sequence
+?e1 (?s paraphrase-to.v ?h '(This is a test string \.))
+ 
+?e2 (:repeat-until (?h say-bye.v)
 
-  (:if (?h ((pres prog) test.v (the.d system.n)))
+  ?e3 (?s say-to.v ?h '(Test \.))
 
-    ?e2 (?s say-to.v ?h '(Test one \.))
-  
-  )
+  ?e4 (?h say-to.v ?s ?response)
 
-  (:else
-  
-    ?e3 (?s say-to.v ?h '(Test two \.))
+  ?e5 (:try-in-sequence
 
-  )
+    (:if (?h do-nothing.v)
+
+      ?e6 (?s say-to.v ?h '(Bye \.))
+      ?e7 (?s commit-to-STM.v (that (?h say-bye.v))))
+
+    (:else
+
+      ?e8 (?s say-to.v ?h ?h '(Okay \.))))
 
 )
+
+?e9 (?s say-to.v ?h ?words)
 
 )
 
 :certainties (
+  !c1 (!e1 0.4)
+  !c2 (!e4 0.7)
 )
 
 :necessities (
+  !n1 (!r2 0.6)
 )
 
 )) ; END test-cond.v

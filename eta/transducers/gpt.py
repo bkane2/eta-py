@@ -98,7 +98,7 @@ class GPTPragmaticTransducer(GPTTransducer, PragmaticTransducer):
   
 
 class GPTReactionTransducer(GPTTransducer, ReactionTransducer):
-  def __init__(self, rule_dirs):
+  def __init__(self):
     # TODO
     pass
 
@@ -107,6 +107,18 @@ class GPTReactionTransducer(GPTTransducer, ReactionTransducer):
     # TODO
     action = []
     return action
+  
+
+class GPTExpandStepTransducer(GPTTransducer, ExpandStepTransducer):
+  def __init__(self):
+    # TODO
+    pass
+
+  def __call__(self, step):
+    """Eventuality -> List[Eventuality]"""
+    # TODO
+    substeps = []
+    return substeps
 
 
 class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
