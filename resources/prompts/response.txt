@@ -1,0 +1,10 @@
+Write a conversation between ^you and ^me.
+
+Background:
+<conds>
+
+Use the following relevant facts in your response:
+<facts>
+
+@zip(<agents>, <history>)
+^me:

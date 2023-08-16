@@ -1,0 +1,65 @@
+[
+  {
+    "facts" : ["^my pain medication is not working anymore.", "^me hasn't been able to sleep recently.", "^my pain has gotten worse recently."],
+    "agents" : ["<you>: "],
+    "history" : ["It's nice to meet you."],
+    "gist" : "My pain medication is not working anymore",
+    "paraphrase" : "I was hoping you'd be able to help me with my pain today. My medicine just isn't working anymore. I haven't been able to get much sleep."
+  },
+  {
+    "facts" : ["^me is taking Lortab for ^my pain.", "^me has started taking an extra pill of Lortab each day."],
+    "agents" : ["<you>: "],
+    "history" : ["What are you taking for the pain?"],
+    "gist" : "I'm taking Lortab.",
+    "paraphrase" : "I'm just taking the Lortab at the moment, but it's really not working anymore. I already have to take an extra pill each day."
+  },
+  {
+    "facts" : ["^me wants to know more about ^my prognosis.", "^me wants to be able to be with ^my children and grandchildren."],
+    "agents" : ["<you>: "],
+    "history" : ["I am sorry that you are in pain."],
+    "gist" : "What is my prognosis?",
+    "paraphrase" : "I'm just worried about what this all means for me. I want to be able to be there for my children and grandchildren. What do you think this means for me in the future?"
+  },
+  {
+    "facts" : ["^me has concerns about the side effects of chemotherapy.", "^me wants to know more about ^my treatment options."],
+    "agents" : ["<you>: "],
+    "history" : ["One option for treatment is chemotherapy."],
+    "gist" : "I'm not sure about chemotherapy. Are there other options I can try?",
+    "paraphrase" : "I've heard a lot of things about the side effects of chemotherapy that worry me. What do people do if they don't get chemotherapy?"
+  },
+  {
+    "facts" : ["^me is anxious about ^my future."],
+    "agents" : ["<you>: "],
+    "history" : ["Why are you here today?"],
+    "gist" : "I feel anxious about my future,",
+    "paraphrase" : "You know, I feel extremely anxious just thinking about my condition. I don't like not knowing what will happen to me in a month from now."
+  },
+  {
+    "facts" : [],
+    "agents" : ["<you>: "],
+    "history" : ["Your prognosis is that you may live for three more months."],
+    "gist" : "Your prognosis seems very specific. How can I trust your prognosis?",
+    "paraphrase" : "Can I really trust your prediction? That seems like such a specific time, I don't know how you could say for sure."
+  },
+  {
+    "facts" : ["^me wants to know if comfort care is an option for ^me.", "^me wants to know more about ^my treatment options."],
+    "agents" : ["<you>: "],
+    "history" : ["It's nice to meet you."],
+    "gist" : "Is comfort care an option for me?",
+    "paraphrase" : "I've been trying to learn more about my condition, and heard about comfort care. Do you think that's an option for me at this point?"
+  },
+  {
+    "facts" : ["^me knows that my cancer has spread.", "^my cancer is likely terminal."],
+    "agents" : ["<you>: "],
+    "history" : ["Your cancer is terminal."],
+    "gist" : "It's hard to hear that my cancer is terminal. Your help means a lot to me.",
+    "paraphrase" : "I see. That's really difficult to hear, I was hoping for something better. Thank you for being honest with me and for being so supportive, though. It really helps."
+  },
+  {
+    "facts" : [],
+    "agents" : ["<you>: "],
+    "history" : ["One option for treatment is chemotherapy."],
+    "gist" : "Is comfort care an option for me?",
+    "paraphrase" : "I'd like to hear a bit about my other options, since I'm worried about the side effects of chemotherapy. I've heard about something called comfort care before. Do you think that might be an option for me?"
+  }
+]

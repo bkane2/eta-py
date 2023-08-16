@@ -1,5 +1,5 @@
 from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr
-from eta.util.general import listp, atom, cons, flatten, episode_name, episode_var, subst, substall, dict_substall_keys, replaceall, dual_var, remove_duplicates
+from eta.util.general import listp, atom, cons, flatten, episode_name, episode_var, subst, substall, rec_replace, dict_substall_keys, replaceall, dual_var, remove_duplicates
 
 KEYWORDS = ['not', 'plur', 'past', 'pres', 'perf', 'prog', 'pasv', 'k', 'ka', 'ke', 'to', 'that', 'tht', 'fquan', 'nquan',
             'nmod', 'amod', '*h', '*s', '*p', 'set-of', 'n+preds', 'np+preds', 'sub', 'rep', "'s", 'poss-by', 'adv-a',
@@ -103,7 +103,10 @@ class ULF(LF):
 
   def to_nl(self):
     # TODO - replace naive implementation with ULF2English
-    words = ' '.join([remove_type(w) for w in list_to_str(self.get_formula()).split() if w not in KEYWORDS_R])
+    formula = self.get_formula()
+    formula = rec_replace(['^me', "'s"], '^my', formula)
+    formula = rec_replace(['^you', "'s"], '^your', formula)
+    words = ' '.join([remove_type(w) for w in list_to_str(formula).split() if w not in KEYWORDS_R])
     words = ' '.join(flatten([w.split('-') for w in words.split()]))
     words = ' '.join([w.replace('_', ' ') for w in words.split()])
     return words

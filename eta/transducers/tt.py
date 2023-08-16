@@ -2,7 +2,7 @@ from eta.transducers.base import *
 from eta.lf import parse_eventuality
 from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 
-from eta.constants import ME
+from eta.constants import ME, YOU
 from eta.util.general import listp, cons, remove_duplicates, isquote
 from eta.util.tt.choice import choose_result_for
 from eta.util.tt.parse import from_lisp_dirs
@@ -134,12 +134,51 @@ class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
   def __init__(self, rule_dirs):
     super().__init__(rule_dirs, 'paraphrase')
 
-  def __call__(self, gist, prev_gist, history):
-    """str, str, List[str] -> Eventuality"""
-    ret = super().__call__([prev_gist.split(), gist.split()])
-    if ret:
-      return ret[0]
-    return ret
+  def __call__(self, gist, conversation_log, conds=[], facts=[]):
+    """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    prev_gist = ''
+    prior_turn = get_prior_turn(conversation_log, YOU)
+    if prior_turn:
+      prev_gists = prior_turn.gists
+      if prev_gists:
+        prev_gist = prev_gists[0]
+    return super().__call__([prev_gist.split(), gist.split()])
+  
+
+class TTResponseTransducer(TTTransducer, ResponseTransducer):
+  def __init__(self, rule_dirs):
+    # TODO
+    pass
+
+  def __call__(self, conversation_log, conds=[], facts=[]):
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    # TODO
+    utt = ''
+    return utt
+  
+
+class TTAnswerTransducer(TTTransducer, AnswerTransducer):
+  def __init__(self, rule_dirs):
+    # TODO
+    pass
+
+  def __call__(self, conversation_log, conds=[], facts=[]):
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    # TODO
+    utt = ''
+    return utt
+  
+
+class TTAskTransducer(TTTransducer, AskTransducer):
+  def __init__(self, rule_dirs):
+    # TODO
+    pass
+
+  def __call__(self, conversation_log, conds=[], facts=[]):
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    # TODO
+    utt = ''
+    return utt
   
 
 def test1():
@@ -168,26 +207,25 @@ def test2():
 def test3():
   test = TTParaphraseTransducer('avatars/sophie/rules')
 
-  prev_gist = ''
+  clog = []
   gist = 'this is an out of domain gist clause .'
-  hist = []
-  print(test(gist, prev_gist, hist))
+  print(test(gist, clog))
 
-  prev_gist = 'the prognosis is that i cannot be cured .'
-  gist = 'i drove here today .'
-  hist = []
-  print(test(gist, prev_gist, hist))
-
-  prev_gist = 'the prognosis is that i cannot be cured .'
+  clog = [
+    DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
+    DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
+  ]
   gist = 'what is my prognosis ?'
-  hist = []
-  print(test(gist, prev_gist, hist))
+  print(test(gist, clog))
+
+  gist = 'i drove here today .'
+  print(test(gist, clog))
 
 
 def main():
   # test1()
-  test2()
-  # test3()
+  # test2()
+  test3()
 
 
 if __name__ == '__main__':

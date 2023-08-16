@@ -1,0 +1,27 @@
+^you is having a conversation with ^me.
+
+Background:
+<conds>
+
+Rewrite the sentences marked with [ORIGINAL] as [REWRITTEN]. Use a set of relevant facts in your rewritten
+responses, but DO NOT change the meaning of the original sentence.
+
+@startexamples
+Relevant facts:
+<facts>
+
+@zip(<agents-gen>, <history>)
+Person B [ORIGINAL]: <gist>
+
+@zip(<agents>, <history>)
+^me [REWRITTEN]: <paraphrase>
+@endexamples
+
+Relevant facts:
+<facts>
+
+@zip(<agents-gen>, <history>)
+Person B [ORIGINAL]: <gist>
+
+@zip(<agents>, <history>)
+^me [REWRITTEN]:
