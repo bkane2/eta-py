@@ -103,7 +103,7 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
     super().__init__(PROMPTS['gist'], VALIDATORS['gist'], examples=examples)
 
   def __call__(self, utt, conversation_log):
-    """str, List[DialogueTurn] -> str"""
+    """str, List[DialogueTurn] -> List[str]"""
     prev_utt = 'Hello.'
     prior_turn = get_prior_turn(conversation_log, ME)
     if prior_turn:
@@ -171,7 +171,7 @@ class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
     super().__init__(PROMPTS['paraphrase'], VALIDATORS['paraphrase'], examples=examples)
 
   def __call__(self, gist, conversation_log, conds=[], facts=[]):
-    """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     agents_gen = self._to_generic_agents(agents)
@@ -184,7 +184,7 @@ class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
       'gist' : gist
     },
     stop=['^you:', '^me:', '^me [REWRITTEN]'])
-    return standardize(utt)
+    return [standardize(utt)]
   
   def _to_generic_agents(self, agents):
     return ['Person A: ' if 'you' in a else 'Person B: ' for a in agents]
@@ -195,7 +195,7 @@ class GPTResponseTransducer(GPTTransducer, ResponseTransducer):
     super().__init__(PROMPTS['response'], VALIDATORS['response'])
 
   def __call__(self, conversation_log, conds=[], facts=[]):
-    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     utt = super().__call__({
@@ -205,7 +205,7 @@ class GPTResponseTransducer(GPTTransducer, ResponseTransducer):
       'history' : history
     },
     stop=['^you:', '^me:'])
-    return standardize(utt)
+    return [standardize(utt)]
   
 
 class GPTAnswerTransducer(GPTTransducer, AnswerTransducer):
@@ -213,7 +213,7 @@ class GPTAnswerTransducer(GPTTransducer, AnswerTransducer):
     super().__init__(PROMPTS['answer'], VALIDATORS['answer'])
 
   def __call__(self, conversation_log, conds=[], facts=[]):
-    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     utt = super().__call__({
@@ -222,7 +222,7 @@ class GPTAnswerTransducer(GPTTransducer, AnswerTransducer):
       'agents' : agents,
       'history' : history
     })
-    return standardize(utt)
+    return [standardize(utt)]
   
 
 class GPTAskTransducer(GPTTransducer, AskTransducer):
@@ -230,7 +230,7 @@ class GPTAskTransducer(GPTTransducer, AskTransducer):
     super().__init__(PROMPTS['ask'], VALIDATORS['ask'])
 
   def __call__(self, conversation_log, conds=[], facts=[]):
-    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     utt = super().__call__({
@@ -239,7 +239,7 @@ class GPTAskTransducer(GPTTransducer, AskTransducer):
       'agents' : agents,
       'history' : history
     })
-    return standardize(utt)
+    return [standardize(utt)]
 
 
 def test1():

@@ -200,6 +200,10 @@ def remove_duplicates(lst, order=False):
 		return list(set(lst))
 	
 
+def remove_nil(lst):
+	return [x for x in lst if not x]
+	
+
 def subst(a, b, lst):
 	def subst_rec(a, b, x):
 		if x == b:

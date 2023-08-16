@@ -7,7 +7,7 @@ from multiprocessing import Value
 from multiprocessing.managers import BaseManager
 
 from eta.constants import IO_PATH, DEFAULT_START
-from eta.util.general import gentemp, clear_symtab, remove_duplicates, append, variablep, episode_name, listp
+from eta.util.general import gentemp, clear_symtab, remove_duplicates, remove_nil, append, variablep, episode_name
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
@@ -287,7 +287,7 @@ class DialogueState():
   def apply_transducer(self, type, *args):
     with self._lock:
       if isinstance(self.transducers[type], list):
-        return remove_duplicates(append([t(*args) for t in self.transducers[type]]), order=True)
+        return remove_nil(remove_duplicates(append([t(*args) for t in self.transducers[type]]), order=True))
       else:
         return self.transducers[type](*args)
     

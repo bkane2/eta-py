@@ -80,7 +80,7 @@ class TTGistTransducer(TTTransducer, GistTransducer):
     super().__init__(rule_dirs, 'gist')
 
   def __call__(self, utt, conversation_log):
-    """str, List[DialogueTurn] -> str"""
+    """str, List[DialogueTurn] -> List[str]"""
     prev_gist = ''
     prior_turn = get_prior_turn(conversation_log, ME)
     if prior_turn:
@@ -135,7 +135,7 @@ class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
     super().__init__(rule_dirs, 'paraphrase')
 
   def __call__(self, gist, conversation_log, conds=[], facts=[]):
-    """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     prev_gist = ''
     prior_turn = get_prior_turn(conversation_log, YOU)
     if prior_turn:
@@ -151,10 +151,10 @@ class TTResponseTransducer(TTTransducer, ResponseTransducer):
     pass
 
   def __call__(self, conversation_log, conds=[], facts=[]):
-    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     # TODO
-    utt = ''
-    return utt
+    utts = []
+    return utts
   
 
 class TTAnswerTransducer(TTTransducer, AnswerTransducer):
@@ -163,10 +163,10 @@ class TTAnswerTransducer(TTTransducer, AnswerTransducer):
     pass
 
   def __call__(self, conversation_log, conds=[], facts=[]):
-    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
+    """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     # TODO
-    utt = ''
-    return utt
+    utts = []
+    return utts
   
 
 class TTAskTransducer(TTTransducer, AskTransducer):
@@ -177,8 +177,8 @@ class TTAskTransducer(TTTransducer, AskTransducer):
   def __call__(self, conversation_log, conds=[], facts=[]):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
     # TODO
-    utt = ''
-    return utt
+    utts = []
+    return utts
   
 
 def test1():
