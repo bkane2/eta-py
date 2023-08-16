@@ -101,6 +101,8 @@ def indent(n):
 
 def standardize(str):
 	str = str.replace('--', '-').replace('_', ' ')
+	str = re.sub(r'\[[a-zA-Z0-9\s]*\]', '', str)
+	str = re.sub(r'\*[a-zA-Z0-9\s]*\*', '', str)
 	str = re.sub(r'([.|,|!|?|:|;|-])', r' \1 ', str)
 	str = re.sub(r'[\s]+', ' ', str)
 	return str.lower().strip()
