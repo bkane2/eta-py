@@ -344,7 +344,7 @@ def expand_plan_node(plan_node, subplan_node_start):
   Returns the start node of the subplan.
   """
   subplan_node_end = get_last_plan_node(subplan_node_start)
-  plan_node.add_superstep_to_subplan(subplan_node_start)
+  subplan_node_start.add_superstep_to_subplan(plan_node)
   if plan_node.prev:
     plan_node.prev.next = subplan_node_start
     subplan_node_start.prev = plan_node.prev
