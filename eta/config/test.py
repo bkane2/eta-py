@@ -16,7 +16,8 @@ def config():
         'semantic' : TTSemanticTransducer('avatars/test/rules'),
         'pragmatic' : TTPragmaticTransducer('avatars/test/rules'),
         'reaction' : TTReactionTransducer('avatars/test/rules'),
-        'expand-step' : TTExpandStepTransducer('avatars/test/rules')
+        'expand-step' : TTExpandStepTransducer('avatars/test/rules'),
+        'affect' : GPTAffectTransducer()
     },
     'session_number': 1
   }

@@ -33,17 +33,19 @@
 
 :episodes (
 
-?e1 (:try-in-sequence
+?e1 (?h say-to.v ?s ?words)
+
+?e2 (:try-in-sequence
 
   (:if (?h ((pres prog) test.v (the.d system.n)))
 
-    ?e2 (?s say-to.v ?h '(Test one \.))
+    ?e3 (?s say-to.v ?h '(Test one \.))
   
   )
 
   (:else
   
-    ?e3 (?s say-to.v ?h '(Test two \.))
+    ?e4 (?s say-to.v ?h '(Test two \.))
 
   )
 

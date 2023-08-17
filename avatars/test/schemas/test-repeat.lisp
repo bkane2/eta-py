@@ -32,14 +32,18 @@
 )
 
 :episodes (
+
+?e1 (?s say-to.v ?h '(Begin \.))
  
-?e2 (:repeat-until (not (?h ((pres prog) test.v (the.d system.n))))
+?e2 (:repeat-until (?h ((pres prog) test.v (the.d system.n)))
 
   ?e3 (?s say-to.v ?h '(Test one \.))
 
-  ?e4 (?s say-to.v ?h '(Test two \.))
+  ?e4 (?h reply-to.v ?e3)
 
 )
+
+?e5 (?s say-to.v ?h '(Done \.))
 
 )
 

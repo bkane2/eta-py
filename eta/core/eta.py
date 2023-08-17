@@ -3,7 +3,6 @@ from importlib import import_module
 
 from multiprocessing import Process
 from multiprocessing import Lock
-from multiprocessing import Value
 from multiprocessing.managers import BaseManager
 
 from eta.constants import IO_PATH, DEFAULT_START
@@ -11,9 +10,7 @@ from eta.util.general import gentemp, clear_symtab, remove_duplicates, remove_ni
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
-from eta.lf import Condition, Repetition, Eventuality
 from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p
-from eta.discourse import Utterance, DialogueTurn
 from eta.memory import MemoryStorage
 from eta.schema import from_lisp_dirs
 from eta.plan import init_plan_from_eventualities
@@ -36,7 +33,6 @@ class DialogueState():
     self.io_path = IO_PATH + config_agent['avatar'] + '/' + config_user['user_id'] + '/'
     self.me = config_agent['avatar_name']
     self.you = config_user['user_name']
-    self.output_count = 0
     self.output_buffer = []
     self.step_failure_timer = time.now()
     self.quit_conversation = False
@@ -77,10 +73,6 @@ class DialogueState():
 
   def get_use_embeddings(self):
     return self.config_user['use_embeddings']
-  
-  def set_output_count(self, c):
-    with self._lock:
-      self.output_count = c
 
   def set_output_buffer(self, buf):
     with self._lock:
@@ -90,9 +82,13 @@ class DialogueState():
     with self._lock:
       self.output_buffer.append(x)
 
-  def set_step_failure_timer(self, t):
+  def get_step_failure_timer(self):
     with self._lock:
-      self.step_failure_timer = t
+      return self.step_failure_timer
+
+  def reset_step_failure_timer(self):
+    with self._lock:
+      self.step_failure_timer = time.now()
 
   def get_quit_conversation(self):
     with self._lock:
@@ -164,39 +160,39 @@ class DialogueState():
   def advance_plan(self):
     """Advances the plan to the next step, or signals to quit the conversation if none exists."""
     with self._lock:
-      if self.has_plan() and self.plan.next:
+      if self.plan is not None and self.plan.next:
         self.plan = self.plan.next
       else:
         self.quit_conversation = True
 
   def instantiate_curr_step(self):
     """Instantiates the current plan step, binding it everywhere in the dialogue state and adding it to memory."""
-    with self._lock:
-      def instantiate_step_recur(step):
-        event = step.event
-        ep_var = event.get_ep()
-        if not variablep(ep_var):
-          return []
-        substeps = step.substeps
+    def instantiate_step_recur(step):
+      event = step.event
+      ep_var = event.get_ep()
+      if not variablep(ep_var):
+        return []
+      substeps = step.substeps
 
-        # Only instantiate if no substeps, or all substeps have already been instantiated
-        if all([not variablep(substep.event.get_ep()) for substep in substeps]):
+      # Only instantiate if no substeps, or all substeps have already been instantiated
+      if all([not variablep(substep.event.get_ep()) for substep in substeps]):
 
-          # If single substep, share same episode name
-          if substeps and len(substeps) == 1:
-            ep = substeps[0].event.get_ep()
-            ep = episode_name() if variablep(ep) else ep
-          else:
-            ep = episode_name()
+        # If single substep, share same episode name
+        if substeps and len(substeps) == 1:
+          ep = substeps[0].event.get_ep()
+          ep = episode_name() if variablep(ep) else ep
+        else:
+          ep = episode_name()
 
-          event.bind(ep_var, ep)
-          self.bind(ep_var, ep)
-          self.add_to_context(event)
+        event.bind(ep_var, ep)
+        self.bind(ep_var, ep)
+        self.add_to_context(event)
 
-        # Recur for supersteps
-        return [instantiate_step_recur(superstep) for superstep in step.supersteps]
+      # Recur for supersteps
+      return [instantiate_step_recur(superstep) for superstep in step.supersteps]
 
-      instantiate_step_recur(self.plan.step)
+    instantiate_step_recur(self.plan.step)
+    return self.plan.step
     
   # === buffer accessors ===
 
@@ -206,8 +202,27 @@ class DialogueState():
     with self._lock:
       buffer.enqueue(x, self.buffers[type])
 
+  def add_to_buffer_if_empty(self, x, type):
+    if x is None:
+      return
+    with self._lock:
+      if buffer.is_empty(self.buffers[type]):
+        buffer.enqueue(x, self.buffers[type])
+
   def add_all_to_buffer(self, xs, type):
     with self._lock:
+      buffer.enqueue_ordered(xs, self.buffers[type])
+
+  def replace_buffer(self, x, type):
+    if x is None:
+      return
+    with self._lock:
+      buffer.pop_all(self.buffers[type])
+      buffer.enqueue(x, self.buffers[type])
+
+  def replace_all_buffer(self, xs, type):
+    with self._lock:
+      buffer.pop_all(self.buffers[type])
       buffer.enqueue_ordered(xs, self.buffers[type])
 
   def get_buffer(self, type):
@@ -250,6 +265,10 @@ class DialogueState():
     with self._lock:
       self.memory.instantiate(fact)
 
+  def access_from_context(self, pred_patt):
+    with self._lock:
+      return self.memory.access_matching(pred_patt)
+
   def get_memory(self):
     with self._lock:
       return self.memory
@@ -276,7 +295,7 @@ class DialogueState():
           return self.memory.does_characterize_episode(wff[0], wff[2])
         # Otherwise, check to see if wff is true in context
         return True if self.memory.get_from_context(wff) else False
-      eval_truth_value_recur(wff)
+      return eval_truth_value_recur(wff)
 
   # === timegraph accessors ===
 
@@ -318,13 +337,21 @@ class DialogueState():
   
   def write_output_buffer(self):
     """Writes the output buffer (a list of Utterances)"""
-    output = ' '.join([utt.words for utt in self.output_buffer])
-    affects = [utt.affect for utt in self.output_buffer if utt.affect != 'neutral']
-    affect = affects[0] if affects else 'neutral'
-    affect = 'neutral'
-    file.write_file(self.get_io_path('turn-output.txt'), output)
-    file.write_file(self.get_io_path('turn-affect.txt'), affect)
-    self.output_buffer = []
+    with self._lock:
+      if not self.output_buffer:
+        return
+      output = ' '.join([utt.words for utt in self.output_buffer])
+      affects = [utt.affect for utt in self.output_buffer if utt.affect != 'neutral']
+      affect = affects[0] if affects else 'neutral'
+      affect = 'neutral'
+      file.write_file(self.get_io_path('turn-output.txt'), output)
+      file.write_file(self.get_io_path('turn-affect.txt'), affect)
+      self.output_buffer = []
+
+  def push_output_buffer(self, utt):
+    """Pushes an utterance onto the output buffer"""
+    with self._lock:
+      self.output_buffer.append(utt)
   
   def print_schema_predicates(self, surface_english=False):
     """Prints all of the stored schema predicates."""
@@ -367,7 +394,6 @@ class DialogueState():
     file.ensure_file_exists(self.get_io_path('conversation-log/semantic.txt'))
     file.ensure_file_exists(self.get_io_path('conversation-log/pragmatic.txt'))
     file.ensure_file_exists(self.get_io_path('conversation-log/obligations.txt'))
-    file.ensure_file_exists(self.get_io_path('output.txt'))
     file.ensure_file_exists(self.get_io_path('turn-output.txt'))
     file.ensure_file_exists(self.get_io_path('turn-affect.txt'))
     

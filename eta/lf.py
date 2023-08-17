@@ -381,8 +381,20 @@ def make_set(lst):
   """Creates a set from a list of values"""
   if atom(lst):
     return lst
+  elif len(lst) == 1:
+    return lst[0]
   else:
     return cons('set-of', lst)
+  
+
+def is_set(lst):
+  """Checks whether list is a set formula"""
+  return isinstance(lst, list) and (lst[0] == 'set-of' or lst[1] in ['and.cc', 'and'])
+
+
+def set_union(lst1, lst2):
+  """Forms union set from two set formulas"""
+  return make_set(remove_duplicates(extract_set(lst1)+extract_set(lst2), order=True))
   
 
 # Some type-checking predicates

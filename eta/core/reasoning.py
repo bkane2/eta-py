@@ -3,7 +3,7 @@ from time import sleep
 from eta.constants import *
 import eta.util.file as file
 from eta.util.general import listp, atom
-from eta.lf import parse_eventuality
+from eta.lf import parse_eventuality, is_set
 
 def reasoning_loop(ds):
   # TODO: maintain depth limit for facts in inference queue
@@ -75,11 +75,10 @@ def suggest_possible_actions(observations, ds):
 
 
 def reply_to_wff(wff):
-  return listp(wff) and len(wff) == 3 and wff[0] == YOU and wff[1] == REPLY_TO and atom(wff[2])
-
+  return listp(wff) and len(wff) == 3 and wff[:2] == [YOU, REPLY_TO] and (atom(wff[2]) or is_set(wff[2]))
 
 def say_to_wff(wff):
-  return listp(wff) and len(wff) == 4 and wff[0] == YOU and wff[1] == SAY_TO
+  return listp(wff) and len(wff) == 4 and wff[:2] == [YOU, SAY_TO]
 
 
 def main():

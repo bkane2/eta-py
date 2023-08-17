@@ -33,7 +33,6 @@
 
 :episodes (
 
-
 ?e1 (?s say-to.v ?h '(This is a test string \.))
  
 ?e2 (?h reply-to.v ?e1)
@@ -50,6 +49,7 @@
 
 :certainties (
   !c1 (!e1 0.4)
+  !c2 (!e2 0.4)
 )
 
 :necessities (

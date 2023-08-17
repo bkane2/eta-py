@@ -147,12 +147,16 @@ class MemoryStorage:
     if listp(memory):
       return [self.remove_from_context(m) for m in memory]
     
-    ep = memory.get_ep()
-    memories = self.ep_ht[ep]
-    for m in memories:
-      if m in self.context:
-        m.end()
-        self.context.remove(m)
+    # TODO: need to figure out appropriate way of removing from context
+    if memory in self.context:
+      memory.end()
+      self.context.remove(memory)
+    # ep = memory.get_ep()
+    # memories = self.ep_ht[ep]
+    # for m in memories:
+    #   if m in self.context:
+    #     m.end()
+    #     self.context.remove(m)
       
   def instantiate(self, event, importance=DEFAULT_IMPORTANCE):
     """TBC"""
@@ -235,6 +239,12 @@ class MemoryStorage:
     """TBC"""
     memories = self.get_matching(pred_patt)
     self.remove_from_context(memories)
+
+  def get_characterizing_episode(self, pred_patt, ep):
+    """TBC"""
+    memories1 = self.get_matching(pred_patt)
+    memories2 = self.get_episode(ep)
+    return list(set(memories1).intersection(set(memories2)))
 
   def does_characterize_episode(self, pred_patt, ep):
     """TBC"""

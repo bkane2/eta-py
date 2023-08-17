@@ -26,3 +26,23 @@ def get_prior_turn(turns, agent=None):
     return agent_turns[-1] if agent_turns else None
   else:
     return turns[-1] if turns else None
+  
+
+def parse_utt_str(str):
+  affect = None
+  words = str
+  for e in EMOTIONS_LIST:
+    tag1 = f'[{e}]'
+    tag2 = f'[{e.upper()}]'
+    if tag1 in str or tag2 in str:
+      words = words.replace(tag1, '').replace(tag2, '').strip()
+      affect = e
+  return affect, words
+    
+
+def main():
+  print(parse_utt_str('[sad] test string .'))
+
+
+if __name__ == '__main__':
+  main()

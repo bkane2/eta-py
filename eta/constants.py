@@ -42,13 +42,22 @@ HERE = '^here'
 # Common predicates
 SAY_TO = 'say-to.v'
 PARAPHRASE_TO = 'paraphrase-to.v'
+RESPOND_TO = 'respond-to.v'
 REPLY_TO = 'reply-to.v'
+ANSWER = 'answer.v'
+ASK = 'ask.v'
 REACT_TO = 'react-to.v'
 ARTICULATE_TO = 'articulate-to.v'
+SAY_BYE = 'say-bye.v'
 
 # A list of supported speech acts
-SPEECH_ACTS = [SAY_TO, PARAPHRASE_TO, REPLY_TO, REACT_TO, ARTICULATE_TO]
+SPEECH_ACTS = [SAY_TO, PARAPHRASE_TO, RESPOND_TO, REPLY_TO, ANSWER, ASK, REACT_TO, ARTICULATE_TO, SAY_BYE]
 
 # Telic predicates, i.e., predicates that denote events that are assumed to be "instantaneous".
 # TODO: create a more systematic classification
 TELIC_VERBS = SPEECH_ACTS + ['move.v']
+
+# Special "no-op" WFFs used to characterize failed episodes
+NOOP_YOU = [YOU, 'do.v', ['no.d', 'thing.n']]
+NOOP_GEN = [['no.d', 'thing.n'], 'happen.v']
+NOOP = [NOOP_YOU, NOOP_GEN]
