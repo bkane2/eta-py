@@ -7,7 +7,7 @@
 
 (store-schema 'test-repeat.v
 
-'(dial-schema :header (((set-of ?s ?h) test-repeat.v ?words) ** ?e)
+'(dial-schema :header (((set-of ?s ?h) test-repeat.v) ** ?e)
 ;````````````````````````````````````````````````````````````````````````````````
 
 :types (
@@ -37,9 +37,9 @@
  
 ?e2 (:repeat-until (?h ((pres prog) test.v (the.d system.n)))
 
-  ?e3 (?s say-to.v ?h '(Test one \.))
+  ?e3 (?h say-to.v ?s ?words)
 
-  ?e4 (?h reply-to.v ?e3)
+  ?e4 (?s say-to.v ?h ?words)
 
 )
 

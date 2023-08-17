@@ -1,3 +1,4 @@
+from eta.constants import *
 from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr
 from eta.util.general import listp, atom, cons, flatten, episode_name, episode_var, subst, substall, rec_replace, dict_substall_keys, replaceall, dual_var, remove_duplicates
 
@@ -367,6 +368,15 @@ def parse_eventuality_list(lst, prob_dict={}):
   return ret
 
 
+def expectation_p(e):
+  """Returns True if a given eventuality defines an expectation or not: i.e., if it is not a special
+     eventuality type, and its subject is not ^me."""
+  if type(e) in [Condition, Repetition]:
+    return False
+  wff = e.get_wff()
+  return not ((isinstance(wff, list) and wff[0] == ME) or (isinstance(wff, str) and wff.split()[0] == ME))
+
+
 def extract_set(ulf):
   """Extracts a set from a formula of form [set-of, 'a', 'b', ...]"""
   if atom(ulf):
@@ -456,7 +466,6 @@ def main():
   facta = parse_eventuality('(|person| run.v)')
   factb = parse_eventuality('(|person| run.v)')
   print(remove_duplicates([facta, factb], order=True))
-
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ from eta.util.general import gentemp, clear_symtab, remove_duplicates, remove_ni
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
-from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p
+from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p, expectation_p
 from eta.memory import MemoryStorage
 from eta.schema import from_lisp_dirs
 from eta.plan import init_plan_from_eventualities
@@ -166,7 +166,8 @@ class DialogueState():
         self.quit_conversation = True
 
   def instantiate_curr_step(self):
-    """Instantiates the current plan step, binding it everywhere in the dialogue state and adding it to memory."""
+    """Instantiates the current plan step, binding it everywhere in the dialogue state.
+       Also adds the fact to memory (only if not a top-level expectation)."""
     def instantiate_step_recur(step):
       event = step.event
       ep_var = event.get_ep()
@@ -186,7 +187,8 @@ class DialogueState():
 
         event.bind(ep_var, ep)
         self.bind(ep_var, ep)
-        self.add_to_context(event)
+        if substeps or not expectation_p(event):
+          self.add_to_context(event)
 
       # Recur for supersteps
       return [instantiate_step_recur(superstep) for superstep in step.supersteps]
@@ -267,7 +269,7 @@ class DialogueState():
 
   def access_from_context(self, pred_patt):
     with self._lock:
-      return self.memory.access_matching(pred_patt)
+      return self.memory.access_from_context(pred_patt)
 
   def get_memory(self):
     with self._lock:

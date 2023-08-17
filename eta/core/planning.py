@@ -131,9 +131,14 @@ def expand_repetition_step(event, ds, schema=None):
     local_vars = [var for e in eventualities for var in e.bindings.keys()]
     # This is a bit of a hack to ensure that only variables bound in the course of
     # execution of the embedded eventualities (e.g., ?words) are unbound.
+    # TODO: some modifications still need to be made here in order to make the generated
+    # plans and facts in memory coherent in case of repetition
     if schema:
       local_vars = [var for var in local_vars if var not in schema.participants]
     [ds.unbind(var) for var in local_vars]
+    [e.unbind(var) for e in eventualities for var in local_vars]
+    [event.unbind(var) for var in local_vars]
+    [schema.unbind(var) for var in local_vars]
     return init_plan_from_eventualities(eventualities+[event], schema=schema)
 
 

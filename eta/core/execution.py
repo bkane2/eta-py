@@ -181,7 +181,6 @@ def execute_say_bye(step, ds):
   ds.set_quit_conversation(True)
   return {}
 
-
 def you_pred(wff):
   return (isinstance(wff, list) and wff[0] == YOU) or (isinstance(wff, str) and wff.split()[0] == YOU)
 
