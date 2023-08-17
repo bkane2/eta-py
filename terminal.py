@@ -19,8 +19,13 @@ def main(args):
   fname_in_words = f'io/{args.agent_id}/{args.user_id}/turn-output.txt'
   fname_in_affect = f'io/{args.agent_id}/{args.user_id}/turn-affect.txt'
 
-  if os.path.isfile(fname_in_words) and os.path.isfile(fname_in_affect):
+  if args.agent_start:
+    while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
+      sleep(.1)
     read_eta(fname_in_words, fname_in_affect)
+  else:
+    if os.path.isfile(fname_in_words) and os.path.isfile(fname_in_affect):
+      read_eta(fname_in_words, fname_in_affect)
 
   while True:
     sleep(.1)
@@ -39,5 +44,6 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Eta terminal.')
   parser.add_argument('agent_id', type=str)
   parser.add_argument('user_id', type=str)
+  parser.add_argument('--agent_start', type=bool, action='store_true')
   args = parser.parse_args()
   main(args)
