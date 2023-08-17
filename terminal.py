@@ -44,6 +44,6 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Eta terminal.')
   parser.add_argument('agent_id', type=str)
   parser.add_argument('user_id', type=str)
-  parser.add_argument('--agent_start', type=bool, action='store_true')
+  parser.add_argument('--agent_start', action='store_true')
   args = parser.parse_args()
   main(args)
