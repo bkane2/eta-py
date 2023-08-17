@@ -11,7 +11,10 @@ def read_eta(fname_in_words, fname_in_affect):
     os.remove(fname_in_words)
     os.remove(fname_in_affect)
     
-    return f'[{affect}] {words}'
+    if words:
+      return f'[{affect}] {words}'
+    else:
+      return ''
 
 
 def main(args):
@@ -19,6 +22,12 @@ def main(args):
   fname_in_words = f'io/{args.agent_id}/{args.user_id}/turn-output.txt'
   fname_in_affect = f'io/{args.agent_id}/{args.user_id}/turn-affect.txt'
 
+  # Remove initial contents of Eta files
+  if os.path.isfile(fname_in_words) and os.path.isfile(fname_in_affect):
+    os.remove(fname_in_words)
+    os.remove(fname_in_affect)
+
+  # If agent is supposed to start, block until an utterance is obtained
   if args.agent_start:
     utt = ''
     while not utt:
@@ -26,10 +35,9 @@ def main(args):
         sleep(.1)
       str = read_eta(fname_in_words, fname_in_affect)
       utt = str if str else ''
-  else:
-    if os.path.isfile(fname_in_words) and os.path.isfile(fname_in_affect):
-      print(read_eta(fname_in_words, fname_in_affect))
+    print(utt)
 
+  # Listen for user input
   while True:
     sleep(.1)
     utt = input()
@@ -38,6 +46,7 @@ def main(args):
     if utt == ':q':
       break
 
+    # Block until agent response
     while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
       sleep(.1)
     print(read_eta(fname_in_words, fname_in_affect))
