@@ -1,0 +1,7 @@
+From the following list, which emotional state most closely describes the feelings of ^me?
+<emotions>
+
+@zip(<agents>, <history>)
+^me: <words>
+
+Emotional state:

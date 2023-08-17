@@ -109,5 +109,15 @@ class AskTransducer(Transducer):
     return utts
   
 
+class AffectTransducer(Transducer):
+  def __init__(self):
+    pass
+
+  def __call__(self, words, conversation_log):
+    """str, List[DialogueTurn] -> List[str]"""
+    affects = []
+    return affects
+  
+
 # PlanExpansionTransducer(Transducer):
 # history, context, curr-step -> List[Eventuality]

@@ -1,7 +1,7 @@
 import re
 
 import eta.util.file as file
-from eta.constants import ME, YOU
+from eta.constants import *
 from eta.util.general import standardize
 from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 from eta.transducers.base import *
@@ -21,13 +21,19 @@ def answer_validator(prompt, resp):
     return None
   return re.sub(r'\.[^\.]*\?$', '.', resp)
 
+def affect_validator(prompt, resp):
+  if resp not in EMOTIONS_LIST:
+    return EMOTIONS_LIST[0]
+  return resp
+
 PROMPTS = {
   'reasoning' : file.read_file('resources/prompts/reasoning.txt'),
   'gist' : file.read_file('resources/prompts/gist.txt'),
   'paraphrase' : file.read_file('resources/prompts/paraphrase.txt'),
   'response' : file.read_file('resources/prompts/response.txt'),
   'answer' : file.read_file('resources/prompts/answer.txt'),
-  'ask' : file.read_file('resources/prompts/ask.txt')
+  'ask' : file.read_file('resources/prompts/ask.txt'),
+  'affect' : file.read_file('resources/prompts/affect.txt')
 }
 
 VALIDATORS = {
@@ -36,7 +42,8 @@ VALIDATORS = {
   'paraphrase' : [paraphrase_validator],
   'response' : [],
   'answer' : [answer_validator],
-  'ask' : []
+  'ask' : [],
+  'affect' : [affect_validator]
 }
 
 def apply_zip(prompt, kwargs):
@@ -104,6 +111,7 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
 
   def __call__(self, utt, conversation_log):
     """str, List[DialogueTurn] -> List[str]"""
+    # TODO: need to deal with pronoun swapping here
     prev_utt = 'Hello.'
     prior_turn = get_prior_turn(conversation_log, ME)
     if prior_turn:
@@ -240,6 +248,23 @@ class GPTAskTransducer(GPTTransducer, AskTransducer):
       'history' : history
     })
     return [standardize(utt)]
+  
+
+class GPTAffectTransducer(GPTTransducer, AffectTransducer):
+  def __init__(self):
+    super().__init__(PROMPTS['affect'], VALIDATORS['affect'])
+
+  def __call__(self, words, conversation_log):
+    """str, List[DialogueTurn] -> List[str]"""
+    history = [turn.utterance.words for turn in conversation_log[-3:]]
+    agents = [f'{turn.agent}: ' for turn in conversation_log[-3:]]
+    affect = super().__call__({
+      'emotions' : ', '.join(EMOTIONS_LIST),
+      'agents' : agents,
+      'history' : history,
+      'words' : words
+    })
+    return [affect]
 
 
 def test1():
@@ -291,11 +316,23 @@ def test4():
   print(test(clog, conds=conds, facts=facts), '\n')
 
 
+def test5():
+  test = GPTAffectTransducer()
+
+  clog = [
+    DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
+    DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
+  ]
+  words = 'how long do you think i have left ?'
+  print(test(words, clog), '\n')
+
+
 def main():
   # test1()
   # test2()
   # test3()
-  test4()
+  # test4()
+  test5()
 
 
 if __name__ == '__main__':

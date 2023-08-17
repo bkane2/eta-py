@@ -181,6 +181,18 @@ class TTAskTransducer(TTTransducer, AskTransducer):
     return utts
   
 
+class TTAffectTransducer(TTTransducer, AffectTransducer):
+  def __init__(self, rule_dirs):
+    # TODO
+    pass
+
+  def __call__(self, words, conversation_log):
+    """str, List[DialogueTurn] -> List[str]"""
+    # TODO
+    affects = []
+    return affects
+  
+
 def test1():
   facts = ['it is snowing outside .', 'i am mortal .', 'i own a cat , and my cat is nice .', 'i own skiis .', '^you say-to ^me "I like to go skiing" .']
   test = TTReasoningTransducer('avatars/test/rules')
