@@ -15,6 +15,16 @@ def read_eta(fname_in_words, fname_in_affect):
       return f'[{affect}] {words}'
     else:
       return ''
+    
+
+def block_until_eta_response(fname_in_words, fname_in_affect):
+  utt = ''
+  while not utt:
+    while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
+      sleep(.1)
+    str = read_eta(fname_in_words, fname_in_affect)
+    utt = str if str else ''
+  return utt
 
 
 def main(args):
@@ -29,13 +39,7 @@ def main(args):
 
   # If agent is supposed to start, block until an utterance is obtained
   if args.agent_start:
-    utt = ''
-    while not utt:
-      while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
-        sleep(.1)
-      str = read_eta(fname_in_words, fname_in_affect)
-      utt = str if str else ''
-    print(utt)
+    print(block_until_eta_response(fname_in_words, fname_in_affect))
 
   # Listen for user input
   while True:
@@ -46,10 +50,7 @@ def main(args):
     if utt == ':q':
       break
 
-    # Block until agent response
-    while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
-      sleep(.1)
-    print(read_eta(fname_in_words, fname_in_affect))
+    print(block_until_eta_response(fname_in_words, fname_in_affect))
     
 
 if __name__ == '__main__':
