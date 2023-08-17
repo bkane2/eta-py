@@ -11,7 +11,7 @@ def read_eta(fname_in_words, fname_in_affect):
     os.remove(fname_in_words)
     os.remove(fname_in_affect)
     
-    print(f'[{affect}] {words}')
+    return f'[{affect}] {words}'
 
 
 def main(args):
@@ -20,12 +20,15 @@ def main(args):
   fname_in_affect = f'io/{args.agent_id}/{args.user_id}/turn-affect.txt'
 
   if args.agent_start:
-    while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
-      sleep(.1)
-    read_eta(fname_in_words, fname_in_affect)
+    utt = ''
+    while not utt:
+      while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
+        sleep(.1)
+      str = read_eta(fname_in_words, fname_in_affect)
+      utt = str if str else ''
   else:
     if os.path.isfile(fname_in_words) and os.path.isfile(fname_in_affect):
-      read_eta(fname_in_words, fname_in_affect)
+      print(read_eta(fname_in_words, fname_in_affect))
 
   while True:
     sleep(.1)
@@ -37,7 +40,7 @@ def main(args):
 
     while not os.path.isfile(fname_in_words) or not os.path.isfile(fname_in_affect):
       sleep(.1)
-    read_eta(fname_in_words, fname_in_affect)
+    print(read_eta(fname_in_words, fname_in_affect))
     
 
 if __name__ == '__main__':
