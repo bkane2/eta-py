@@ -116,7 +116,7 @@ class PlanNode:
 
     if prev:
       ret += '   ...\n'
-    for step_prev in steps_prev:
+    for step_prev in steps_prev[::-1]:
       ret += f'   {step_prev}\n'
     ret += f'>> {step_curr}\n'
     for step_next in steps_next:
