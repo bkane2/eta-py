@@ -427,6 +427,15 @@ def certainty_to_period(certainty):
     return 'inf'
   else:
     return -EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT * math.log(1-certainty)
+  
+
+def has_elapsed_certainty_period(time, certainty):
+  """Checks whether a given time delta has elapsed the period corresponding to a particular certainty."""
+  if certainty >= 1 or certainty < 0:
+    return False
+  else:
+    period = certainty_to_period(certainty)
+    return time >= period
 
 
 def visualize_plan(plan_node, before=3, after=5, schemas=False, vert=False):
