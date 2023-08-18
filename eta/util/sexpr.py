@@ -1,6 +1,6 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 
-from eta.util.general import flatten, replaceall, cons, symbolp, atom, escaped_symbol_p
+from eta.util.general import flatten, replaceall, cons, symbolp, atom, escaped_symbol_p, standardize
 import eta.util.file as file
 
 def balanced_substr(s):
@@ -52,7 +52,7 @@ def convert_quotes(s_expr):
 			e1 = []
 			for x1, x2 in zip([None]+e[:-1], e):
 				if x1 == "'" and x2 and isinstance(x2, list) and all([isinstance(x, str) for x in x2]):
-					e1.append('"'+' '.join(x2)+'"')
+					e1.append('"'+standardize(' '.join(x2))+'"')
 				elif x2 != "'":
 					e1.append(x2)
 			return [convert_quotes_rec(x) for x in e1]
