@@ -41,7 +41,9 @@ class DialogueState():
     self.schemas = schema_from_lisp_dirs(config_agent['schema_dirs'])
     self.concept_aliases = None # TODO
     self.concept_sets = None # TODO
-    self.init_knowledge = eventualities_from_lisp_dirs(config_agent['knowledge_dirs'])
+    self.init_knowledge = []
+    if 'knowledge_dirs' in config_agent:
+      self.init_knowledge = eventualities_from_lisp_dirs(config_agent['knowledge_dirs'])
 
     # === dialogue variables ===
     if not self.start_schema in self.schemas['dial-schema']:
