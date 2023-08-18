@@ -3,9 +3,10 @@ import openai
 from openai.error import RateLimitError, Timeout, ServiceUnavailableError, APIConnectionError, APIError
 from transformers import GPT2Tokenizer
 
+from eta.constants import *
 import eta.util.file as file
 
-openai.api_key = file.read_file('_keys/openai.txt')
+openai.api_key = file.read_file(f'{KEY_PATH}openai.txt')
 
 TOKENIZER = GPT2Tokenizer.from_pretrained("gpt2")
 

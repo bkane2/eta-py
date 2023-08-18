@@ -3,3 +3,6 @@ openai
 transformers
 nltk
 graphviz
+requests
+numpy
+sentence_transformers

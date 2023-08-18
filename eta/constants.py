@@ -1,3 +1,10 @@
+# Default models/embedding URLs
+EMBEDDING_DEFAULT_API = "https://api-inference.huggingface.co/pipeline/feature-extraction/"
+EMBEDDING_DEFAULT_MODEL = "sentence-transformers/all-distilroberta-v1"
+
+# Directory for API keys
+KEY_PATH = '_keys/'
+
 # Coreference mode
 # 0 : simply reconstruct the original ulf
 # 1 : mode 2 but excluding i.pro and you.pro from resolved references

@@ -1,5 +1,6 @@
 from eta.transducers.tt import *
 from eta.transducers.gpt import *
+from eta.embedding import *
 
 def config():
   return {
@@ -19,5 +20,6 @@ def config():
         'expand-step' : TTExpandStepTransducer('avatars/test/rules'),
         'affect' : GPTAffectTransducer()
     },
+    'embedder': Embedder(),
     'session_number': 1
   }
