@@ -133,12 +133,12 @@ class Schema:
 
     # Return with warning if no variables in participants list
     if not vars:
-      print(f'@@@ Warning: Attempt to substitute values \n    {args}\n    in participants {participants}, which has no variables.')
+      # print(f'@@@ Warning: Attempt to substitute values \n    {args}\n    in participants {participants}, which has no variables.')
       return self
     
     # Case 1: More args than variables
     if len(args) > len(vars):
-      print(f'@@@ Warning: More values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
+      # print(f'@@@ Warning: More values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
 
       # If ^me or ^you are already in participants of the schema, remove them from the args list
       args = [x for x in args if x != ME] if ME in participants else args
@@ -147,11 +147,11 @@ class Schema:
       if len(args) > len(vars):
         args = args[:(len(vars)-len(args))]
 
-      print(f'@@@ Now using args: {args}')
+      # print(f'@@@ Now using args: {args}')
 
     # Case 2: Fewer args than variables
     elif len(args) < len(vars):
-      print(f'@@@ Warning: Fewer values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
+      # print(f'@@@ Warning: Fewer values supplied, vis.,\n    {args},\n    than participants {participants} has variables.')
 
       # Assume first two missing args are ^me and ^you if they don't appear in the header
       if (len(vars)-len(args)) >= 2 and not YOU in participants:
@@ -161,7 +161,7 @@ class Schema:
       if len(args) < len(vars):
         vars = vars[:(len(args)-len(vars))]
 
-      print(f'@@@ Now using args: {args}, for vars: {vars}')
+      # print(f'@@@ Now using args: {args}, for vars: {vars}')
 
     # Length of 'args' and 'vars' are equal (or have just been equalized)
     for var, arg in zip(vars, args):
