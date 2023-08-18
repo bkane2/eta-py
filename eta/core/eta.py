@@ -316,6 +316,8 @@ class DialogueState():
     
   def apply_transducer(self, type, *args):
     with self._lock:
+      if type not in self.transducers:
+        return []
       if isinstance(self.transducers[type], list):
         return remove_nil(remove_duplicates(append([t(*args) for t in self.transducers[type]]), order=True))
       else:
@@ -457,7 +459,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(
                     prog='eta',
                     description='Starts the Eta dialogue manager')
-  parser.add_argument('--agent', type=str, default='lissa_gpt', help='The name of an agent config in eta.config')
+  parser.add_argument('--agent', type=str, default='sophie_gpt', help='The name of an agent config in eta.config')
   parser.add_argument('--user', type=str, default='test', help='The name of a user config in ./user_config/')
   args = parser.parse_args()
   main(args.agent, args.user)

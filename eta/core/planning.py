@@ -168,7 +168,7 @@ def plan_paraphrase(expr, ds):
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
-  return say_to_step_from_utts(ds.apply_transducer('paraphrase', gist, conversation_log, conds=conds, facts=facts))
+  return say_to_step_from_utts(ds.apply_transducer('paraphrase', gist, conversation_log, conds, facts))
 
 
 def plan_respond(expr, ds):
@@ -176,7 +176,7 @@ def plan_respond(expr, ds):
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
-  return say_to_step_from_utts(ds.apply_transducer('response', conversation_log, conds=conds, facts=facts))
+  return say_to_step_from_utts(ds.apply_transducer('response', conversation_log, conds, facts))
 
 
 def plan_answer(expr, ds):
@@ -184,7 +184,7 @@ def plan_answer(expr, ds):
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
-  return say_to_step_from_utts(ds.apply_transducer('answer', conversation_log, conds=conds, facts=facts))
+  return say_to_step_from_utts(ds.apply_transducer('answer', conversation_log, conds, facts))
 
 
 def plan_ask(expr, ds):
@@ -192,7 +192,7 @@ def plan_ask(expr, ds):
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
-  return say_to_step_from_utts(ds.apply_transducer('ask', conversation_log, conds=conds, facts=facts))
+  return say_to_step_from_utts(ds.apply_transducer('ask', conversation_log, conds, facts))
 
 
 def plan_react(expr, ds):

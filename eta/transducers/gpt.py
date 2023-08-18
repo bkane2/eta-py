@@ -178,7 +178,7 @@ class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
       e['agents-gen'] = self._to_generic_agents(e['agents'])
     super().__init__(PROMPTS['paraphrase'], VALIDATORS['paraphrase'], examples=examples)
 
-  def __call__(self, gist, conversation_log, conds=[], facts=[]):
+  def __call__(self, gist, conversation_log, conds, facts):
     """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
@@ -202,7 +202,7 @@ class GPTResponseTransducer(GPTTransducer, ResponseTransducer):
   def __init__(self):
     super().__init__(PROMPTS['response'], VALIDATORS['response'])
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
@@ -220,7 +220,7 @@ class GPTAnswerTransducer(GPTTransducer, AnswerTransducer):
   def __init__(self):
     super().__init__(PROMPTS['answer'], VALIDATORS['answer'])
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
@@ -237,7 +237,7 @@ class GPTAskTransducer(GPTTransducer, AskTransducer):
   def __init__(self):
     super().__init__(PROMPTS['ask'], VALIDATORS['ask'])
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
@@ -301,7 +301,7 @@ def test3():
     DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
   gist = 'what is my prognosis ?'
-  print(test(gist, clog, facts=facts), '\n')
+  print(test(gist, clog, facts), '\n')
 
 
 def test4():
@@ -313,7 +313,7 @@ def test4():
     DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
     DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
-  print(test(clog, conds=conds, facts=facts), '\n')
+  print(test(clog, conds, facts), '\n')
 
 
 def test5():

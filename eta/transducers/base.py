@@ -73,7 +73,7 @@ class ParaphraseTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, gist, conversation_log, conds=[], facts=[]):
+  def __call__(self, gist, conversation_log, conds, facts):
     """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     utts = []
     return utts
@@ -83,7 +83,7 @@ class ResponseTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     utts = []
     return utts
@@ -93,7 +93,7 @@ class AnswerTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     utts = []
     return utts
@@ -103,7 +103,7 @@ class AskTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     utts = []
     return utts

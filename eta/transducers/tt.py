@@ -134,7 +134,7 @@ class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
   def __init__(self, rule_dirs):
     super().__init__(rule_dirs, 'paraphrase')
 
-  def __call__(self, gist, conversation_log, conds=[], facts=[]):
+  def __call__(self, gist, conversation_log, conds, facts):
     """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     prev_gist = ''
     prior_turn = get_prior_turn(conversation_log, YOU)
@@ -150,7 +150,7 @@ class TTResponseTransducer(TTTransducer, ResponseTransducer):
     # TODO
     pass
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     # TODO
     utts = []
@@ -162,7 +162,7 @@ class TTAnswerTransducer(TTTransducer, AnswerTransducer):
     # TODO
     pass
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     # TODO
     utts = []
@@ -174,7 +174,7 @@ class TTAskTransducer(TTTransducer, AskTransducer):
     # TODO
     pass
 
-  def __call__(self, conversation_log, conds=[], facts=[]):
+  def __call__(self, conversation_log, conds, facts):
     """List[DialogueTurn], List[Eventuality], List[Eventuality] -> str"""
     # TODO
     utts = []
