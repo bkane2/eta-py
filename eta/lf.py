@@ -1,5 +1,7 @@
+import glob
+
 from eta.constants import *
-from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr
+from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr, read_lisp
 from eta.util.general import listp, atom, cons, flatten, episode_name, episode_var, subst, substall, rec_replace, dict_substall_keys, replaceall, dual_var, remove_duplicates
 
 KEYWORDS = ['not', 'plur', 'past', 'pres', 'perf', 'prog', 'pasv', 'k', 'ka', 'ke', 'to', 'that', 'tht', 'fquan', 'nquan',
@@ -368,6 +370,28 @@ def parse_eventuality_list(lst, prob_dict={}):
   return ret
 
 
+def from_lisp_file(fname, eventualities):
+  """Reads a list of eventualities from a .lisp file."""
+  for expr in read_lisp(fname):
+    if expr[0] == 'defparameter':
+      contents = expr[2]
+      for wff in contents:
+        eventualities.append(parse_eventuality(wff))
+
+
+def from_lisp_dirs(dirs):
+  """Recursively reads all .lisp files in a given dir or list of dirs,
+     returning a dict of eventualities."""
+  eventualities = []
+  if isinstance(dirs, str):
+    dirs = [dirs]
+  for dir in dirs:
+    fnames = glob.glob(dir + '/**/*.lisp', recursive=True)
+    for fname in fnames:
+      from_lisp_file(fname, eventualities)
+  return eventualities
+
+
 def expectation_p(e):
   """Returns True if a given eventuality defines an expectation or not: i.e., if it is not a special
      eventuality type, and its subject is not ^me."""
@@ -424,7 +448,7 @@ def characterizes_prop_p(ulf):
   return listp(ulf) and len(ulf) == 3 and ulf[1] == '**'
 
 
-def main():
+def test1():
   fact = Eventuality('e5',
               'John went to the store yesterday.',
               '(|John| ((past go.v) (to.p (the.d store.n)) (adv-e yesterday.pro)))',
@@ -466,6 +490,13 @@ def main():
   facta = parse_eventuality('(|person| run.v)')
   factb = parse_eventuality('(|person| run.v)')
   print(remove_duplicates([facta, factb], order=True))
+
+
+def main():
+  # test1()
+  knowledge = from_lisp_dirs('avatars/test/knowledge')
+  for e in knowledge:
+    print(e)
 
 
 if __name__ == '__main__':

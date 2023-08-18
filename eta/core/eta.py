@@ -11,8 +11,9 @@ import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
 from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p, expectation_p
+from eta.lf import from_lisp_dirs as eventualities_from_lisp_dirs
 from eta.memory import MemoryStorage
-from eta.schema import from_lisp_dirs
+from eta.schema import from_lisp_dirs as schema_from_lisp_dirs
 from eta.plan import init_plan_from_eventualities
 
 from eta.core.perception import perception_loop
@@ -37,10 +38,10 @@ class DialogueState():
     self.step_failure_timer = time.now()
     self.quit_conversation = False
 
-    self.schemas = from_lisp_dirs(config_agent['schema_dirs'])
+    self.schemas = schema_from_lisp_dirs(config_agent['schema_dirs'])
     self.concept_aliases = None # TODO
     self.concept_sets = None # TODO
-    self.init_knowledge = None # TODO
+    self.init_knowledge = eventualities_from_lisp_dirs(config_agent['knowledge_dirs'])
 
     # === dialogue variables ===
     if not self.start_schema in self.schemas['dial-schema']:
@@ -52,8 +53,10 @@ class DialogueState():
     self.equality_sets = {}
     self.conversation_log = []
     self.memory = MemoryStorage()
+    self.add_to_memory(self.init_knowledge)
     self.timegraph = self._make_timegraph()
     self.transducers = self.config_agent.pop('transducers')
+    self.embedder = self.config_agent.pop('embedder')
 
     self._create_session_io_files()
   
@@ -262,6 +265,10 @@ class DialogueState():
       self.conversation_log.append(turn)
 
   # === memory accessors ===
+
+  def add_to_memory(self, fact):
+    with self._lock:
+      self.memory.store(fact)
 
   def add_to_context(self, fact):
     with self._lock:

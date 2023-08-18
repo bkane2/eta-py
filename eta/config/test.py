@@ -7,7 +7,8 @@ def config():
     'avatar': 'test',
     'avatar_name': 'Test',
     'schema_dirs': 'avatars/test/schemas',
-    'start_schema': 'test-repeat.v',
+    'knowledge_dirs': 'avatars/test/knowledge',
+    'start_schema': 'test.v',
     'perception_servers': ['speech', 'world'],
     'specialist_servers': [],
     'transducers': {
