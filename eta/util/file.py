@@ -14,6 +14,11 @@ def read_lines(fname):
 def write_file(fname, data):
   with open(fname, 'w+') as f:
     f.write(data)
+
+
+def append_file(fname, data):
+  with open(fname, 'a+') as f:
+    f.write(data)
   
 
 def load_json(fname):

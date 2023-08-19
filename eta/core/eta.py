@@ -10,7 +10,7 @@ from eta.util.general import gentemp, clear_symtab, remove_duplicates, remove_ni
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
-from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p, expectation_p
+from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p, expectation_p, list_to_s_expr
 from eta.lf import from_lisp_dirs as eventualities_from_lisp_dirs
 from eta.memory import MemoryStorage
 from eta.schema import from_lisp_dirs as schema_from_lisp_dirs
@@ -265,6 +265,7 @@ class DialogueState():
   def log_turn(self, turn):
     with self._lock:
       self.conversation_log.append(turn)
+      self._write_turn(turn)
 
   # === memory accessors ===
 
@@ -349,20 +350,19 @@ class DialogueState():
     return cost
   
   def write_output_buffer(self):
-    """Writes the output buffer (a list of Utterances)"""
+    """Writes the output buffer (a list of Utterances)."""
     with self._lock:
       if not self.output_buffer:
         return
       output = ' '.join([utt.words for utt in self.output_buffer])
       affects = [utt.affect for utt in self.output_buffer if utt.affect != 'neutral']
       affect = affects[0] if affects else 'neutral'
-      affect = 'neutral'
       file.write_file(self.get_io_path('turn-output.txt'), output)
       file.write_file(self.get_io_path('turn-affect.txt'), affect)
       self.output_buffer = []
 
   def push_output_buffer(self, utt):
-    """Pushes an utterance onto the output buffer"""
+    """Pushes an utterance onto the output buffer."""
     with self._lock:
       self.output_buffer.append(utt)
   
@@ -409,6 +409,21 @@ class DialogueState():
     file.ensure_file_exists(self.get_io_path('conversation-log/obligations.txt'))
     file.ensure_file_exists(self.get_io_path('turn-output.txt'))
     file.ensure_file_exists(self.get_io_path('turn-affect.txt'))
+
+  def _write_turn(self, turn):
+    """Writes a turn to the conversation log directory."""
+    text = turn.utterance.words
+    affect = turn.utterance.affect
+    gist = " ".join([list_to_s_expr(t) for t in turn.gists]) if turn.gists else 'NIL'
+    semantics = " ".join([list_to_s_expr(t) for t in turn.semantics]) if turn.semantics else 'NIL'
+    pragmatics = " ".join([list_to_s_expr(t) for t in turn.pragmatics]) if turn.pragmatics else 'NIL'
+    obligations = " ".join([list_to_s_expr(t) for t in turn.obligations]) if turn.obligations else 'NIL'
+    file.append_file(self.get_io_path('conversation-log/text.txt'), f'{turn.agent} : {text}\n')
+    file.append_file(self.get_io_path('conversation-log/affect.txt'), f'{turn.agent} : {affect}\n')
+    file.append_file(self.get_io_path('conversation-log/gist.txt'), f'{turn.agent} : {gist}\n')
+    file.append_file(self.get_io_path('conversation-log/semantic.txt'), f'{turn.agent} : {semantics}\n')
+    file.append_file(self.get_io_path('conversation-log/pragmatic.txt'), f'{pragmatics}\n')
+    file.append_file(self.get_io_path('conversation-log/obligations.txt'), f'{obligations}\n')
     
 
 class ProcessManager(BaseManager):

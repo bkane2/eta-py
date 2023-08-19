@@ -6,6 +6,8 @@ SESSION_NUMBER = 1
 DIR_SOPHIE = 'avatars/sophie-gpt/'
 DIRS_SCHEMA = [DIR_SOPHIE+'schemas', DIR_SOPHIE+f'day{SESSION_NUMBER}/schemas']
 DIRS_RULES = [DIR_SOPHIE+'rules', DIR_SOPHIE+f'day{SESSION_NUMBER}/rules']
+GIST_EXAMPLES = file.load_json('avatars/sophie-gpt/gist_examples.json')
+PARAPHRASE_EXAMPLES = file.load_json('avatars/sophie-gpt/paraphrase_examples.json')
 
 def config():
   return {
@@ -17,12 +19,12 @@ def config():
     'specialist_servers': [],
     'transducers': {
         # 'reasoning' : TTReasoningTransducer(DIRS_RULES),
-        'gist' : [TTGistTransducer(DIRS_RULES), GPTGistTransducer()],
+        'gist' : [TTGistTransducer(DIRS_RULES), GPTGistTransducer(GIST_EXAMPLES)],
         # 'semantic' : TTSemanticTransducer(DIRS_RULES),
         'pragmatic' : TTPragmaticTransducer(DIRS_RULES),
         'reaction' : TTReactionTransducer(DIRS_RULES),
         # 'expand-step' : TTExpandStepTransducer(DIRS_RULES),
-        'paraphrase' : GPTParaphraseTransducer(),
+        'paraphrase' : GPTParaphraseTransducer(PARAPHRASE_EXAMPLES),
         'response' : GPTResponseTransducer(),
         'answer' : GPTAnswerTransducer(),
         'ask' : GPTAskTransducer(),

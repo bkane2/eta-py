@@ -202,7 +202,7 @@ def test1():
 
 
 def test2():
-  test = TTGistTransducer('avatars/sophie-gpt/rules')
+  test = TTGistTransducer(['avatars/sophie-gpt/rules', 'avatars/sophie-gpt/day1/rules'])
 
   clog = []
   utt = 'where is your pain ?'
@@ -213,6 +213,14 @@ def test2():
     DialogueTurn('^you', Utterance('hmm ...'))
   ]
   utt = 'yes , i would recommend it . did you come here with anyone today ?'
+  print(test(utt, clog))
+
+  clog = [
+    DialogueTurn('^me', Utterance("hi , doctor . i'm meeting with you today to help get some questions answered about my condition .")),
+    DialogueTurn('^me', Utterance("i wanted to talk to you about the recent increase in my pain . i'm not sure why it's been getting worse lately , and i was hoping you could provide some insight ."),
+                 gists=['why has my pain been getting worse recently ?']),
+  ]
+  utt = 'unfortunately sophie your cancer has spread .'
   print(test(utt, clog))
 
 
@@ -236,8 +244,8 @@ def test3():
 
 def main():
   # test1()
-  # test2()
-  test3()
+  test2()
+  # test3()
 
 
 if __name__ == '__main__':

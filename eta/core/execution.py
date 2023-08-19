@@ -57,8 +57,9 @@ def process_repetition_step(event, ds):
 
 def process_expected_step(event, ds):
   """TBC"""
-  # It is assumed that Eta is done speaking if step is an expectation
-  ds.write_output_buffer()
+  # It is assumed that it is time to write output and listen for input if expected user turn
+  if you_pred(event.get_wff()):
+    ds.write_output_buffer()
 
   # If the timer exceeds period (function of certainty of step), instantiate a 'failed' episode
   certainty = event.prob
@@ -143,7 +144,7 @@ def execute_say_to(step, ds):
   affect, words = parse_utt_str(utt)
   if not affect:
     affects = ds.apply_transducer('affect', words, conversation_log)
-    affect = affects[0] if affect and affects[0] else EMOTIONS_LIST[0]
+    affect = affects[0] if affects and affects[0] else EMOTIONS_LIST[0]
   utt = Utterance(words, affect)
 
   # Find and store additional gist clauses corresponding to Eta's utterance
