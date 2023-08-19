@@ -201,7 +201,7 @@ def remove_duplicates(lst, order=False):
 	
 
 def remove_nil(lst):
-	return [x for x in lst if not x]
+	return [x for x in lst if x]
 	
 
 def subst(a, b, lst):
