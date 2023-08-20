@@ -1,5 +1,5 @@
 from eta.transducers.base import *
-from eta.lf import parse_eventuality
+from eta.lf import parse_eventuality, is_set, extract_set
 from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 
 from eta.constants import ME, YOU
@@ -29,6 +29,8 @@ class TTTransducer(Transducer):
       choice = self.process_choice(choice)
       if choice and listp(choice) and choice[0] == ':and':
         ret = ret + choice[1:]
+      elif choice and listp(choice) and is_set(choice):
+        ret = ret + extract_set(choice)
       else:
         ret.append(choice)
     return remove_duplicates([r for r in ret if r], order=True)
@@ -83,11 +85,12 @@ class TTGistTransducer(TTTransducer, GistTransducer):
     """str, List[DialogueTurn] -> List[str]"""
     prev_gist = ''
     prior_turn = get_prior_turn(conversation_log, ME)
+    gists = []
     if prior_turn:
       prev_gists = prior_turn.gists
-      if prev_gists:
-        prev_gist = prev_gists[0]
-    return super().__call__([prev_gist.split(), utt.split()])
+      for prev_gist in prev_gists:
+        gists += super().__call__([prev_gist.split(), utt.split()])
+    return gists
   
 
 class TTSemanticTransducer(TTTransducer, SemanticTransducer):
@@ -138,11 +141,12 @@ class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
     """str, List[DialogueTurn], List[Eventuality], List[Eventuality] -> List[str]"""
     prev_gist = ''
     prior_turn = get_prior_turn(conversation_log, YOU)
+    utts = []
     if prior_turn:
       prev_gists = prior_turn.gists
-      if prev_gists:
-        prev_gist = prev_gists[0]
-    return super().__call__([prev_gist.split(), gist.split()])
+      for prev_gist in prev_gists:
+        utts += super().__call__([prev_gist.split(), gist.split()])
+    return utts
   
 
 class TTResponseTransducer(TTTransducer, ResponseTransducer):

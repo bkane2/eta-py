@@ -402,13 +402,13 @@ def expectation_p(e):
 
 
 def extract_set(ulf):
-  """Extracts a set from a formula of form [set-of, 'a', 'b', ...]"""
+  """Extracts a set from a formula of form [set-of, 'a', 'b', ...], or of form ['a', and, 'b', and, ...]"""
   if atom(ulf):
     return [ulf]
   elif ulf[0] == 'set-of':
     return ulf[1:]
   else:
-    return ulf
+    return [x for x in ulf if x not in ['and.cc', 'and']]
   
 
 def make_set(lst):

@@ -4,7 +4,7 @@ from eta.constants import *
 import eta.util.file as file
 from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 from eta.util.general import standardize, episode_name, append, remove_duplicates
-from eta.lf import parse_eventuality
+from eta.lf import parse_eventuality, extract_set
 
 PROMPT_GIST = file.read_file('resources/prompts/gist.txt')
 
@@ -49,15 +49,15 @@ def process_utterances(inputs, ds):
 
     # Interpret gist clauses using conversation log
     conversation_log = ds.get_conversation_log()
-    gists = ds.apply_transducer('gist', input, conversation_log)
+    gists = remove_duplicates(ds.apply_transducer('gist', input, conversation_log), order=True)
     observations += [parse_eventuality([YOU, PARAPHRASE_TO, ME, f'"{gist}"'], ep=ep) for gist in gists]
 
     # Interpret semantic meanings of gist clauses
-    semantics = append([ds.apply_transducer('semantic', gist) for gist in gists])
+    semantics = remove_duplicates(append([ds.apply_transducer('semantic', gist) for gist in gists]), order=True)
     observations += [parse_eventuality([YOU, ARTICULATE_TO, ME, semantic], ep=ep) for semantic in semantics]
 
     # Interpret pragmatic meanings of gist clauses
-    pragmatics = append([ds.apply_transducer('pragmatic', gist) for gist in gists])
+    pragmatics = remove_duplicates(append([ds.apply_transducer('pragmatic', gist) for gist in gists]), order=True)
     observations += [parse_eventuality(pragmatic, ep=ep) for pragmatic in pragmatics]
 
     # An utterance may always be considered a reply to the preceeding Eta turn, if any

@@ -2,8 +2,8 @@ from time import sleep
 
 from eta.constants import *
 import eta.util.file as file
-from eta.util.general import listp, atom
-from eta.lf import parse_eventuality, is_set
+from eta.util.general import listp, atom, remove_duplicates
+from eta.lf import parse_eventuality, is_set, extract_set
 
 def reasoning_loop(ds):
   # TODO: maintain depth limit for facts in inference queue
@@ -55,7 +55,7 @@ def infer_bottom_up(facts, ds):
   if not facts:
     return []
   
-  new_facts = ds.apply_transducer('reasoning', facts)
+  new_facts = remove_duplicates(ds.apply_transducer('reasoning', facts), order=True)
   return new_facts
 
 

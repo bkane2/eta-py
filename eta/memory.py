@@ -240,6 +240,12 @@ class MemoryStorage:
     memories = self.get_matching(pred_patt)
     self.remove_from_context(memories)
 
+  def flush_context(self):
+    """TBC"""
+    memories = [m for m in self.context if m.is_telic()]
+    for memory in memories:
+      self.remove_from_context(memory)
+
   def get_characterizing_episode(self, pred_patt, ep):
     """TBC"""
     memories1 = self.get_matching(pred_patt)

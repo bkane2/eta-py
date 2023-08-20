@@ -177,7 +177,8 @@ def plan_respond(expr, ds):
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
-  return say_to_step_from_utts(ds.apply_transducer('response', conversation_log, conds, facts))
+  utts = ds.apply_transducer('response', conversation_log, conds, facts)
+  return say_to_step_from_utts(utts) if utts else say_to_step_from_utt('NIL Response .')
 
 
 def plan_answer(expr, ds):
@@ -185,7 +186,8 @@ def plan_answer(expr, ds):
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
-  return say_to_step_from_utts(ds.apply_transducer('answer', conversation_log, conds, facts))
+  utts = ds.apply_transducer('answer', conversation_log, conds, facts)
+  return say_to_step_from_utts(utts) if utts else say_to_step_from_utt('NIL Answer .')
 
 
 def plan_ask(expr, ds):
@@ -193,7 +195,8 @@ def plan_ask(expr, ds):
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
-  return say_to_step_from_utts(ds.apply_transducer('ask', conversation_log, conds, facts))
+  utts = ds.apply_transducer('ask', conversation_log, conds, facts)
+  return say_to_step_from_utts(utts) if utts else say_to_step_from_utt('NIL Question ?')
 
 
 def plan_react(expr, ds):

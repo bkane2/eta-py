@@ -280,6 +280,10 @@ class DialogueState():
   def access_from_context(self, pred_patt):
     with self._lock:
       return self.memory.access_from_context(pred_patt)
+    
+  def flush_context(self):
+    with self._lock:
+      self.memory.flush_context()
 
   def get_memory(self):
     with self._lock:
@@ -474,7 +478,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(
                     prog='eta',
                     description='Starts the Eta dialogue manager')
-  parser.add_argument('--agent', type=str, default='sophie_gpt', help='The name of an agent config in eta.config')
+  parser.add_argument('--agent', type=str, default='sophie_offline', help='The name of an agent config in eta.config')
   parser.add_argument('--user', type=str, default='test', help='The name of a user config in ./user_config/')
   args = parser.parse_args()
   main(args.agent, args.user)
