@@ -385,19 +385,6 @@ def swap_duals(str):
 
 
 # ``````````````````````````````````````
-# Time util
-# ``````````````````````````````````````
-
-
-
-def get_time():
-	now = datetime.now()
-	time = now.strftime(":year/%Y/:month/%m/:day/%d/:hour/%H/:minute/%M/:sec/%S").split('/')
-	return ['$', 'date+time']+time
-
-
-
-# ``````````````````````````````````````
 # 
 # ``````````````````````````````````````
 
@@ -411,8 +398,6 @@ def main():
 	print(subst('a', 'b', ['a', 'b', ['x', 'y', 'b', ['b'], 'c', 'b']]))
 	print(subst('x', ['a', 'b'], ['a', 'b', ['c', ['a', 'b'], ['a', 'b'], 'a', 'b', 'c', [['a', 'b']]]]))
 	print(subst('a', 'b', 'b'))
-
-	print(get_time())
 
 	print(to_key([None, 'test.v', ['a', 'b']]))
 
