@@ -83,11 +83,29 @@ class HFEmbedder(Embedder):
     return json.loads(response.content.decode("utf-8"))
   
 
+class DummyEmbedder(Embedder):
+  def __init__(self):
+    pass
+
+  def embed(self, texts):
+    if isinstance(texts, (list, np.ndarray)):
+      return [[] for _ in texts]
+    else:
+      return []
+  
+
 def sim(x, y):
+  if not y:
+    return 1. if not x else [sim(x1, y) for x1 in x]
   return np.dot(x, y)/(np.linalg.norm(x)*np.linalg.norm(y))
 
 
 def main():
+  print(sim([1., .5], [1., .3]))
+  print(sim([[1., .5], [.3, .2], [.9, .01]], [1., .3]))
+  print(sim([], []))
+  print(sim([[], [], []], []))
+
   test = Embedder()
 
   print(len(test.embed('test sentence 1')))

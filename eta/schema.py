@@ -5,7 +5,7 @@ from eta.constants import ME, YOU
 from eta.util.general import (gentemp, remove_duplicates, get_keyword_contents, append, 
                               cons, flatten, subst, substall, dict_substall_keys, variablep, dual_var, duplicate_var)
 from eta.util.sexpr import read_lisp, list_to_s_expr
-from eta.lf import ULF, parse_eventuality_list
+from eta.lf import ULF, ELF, parse_eventuality_list
 
 class Schema:
   """
@@ -24,9 +24,10 @@ class Schema:
     self.participants = participants
     self.vars = vars
     self.bindings = bindings
-    self.header = header
-    self.contents = contents
+    self.header = ELF(header)
+    self.contents = ELF(contents)
     self.sections = {}
+    self.embedding = []
 
   def read_param_dict(predicate, schema_contents):
     """Reads an s-expr of the schema contents into a parameter dict."""
@@ -58,8 +59,8 @@ class Schema:
     self.participants = substall(self.participants, mappings)
     self.vars = [m[1] for m in mappings]
     self.bindings = dict_substall_keys(self.bindings, mappings)
-    self.header = substall(self.header, mappings)
-    self.contents = substall(self.contents, mappings)
+    self.header = ELF(substall(self.header.get_formula(), mappings))
+    self.contents = ELF(substall(self.contents.get_formula(), mappings))
     for sec in self.sections.values():
       for (var1, var2) in mappings:
         [e.replacevar(var1, var2) for e in sec]
@@ -170,6 +171,13 @@ class Schema:
     return self
     # END bind_args
 
+  def embed(self, embedder):
+    """Create embeddings for the schema as a whole, as well as for each eventuality."""
+    self.embedding = embedder.embed(self.contents.to_nl())
+    for sec in self.sections.values():
+      for eventuality in sec:
+        eventuality.embed(embedder)
+
   def get_participants(self, no_bind=False):
     if no_bind:
       return self.participants
@@ -178,8 +186,8 @@ class Schema:
 
   def get_contents(self, no_bind=False):
     if no_bind:
-      return self.contents
-    return substall(self.contents, list(self.bindings.items()))
+      return self.contents.get_formula()
+    return substall(self.contents.get_formula(), list(self.bindings.items()))
   
   def get_section(self, sec):
     if isinstance(sec, str):
@@ -316,57 +324,83 @@ class ObjSchema(Schema):
     return kwargs
   
 
-def store_schema(predicate, schema_contents, schemas={}):
-  """Creates a Schema object from a predicate and s-expr of schema contents,
-     and stores it in a dictionary of generic schemas."""
-  if schema_contents[0] in ['dialogue-schema', 'dial-schema']:
-    typ = DialSchema
-    typ_str = 'dial-schema'
-  elif schema_contents[0] in ['event-schema', 'episode-schema', 'epi-schema']:
-    typ = EpiSchema
-    typ_str = 'epi-schema'
-  elif schema_contents[0] in ['object-schema', 'obj-schema']:
-    typ = ObjSchema
-    typ_str = 'obj-schema'
-  else:
-    raise Exception(f'schema for {predicate} must begin with either dial-schema, epi-schema or obj-schema')
-  schema = typ(**typ.read_param_dict(predicate, schema_contents))
-  schemas[typ_str][predicate] = schema
-  return schemas
+class SchemaLibrary:
+  """
+  Contains a dictionary of predicate:schema pairs for each type of supported schema.
+  """
+  def __init__(self, embedder=None):
+    self.dial = {}
+    self.epi = {}
+    self.obj = {}
+    self.embedder = embedder
 
+  def add(self, schema):
+    if isinstance(schema, DialSchema):
+      self.dial[schema.predicate] = schema
+    elif isinstance(schema, EpiSchema):
+      self.epi[schema.predicate] = schema
+    elif isinstance(schema, ObjSchema):
+      self.obj[schema.predicate] = schema
+    else:
+      raise Exception(f'Unsupported schema type for {schema.predicate}')
+    
+  def create(self, predicate, contents):
+    if contents[0] in ['dialogue-schema', 'dial-schema']:
+      typ = DialSchema
+    elif contents[0] in ['event-schema', 'episode-schema', 'epi-schema']:
+      typ = EpiSchema
+    elif contents[0] in ['object-schema', 'obj-schema']:
+      typ = ObjSchema
+    else:
+      raise Exception(f'Schema for {predicate} must begin with either dial-schema, epi-schema or obj-schema')
+    schema = typ(**typ.read_param_dict(predicate, contents))
+    if self.embedder:
+      schema.embed(self.embedder)
+    self.add(schema)
 
-def from_lisp_file(fname, schemas):
-  """Reads a set of schemas from a .lisp file."""
-  for expr in read_lisp(fname):
-    if expr[0] == 'store-schema':
-      predicate = expr[1].strip("'")
-      contents = expr[2]
-      if predicate:
-        store_schema(predicate, contents, schemas)
+  def retrieve(self, query=None):
+    """TBC"""
+    # TODO:
+    # should have type of schema as argument
+    # 1. use schema embeddings to select top schema
+    # 2. combine section eventualities
+    # 3. select n top eventualities
+    # 4. return schema header + eventualities
+    pass
 
+  def from_lisp_file(self, fname):
+    """Reads a set of schemas from a .lisp file."""
+    for expr in read_lisp(fname):
+      if expr[0] == 'store-schema':
+        predicate = expr[1].strip("'")
+        contents = expr[2]
+        if predicate:
+          self.create(predicate, contents)
+    return self
 
-def from_lisp_dirs(dirs):
-  """Recursively reads all .lisp files in a given dir or list of dirs,
-     returning a dict of generic schemas."""
-  schemas = {
-    'dial-schema' : {},
-    'epi-schema' : {},
-    'obj-schema' : {}
-  }
-  if isinstance(dirs, str):
-    dirs = [dirs]
-  for dir in dirs:
-    fnames = glob.glob(dir + '/**/*.lisp', recursive=True)
-    for fname in fnames:
-      from_lisp_file(fname, schemas)
-  return schemas
+  def from_lisp_dirs(self, dirs):
+    """Recursively reads all .lisp files in a given dir or list of dirs,
+      returning a dict of generic schemas."""
+    if isinstance(dirs, str):
+      dirs = [dirs]
+    for dir in dirs:
+      fnames = glob.glob(dir + '/**/*.lisp', recursive=True)
+      for fname in fnames:
+        self.from_lisp_file(fname)
+    return self
 
+  def __str__(self):
+    ret = []
+    for name, d in zip(['dialogue:', 'episode:', 'object:'], [self.dial, self.epi, self.obj]):
+      ret.append(name+'\n'+'\n'.join([predicate for predicate in d.keys()]))
+    return '\n\n'.join(ret)
+  
 
 def testschema(schemas):
   sep = '\n----------------------------\n'
   print(sep)
 
-  schema = schemas['dial-schema']['test.v']
+  schema = schemas.dial['test.v']
   print(schema, sep)
 
   print(schema.get_participants())
@@ -396,7 +430,7 @@ def testcopy(schemas):
   sep = '\n----------------------------\n'
   print(sep)
 
-  schema = schemas['dial-schema']['test.v']
+  schema = schemas.dial['test.v']
   print(schema, sep)
 
   print(schema.vars, sep)
@@ -429,7 +463,7 @@ def testcond(schemas):
   sep = '\n----------------------------\n'
   print(sep)
 
-  schema = schemas['dial-schema']['test-cond.v']
+  schema = schemas.dial['test-cond.v']
   print(schema, sep)
 
   print(schema.participants)
@@ -476,9 +510,12 @@ def testcond(schemas):
 
 
 def main():
-  schemas = from_lisp_dirs(['avatars/test/schemas'])
+  sep = '\n----------------------------\n'
+  schemas = SchemaLibrary()
+  schemas.from_lisp_dirs(['avatars/test/schemas'])
 
-  # print_schema_predicates(schemas)
+  print(schemas, sep)
+
   testschema(schemas)
   # testcopy(schemas)
   # testcond(schemas)

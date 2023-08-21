@@ -2,7 +2,6 @@ from eta.constants import DEFAULT_IMPORTANCE, TELIC_VERBS
 from eta.util.general import get_time, cons_dict, listp, atom, cons, variablep, to_key, dict_get, dict_rem, dict_rem_val
 from eta.lf import parse_eventuality
 
-
 class Memory:
   """
   Represents a single memory, which consists of a temporally bounded event with some importance value.
@@ -19,6 +18,7 @@ class Memory:
     self.end_time = None
     self.last_access = self.start_time
     self.importance = importance
+    self.embedding = []
 
   def update_last_access(self):
     self.last_access = get_time()
@@ -59,11 +59,12 @@ class MemoryStorage:
   Stores memories, keyed on the episode names as well as predicates of the ULF formula (if any).
   Also maintain a set of facts that are "true now", i.e., whose end time is None.
   """
-  def __init__(self):
+  def __init__(self, embedder=None):
     self.memories = set()
     self.ep_ht = {}
     self.wff_ht = {}
     self.context = set()
+    self.embedder = embedder
 
   def _get_wff_keys(self, wff):
     """
@@ -165,6 +166,8 @@ class MemoryStorage:
         importance = [DEFAULT_IMPORTANCE for _ in event]
       return [self.instantiate(e, i) for e, i in zip(event, importance)]
     
+    if self.embedder:
+      event.embed(self.embedder)
     memory = Memory(event, importance=importance)
     self.store(memory)
 
@@ -260,6 +263,7 @@ class MemoryStorage:
 
   def retrieve(self, query=None):
     """TBC"""
+    # TODO
     pass
 
   def forget(self):

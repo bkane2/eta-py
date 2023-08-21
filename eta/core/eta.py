@@ -10,10 +10,10 @@ from eta.util.general import gentemp, clear_symtab, remove_duplicates, remove_ni
 import eta.util.file as file
 import eta.util.time as time
 import eta.util.buffer as buffer
-from eta.lf import equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p, expectation_p, list_to_s_expr
-from eta.lf import from_lisp_dirs as eventualities_from_lisp_dirs
+from eta.lf import (equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p, expectation_p,
+                    from_lisp_dirs, list_to_s_expr)
 from eta.memory import MemoryStorage
-from eta.schema import from_lisp_dirs as schema_from_lisp_dirs
+from eta.schema import SchemaLibrary
 from eta.plan import init_plan_from_eventualities
 
 from eta.core.perception import perception_loop
@@ -38,15 +38,22 @@ class DialogueState():
     self.step_failure_timer = time.now()
     self.quit_conversation = False
 
-    self.schemas = schema_from_lisp_dirs(config_agent['schema_dirs'])
+    # === internal mechanisms ===
+    self.transducers = self.config_agent.pop('transducers')
+    self.embedder = None
+    if 'embedder' in config_agent:
+      self.embedder = self.config_agent.pop('embedder')
+
+    # === static knowledge ===
+    self.schemas = SchemaLibrary(self.embedder).from_lisp_dirs(config_agent['schema_dirs'])
     self.concept_aliases = None # TODO
     self.concept_sets = None # TODO
     self.init_knowledge = []
     if 'knowledge_dirs' in config_agent:
-      self.init_knowledge = eventualities_from_lisp_dirs(config_agent['knowledge_dirs'])
+      self.init_knowledge = from_lisp_dirs(config_agent['knowledge_dirs'])
 
     # === dialogue variables ===
-    if not self.start_schema in self.schemas['dial-schema']:
+    if not self.start_schema in self.schemas.dial:
       raise Exception('Start schema for session not found.')
     self.schema_instances = {}
     self.plan = self.init_plan_from_schema(self.start_schema)
@@ -54,11 +61,9 @@ class DialogueState():
     self.reference_list = []
     self.equality_sets = {}
     self.conversation_log = []
-    self.memory = MemoryStorage()
+    self.memory = MemoryStorage(self.embedder)
     self.add_to_memory(self.init_knowledge)
     self.timegraph = self._make_timegraph()
-    self.transducers = self.config_agent.pop('transducers')
-    self.embedder = self.config_agent.pop('embedder')
 
     self._create_session_io_files()
   
@@ -111,7 +116,7 @@ class DialogueState():
     
   def is_dial_schema(self, predicate):
     with self._lock:
-      return predicate in self.schemas['dial-schema']
+      return predicate in self.schemas.dial
 
   # === plan accessors ===
 
@@ -151,9 +156,9 @@ class DialogueState():
     from other schema sections based on context.
     """
     with self._lock:
-      if predicate not in self.schemas['dial-schema']:
+      if predicate not in self.schemas.dial:
         raise Exception(f'Attempting to instantiate a dialogue schema, {predicate}, that does not exist.')
-      schema = self.schemas['dial-schema'][predicate]
+      schema = self.schemas.dial[predicate]
       if not schema.get_section('episodes'):
         raise Exception(f'Attempting to initialize a plan from a schema, {predicate}, that has no episodes.')
 
@@ -370,14 +375,6 @@ class DialogueState():
     with self._lock:
       self.output_buffer.append(utt)
   
-  def print_schema_predicates(self, surface_english=False):
-    """Prints all of the stored schema predicates."""
-    for predicate in self.schemas.keys():
-      if surface_english:
-        print(predicate.split('.')[0].replace('-', ' ').lower())
-      else:
-        print(predicate)
-  
   def print_schema_instances(self, no_bind=False):
     """Prints all schema instances."""
     for schema in self.schema_instances.values():
@@ -388,7 +385,6 @@ class DialogueState():
   def _make_buffers(self):
     return {
       'observations' : [],
-      # 'interpretations' : [],
       'inferences' : [],
       'actions' : [],
       'plans' : []

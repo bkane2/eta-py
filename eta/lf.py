@@ -95,15 +95,7 @@ class LF:
   
   def get_formula(self):
     return substall(self.formula, list(self.bindings.items()))
-
-  def __str__(self):
-    return list_to_s_expr(self.get_formula())
   
-
-class ULF(LF):
-  def __init__(self, formula):
-    super().__init__(formula)
-
   def to_nl(self):
     # TODO - replace naive implementation with ULF2English
     formula = self.get_formula()
@@ -113,6 +105,14 @@ class ULF(LF):
     words = ' '.join(flatten([w.split('-') for w in words.split()]))
     words = ' '.join([w.replace('_', ' ') for w in words.split()])
     return words
+
+  def __str__(self):
+    return list_to_s_expr(self.get_formula())
+  
+
+class ULF(LF):
+  def __init__(self, formula):
+    super().__init__(formula)
     
 
 class ELF(LF):
@@ -132,6 +132,7 @@ class Eventuality:
     self.set_elf(elf)
     self.prob = prob
     self.bindings = {}
+    self.embedding = []
 
   def set_ep(self, ep):
     self.ep = ep
@@ -181,6 +182,9 @@ class Eventuality:
       self.ulf.replacevar(var1, var2)
     if self.elf:
       self.elf.replacevar(var1, var2)
+
+  def embed(self, embedder):
+    self.embedding = embedder.embed(self.get_nl())
 
   def get_ep(self):
     return self.bindings[self.ep] if self.ep in self.bindings else self.ep
