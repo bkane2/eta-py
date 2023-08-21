@@ -1,6 +1,8 @@
 from eta.constants import DEFAULT_IMPORTANCE, TELIC_VERBS
-from eta.util.general import get_time, cons_dict, listp, atom, cons, variablep, to_key, dict_get, dict_rem, dict_rem_val
+from eta.util.general import cons_dict, listp, atom, cons, variablep, to_key, dict_get, dict_rem_val, squash, linsum, argmax
+from eta.util.time import TimePoint
 from eta.lf import parse_eventuality
+from eta.embedding import Embedder
 
 class Memory:
   """
@@ -14,17 +16,16 @@ class Memory:
   """
   def __init__(self, event, importance=DEFAULT_IMPORTANCE):
     self.event = event
-    self.start_time = get_time()
+    self.start_time = TimePoint()
     self.end_time = None
-    self.last_access = self.start_time
+    self.last_access = TimePoint(self.start_time.time)
     self.importance = importance
-    self.embedding = []
 
   def update_last_access(self):
-    self.last_access = get_time()
+    self.last_access.update()
 
   def end(self):
-    self.end_time = get_time()
+    self.end_time = TimePoint()
 
   def get_ep(self):
     return self.event.get_ep()
@@ -33,9 +34,9 @@ class Memory:
     return self.event.get_wff()
 
   def get_time_wffs(self):
-    start_wff = [self.start_time, 'during', self.event.get_ep()]
+    start_wff = [self.start_time.to_ulf(), 'during', self.event.get_ep()]
     if self.end_time:
-      end_wff = [self.end_time, 'during', self.event.get_ep()]
+      end_wff = [self.end_time.to_ulf(), 'during', self.event.get_ep()]
     else:
       end_wff = ['^now', 'during', self.event.get_ep()]
     return (start_wff, end_wff)
@@ -261,10 +262,17 @@ class MemoryStorage:
     memories2 = self.get_episode(ep)
     return True if set(memories1).intersection(set(memories2)) else False
 
-  def retrieve(self, query=None):
+  def retrieve(self, query=None, n=5, coeffs=[1.,1.,1.]):
     """TBC"""
-    # TODO
-    pass
+    memories = list(self.memories)
+    recency = squash([m.last_access.to_num() for m in memories])
+    importance = squash([m.importance for m in memories])
+    if not query or not self.embedder:
+      salience = squash([1. for _ in memories])
+    else:
+      salience = squash(self.embedder.score(query, memories, [m.event.embedding for m in memories]))
+    scores = linsum([recency, importance, salience], coeffs)
+    return argmax(memories, scores, n)
 
   def forget(self):
     """
@@ -385,9 +393,26 @@ def test1():
   # print(test)
 
 
+def test_retrieval():
+  sep = '\n----------------------------\n'
+
+  test = MemoryStorage(Embedder())
+  test.instantiate(parse_eventuality('(^you ((pres play.v) (k football.n)))'))
+  test.instantiate(parse_eventuality('^me like to travel .'))
+  test.instantiate(parse_eventuality('(^you ((past go.v) (to.p (the.d store.n)) yesterday.adv-e)'))
+  test.instantiate(parse_eventuality('(^you say-to.v ^me "this is a test sentence ."'))
+  test.instantiate(parse_eventuality('(^me ((past visit.v) |Spain| (adv-e ({during}.p ({the}.d (last.a year.n)))))'))
+  test.instantiate(parse_eventuality('(^you ((pres test.v) (the.d system.n)))'))
+
+  mems = test.retrieve(query='i like to travel', n=3)
+  for m in mems:
+    print(m)
+
+
 def main():
-  test1()
+  # test1()
   # test2()
+  test_retrieval()
   
 
 if __name__ == '__main__':

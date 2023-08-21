@@ -17,6 +17,19 @@ class Embedder:
   def embed(self, texts):
     return list(self.model.encode(texts))
   
+  def score(self, text, documents, embeddings=[]):
+    """TBC"""
+    documents = np.array(documents)
+
+    if embeddings and len(embeddings) == len(documents):
+      e_d = embeddings
+    else:
+      e_d = self.embed(documents)
+    e_t = self.embed(text)
+
+    scores = sim(e_d, e_t)
+    return scores.tolist()
+  
   def retrieve(self, text, documents, embeddings=[], n=5, header=False):
     """TBC"""
     documents = np.array(documents)

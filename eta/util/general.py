@@ -1,4 +1,5 @@
 import re
+import numpy as np
 import random
 import string
 from datetime import datetime
@@ -286,6 +287,44 @@ def dict_rem(dct, k):
 	"""Safe version of dict pop that removes a key from the dict."""
 	if k in dct:
 		dct.pop(k)
+
+
+
+# ``````````````````````````````````````
+# Number util
+# ``````````````````````````````````````
+
+
+
+def squash(vector, range=(0, 1)):
+	if min(vector) == max(vector):
+		return [1. for _ in vector]
+	v = np.array(vector)
+	mn = min(vector)
+	mx = max(vector)
+	a = (range[1]-range[0]) / (mx-mn)
+	b = range[1] - (a * mx)
+	return ((a * v) + b).tolist()
+
+
+def normalize(vector):
+	v = np.array(vector)
+	v = v / v.sum()
+	return v.tolist()
+
+
+def linsum(vectors, coeffs):
+	r = np.array([0. for _ in vectors[0]])
+	vs = [np.array(v) for v in vectors]
+	for idx, v in enumerate(vs):
+		r += coeffs[idx] * v
+	return r
+
+
+def argmax(lst, scores, n):
+	objs = np.array(lst, dtype=object)
+	scores_top = np.argsort(scores)[:-(min(n, len(scores))+1):-1]
+	return objs[scores_top].tolist()
 
 
 
