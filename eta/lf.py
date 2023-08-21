@@ -101,10 +101,11 @@ class LF:
     formula = self.get_formula()
     formula = rec_replace(['^me', "'s"], '^my', formula)
     formula = rec_replace(['^you', "'s"], '^your', formula)
-    words = ' '.join([remove_type(w) for w in list_to_str(formula).split() if w not in KEYWORDS_R])
-    words = ' '.join(flatten([w.split('-') for w in words.split()]))
-    words = ' '.join([w.replace('_', ' ') for w in words.split()])
-    return words
+    words = [remove_type(w) for w in list_to_str(formula).split() if w not in KEYWORDS_R]
+    words = [w for w in words if w[0] != '{']
+    words = flatten([w.split('-') for w in words])
+    words = [w.replace('_', ' ') for w in words]
+    return ' '.join(words)
 
   def __str__(self):
     return list_to_s_expr(self.get_formula())
@@ -460,7 +461,7 @@ def test1():
   
   print(fact)
 
-  fact2 = parse_eventuality('(|John| ((past go.v) (to.p (the.d store.n)) (adv-e yesterday.pro)))')
+  fact2 = parse_eventuality('(|John| ((past go.v) (to.p (the.d store.n)) (adv-e ({during}.p yesterday.pro))))')
   print(fact2)
 
   fact3 = parse_eventuality('(|Mary| leave.v)', ep='e3')
@@ -497,10 +498,10 @@ def test1():
 
 
 def main():
-  # test1()
-  knowledge = from_lisp_dirs('avatars/test/knowledge')
-  for e in knowledge:
-    print(e)
+  test1()
+  # knowledge = from_lisp_dirs('avatars/test/knowledge')
+  # for e in knowledge:
+  #   print(e)
 
 
 if __name__ == '__main__':
