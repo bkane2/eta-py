@@ -168,11 +168,11 @@ def from_lisp_dirs(dirs):
 
 
 def main():
-  # trees, feats = from_lisp_file('tests/tt/test1.lisp')
+  # trees, feats = from_lisp_file('avatars/sophie-gpt/rules/word-features.lisp')
   # print(feats)
   # print(isa('lortab', 'medicine-gen', feats))
 
-  # trees, feats = from_lisp_file('tests/tt/test2.lisp')
+  # trees, feats = from_lisp_file('avatars/sophie-gpt/rules/user-interpretation/gist/rules-for-yes-no.lisp')
   # print(trees.keys())
   # print(trees['match-affirm'])
 

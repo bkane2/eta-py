@@ -157,7 +157,7 @@ def write_lisp(fname, sexpr):
 
 def main():
 
-	# sexpr = read_lisp('tests/tt/test2.lisp')
+	# sexpr = read_lisp('avatars/sophie-gpt/rules/user-interpretation/gist/rules-for-yes-no.lisp')
 	# print(sexpr)
 
 	# test = "((^you go.v (to.p (the.d |Store|.n))) ** E1)"
