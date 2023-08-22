@@ -29,48 +29,6 @@ class Embedder:
 
     scores = sim(e_d, e_t)
     return scores.tolist()
-  
-  def retrieve(self, text, documents, embeddings=[], n=5, header=False):
-    """TBC"""
-    documents = np.array(documents)
-
-    head = ''
-    if header:
-      head = documents[0]
-      documents = documents[1:]
-
-    if embeddings and len(embeddings) == len(documents):
-      e_d = embeddings
-    else:
-      e_d = self.embed(documents)
-    e_t = self.embed(text)
-
-    scores = sim(e_d, e_t)
-    scores_top = np.argsort(scores)[:-(min(n, len(scores))+1):-1]
-
-    if header:
-      return [head] + list(documents[scores_top])
-    else:
-      return list(documents[scores_top])
-    
-  def retrieve_multilevel(self, text, document_sets, embedding_sets=[], embeddings=[], n=5, header=False):
-    """TBC"""
-    document_agg = np.array([' '.join(ds) for ds in document_sets])
-    document_sets = np.array([np.array(ds) for ds in document_sets], dtype=object)
-
-    if embeddings and len(embeddings) == len(document_agg):
-      e_ds = embeddings
-    else:
-      e_ds = self.embed(document_agg)
-    e_t = self.embed(text)
-
-    documents = document_sets[np.argmax(sim(e_ds, e_t))]
-
-    if embedding_sets and len(embedding_sets) == len(document_sets):
-      embeddings_docs = embedding_sets[np.argmax(sim(e_ds, e_t))]
-      return self.retrieve(text, documents, embeddings=embeddings_docs, n=n, header=header)
-    else:
-      return self.retrieve(text, documents, n=n, header=header)
 
 
 class HFEmbedder(Embedder):
@@ -125,19 +83,7 @@ def main():
   print(len(test.embed(['test sentence 2', 'test sentence 3'])))
 
   test_set1 = ['how to test systems', 'this is a sentence for testing', 'have you ever tested code before', 'debugging code']
-  print(test.retrieve('test sentence', test_set1, n=2))
-
-  test_set2 = ['visiting other countries', 'booking a flight', 'exploring different cuisines', 'how to organize a trip']
-  test_set3 = ['all about sports', 'playing soccer', 'attending the world cup', 'watching a basketball game']
-  test_sets = [test_set1, test_set2, test_set3]
-  print(test.retrieve_multilevel('i like travel', test_sets, n=2, header=True))
-
-  e_ts1 = test.embed(test_set1)
-  e_ts2 = test.embed(test_set1)
-  e_ts3 = test.embed(test_set1)
-  e_sets = [e_ts1, e_ts2, e_ts3]
-  e_agg = test.embed([' '.join(t) for t in test_sets])
-  print(test.retrieve_multilevel('i like travel', test_sets, embedding_sets=e_sets, embeddings=e_agg, n=2, header=True))
+  print(test.score('test sentence', test_set1))
 
 
 if __name__ == '__main__':

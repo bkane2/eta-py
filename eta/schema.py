@@ -3,9 +3,11 @@ from copy import deepcopy
 
 from eta.constants import ME, YOU
 from eta.util.general import (gentemp, remove_duplicates, get_keyword_contents, append, 
-                              cons, flatten, subst, substall, dict_substall_keys, variablep, dual_var, duplicate_var)
+                              cons, flatten, subst, substall, dict_substall_keys, variablep, dual_var, duplicate_var,
+                              linsum, argmax)
 from eta.util.sexpr import read_lisp, list_to_s_expr
 from eta.lf import ULF, ELF, parse_eventuality_list
+from eta.embedding import Embedder
 
 class Schema:
   """
@@ -178,6 +180,16 @@ class Schema:
       for eventuality in sec:
         eventuality.embed(embedder)
 
+  def retrieve(self, embedder, query, n=5, header=True):
+    """TBC"""
+    eventualities = self.get_section(':all')
+    scores = embedder.score(query, eventualities, [e.embedding for e in eventualities])
+    top = argmax(eventualities, scores, n)
+    if header:
+      return cons(self.header.get_formula(), [e.get_wff() for e in top])
+    else:
+      return [e.get_wff() for e in top]
+
   def get_participants(self, no_bind=False):
     if no_bind:
       return self.participants
@@ -190,6 +202,8 @@ class Schema:
     return substall(self.contents.get_formula(), list(self.bindings.items()))
   
   def get_section(self, sec):
+    if sec == ':all':
+      return append([eventualities for eventualities in self.sections.values()])
     if isinstance(sec, str):
       sec = [sec]
     return append([self.sections[s] if s in self.sections else [] for s in sec])
@@ -358,15 +372,34 @@ class SchemaLibrary:
       schema.embed(self.embedder)
     self.add(schema)
 
-  def retrieve(self, query=None):
+  def get_schemas(self, type):
     """TBC"""
-    # TODO:
-    # should have type of schema as argument
-    # 1. use schema embeddings to select top schema
-    # 2. combine section eventualities
-    # 3. select n top eventualities
-    # 4. return schema header + eventualities
-    pass
+    if isinstance(type, list):
+      return append([self.get_schemas(t) for t in type])
+    
+    if type=='dial':
+      return list(self.dial.values())
+    elif type=='epi':
+      return list(self.epi.values())
+    elif type=='obj':
+      return list(self.obj.values())
+
+  def retrieve(self, type, query=None, m=1):
+    """TBC"""
+    schemas = list(self.get_schemas(type))
+    if not schemas:
+      return None
+    if not query or not self.embedder:
+      return schemas[0]
+    scores = self.embedder.score(query, schemas, [s.embedding for s in schemas])
+    return argmax(schemas, scores, m)
+  
+  def retrieve_knowledge(self, type, query=None, m=1, n=5, header=True):
+    """TBC"""
+    schemas = self.retrieve(type, query, m)
+    if not schemas:
+      return None
+    return append([s.retrieve(self.embedder, query, n, header) for s in schemas])
 
   def from_lisp_file(self, fname):
     """Reads a set of schemas from a .lisp file."""
@@ -396,9 +429,14 @@ class SchemaLibrary:
     return '\n\n'.join(ret)
   
 
-def testschema(schemas):
+def testschema():
   sep = '\n----------------------------\n'
   print(sep)
+
+  schemas = SchemaLibrary()
+  schemas.from_lisp_dirs(['avatars/test/schemas'])
+
+  print(schemas, sep)
 
   schema = schemas.dial['test.v']
   print(schema, sep)
@@ -425,10 +463,17 @@ def testschema(schemas):
   print(schema.get_section_wffs('episodes'), sep)
   print(schema.get_section_wffs(['rigid-conds', 'static-conds', 'preconds']), sep)
 
+  print(schema.get_section(':all'), sep)
 
-def testcopy(schemas):
+
+def testcopy():
   sep = '\n----------------------------\n'
   print(sep)
+
+  schemas = SchemaLibrary()
+  schemas.from_lisp_dirs(['avatars/test/schemas'])
+
+  print(schemas, sep)
 
   schema = schemas.dial['test.v']
   print(schema, sep)
@@ -459,9 +504,14 @@ def testcopy(schemas):
   print(sep)
 
 
-def testcond(schemas):
+def testcond():
   sep = '\n----------------------------\n'
   print(sep)
+
+  schemas = SchemaLibrary()
+  schemas.from_lisp_dirs(['avatars/test/schemas'])
+
+  print(schemas, sep)
 
   schema = schemas.dial['test-cond.v']
   print(schema, sep)
@@ -474,15 +524,10 @@ def testcond(schemas):
     print('>', f)
   print(sep)
 
-  print(schema.get_section('episodes')[1].condition, sep)
-  for f in schema.get_section('episodes')[1].eventualities:
-    print('>', f)
-  print(sep)
-
-  for c, fs in schema.get_section('episodes')[1].eventualities[2].conditions:
-    print(c)
-    for f in fs:
-      print('>', f)
+  for (cond, event) in schema.get_section('episodes')[1].conditions:
+    print(cond)
+    for e in event:
+      print('>', e)
   print(sep)
 
   print(schema.vars, sep)
@@ -496,10 +541,10 @@ def testcond(schemas):
     print(f)
   print(sep)
 
-  for c, fs in schema.get_section('episodes')[1].eventualities[2].conditions:
-    print(c)
-    for f in fs:
-      print('>', f)
+  for (cond, event) in schema.get_section('episodes')[1].conditions:
+    print(cond)
+    for e in event:
+      print('>', e)
   print(sep)
 
   print(schema, sep)
@@ -509,16 +554,34 @@ def testcond(schemas):
   print(schema.get_section_wffs(['rigid-conds', 'static-conds', 'preconds']), sep)
 
 
+def test_retrieval():
+  sep = '\n----------------------------\n'
+
+  print('embedding...')
+  schemas = SchemaLibrary(Embedder())
+  schemas.from_lisp_dirs(['avatars/sophie-gpt/schemas'])
+  print('done')
+
+  print('retrieving...')
+  top = schemas.retrieve('dial', 'where is your pain located ?')
+  for t in top:
+    print(t)
+  print(sep)
+
+  facts = schemas.retrieve_knowledge('dial', 'where is your pain located ?', m=3, n=5)
+  for f in facts:
+    print(f)
+  print(sep)
+
+
+
 def main():
   sep = '\n----------------------------\n'
-  schemas = SchemaLibrary()
-  schemas.from_lisp_dirs(['avatars/test/schemas'])
 
-  print(schemas, sep)
-
-  testschema(schemas)
-  # testcopy(schemas)
-  # testcond(schemas)
+  testschema()
+  # testcopy()
+  # testcond()
+  # test_retrieval()
 
 
 if __name__ == '__main__':
