@@ -56,6 +56,7 @@ class DialogueState():
     if not self.start_schema in self.schemas.dial:
       raise Exception('Start schema for session not found.')
     self.schema_instances = {}
+    self.active_schema = None
     self.plan = self.init_plan_from_schema(self.start_schema)
     self.buffers = self._make_buffers()
     self.reference_list = []
@@ -164,6 +165,7 @@ class DialogueState():
 
       schema_instance = schema.instantiate(args)
       self.schema_instances[schema_instance.id] = schema_instance
+      self.active_schema = schema_instance
       
       return init_plan_from_eventualities(schema_instance.get_section('episodes'), schema=schema_instance)
     
