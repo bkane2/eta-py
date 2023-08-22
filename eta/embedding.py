@@ -67,7 +67,7 @@ class DummyEmbedder(Embedder):
 
 def sim(x, y):
   if not y:
-    return 1. if not x else [sim(x1, y) for x1 in x]
+    return np.array(1.) if not x else np.array([sim(x1, y) for x1 in x])
   return np.dot(x, y)/(np.linalg.norm(x)*np.linalg.norm(y))
 
 
