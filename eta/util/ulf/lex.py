@@ -111,11 +111,3 @@ def stem_superlative(sup_adv):
     return stem[:-1]
   else:
     return stem
-
-
-def main():
-  print(to_ulf('noun', 'parrots'))
-
-
-if __name__ == '__main__':
-  main()

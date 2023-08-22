@@ -102,9 +102,3 @@ def split_sentences(wordlist):
       result1.append(cur)
     cur = []
   return gute.remove_duplicates(result1, order=True)
-
-def main():
-  print(split_sentences('this is a test sentence . this is another test sentence , and it is for testing .'.split()))
-
-if __name__ == '__main__':
-  main()

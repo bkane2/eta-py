@@ -1,6 +1,6 @@
 # Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 
-from eta.util.general import flatten, replaceall, cons, symbolp, atom, escaped_symbol_p, standardize
+from eta.util.general import flatten, replaceall, symbolp, atom, escaped_symbol_p, standardize
 import eta.util.file as file
 
 def balanced_substr(s):
@@ -153,27 +153,3 @@ def read_lisp(fname):
 
 def write_lisp(fname, sexpr):
   file.write_file(fname, list_to_s_expr(sexpr))
-
-
-def main():
-
-	# sexpr = read_lisp('avatars/sophie-gpt/rules/user-interpretation/gist/rules-for-yes-no.lisp')
-	# print(sexpr)
-
-	# test = "((^you go.v (to.p (the.d |Store|.n))) ** E1)"
-	# s_expr = parse_s_expr(test)
-	# print(s_expr)
-
-	# print(list_to_s_expr(s_expr))
-
-	test = "(^you paraphrase-to.v ^me '(this is a test quote .))"
-	s_expr = parse_s_expr(test)
-	print(s_expr)
-
-	test = "((^you paraphrase-to.v ^me '(this is a test quote .)) ** E1)"
-	s_expr = parse_s_expr(test)
-	print(s_expr)
-
-
-if __name__ == "__main__":
-  main()

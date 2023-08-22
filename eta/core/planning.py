@@ -258,11 +258,3 @@ def relative_speech_act_step(wff):
 
 def equivalent_speech_acts(wff1, wff2):
   return relative_speech_act_step(wff1) and relative_speech_act_step(wff2) and wff1[0] == wff2[0] and wff1[1] == wff2[1]
-
-
-def main():
-  pass
-
-
-if __name__ == "__main__":
-  main()

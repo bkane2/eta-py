@@ -117,7 +117,3 @@ class AffectTransducer(Transducer):
     """str, List[DialogueTurn] -> List[str]"""
     affects = []
     return affects
-  
-
-# PlanExpansionTransducer(Transducer):
-# history, context, curr-step -> List[Eventuality]

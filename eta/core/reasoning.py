@@ -79,11 +79,3 @@ def reply_to_wff(wff):
 
 def say_to_wff(wff):
   return listp(wff) and len(wff) == 4 and wff[:2] == [YOU, SAY_TO]
-
-
-def main():
-  pass
-
-
-if __name__ == "__main__":
-  main()

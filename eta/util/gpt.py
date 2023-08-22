@@ -56,7 +56,6 @@ def generate_gpt(prompt, preamble=None, examples=[], model='gpt-3.5-turbo', stop
   return result, cost
 
 
-
 def cost_gpt(prompt, avg_resp_len, preamble=None, examples=[], model='gpt-3.5-turbo', stop=None, max_tokens=2048,
              postprocessors=[], n_retries=2, tokenizer=TOKENIZER):
   n_tokens = 0
@@ -71,17 +70,5 @@ def cost_gpt(prompt, avg_resp_len, preamble=None, examples=[], model='gpt-3.5-tu
   return (cost, n_retries*cost)
 
 
-
 def cost_tokens(model, n_tokens):
   return (MODEL_COSTS[model] / 1000) * n_tokens
-
-
-
-def main():
-  result, cost = generate_gpt('test:')
-  print(result)
-  print(cost)
-
-
-if __name__ == "__main__":
-  main()

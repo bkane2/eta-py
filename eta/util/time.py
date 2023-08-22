@@ -26,14 +26,3 @@ class TimePoint:
 
 def now():
   return datetime.now(timezone.utc).timestamp()
-     
-    
-def main():
-  tp = TimePoint()
-  print(tp)
-  print(tp.to_num())
-  print(tp.to_ulf())
-
-
-if __name__ == '__main__':
-  main()

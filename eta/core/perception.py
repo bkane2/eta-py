@@ -82,11 +82,3 @@ def process_utterances(inputs, ds):
 def process_observations(inputs):
   """List[str] -> List[Eventuality]"""
   return [parse_eventuality(standardize(input)) for input in inputs]
-    
-
-def main():
-  pass
-
-
-if __name__ == "__main__":
-  main()

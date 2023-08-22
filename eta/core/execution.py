@@ -210,11 +210,3 @@ def get_action(wff):
     return SAY_BYE
   else:
     return None
-
-
-def main():
-  pass
-
-
-if __name__ == "__main__":
-  main()

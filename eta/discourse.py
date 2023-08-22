@@ -38,11 +38,3 @@ def parse_utt_str(str):
       words = words.replace(tag1, '').replace(tag2, '').strip()
       affect = e
   return affect, words
-    
-
-def main():
-  print(parse_utt_str('[sad] test string .'))
-
-
-if __name__ == '__main__':
-  main()

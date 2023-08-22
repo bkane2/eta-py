@@ -411,11 +411,3 @@ def choose_result_for1(clause, parts, rule_node, visited, trees, feats):
   # Unexpected
   raise Exception(f'Unsupported directive {directive} encountered for rule with pattern {pattern} for clause {clause}')
   # END choose_result_for1
-
-
-def main():
-  pass
-
-
-if __name__ == '__main__':
-  main()
