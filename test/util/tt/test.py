@@ -47,7 +47,7 @@ def david_test():
                           feats))
   
   print(choose_result_for(['spatial-question', 'is', 'the', 'mcdonalds', 'block', 'to_the_left_of', 'the', 'twitter', 'block', '?'],
-                          'clause-semantics-tree',
+                          'semantic',
                           trees,
                           feats))
 
