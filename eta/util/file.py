@@ -32,8 +32,11 @@ def read_file(fname):
   -------
   str
   """
-  with open(fname, 'r') as f:
-    return f.read()
+  if exists(fname):
+    with open(fname, 'r') as f:
+      return f.read()
+  else:
+    return ''
   
 
 def read_lines(fname):
@@ -47,7 +50,10 @@ def read_lines(fname):
   -------
   list[str]
   """
-  return [l.strip() for l in read_file(fname).split('\n') if l.strip()]
+  if exists(fname):
+    return [l.strip() for l in read_file(fname).split('\n') if l.strip()]
+  else:
+    return []
   
 
 def write_file(fname, data):
@@ -85,8 +91,11 @@ def load_json(fname):
   -------
   dict
   """
-  with open(fname, 'r') as f:
-    return json.load(f)
+  if exists(fname):
+    with open(fname, 'r') as f:
+      return json.load(f)
+  else:
+    return {}
   
 
 def write_json(fname, data):
