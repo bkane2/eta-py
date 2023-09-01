@@ -1,4 +1,12 @@
-(READRULES '*reasoning*
+(READRULES '*reason-top-down*
+'(
+  1 ((^you reply-to.v !expr) 0 (^you say-to.v ^me !expr) 0)
+    2 (^you reply-to.v 1.3) (0 :ulf)
+  ;; 1 ((^you reply-to.v !expr) 0)
+  ;;   2 (*reason-top-down1* (prefix-each! 1.3 (2))) (0 :subtree-permute)
+))
+
+(READRULES '*reason-bottom-up*
 '(
   1 (0)
     2 ((*reasoning-split* *reasoning-thematic*) (1)) (0 :subtrees)
