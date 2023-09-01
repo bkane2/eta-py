@@ -16,13 +16,13 @@ from eta.util.general import atom
 
 STEMMER = SnowballStemmer("english")
 
-NAMES = file.load_json('resources/lexical/ulf/names.json')
-NOUNS = file.load_json('resources/lexical/ulf/nouns.json')
-VERBS = file.load_json('resources/lexical/ulf/verbs.json')
-VERBS_PASV = file.load_json('resources/lexical/ulf/verbs_passive.json')
-WH_PREDS = file.load_json('resources/lexical/ulf/wh_preds.json')
-SUP_ADJS = file.load_json('resources/lexical/ulf/sup_adjs.json')
-ADV_ADJS = file.load_json('resources/lexical/ulf/adv_adjs.json')
+NAMES = file.load_json('eta/resources/lexical/ulf/names.json')
+NOUNS = file.load_json('eta/resources/lexical/ulf/nouns.json')
+VERBS = file.load_json('eta/resources/lexical/ulf/verbs.json')
+VERBS_PASV = file.load_json('eta/resources/lexical/ulf/verbs_passive.json')
+WH_PREDS = file.load_json('eta/resources/lexical/ulf/wh_preds.json')
+SUP_ADJS = file.load_json('eta/resources/lexical/ulf/sup_adjs.json')
+ADV_ADJS = file.load_json('eta/resources/lexical/ulf/adv_adjs.json')
 
 
 def to_ulf(cat, word):

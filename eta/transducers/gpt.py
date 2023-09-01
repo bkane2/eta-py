@@ -56,13 +56,13 @@ def _affect_validator(prompt, resp):
   return resp
 
 PROMPTS = {
-  'reason-bottom-up' : file.read_file('resources/prompts/reason-bottom-up.txt'),
-  'gist' : file.read_file('resources/prompts/gist.txt'),
-  'paraphrase' : file.read_file('resources/prompts/paraphrase.txt'),
-  'response' : file.read_file('resources/prompts/response.txt'),
-  'answer' : file.read_file('resources/prompts/answer.txt'),
-  'ask' : file.read_file('resources/prompts/ask.txt'),
-  'affect' : file.read_file('resources/prompts/affect.txt')
+  'reason-bottom-up' : file.read_file('eta/resources/prompts/reason-bottom-up.txt'),
+  'gist' : file.read_file('eta/resources/prompts/gist.txt'),
+  'paraphrase' : file.read_file('eta/resources/prompts/paraphrase.txt'),
+  'response' : file.read_file('eta/resources/prompts/response.txt'),
+  'answer' : file.read_file('eta/resources/prompts/answer.txt'),
+  'ask' : file.read_file('eta/resources/prompts/ask.txt'),
+  'affect' : file.read_file('eta/resources/prompts/affect.txt')
 }
 """dict: a dict of prompts to use for initializing each transducer type."""
 
