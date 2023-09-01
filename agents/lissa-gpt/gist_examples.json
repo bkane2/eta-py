@@ -1,0 +1,47 @@
+[
+  {
+    "context" : "What activities do you enjoy?",
+    "utterance" : "Skiing! I love the thrill of going down a slope with the wind in my face.",
+    "rewritten" : "The activity I like is skiing."
+  },
+  {
+    "context" : "What type of food do you like to eat?",
+    "utterance" : "That's a difficult question. My favorite would be Thai I think, but I also really enjoy Mexican. There's a lot of great styles of food out there.",
+    "rewritten" : "I like to eat Thai food."
+  },
+  {
+    "context" : "What do you do for work?",
+    "utterance" : "I'm a computer scientist who mostly researches natural language processing and dialogue systems.",
+    "rewritten" : "I work as a computer scientist who researches natural language processing and dialogue systems."
+  },
+  {
+    "context" : "Have you ever been to China?",
+    "utterance" : "Nope, not yet.",
+    "rewritten" : "I have never been to China."
+  },
+  {
+    "context" : "What pets do you have?",
+    "utterance" : "Well, I have",
+    "rewritten" : "NONE"
+  },
+  {
+    "context" : "What are your thoughts on technology?",
+    "utterance" : "Have you really been far even as decided to use even go want to do look more like?",
+    "rewritten" : "NONE"
+  },
+  {
+    "context" : "I own a couple of dogs as pets.",
+    "utterance" : "Wow, that's awesome! What are your favorite things about them?",
+    "rewritten" : "What are your favorite things about having dogs as pets?"
+  },
+  {
+    "context" : "I travelled to Spain last year.",
+    "utterance" : "What kinds of things did you get up to there?",
+    "rewritten" : "What did you do while in Spain?"
+  },
+  {
+    "context" : "It's really cold where I'm from.",
+    "utterance" : "How do you feel about that?",
+    "rewritten" : "How do you feel about your hometown being cold?"
+  }
+  ]
