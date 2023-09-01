@@ -1,21 +1,57 @@
+"""Reasoning Loop
+
+Implements the core loop for inferring new facts and possible actions to
+take from previous facts/observations.
+
+Exported functions
+------------------
+reasoning_loop
+"""
+
 from time import sleep
 
 from eta.constants import *
-import eta.util.file as file
-from eta.util.general import listp, atom, remove_duplicates
-from eta.lf import parse_eventuality, is_set, extract_set
+from eta.util.general import remove_duplicates
 
 def reasoning_loop(ds):
-  # TODO: maintain depth limit for facts in inference queue
-  while ds.do_continue():
-    sleep(.1)
+  """Infer new facts and possible actions from previous facts/observations.
 
-    # Infer new facts from prior facts/inferences
+  First, all recent inferences are popped from the 'inferences' buffer, and from
+  these inferences, the system attempts to infer new facts in both a *top down* and
+  a *bottom up* manner.
+  
+  A depth limit is imposed, such that only facts which are below some number of
+  inference steps away from a direct observation are considered for further inference.
+  Any inferred facts are added back to the 'inferences' buffer, with a depth
+  that is one greater than the minimum depth of the facts used to infer them.
+
+  In the top down approach, the current state of the dialogue plan is used as
+  the context for making inferences from each fact.
+
+  In the bottom up approach, a set of relevant facts are retrieved from memory
+  and used to make inferences from each fact.
+
+  Second, all direct observations are popped from the 'observations' buffer,
+  and used to suggest possible actions that the system can take in reaction
+  to those observations.
+  
+  Parameters
+  ----------
+  ds : DialogueState
+  """
+  while ds.do_continue():
+    sleep(SLEEPTIME)
+
+    # Infer new facts from prior facts (that haven't yet surpassed the depth limit)
     facts = ds.pop_all_buffer('inferences')
+    min_depth = min([f['depth'] for f in facts])
+    facts = [f['fact'] for f in facts if not f['depth'] > REASONING_DEPTH_LIMIT]
+
     new_facts = []
     new_facts += infer_top_down(facts, ds)
     new_facts += infer_bottom_up(facts, ds)
     ds.add_to_context(new_facts)
+    new_facts = [{'fact':f, 'depth':min_depth+1} for f in new_facts]
     ds.add_all_to_buffer(new_facts, 'inferences')
 
     # Infer possible actions to take based on observations
@@ -25,57 +61,76 @@ def reasoning_loop(ds):
 
 
 def infer_top_down(facts, ds):
-  """Infer new facts in a "top-down" manner, using the current expected/intended
-     plan step as context for inferring new facts.
-     TODO: make this function more general using transducer."""
+  """Infer new facts in a "top-down" manner, using the current expected/intended plan step as context.
+  
+  Parameters
+  ----------
+  facts : list[Eventuality]
+    A list of facts to use for inference.
+  ds : DialogueState
+
+  Returns
+  -------
+  list[Eventuality]
+    A list of inferred facts.
+  """
   plan = ds.get_plan()
   if not plan or not facts:
     return []
   
-  new_facts = []
-  wff = plan.step.event.get_wff()
-
-  # If currently pending step is the user replying to some episode e, and facts
-  # contains a say-to.v action, infer (^you reply-to.v e).
-  # NOTE: this can probably be done with pattern transduction, given each fact and
-  # the ULF of the current step
-  if reply_to_wff(wff):
-    prior_ep = wff[2]
-    facts_say_to = [fact for fact in facts if say_to_wff(fact.get_wff())]
-    for fact in facts_say_to:
-      ep = fact.get_ep()
-      new_facts.append(parse_eventuality([YOU, REPLY_TO, prior_ep], ep=ep))
-
+  step = plan.step.event
+  new_facts = remove_duplicates(ds.apply_transducer('reason-top-down', step, facts), order=True)
   return new_facts
 
 
 def infer_bottom_up(facts, ds):
   """Infer new facts in a "bottom-up" manner, using relevant facts in memory.
-     TODO: implement retrieval for relevant facts."""
+
+  TODO: still need to implement retrieval of relevant facts from memory (and generic knowledge?).
+  
+  Parameters
+  ----------
+  facts : list[Eventuality]
+    A list of facts to use for inference.
+  ds : DialogueState
+
+  Returns
+  -------
+  list[Eventuality]
+    A list of inferred facts.
+  """
   if not facts:
     return []
   
-  new_facts = remove_duplicates(ds.apply_transducer('reasoning', facts), order=True)
+  new_facts = remove_duplicates(ds.apply_transducer('reason-bottom-up', facts), order=True)
   return new_facts
 
 
 def suggest_possible_actions(observations, ds):
   """Suggest possible actions to take in reaction to a list of observations.
-  TODO:
-  Reconsidering previous plan steps that failed to realize intended goal.
-  Considering the system's desires.
-  Suggestions from knowledge-based inference.
-  Allow urgency scores to be returned by pattern transduction rules.
-  Modify urgency scores in some way according to the order of the gist clauses (and statement vs. question)?
+  
+  TODO: some possible future improvements:
+  1) Reconsider previous failed plan steps as possible actions to retry.
+  2) Consider the system's desires, and/or obligations placed on the system,
+     as well as observations, in considering possible actions.
+  3) Allow urgency scores to be included in the transducer results, allowing
+     for differential priority for different kinds of possible actions (e.g.,
+     even in a simple chit-chat domain, we may wish for answering a question to
+     have a higher urgency than responding to a statement.)
+
+  Parameters
+  ----------
+  observations : list[Eventuality]
+    A list of observed events to use for reaction.
+  ds : DialogueState
+
+  Returns
+  -------
+  list[str]
+    A list of possible actions (as natural language strings or
+    LISP-formatted S-expression strings).
   """
   actions = []
   for observation in observations:
     actions += ds.apply_transducer('reaction', observation)
   return actions
-
-
-def reply_to_wff(wff):
-  return listp(wff) and len(wff) == 3 and wff[:2] == [YOU, REPLY_TO] and (atom(wff[2]) or is_set(wff[2]))
-
-def say_to_wff(wff):
-  return listp(wff) and len(wff) == 4 and wff[:2] == [YOU, SAY_TO]

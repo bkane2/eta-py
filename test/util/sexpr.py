@@ -2,7 +2,7 @@ from eta.util.sexpr import *
 
 def main():
 
-	sexpr = read_lisp('avatars/sophie-gpt/rules/user-interpretation/gist/rules-for-yes-no.lisp')
+	sexpr = read_lisp('agents/sophie-gpt/rules/user-interpretation/gist/rules-for-yes-no.lisp')
 	print(sexpr)
 
 	test = "((^you go.v (to.p (the.d |Store|.n))) ** E1)"

@@ -1,15 +1,34 @@
-from eta.transducers.tt import TTReasoningTransducer
+from eta.transducers.tt import *
+from eta.transducers.gpt import *
+from eta.embedding import *
+
+SESSION_NUMBER = 1
+DIR_LISSA = 'agents/lissa-elderly/'
+DIRS_SCHEMA = [DIR_LISSA+'schemas', DIR_LISSA+f'day{SESSION_NUMBER}/schemas']
+DIRS_RULES = [DIR_LISSA+'rules', DIR_LISSA+f'day{SESSION_NUMBER}/rules']
 
 def config():
   return {
-    'avatar': 'lissa-gpt',
-    'avatar_name': 'Lissa',
-    'schema_dirs': 'avatars/lissa-gpt/schemas',
-    'start_schema': 'discuss-activities.v',
-    'perception_servers': ['speech', 'world'],
+    'agent': 'lissa-rule',
+    'agent_name': 'Lissa',
+    'schema_dirs': DIRS_SCHEMA,
+    'start_schema': 'have-eta-dialog.v',
+    'perception_servers': ['speech'],
     'specialist_servers': [],
     'transducers': {
-        'reasoning' : TTReasoningTransducer('avatars/lissa-gpt/rules')
+        # 'reason-top-down' : TTReasonTopDownTransducer(DIRS_RULES),
+        # 'reason-bottom-up' : TTReasonBottomUpTransducer(DIRS_RULES),
+        'gist' : TTGistTransducer(DIRS_RULES),
+        # 'semantic' : TTSemanticTransducer(DIRS_RULES),
+        'pragmatic' : TTPragmaticTransducer(DIRS_RULES),
+        'reaction' : TTReactionTransducer(DIRS_RULES),
+        # 'subplan' : TTSubplanTransducer(DIRS_RULES),
+        # 'paraphrase' : GPTParaphraseTransducer(PARAPHRASE_EXAMPLES),
+        # 'response' : GPTResponseTransducer(),
+        # 'answer' : GPTAnswerTransducer(),
+        # 'ask' : GPTAskTransducer(),
+        # 'affect' : GPTAffectTransducer()
     },
+    'embedder': DummyEmbedder(),
     'session_number': 1
   }

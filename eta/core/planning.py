@@ -1,3 +1,17 @@
+"""Planning Loop
+
+Implements the core loop for modifying the dialogue plan, including adding possible actions
+to the plan, expanding plan steps, merging plan steps, and reordering plan steps.
+
+NOTE: currently, the 'plans' buffer is handled differently from the other buffers, in that
+we assume it only holds one element at a time, and this element is simply replaced whenever
+the plan is modified in some way.
+
+Exported functions
+------------------
+planning_loop
+"""
+
 from time import sleep
 
 from eta.constants import *
@@ -6,8 +20,26 @@ from eta.lf import Condition, Repetition, parse_eventuality, extract_set, is_set
 from eta.plan import init_plan_from_eventualities, insert_before_plan_node, expand_plan_node, merge_plan_nodes
 
 def planning_loop(ds):
+  """Make modifications to the dialogue plan.
+
+  First, all suggested actions are popped from the 'actions' buffer, and used to create a new
+  plan. The plan of the current dialogue state is updated, and the contents of the 'plans' buffer
+  is replaced with the updated plan.
+
+  Second, this attempts to modify the plan in the 'plans' buffer. This consists of the following substeps:
+  1) Attempt to expand top-level steps in the plan into substeps.
+  2) Merge equivalent steps in the plan.
+  3) Reorder plan steps according to constraints.
+
+  If the plan was modified by the previous step, it is used to update the plan of the current dialogue state,
+  and is re-added to the 'plans' buffer.
+  
+  Parameters
+  ----------
+  ds : DialogueState
+  """
   while ds.do_continue():
-    sleep(.1)
+    sleep(SLEEPTIME)
 
     # Pop from buffer of possible actions and attempt to add to plan
     actions = ds.pop_all_buffer('actions')
@@ -26,15 +58,26 @@ def planning_loop(ds):
 
 
 def add_possible_actions_to_plan(actions, ds):
-  """
-  Given a list of possible actions, attempt to add actions into the current plan.
-  TODO:
-  1. For now, we assume that only the first action in a set of possible actions is used.
+  """Given a list of possible actions, attempt to add actions into the current plan.
+
+  TODO: some possible future improvements:
+  1) For now, we assume that only the first action in a set of possible actions is used.
      In the future, this might be extended with a policy for attempting to add the top K possible actions.
-  2. This currently adds the action unconditionally; ultimately, the system should verify that the action
+  2) This currently adds the action unconditionally; ultimately, the system should verify that the action
      can be added to the plan. This may be done by way of a pattern transducer.
-  3. The action is currently inserted as the current step, but ultimately we should be able to insert actions
+  3) The action is currently inserted as the current step, but ultimately we should be able to insert actions
      elsewhere in the plan as well.
+
+  Parameters
+  ----------
+  actions : list[str]
+    A list of possible actions (as natural language strings or LISP-formatted S-expression strings).
+  ds : DialogueState
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
   """
   if not actions:
     return None
@@ -45,14 +88,27 @@ def add_possible_actions_to_plan(actions, ds):
 
 
 def expand_plan_steps(plan, ds):
-  """
-  This attempts to expand the surface steps in the plan using one of:
+  """Attempt to expand the surface steps in the plan using one of:
   1. A keyword step, which have special expansion behavior
   2. A schema whose header matches the step WFF (unifying any schema args)
   3. A "primitive" type of plan step whose expansion is directly supported
-  4. (TBC) A pattern transduction tree mapping the step WFF to substep WFF(s)
-  TODO: currently, this only attempts to expand the currently due step; however,
-  it may be possible to use pattern transduction to expand other steps in the plan as well."""
+  4. A pattern transduction tree mapping the step WFF to substep WFF(s)
+
+  TODO: some possible future improvements:
+  1) currently, this only attempts to expand the currently due step; however,
+     it may be possible to expand certain other steps in the plan as well.
+     
+  Parameters
+  ----------
+  plan : PlanNode or None
+    The plan to expand (if one exists).
+  ds : DialogueState
+  
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   if not plan:
     return None
   
@@ -70,7 +126,8 @@ def expand_plan_steps(plan, ds):
   else:
     subplan = expand_primitive_step(event, ds)
     if not subplan:
-      subplan = ds.apply_transducer('expand-step', event)
+      subplans = ds.apply_transducer('subplan', event)
+      subplan = subplans[0] if subplans else None
 
   if subplan:
     return expand_plan_node(ds.get_plan(), subplan)
@@ -79,17 +136,28 @@ def expand_plan_steps(plan, ds):
 
 
 def merge_plan_steps(plan, ds):
-  """
-  Merge steps in the plan that are deemed to be equivalent, unifiable, or otherwise
-  able to be simultaneously instantiated by a single step.
+  """Merge steps in the plan that are equivalent or unifiable.
 
-  TODO: currently, the only thing this function does is merge directly adjacent
-  reply-to steps in the plan. It should be refactored using a transducer that
-  maps a plan to a new plan with merged steps, possibly making use of retrieved
-  equivalency knowledge.
+  TODO: the behavior of this function is currently hard-coded to merge directly
+  adjacent reply-to steps in the plan. It should be generalized using a transducer
+  that maps a plan to a new plan with merged steps, possibly making use of retrieved
+  equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially
+  perform this step instead).
+
+  Parameters
+  ----------
+  plan : PlanNode or None
+    The plan to expand (if one exists).
+  ds : DialogueState
+  
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
   """
-  if plan is None:
-    return plan
+  if not plan:
+    return None
+  
   wff1 = plan.step.event.get_wff()
   if plan.next:
     wff2 = plan.next.step.event.get_wff()
@@ -103,15 +171,44 @@ def merge_plan_steps(plan, ds):
 
 
 def reorder_plan_steps(plan, ds):
-  """TBC"""
-  if plan is None:
-    return plan
+  """Reorder steps in the plan according to imposed constraints.
+
+  TODO: this is a stub that needs implementation.
+  
+  Parameters
+  ----------
+  plan : PlanNode or None
+    The plan to expand (if one exists).
+  ds : DialogueState
+  
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
+  if not plan:
+    return None
+  
   # TODO
   return plan
 
 
 def expand_condition_step(event, ds, schema=None):
-  """TBC"""
+  """Expand a step containing a condition eventuality depending on the truth value of its condition.
+
+  Parameters
+  ----------
+  event : Condition
+    The condition eventuality to expand.
+  ds : DialogueState
+  schema : Schema, optional
+    The schema (if any) to inherit from when instantiating the sub-eventualities.
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   for (condition, eventualities) in event.conditions:
     if condition == True or ds.eval_truth_value(condition.get_formula()):
       return init_plan_from_eventualities(eventualities, schema=schema)
@@ -119,20 +216,38 @@ def expand_condition_step(event, ds, schema=None):
 
 
 def expand_repetition_step(event, ds, schema=None):
-  """TBC"""
+  """Expand a step containing a repetition eventuality depending on the truth value of its condition.
+
+  TODO: some modifications still need to be made to the method of unbinding local variables, since it
+  may be possible that a variable within a :repeat-until section of a schema first appeared within an
+  episode outside of the :repeat-until section, yet not within the participants list of the schema.
+  This means that these variables will be unbound in memory following execution of the repeating episode,
+  although typically the repetition itself still executes as intended.
+
+  Parameters
+  ----------
+  event : Repetition
+    The repetition eventuality to expand.
+  ds : DialogueState
+  schema : Schema, optional
+    The schema (if any) to inherit from when instantiating the sub-eventualities.
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   condition = event.condition
   eventualities = event.eventualities
   # If termination has been reached, do nothing
   if ds.eval_truth_value(condition.get_formula()):
     return None
-  # Otherwise, unbind all variables within each of the embedded eventualities and
-  # return the repetition step as a new subplan
+  # Otherwise, unbind all variables within each of the embedded
+  # eventualities and return the repetition step as a new subplan
   else:
     local_vars = [var for e in eventualities for var in e.bindings.keys()]
-    # This is a bit of a hack to ensure that only variables bound in the course of
-    # execution of the embedded eventualities (e.g., ?words) are unbound.
-    # TODO: some modifications still need to be made here in order to make the generated
-    # plans and facts in memory coherent in case of repetition
+    # This is a bit of a hack to ensure that only variables bound in the course
+    # of execution of the embedded eventualities (e.g., ?words) are unbound
     if schema:
       local_vars = [var for var in local_vars if var not in schema.participants]
     [ds.unbind(var) for var in local_vars]
@@ -143,7 +258,19 @@ def expand_repetition_step(event, ds, schema=None):
 
 
 def expand_primitive_step(event, ds):
-  """TBC"""
+  """Expand a primitive step, i.e., one whose expansion method is supported directly.
+
+  Parameters
+  ----------
+  event : Eventuality
+    The condition eventuality to expand.
+  ds : DialogueState
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   ep = event.get_ep()
   wff = event.get_wff()
   if paraphrase_step(wff):
@@ -161,7 +288,19 @@ def expand_primitive_step(event, ds):
   
 
 def plan_paraphrase(expr, ds):
-  """TBC"""
+  """Generate a subplan for a paraphrase step using the paraphrase transducer.
+
+  Parameters
+  ----------
+  expr : s-expr
+    The wff for the paraphrase step.
+  ds : DialogueState
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   if not isinstance(expr, str) or not expr[0] == '"' or not expr[-1] == '"':
     return None
   gist = expr.strip('"')
@@ -173,7 +312,19 @@ def plan_paraphrase(expr, ds):
 
 
 def plan_respond(expr, ds):
-  """TBC"""
+  """Generate a subplan for a respond-to step using the response transducer.
+
+  Parameters
+  ----------
+  expr : s-expr
+    The wff for the response step.
+  ds : DialogueState
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
@@ -182,7 +333,19 @@ def plan_respond(expr, ds):
 
 
 def plan_answer(expr, ds):
-  """TBC"""
+  """Generate a subplan for an answer step using the answer transducer.
+
+  Parameters
+  ----------
+  expr : s-expr
+    The wff for the answer step.
+  ds : DialogueState
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
@@ -191,7 +354,19 @@ def plan_answer(expr, ds):
 
 
 def plan_ask(expr, ds):
-  """TBC"""
+  """Generate a subplan for an ask step using the ask transducer.
+
+  Parameters
+  ----------
+  expr : s-expr
+    The wff for the ask step.
+  ds : DialogueState
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   conversation_log = ds.get_conversation_log()
   conds = [] # TODO
   facts = [] # TODO
@@ -200,7 +375,19 @@ def plan_ask(expr, ds):
 
 
 def plan_react(expr, ds):
-  """TBC"""
+  """Generate a subplan for a react-to step using the reaction transducer.
+
+  Parameters
+  ----------
+  expr : s-expr
+    The wff for the react-to step.
+  ds : DialogueState
+
+  Returns
+  -------
+  PlanNode or None
+    The updated plan, if successful.
+  """
   eps = extract_set(expr)
   events = [m.event for ep in eps for m in ds.get_memory().get_episode(ep)]
   actions = []
@@ -213,10 +400,15 @@ def plan_react(expr, ds):
 
 
 def say_to_step_from_utt(utt):
+  """Generate a say-to subplan from an utterance."""
   return init_plan_from_eventualities([parse_eventuality([ME, SAY_TO, YOU, f'"{utt}"'], expectation=True)])
 
 
 def say_to_step_from_utts(utts):
+  """Generate a say-to subplan from a list of utterances.
+  
+  NOTE: currently this just splits off the first utterance in the list.
+  """
   if utts and utts[0]:
     return say_to_step_from_utt(utts[0])
   else:
@@ -224,10 +416,12 @@ def say_to_step_from_utts(utts):
 
 
 def schema_step(wff, ds):
-  return listp(wff) and ((len(wff) == 1 and ds.is_dial_schema(wff[0])) or ds.is_dial_schema(wff[1]))
+  """Check whether a given step wff corresponds to a dialogue schema in Eta's schema library."""
+  return listp(wff) and ((len(wff) == 1 and ds.is_schema(wff[0], type='dial')) or ds.is_schema(wff[1], type='dial'))
 
 
 def split_schema_step(wff):
+  """Split a schema step wff into the schema predicate and the arguments list for the schema."""
   if len(wff) == 1:
     return wff[0], []
   predicate = wff[1]

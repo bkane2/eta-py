@@ -1,7 +1,18 @@
+"""ULF Lexicalization
+
+Functions for converting lexemes to ULF symbols.
+
+Relies on the NLTK Snowball stemmer.
+
+Exported functions
+------------------
+to_ulf : convert a word to a ULF of a given type category.
+"""
+
 from nltk.stem.snowball import SnowballStemmer
 
 import eta.util.file as file
-from eta.util.general import atom, cons
+from eta.util.general import atom
 
 STEMMER = SnowballStemmer("english")
 
@@ -15,11 +26,21 @@ ADV_ADJS = file.load_json('resources/lexical/ulf/adv_adjs.json')
 
 
 def to_ulf(cat, word):
-  """
-  Construct a ulf of the appropriate type out of 'word-sym' (a symbol such
-  as MERCEDES, ARE, ON-TOP-OF), given the lexical category (such as NAME,
-  V, or P)
-  NOTE: this version is intended for very limited experimental use
+  """Convert a word to a ULF of a given type category.
+
+  This version is incomplete and intended for very limited experimental use.
+
+  Parameters
+  ----------
+  cat : str
+    The ULF type category to generate (e.g., 'name', 'v', or 'p').
+  word : str
+    The word to lexicalize (e.g., 'mercedes', 'are', or 'on-top-of').
+
+  Returns
+  -------
+  s-expr
+    The generated ULF.
   """
   if cat == 'name':
     if word in NAMES:
@@ -98,13 +119,21 @@ def to_ulf(cat, word):
 
 
 def stem_superlative(sup_adv):
-  """
-  Find stem of superlative adjective  this is a stub, intended as default
-  when word-specific stems have not been found in the calling program 
-  only a simple check whether the stem probably shouldn't have a doubled
-  up final consonant is made.
+  """Find stem of a superlative adjective.
+
+  This is a stub, intended as default when word-specific stems have not been
+  found in the calling program only a simple check whether the stem probably
+  shouldn't have a doubled up final consonant is made.
  
-  sup-adj: an upper-case symbolic atom such as 'biggest', "smartest', etc.
+  Parameters
+  ----------
+  sup-adj : str
+    An upper-case symbolic atom such as 'biggest', "smartest', etc.
+  
+  Returns
+  -------
+  str
+    The stemmed superlative.
   """
   stem = sup_adv[:-3]
   if stem[-2:] in ['bb', 'dd', 'gg', 'nn', 'pp', 'tt']:

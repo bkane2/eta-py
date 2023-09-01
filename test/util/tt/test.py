@@ -3,7 +3,7 @@ from eta.util.tt.parse import from_lisp_dirs
 
 
 def latency_test():
-  trees, feats = from_lisp_dirs('avatars/test/rules')
+  trees, feats = from_lisp_dirs('agents/test/rules')
 
   lst = ['test', 'string', 'one', '.']
   print(choose_result_for(lst, 'latency-test', trees, feats))
@@ -18,7 +18,7 @@ def latency_test():
 
 
 def david_test():
-  trees, feats = from_lisp_dirs('avatars/david-qa/rules')
+  trees, feats = from_lisp_dirs('agents/david-qa/rules')
   # print(trees.keys())
 
   print(choose_result_for("that is enough for now .".split(),
@@ -53,7 +53,7 @@ def david_test():
 
 
 def sophie_test():
-  trees, feats = from_lisp_dirs(['avatars/sophie-gpt/rules', 'avatars/sophie-gpt/day1/rules'])
+  trees, feats = from_lisp_dirs(['agents/sophie-gpt/rules', 'agents/sophie-gpt/day1/rules'])
   # print(trees.keys())
 
   print(choose_result_for(['do', 'i', 'need', 'chemotherapy', '?'],

@@ -1,24 +1,66 @@
+"""Plan
+
+Contains classes and functions for representing and modifying dialogue plan structures.
+
+A plan structure consists of a doubly linked list of plan nodes, interpreted as sequentially ordered
+steps in the system's plan. Each step contains the expected or intended event corresponding to that node.
+
+Additionally, plan steps may be related to other plan steps in a tree structure, such that each plan
+step has a list of substeps (more concrete steps that together constitute an abstract step), as well
+as a list of supersteps (more abstract steps that a step partially constitutes).
+
+The process of planning dialogue, then, consists of iteratively expanding abstract steps to create a
+"frontier" of concrete plan steps, which become plan nodes (replacing the plan node that previously
+held the abstract step).
+
+Similarly, executing a plan consists of advancing the pointer to the currently due plan node within
+the linked list of plan nodes.
+
+Exported classes
+----------------
+PlanNode : a node in the doubly linked list that represents the system's plan.
+PlanStep : a plan step, related to other plan steps through a tree structure.
+
+Exported functions
+------------------
+get_first_plan_node : get the first plan node in a linked list of plan nodes.
+get_last_plan_node : get the last plan node in a linked list of plan nodes.
+expand_plan_node : expand a plan node using the subplan headed by another node.
+insert_before_plan_nodes : insert a new plan directly before a given plan node in the linked list.
+merge_plan_nodes : merge a sequence of plan nodes (bounded between plan-node-start and plan-node-end) into a given subplan node.
+init_plan_from_eventualities : create a plan structure from a list of eventualities, assumed to occur sequentially.
+visualize_plan : visualize a plan as a graph using graphviz dot.
+"""
+
 import graphviz
-import math
 
 from eta.util.general import gentemp, remove_duplicates, indent, cons
-from eta.constants import EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT
 
 class PlanNode:
+  """A node in the doubly linked list that represents the system's plan.
+  
+  Attributes
+  ----------
+  step : PlanStep
+    The plan step contained within this node.
+  prev : PlanNode
+    The next plan node in the linked list.
+  next : PlanNode
+    The previous plan node in the linked list.
   """
-  Defines a top-level node in Eta's plan (a doubly linked list).
-  Each node has a plan step associated, which may be linked to other
-  plan steps in a tree-like structure.
-  """
+
   def __init__(self, step):
     self.step = step
     self.prev = None
     self.next = None
 
   def add_superstep_to_subplan(self, node):
-    """
-    Add the step of a given plan-node as a superstep of each node within the
-    subplan headed by this node.
+    """Add the step of a given plan node as a superstep of each node within the subplan headed by this node.
+
+    Parameters
+    ----------
+    node : PlanNode
+      The node whose step should be added as a superstep.
     """
     start = self
     while start.next:
@@ -27,9 +69,14 @@ class PlanNode:
     start.step.add_superstep(node.step)
 
   def add_supersteps(self, start_node, end_node):
-    """
-    Given a sequence of plan nodes bounded between a given start and end node,
-    add each plan node as a superstep of this node.
+    """Given a subplan bounded between a given start and end node, add each as a superstep of this node.
+
+    Parameters
+    ----------
+    start_node : PlanNode
+      The beginning of the subplan whose steps should be added as a superstep.
+    end_node : PlanNode
+      The end of the subplan whose steps should be added as a superstep.
     """
     start = start_node
     while start.next and not start == end_node:
@@ -38,9 +85,12 @@ class PlanNode:
     self.step.add_superstep(start.step)
 
   def add_schema_to_subplan(self, schema):
-    """
-    Adds the given schema-id to each plan-step in a subplan structure
-    headed by this node.
+    """Add the given schema to each plan step in the subplan headed by this node.
+
+    Parameters
+    ----------
+    schema : Schema
+      The schema object to add to the schema lists for each plan step.
     """
     start = self
     while start.next:
@@ -49,7 +99,7 @@ class PlanNode:
     start.step.schemas.append(schema)
 
   def get_all_roots(self):
-    """Get all root plan-steps in a plan structure."""
+    """Get all root plan steps (i.e., the most abstract steps) reachable from the current plan."""
     ret = []
     def recur1(node, left=False, right=False):
       recur2(node.step)
@@ -67,7 +117,7 @@ class PlanNode:
     return remove_duplicates(ret, order=True)
   
   def bind(self, var, val):
-    """Recursively binds a variable throughout a plan structure."""
+    """Bind the given variable symbol to the given value throughout the entire plan structure."""
     def bind_rec(node, var, val, left, right):
       node.step.bind(var, val)
       if node.prev and left:
@@ -78,7 +128,7 @@ class PlanNode:
     return self
   
   def unbind(self, var):
-    """Recursively unbinds a variable throughout a plan structure."""
+    """Unbind the given variable symbol throughout the entire plan structure."""
     def unbind_rec(node, var, left, right):
       node.step.unbind(var)
       if node.prev and left:
@@ -89,11 +139,20 @@ class PlanNode:
     return self
   
   def status(self, before=3, after=5, schemas=False):
-    """
-    Prints the current plan status (i.e., steps that are currently in
-    the surface plan, with a pointer to the currently due step). Allows
-    the number of steps to be shown before and after this pointer to be
-    specified as key arguments.
+    """Format the plan structure as a status string showing the current, past, and future surface steps.
+
+    Parameters
+    ----------
+    before : int, optional
+      The number of past surface steps to show (the default is 3).
+    after : int, optional
+      The number of future surface steps to show (the default is 5).
+    schemas : bool, optional
+      Whether to also display schema predicates for each step (the default is False).
+
+    Returns
+    -------
+    str
     """
     ret = ''
     prev = self.prev
@@ -124,16 +183,52 @@ class PlanNode:
     return ret
   
   def serialize_subtree(self, schemas=False):
-    """Prints the subtree of the plan structure reachable from the current node."""
+    """Format a string representing the subtree of the plan structure reachable from this node.
+    
+    Parameters
+    ----------
+    schemas : bool, optional
+      Whether to also display schema predicates for each step (the default is False).
+    
+    Returns
+    -------
+    str
+    """
     return self.step.serialize(schemas=schemas)
   
   def serialize_from_roots(self, schemas=False):
-    """Prints the subtrees of the plan structure reachable from each root step."""
+    """Format a string representing the subtrees of the plan structure reachable from each root step.
+    
+    Parameters
+    ----------
+    schemas : bool, optional
+      Whether to also display schema predicates for each step (the default is False).
+    
+    Returns
+    -------
+    str
+    """
     return [root.serialize(reverse=True, schemas=schemas) for root in self.get_all_roots()]
   
   def to_graph(self, before=3, after=5, schemas=False):
-    """Converts a (sub)plan (possibly bounded by some number of plan nodes before/after
-       the current node) into a graph structure, i.e., a list of nodes and edges."""
+    """Convert a plan structure to a standard graph object, i.e., a list of vertices and edges.
+
+    Parameters
+    ----------
+    before : int, optional
+      The number of past surface steps to include in the graph (the default is 3).
+    after : int, optional
+      The number of future surface steps to include in the graph (the default is 5).
+    schemas : bool, optional
+      Whether to also display schema predicates in the labels for each step (the default is False).
+
+    Returns
+    -------
+    nodes : list[tuple[str, str]]
+      A list of vertices/nodes in the resulting graph, where each node is an (<id>, <label>) tuple.
+    edges : list[tuple[str, str]]
+      A list of edges in the resulting graph, where each edge is an (<id1>, <id2>) tuple.
+    """
     nodes = []
     edges = []
     visited = {}
@@ -181,25 +276,28 @@ class PlanNode:
       edges.append((f'N{i-1}', 'Ninf'))
 
     return nodes, edges
-    # END to_graph
   
   def __str__(self):
     return self.status()
-  # END PlanNode
   
 
 class PlanStep:
-  """
-  Defines a plan-step, which is an expectation or intention within
-  Eta's plan. Each plan-step may be a top-level concrete step (i.e.,
-  corresponding to a plan-node), or an abstract step linked to a more
-  concrete step through a superstep relation.
-
-  In general, each plan-step corresponds to an Eventuality (an expected
-  event, with certainty in [0,1]), and has both a list of substeps and
-  a list of supersteps. Additionally, we maintain any obligation(s) (i.e.,
-  Eventualities that are obligated by the plan-step, but not yet expectations
-  in the plan), and a list of schema instances that generated the plan-step.
+  """A plan step containing an eventuality, related to other plan steps through a tree structure.
+  
+  Attributes
+  ----------
+  id : str
+    A unique ID for this step.
+  event : Eventuality
+    The eventuality corresponding to this step.
+  substeps : list[PlanStep]
+    A list of more concrete plan steps that together realize this step.
+  supersteps : list[PlanStep]
+    A list of more abstract plan steps which this step (partially) realizes.
+  obligations : list[Eventuality]
+    A list of dialogue obligations associated with this plan step.
+  schemas : list[Schema]
+    A list of schemas that this expected/intended step arises from (if any).
   """
   def __init__(self, event=None):
     self.id = gentemp('STEP')
@@ -210,13 +308,13 @@ class PlanStep:
     self.schemas = []
 
   def get_obligations(self):
-    """
-    Gets any obligations associated with a particular step in a plan in the
-    schema that the step is part of (look at the parent step as well in case of
-    no obligations).
-    TODO: this is a bit hacky currently because say-to.v actions may need to access
-    the parent paraphrase-to.v actions in order to access obligations. Rather, it seems
-    that the say-to.v actions should inherit the obligations upon creation.
+    """Get any dialogue obligations associated with a particular step in the plan.
+
+    TODO: this is currently a bit of a hack, in that it involves looking at the superstep
+    as well if no obligations are found. This is because say-to.v actions may need to access
+    the parent paraphrase-to.v actions in order to inherit relevant obligations of the latter.
+    It may be possible to instead modify the plan expansion method so that obligations are
+    inherited upon expansion.
     """
     obligations = self.obligations
     if self.supersteps and not obligations:
@@ -224,32 +322,28 @@ class PlanStep:
     return obligations
 
   def add_superstep(self, superstep):
-    """
-    Adds bidirectional supplan/superplan links between a plan-step and a
-    given superstep. Also add the schemas of the superstep to the plan-step
-    in the case where the plan-step doesn't have any associated schemas (e.g.,
+    """Add bidirectional subplan/superplan links between this step and a given superstep.
+
+    The schemas of the superstep also become the schemas associated with this step, but
+    only in the case where this step doesn't already have associated schemas (e.g.,
     if it was created from an episode list in expanding an action).
-    TODO: should we instead always append the schemas of the superstep?
+
+    TODO: it's not clear whether the above is the sensible behavior, or if instead we
+    should always append the schemas of the superstep to this step.
+
+    Parameters
+    ----------
+    superstep : PlanStep
+      The superstep to add to this step.
     """
     self.supersteps.append(superstep)
     superstep.substeps.append(self)
     if not self.schemas:
       self.schemas = superstep.schemas
     # self.schemas = remove_duplicates(superstep.schemas + self.schemas, order=True)
-
-  def get_parent_ep(self):
-    """
-    If the current step is a subplan of another step, get the episode name/var
-    corresponding to that step.
-    NOTE: in case there are multiple supersteps, this currently just returns the first.
-    """
-    if self.supersteps:
-      return self.supersteps[0].event.get_ep()
-    else:
-      return None
     
   def bind(self, var, val):
-    """Recursively binds a variable throughout a plan-step subtree."""
+    """Bind the given variable symbol to the given value throughout the entire plan step tree (and associated schemas)."""
     def bind_rec(step, var, val):
       step.event.bind(var, val)
       [o.bind(var, val) for o in step.obligations]
@@ -259,7 +353,7 @@ class PlanStep:
     return self
   
   def unbind(self, var):
-    """Recursively unbinds a variable throughout a plan-step subtree."""
+    """Unbind the given variable symbol throughout the entire plan step tree (and associated schemas)."""
     def unbind_rec(step, var):
       step.event.unbind(var)
       [o.unbind(var) for o in step.obligations]
@@ -269,11 +363,21 @@ class PlanStep:
     return self
 
   def serialize(self, reverse=False, schemas=False):
-    """
-    Serializes a tree of plan-steps using a DFS, maintaining a record of nodes
-    so that variables can be inserted in place of nodes that appear more than once
-    in the tree.
-    If reverse=True is given, print the tree "above" the current step rather than below.
+    """Format a string representing a serialized version of the subtree rooted at this step.
+
+    This is generated using a DFS, maintaining a record of recurring plan steps so that numerical
+    references can be inserted in place of nodes that appear more than once in the tree.
+
+    Parameters
+    ----------
+    reverse : bool, optional
+      If given as True, print the subtree "above" this step rather than below (the default is False).
+    schemas : bool, optional
+      Whether to also display schema predicates for each step (the default is False).
+    
+    Returns
+    -------
+    str
     """
     visited = {}
     c = 1
@@ -297,13 +401,19 @@ class PlanStep:
     return serialize_recur(self, 1)
 
   def format(self, schemas=False):
-    """
-    Formats the step corresponding to a given plan node, as
-    "((ep-name wff) certainty)"
-    Or, if a hash table of schema instances is given, as
-    "((ep-name wff) certainty) (:schemas schema-preds)"
-    Where schema-preds is a list of schema predicates corresponding
-    to the schemas in which this step appears.
+    """Format a string representing this plan step as an S-expression.
+
+    Parameters
+    ----------
+    schemas : bool, optional
+      Whether to also display schema predicates for each step (the default is False).
+
+    Returns
+    -------
+    str
+      The step formatted as one of the following S-expression string representations:
+      ((<ep-name> <wff>) <certainty>)
+      ((<ep-name> <wff>) <certainty>) (:schemas <schema-preds>)
     """
     if schemas:
       schema_instances = [s.predicate for s in self.schemas]
@@ -314,11 +424,21 @@ class PlanStep:
 
   def __str__(self):
     return self.format()
-  # END PlanStep
   
 
 def get_first_plan_node(plan_node):
-  """Gets the first plan-node in the plan structure, given an arbitrary plan-node."""
+  """Get the first plan node in a linked list of plan nodes.
+
+  Parameters
+  ----------
+  plan_node : PlanNode
+    An arbitrary node within the linked list of plan nodes.
+  
+  Returns
+  -------
+  PlanNode
+    The first node in the linked list.
+  """
   node = plan_node
   while node.prev:
     node = node.prev
@@ -326,7 +446,18 @@ def get_first_plan_node(plan_node):
 
 
 def get_last_plan_node(plan_node):
-  """Gets the last plan-node in the plan structure, given an arbitrary plan-node."""
+  """Get the last plan node in a linked list of plan nodes.
+
+  Parameters
+  ----------
+  plan_node : PlanNode
+    An arbitrary node within the linked list of plan nodes.
+  
+  Returns
+  -------
+  PlanNode
+    The last node in the linked list.
+  """
   node = plan_node
   while node.next:
     node = node.next
@@ -334,12 +465,25 @@ def get_last_plan_node(plan_node):
 
 
 def expand_plan_node(plan_node, subplan_node_start):
-  """
-  Given a plan-node and the start/end plan-nodes of some subplan, insert the
-  subplan into the plan in place of the given plan-node. This modifies the
-  pointers of the previous/next steps in the plan (if any), and also adds the
-  plan-step of the original plan-node to the list of supersteps of each substep.
-  Returns the start node of the subplan.
+  """Expand a plan node using the subplan headed by another node.
+
+  The subplan is inserted into the plan in place of the given plan node, which
+  is done by adding the plan node as a superstep of each step in the subplan,
+  and then modifying the pointers of the linked list so that the step before
+  the plan node points to the first node in the subplan, and the step after
+  the plan node points to the last node in the subplan.
+
+  Parameters
+  ----------
+  plan_node : PlanNode
+    The node to expand.
+  subplan_node_start : PlanNode
+    The first node in the subplan to replace 'plan_node' with.
+
+  Returns
+  -------
+  PlanNode
+    The first node in the given subplan.
   """
   subplan_node_end = get_last_plan_node(subplan_node_start)
   subplan_node_start.add_superstep_to_subplan(plan_node)
@@ -353,8 +497,20 @@ def expand_plan_node(plan_node, subplan_node_start):
 
 
 def insert_before_plan_node(plan_node, new_plan_node_start):
-  """Inserts a new plan before the given plan node (adjusting the pointers),
-     and returns the new plan node."""
+  """Insert a new plan directly before a given plan node in the linked list.
+  
+  Parameters
+  ----------
+  plan_node : PlanNode
+    The node that the new plan should precede.
+  new_plan_node_start : PlanNode
+    The first node in the new plan to insert before 'plan_node'.
+    
+  Returns
+  -------
+  PlanNode
+    The first node in the new plan.
+  """
   new_plan_node_end = get_last_plan_node(new_plan_node_start)
   if plan_node.prev:
     plan_node.prev.next = new_plan_node_start
@@ -365,10 +521,25 @@ def insert_before_plan_node(plan_node, new_plan_node_start):
 
 
 def merge_plan_nodes(plan_node_start, plan_node_end, new_plan_node):
-  """
-  Merges a sequence of plan nodes (bounded between plan-node-start and plan-node-end)
-  into a given subplan node. Returns the new subplan node.
-  TODO: do we also need to deal with cases where the plan-nodes are discontiguous in the plan?
+  """Merge a sequence of plan nodes (bounded between plan-node-start and plan-node-end) into a given subplan node.
+
+  Note that this function is effectively the opposite of 'expand_plan_node'.
+  
+  TODO: this may need to be extended to deal with cases where the plan nodes to merge are discontiguous in the plan.
+
+  Parameters
+  ----------
+  plan_node_start : PlanNode
+    The first node in the plan sequence to merge.
+  plan_node_end : PlanNode
+    The last node in the plan sequence to merge.
+  new_plan_node : PlanNode
+    The new subplan node that should replace the merged sequence.
+
+  Returns
+  -------
+  PlanNode
+    The new subplan node that replaced the merged sequence.
   """
   new_plan_node.add_supersteps(plan_node_start, plan_node_end)
   if plan_node_start.prev:
@@ -381,21 +552,31 @@ def merge_plan_nodes(plan_node_start, plan_node_end, new_plan_node):
 
 
 def init_plan_from_eventualities(eventualities, schema=None):
-  """
-  Creates a plan structure from a list of eventualities, assumed to occur sequentially.
-  (TODO: we might, in the future, allow for episode-relations in the schema to provide initial
-  constraints over plan construction here).
-  TODO: In the case of :repeat-until, we should create duplicate PlanSteps but reuse the same
-  Eventuality objects (we may need a function to un-bind in plan and schema?).
+  """Create a plan structure from a list of eventualities, assumed to occur sequentially.
+  
+  TODO: we might, in the future, allow for episode-relations in the schema to provide initial
+  constraints over plan construction here.
+
+  Parameters
+  ----------
+  eventualities : list[Eventualities]
+    The list of eventualities to use to create a plan.
+  schema : Schema, optional
+    If a schema is provided, it will be added to the created plan steps and used to
+    inherit obligations, etc.
+
+  Returns
+  -------
+  PlanNode
+    The first node in the created plan structure.
   """
   first_node = None
   prev_node = None
   curr_node = None
+
   for e in eventualities:
-    # Make plan-step structure
     step = PlanStep(event=e)
 
-    # If schema is provided, add it to schemas of step, and also inherit any obligations/etc.
     if schema is not None:
       step.schemas.append(schema)
       step.obligations += schema.get_obligations_of_ep(e.get_ep())
@@ -412,35 +593,23 @@ def init_plan_from_eventualities(eventualities, schema=None):
   return first_node
 
 
-def certainty_to_period(certainty):
-  """
-  Maps a certainty from [0,1] to a period corresponding to the
-  period (in seconds) that Eta must wait to consider an expected episode
-  failed and move on in the plan.
-  The proportion between the period (in task cycles) and the
-  quantity -log(1 - certainty) is determined by the global
-  constant *expected-step-failure-period-coefficient*.
-  """
-  if certainty >= 1 or certainty < 0:
-    return 'inf'
-  else:
-    return -EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT * math.log(1-certainty)
-  
+def visualize_plan(plan_node, before=3, after=5, schemas=False, vert=False, dir='io/'):
+  """Visualize a plan as a graph using graphviz dot.
 
-def has_elapsed_certainty_period(time, certainty):
-  """Checks whether a given time delta has elapsed the period corresponding to a particular certainty."""
-  if certainty >= 1 or certainty < 0:
-    return False
-  else:
-    period = certainty_to_period(certainty)
-    return time >= period
+  TODO: it may be better to move this function elsewhere in order to have a cleaner dependency structure.
 
-
-def visualize_plan(plan_node, before=3, after=5, schemas=False, vert=False):
-  """
-  Visualizes a plan using graphviz dot.
-  TODO: may want to move this function elsewhere in order to have cleaner dependency structure.
-  TODO: try to fix order of top-level nodes
+  Parameters
+  ----------
+  before : int, optional
+    The number of past surface steps to include in the graph (the default is 3).
+  after : int, optional
+    The number of future surface steps to include in the graph (the default is 5).
+  schemas : bool, optional
+    Whether to also display schema predicates in the labels for each step (the default is False).  
+  vert : bool, optional
+    Whether to rotate the direction of the graph to left-right (the default is False).
+  dir : str, optional
+    The directory to store the generated graph image (the default is 'io/').
   """
   nodes, edges = plan_node.to_graph(before=before, after=after, schemas=schemas)
   dot = graphviz.Digraph()
@@ -474,4 +643,4 @@ def visualize_plan(plan_node, before=3, after=5, schemas=False, vert=False):
     for e in [e for e in edges if e[0][0]!='N' or e[1][0]!='N']:
       dot1.edge(e[0], e[1], dir='none')
 
-  dot.render('tests/graphviz/plan.gv', view=True)
+  dot.render(f'{dir}plan.gv', view=True)

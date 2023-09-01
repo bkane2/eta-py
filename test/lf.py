@@ -46,7 +46,7 @@ def test1():
 
 def main():
   test1()
-  knowledge = from_lisp_dirs('avatars/test/knowledge')
+  knowledge = from_lisp_dirs('agents/test/knowledge')
   for e in knowledge:
     print(e)
 

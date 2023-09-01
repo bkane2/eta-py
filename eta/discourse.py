@@ -1,6 +1,41 @@
+"""Discourse
+
+Contains classes and functions for representing and processing discourse.
+
+Exported classes
+----------------
+Utterance : represents a single utterance, which contains both the words of the utterance and an affect.
+DialogueTurn : represents a dialogue turn by an agent, which contains the utterance as well as any associated dialogue information.
+
+Exported functions
+------------------
+get_prior_turn : retrieve the immediately prior turn by the specified agent(s).
+parse_utt_str : parse an utterance string into a word string and affect.
+decompress : expand contractions into full phrases (e.g. 'don't' or 'dont' by 'do not').
+compress : replace auxiliary-NOT combinations by -N'T contractions.
+swap_duals : swap first-person pronouns (I, me, ...) with second-person pronouns (you, ...), and vice-versa.
+"""
+
+import eta.util.file as file
 from eta.constants import EMOTIONS_LIST
+from eta.util.general import cons, replaceall
+
+CONTRACTIONS = file.load_json('resources/lexical/contractions.json')
+NEGPAIRS = file.load_json('resources/lexical/negpairs.json')
+DUALS = file.load_json('resources/lexical/duals.json')
+
 
 class Utterance:
+  """Represents a single utterance, which contains both the words of the utterance and an affect.
+  
+  Attributes
+  ----------
+  words : str
+    The content of the utterance.
+  affect : str, optional
+    The affect of the utterance. Must be contained within the list of supported emotions (default is 'neutral').
+  """
+
   def __init__(self, words, affect=EMOTIONS_LIST[0]):
     self.words = words
     if affect in EMOTIONS_LIST:
@@ -10,6 +45,26 @@ class Utterance:
 
 
 class DialogueTurn:
+  """Represents a dialogue turn by an agent, which contains the utterance as well as any associated dialogue information.
+  
+  Attributes
+  ----------
+  agent : str
+    The agent of this turn.
+  utterance : Utterance
+    The utterance of this turn.
+  gists : list[str], optional
+    A list of gist clauses capturing the meaning of this turn.
+  semantics : list[s-expr], optional
+    A list of semantic interpretations of this turn.
+  pragmatics : list[s-expr], optional
+    A list of pragmatic inferences drawn from this turn.
+  obligations : list[s-expr], optional
+    A list of obligations created by this turn.
+  ep : str, optional
+    The episode that this turn corresponds to.
+  """
+  
   def __init__(self, agent, utterance, gists=[], semantics=[], pragmatics=[], obligations=[], ep=None):
     self.agent = agent
     self.utterance = utterance
@@ -21,6 +76,20 @@ class DialogueTurn:
 
 
 def get_prior_turn(turns, agent=None):
+  """Retrieve the immediately prior turn by the specified agent(s).
+  
+  Parameters
+  ----------
+  turns : list[DialogueTurn]
+    A list of dialogue turns in the conversation, in chronological order.
+  agent : str, optional
+    The agent whose prior turn should be found (by default, find the prior turn by any agent).
+
+  Returns
+  -------
+  DialogueTurn or None
+    The prior turn by the given agent (if one exists).
+  """
   if agent:
     agent_turns = [t for t in turns if t.agent == agent]
     return agent_turns[-1] if agent_turns else None
@@ -29,6 +98,20 @@ def get_prior_turn(turns, agent=None):
   
 
 def parse_utt_str(str):
+  """Parse an utterance string into a word string and affect.
+  
+  Parameters
+  ----------
+  str : str
+    A string representing an utterance, potentially prefixed by an emotion tag, e.g., [happy] or [sad].
+  
+  Returns
+  -------
+  affect : str
+    The affect/emotion of the utterance.
+  words : str
+    The word string of the utterance.
+  """
   affect = None
   words = str
   for e in EMOTIONS_LIST:
@@ -38,3 +121,85 @@ def parse_utt_str(str):
       words = words.replace(tag1, '').replace(tag2, '').strip()
       affect = e
   return affect, words
+
+
+def decompress(str):
+	"""Expand contractions into full phrases (e.g. 'don't' or 'dont' by 'do not')."""
+	def decompress_rec(words):
+		if not words:
+			return []
+		elif words[0] in CONTRACTIONS:
+			return cons(CONTRACTIONS[words[0]], decompress_rec(words[1:]))
+		else:
+			return cons(words[0], decompress_rec(words[1:]))
+	return ' '.join(decompress_rec(str.split()))
+
+
+def compress(str):
+	"""Replace auxiliary-NOT combinations by -N'T contractions."""
+	def compress_rec(words):
+		if not words:
+			return []
+		elif not words[1:]:
+			return words
+		elif words[1] == 'not' and words[0] in NEGPAIRS:
+			return cons(NEGPAIRS[words[0]], compress_rec(words[2:]))
+		else:
+			return cons(words[0], compress_rec(words[1:]))
+	return ' '.join(compress_rec(str.split()))
+
+
+def presubst(str):
+  """Prepare a string for calling the swap_duals function to avoid ungrammatical substitutions.
+
+  For example, in swapping dual pronouns, we want to avoid outputs such as "why do you say i are stupid",
+  while still correctly producing "why do you say your brothers are stupid".
+
+	This function replaces "are" by "are2" when preceded or followed by "you"; similarly, it replaces
+  "were" by "were2" and "was" by "was2".
+
+	It also replaces "you" by "you2" when it is the last word, or
+	when it is not one of the first two words and is not preceded by
+	certain conjunctions ("and", "or", "but", "that", "because", "if",
+	"when", "then", "why", ...), or certain subordinating verbs ("think",
+	"believe", "know", ...), or when it follows "to".
+
+	This is in preparation for replacement of "you2" by "me" (rather than "i")
+	when swap_duals is applied.
+	"""
+  re_punct = ['?','!',',','.',':',';']
+  re_blocker = ['and', 'or', 'but', 'that', 'because', 'if', 'so', 'when', 'then', 'why',
+			  				'think', 'see', 'guess', 'believe', 'hope', 'do', 'can', 'would', 'should',
+								'than', 'know', 'i', 'you', '-', '--']
+  str = replaceall(str, [
+		("you are", "you1 are2", False),
+		("are you", "are2 you1", False),
+		("i was", "i was2", False),
+		("was i", "was2 i", False),
+		("you were", "you1 were2", False),
+		("were you", "were2 you1", False),
+		(fr"you ([{'|'.join(re_punct)}])", r"you2 \1", True),
+		("to you", "to you2", False),
+	])
+  str = str.replace('you', 'you0')
+  str = replaceall(str, [
+		(r"^you0", r"you", True),
+		(r"^([\S]+) you0", r"\1 you", True),
+		(fr"([{'|'.join(re_punct)}]) you0", r"\1 you", True),
+		(fr"([{'|'.join(re_punct)}]) ([\S]+) you0", r"\1 \2 you", True),
+		(fr"({'|'.join(re_blocker)}) you0", r"\1 you", True)
+  ])
+  return str.replace('you0', 'you2')
+
+
+def swap_duals(str):
+	"""Swap first-person pronouns (I, me, ...) with second-person pronouns (you, ...), and vice-versa."""
+	def swap_duals_rec(words):
+		if not words:
+			return []
+		elif words[0] in DUALS:
+			return cons(DUALS[words[0]], swap_duals_rec(words[1:]))
+		else:
+			return cons(words[0], swap_duals_rec(words[1:]))
+	str = presubst(str)
+	return ' '.join(swap_duals_rec(str.split()))

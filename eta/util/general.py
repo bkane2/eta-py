@@ -1,31 +1,97 @@
+"""General Utilities
+
+Contains utility functions for various basic data types.
+
+Exported functions
+------------------
+"Symbol" util
+-------------
+clear_symtab : clear the symbol table used for creating new symbols.
+gentemp : enerate a unique symbol that hasn't been used before by appending an integer suffix i and then incrementing i.
+episode_name : generate a new episode name.
+episode_var : generate a new episode variable.
+escaped_symbol_p : check if a given symbol is an "escaped" symbol, equivalent to '|sym| in LISP.
+symbolp : check if a given input is a "symbol" (i.e., a string).
+variablep : check if a given input is a variable symbol, i.e., starts with '?' or '!'.
+dual_var : given an episode variable like ?e1, return the non-fluent dual of that variable, e.g., !e1 (and vice-versa).
+duplicate_var : duplicate a variable by generating a new variable symbol with the initial variable (excluding trailing numbers) as a prefix.
+
+String util
+-----------
+replaceall : make a list of replacements to a given string in sequence.
+indent : indent a string some number of levels.
+standardize : standardize a string by applying a series of transformations.
+isquote : check if a given input is a quoted expression.
+
+List util
+---------
+rec_replace : recursively replace some old value with a new value throughout a list.
+rec_remove : recursively remove a given target from a list.
+listp : check whether an input is a list (including the empty list).
+cons : insert a value to the front of a list or set.
+push : insert a value to the end of a list or set.
+atom : check whether an input is an atom (either empty list or a non-list).
+append : append each sublist within lst together, creating a single combined list.
+flatten : recursively flatten a list, creating a single list with no sub-lists.
+remove_duplicates : remove duplicate items in a list, preserving the initial order of 'order' is given as True.
+remove_nil : remove any null values from a list.
+subst : recursively substitute b for a throughout a list.
+substall : given a set of replacements, make a substitution in a list for each replacement.
+random_element : select a random element from a list.
+get_keyword_contents : get the contents immediately following each keyword in 'keys' from a list.
+to_key : converts a list to a valid dict key consisting of only tuples and strings.
+
+Dict util
+---------
+dict_substall_keys : given a set of replacements, make a substitution to the keys in a dict for each replacement.
+cons_dict : add v to the list at key k in dct, creating a new list if none exists.
+dict_get : safe version of dict accessor that returns an empty list if key is not found.
+dict_rem_val : safe version of dict remove that removes val from the list stored at key (or pops the key if it stores an atom).
+dict_rem : safe version of dict remove that removes a key from the dict.
+
+Number util
+-----------
+squash : squash each number within a vector to be within the given range.
+normalize : normalize a vector to sum to 1.
+linsum : compute a linear sum of a list of vectors, scaling each vector by the corresponding coefficient.
+argmax : select the n top values in a given list, according to a list of scores for each list element.
+"""
+
 import re
 import numpy as np
 import random
 import string
 from copy import copy
 
+from eta.constants import SYMTAB_PATH
 import eta.util.file as file
 
 # ``````````````````````````````````````
 # "Symbol" util
 # ``````````````````````````````````````
 
-SYMTAB_PATH = 'io/symtab.json'
-
 def clear_symtab():
+	"""Clear the symbol table used for creating new symbols."""
 	file.write_json(SYMTAB_PATH, {})
 
 
 def gentemp(str):
-	"""
-	str -> str
-	````````````````
-	Generates a unique copy of a "symbol" (string) that hasn't been
-	used before by appending an integer suffix i and then incrementing i.
-	NOTE: this relies on read/writes to an external symbol table, which exploits the
-	fact that race conditions with a shared file cannot occur with Python multiprocess
+	"""Generate a unique symbol that hasn't been used before by appending an integer suffix i and then incrementing i.
+
+	This currently relies on an external symbol table stored in a file, which
+	exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
 	(see: https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2)
 	However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.
+
+	Parameters
+	----------
+	str : str
+		String to use for symbol generation.
+
+	Returns
+	-------
+	str
+		A "symbol" with a unique integer suffix attached to the given string.
 	"""
 	symtab = file.load_json(SYMTAB_PATH)
 	if not str in symtab:
@@ -37,30 +103,35 @@ def gentemp(str):
 
 
 def episode_name():
+	"""Generate a new episode name."""
 	return gentemp('e')
 
 
 def episode_var():
+	"""Generate a new episode variable."""
 	return gentemp('?e')
 
 
 def escaped_symbol_p(s):
+	"""Check if a given symbol is an "escaped" symbol, equivalent to '|sym| in LISP."""
 	return isinstance(s, str) and len(s) >= 2 and s.count('|') == 2
 
 
 def symbolp(s):
+	"""Check if a given variable is a "symbol" (i.e., a string)."""
 	return isinstance(s, str)
 
 
 def variablep(s):
-	"""Check whether a symbol is a variable, i.e., starts with '?' or '!'.
-		 NOTE: for now, this excludes indexical variables, such as '^you'."""
+	"""Check if a given input is a variable symbol, i.e., starts with '?' or '!'.
+	
+	NOTE: for now, this excludes indexical variables, such as '^you'.
+	"""
 	return symbolp(s) and s[0] in ['?', '!'] and s not in ['?', '!']
 
 
 def dual_var(ep_var):
-	"""Given an episode variable like ?e1, return the non-fluent dual
-		 of that variable, e.g., !e1 (and vice-versa if !e1 is given)."""
+	"""Given an episode variable like ?e1, return the non-fluent dual of that variable, e.g., !e1 (and vice-versa)."""
 	if variablep(ep_var):
 		return '!'+ep_var[1:] if ep_var[0] == '?' else '?'+ep_var[1:]
 	else:
@@ -68,8 +139,7 @@ def dual_var(ep_var):
 	
 
 def duplicate_var(var):
-	"""Given a variable, duplicate the variable by generating a new variable
-	   symbol with the initial variable as a prefix (stripping any trailing numbers)."""
+	"""Duplicate a variable by generating a new variable symbol with the initial variable (excluding trailing numbers) as a prefix."""
 	if not variablep(var):
 		return var
 	else:
@@ -82,6 +152,22 @@ def duplicate_var(var):
 
 
 def replaceall(str, replist):
+	"""Make a list of replacements to a given string in sequence.
+	
+	Parameters
+	----------
+	str : str
+		A string whose contents should be replaced.
+	replist : list[tuple]
+		A list of replacements to make. A replacement is a tuple of one of the following forms:
+			(old, new)
+			(old, new, is_regex)
+		If is_regex is given as True (default is False), the old and new values are interpreted as regex strings.
+	
+	Returns
+	-------
+	str
+	"""
 	for tup in replist:
 		if len(tup) == 3:
 			a, b, is_regex = tup
@@ -96,10 +182,20 @@ def replaceall(str, replist):
 
 
 def indent(n):
+	"""Indent a string some number of levels."""
 	return "  "*(n-1)
 
 
 def standardize(str):
+	"""Standardize a string by applying a series of transformations.
+	
+	Specifically:
+	1. Replace -- with -, and _ with whitespace.
+	2. Remove parenthetical content (i.e., [...] or *...*).
+	3. Add whitespace around all punctuation.
+	4. Collapse all whitespace to a single space.
+	5. Convert to lowercase.
+	"""
 	str = str.replace('--', '-').replace('_', ' ')
 	str = re.sub(r'\[[a-zA-Z0-9\s]*\]', '', str)
 	str = re.sub(r'\*[a-zA-Z0-9\s]*\*', '', str)
@@ -109,6 +205,7 @@ def standardize(str):
 
 
 def isquote(s):
+	"""Check if a given input is a quoted expression."""
 	return isinstance(s, str) and len(s) >= 2 and s[0] == '"' and s[-1] == '"'
 
 
@@ -120,6 +217,7 @@ def isquote(s):
 
 
 def rec_replace(old, new, lst):
+	"""Recursively replace some old value with a new value throughout a list."""
 	if lst == old:
 		return new
 
@@ -136,6 +234,7 @@ def rec_replace(old, new, lst):
 
 
 def rec_remove(target, lst):
+	"""Recursively remove a given target from a list."""
 	new_lst = []
 	for e in lst:
 		if e == target:
@@ -149,10 +248,24 @@ def rec_remove(target, lst):
 
 
 def listp(lst):
+	"""Check whether an input is a list (including the empty list)."""
 	return isinstance(lst, list)
 
 
 def cons(lst1, lst2):
+	"""Insert a value to the front of a list or set.
+	
+	Parameters
+	----------
+	lst1 : object
+		An object (possibly a sublist) to insert.
+	lst2 : list[object], set[object], or object
+		A list, set, or object to cons the given object to.
+	
+	Returns
+	-------
+	list[object] or set[object]
+	"""
 	if listp(lst2):
 		return [lst1] + lst2
 	elif isinstance(lst2, set):
@@ -162,6 +275,19 @@ def cons(lst1, lst2):
 	
 
 def push(lst1, lst2):
+	"""Insert a value to the end of a list or set.
+
+	Parameters
+	----------
+	lst1 : object
+		An object (possibly a sublist) to insert.
+	lst2 : list[object], set[object], or object
+		A list, set, or object to push the given object to.
+	
+	Returns
+	-------
+	list[object] or set[object]
+	"""
 	if listp(lst2):
 		return lst2 + [lst1]
 	elif isinstance(lst2, set):
@@ -171,14 +297,17 @@ def push(lst1, lst2):
 	
 
 def atom(lst):
+	"""Check whether an input is an atom (either empty list or a non-list)."""
 	return not lst or not listp(lst)
 
 
 def append(lst):
+  """Append each sublist within lst together, creating a single combined list."""
   return [x for l in lst for x in l]
 
 
 def flatten(lst):
+	"""Recursively flatten a list, creating a single list with no sub-lists."""
 	if not listp(lst):
 		return [lst]
 	else:
@@ -186,8 +315,7 @@ def flatten(lst):
 	
 
 def remove_duplicates(lst, order=False):
-	"""Remove duplicate items in a list.
-		 If preserving order is important, specify order=True"""
+	"""Remove duplicate items in a list, preserving the initial order of 'order' is given as True."""
 	if order:
 		visited = []
 		lst1 = []
@@ -201,10 +329,12 @@ def remove_duplicates(lst, order=False):
 	
 
 def remove_nil(lst):
+	"""Remove any null values from a list."""
 	return [x for x in lst if x]
 	
 
 def subst(a, b, lst):
+	"""Recursively substitute b for a throughout a list."""
 	def subst_rec(a, b, x):
 		if x == b:
 			return a
@@ -216,24 +346,24 @@ def subst(a, b, lst):
 
 
 def substall(lst, replist):
-	# Note that the order of var/val in replist is reversed
+	"""Given a set of replacements, make a substitution in a list for each replacement."""
 	for (b, a) in replist:
 		lst = subst(a, b, lst)
 	return lst
 
 
 def random_element(lst):
+	"""Select a random element from a list."""
 	return random.choice(lst)
 
 
 def get_keyword_contents(lst, keys):
-	"""Gets the contents corresponding to a list of keywords in a record structure
-	   (assuming the contents are a single element initially following the keyword)."""
+	"""Get the contents immediately following each keyword in 'keys' from a list."""
 	return [e2 for (e1, e2) in zip(lst, lst[1:]+[None]) if e1 in keys and e2]
 
 
 def to_key(lst):
-	"""Converts a list to a valid dict key consisting of only tuples and strings."""
+	"""Convert a list to a valid dict key consisting of only tuples and strings."""
 	if lst is None:
 		return None
 	if atom(lst):
@@ -250,14 +380,14 @@ def to_key(lst):
 
 
 def dict_substall_keys(dct, replist):
-	# Rep b with a
+	"""Given a set of replacements, make a substitution to the keys in a dict for each replacement."""
 	for (b, a) in replist:
 		dct = { (a if var==b else var):val for var, val in dct.items() }
 	return dct
 
 
 def cons_dict(dct, k, v):
-	"""Adds v to the list at key k in dct, creating a new list if none exists."""
+	"""Add v to the list at key k in dct, creating a new list if none exists."""
 	if k in dct:
 		dct[k].append(v)
 	else:
@@ -273,8 +403,7 @@ def dict_get(dct, k):
 
 
 def dict_rem_val(dct, k, val):
-	"""Safe version of dict remove that removes val from the list stored at key (or pops
-	   the key if it stores an atom)."""
+	"""Safe version of dict remove that removes val from the list stored at key (or pops the key if it stores an atom)."""
 	if k in dct:
 		if isinstance(dct[k], list):
 			dct[k].remove(val)
@@ -296,6 +425,7 @@ def dict_rem(dct, k):
 
 
 def squash(vector, range=(0, 1)):
+	"""Squash each number within a vector to be within the given range."""
 	if min(vector) == max(vector):
 		return [1. for _ in vector]
 	v = np.array(vector)
@@ -307,12 +437,14 @@ def squash(vector, range=(0, 1)):
 
 
 def normalize(vector):
+	"""Normalize a vector to sum to 1."""
 	v = np.array(vector)
 	v = v / v.sum()
 	return v.tolist()
 
 
 def linsum(vectors, coeffs):
+	"""Compute a linear sum of a list of vectors, scaling each vector by the corresponding coefficient."""
 	r = np.array([0. for _ in vectors[0]])
 	vs = [np.array(v) for v in vectors]
 	for idx, v in enumerate(vs):
@@ -321,101 +453,7 @@ def linsum(vectors, coeffs):
 
 
 def argmax(lst, scores, n):
+	"""Select the n top values in a given list, according to a list of scores for each list element."""
 	objs = np.array(lst, dtype=object)
 	scores_top = np.argsort(scores)[:-(min(n, len(scores))+1):-1]
 	return objs[scores_top].tolist()
-
-
-
-# ``````````````````````````````````````
-# Discourse util
-# ``````````````````````````````````````
-
-
-
-CONTRACTIONS = file.load_json('resources/lexical/contractions.json')
-NEGPAIRS = file.load_json('resources/lexical/negpairs.json')
-DUALS = file.load_json('resources/lexical/duals.json')
-
-
-def decompress(str):
-	"""Replaces contractions (e.g. 'don't' or 'dont' by 'do not')"""
-	def decompress_rec(words):
-		if not words:
-			return []
-		elif words[0] in CONTRACTIONS:
-			return cons(CONTRACTIONS[words[0]], decompress_rec(words[1:]))
-		else:
-			return cons(words[0], decompress_rec(words[1:]))
-	return ' '.join(decompress_rec(str.split()))
-
-
-def compress(str):
-	"""Replaces auxiliary-NOT combinations by -N'T contractions"""
-	def compress_rec(words):
-		if not words:
-			return []
-		elif not words[1:]:
-			return words
-		elif words[1] == 'not' and words[0] in NEGPAIRS:
-			return cons(NEGPAIRS[words[0]], compress_rec(words[2:]))
-		else:
-			return cons(words[0], compress_rec(words[1:]))
-	return ' '.join(compress_rec(str.split()))
-
-
-def presubst(str):
-	"""
-	This function is applied to a string prior to calling the
-	dual function. It helps avoid ungrammatical substitutions
-	such as "why do you say i are stupid", while still correctly
-	producing "why do you say your brothers are stupid".
-
-	It replaces "are" by "are2" when preceded or followed by "you";
-	similarly, it replaces "were" by "were2" and "was" by "was2".
-
-	It also replaces "you" by "you2" when it is the last word, or
-	when it is not one of the first two words and is not preceded by
-	certain conjunctions ("and", "or", "but", "that", "because", "if",
-	"when", "then", "why", ...), or certain subordinating verbs ("think",
-	"believe", "know", ...), or when it follows "to".
-
-	This is in preparation for replacement of "you2" by "me" (rather than "i")
-	when dual is applied.
-	"""
-	re_punct = ['?','!',',','.',':',';']
-	re_blocker = ['and', 'or', 'but', 'that', 'because', 'if', 'so', 'when', 'then', 'why',
-			  				'think', 'see', 'guess', 'believe', 'hope', 'do', 'can', 'would', 'should',
-								'than', 'know', 'i', 'you', '-', '--']
-	str = replaceall(str, [
-		("you are", "you1 are2", False),
-		("are you", "are2 you1", False),
-		("i was", "i was2", False),
-		("was i", "was2 i", False),
-		("you were", "you1 were2", False),
-		("were you", "were2 you1", False),
-		(fr"you ([{'|'.join(re_punct)}])", r"you2 \1", True),
-		("to you", "to you2", False),
-	])
-	str = str.replace('you', 'you0')
-	str = replaceall(str, [
-		(r"^you0", r"you", True),
-		(r"^([\S]+) you0", r"\1 you", True),
-		(fr"([{'|'.join(re_punct)}]) you0", r"\1 you", True),
-		(fr"([{'|'.join(re_punct)}]) ([\S]+) you0", r"\1 \2 you", True),
-		(fr"({'|'.join(re_blocker)}) you0", r"\1 you", True)
-	])
-	return str.replace('you0', 'you2')
-
-
-def swap_duals(str):
-	"""Replaces 'I' by 'you', 'you' by 'I', 'my' by 'your', etc."""
-	def swap_duals_rec(words):
-		if not words:
-			return []
-		elif words[0] in DUALS:
-			return cons(DUALS[words[0]], swap_duals_rec(words[1:]))
-		else:
-			return cons(words[0], swap_duals_rec(words[1:]))
-	str = presubst(str)
-	return ' '.join(swap_duals_rec(str.split()))

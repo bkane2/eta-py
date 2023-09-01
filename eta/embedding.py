@@ -1,3 +1,17 @@
+"""Embedding Tools
+
+Contains classes that may be used to embed documents or score embedded documents using cosine similarity.
+
+These classes serve as interfaces for invoking various embedding models or APIs.
+
+Exported classes
+----------------
+Embedder : the abstract class for an embedder object.
+STEmbedder : an embedder that uses a native SentenceTransformer model to compute embeddings.
+HFEmbedder : an embedder that uses HuggingFace's API to compute embeddings.
+DummyEmbedder : an embedder that simply computes empty embeddings.
+"""
+
 import os
 import json
 import requests
@@ -6,19 +20,52 @@ import numpy as np
 from eta.constants import *
 import eta.util.file as file
 
-class Embedder:
-  def __init__(self, model=EMBEDDING_DEFAULT_MODEL, parallelism=False):
-    """TBC"""
-    from sentence_transformers import SentenceTransformer
-    self.model = SentenceTransformer(model)
-    if not parallelism:
-      os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+class Embedder():
+  """Defines an abstract embedder class.
+
+  An embedder minimally contains a method for embedding a text or list of texts, and a
+  method for scoring a set of documents (possibly with precomputed embeddings) relative to a text.
+  """
+  def __init__(self):
+    """Initialize the embedder object."""
+    pass
 
   def embed(self, texts):
-    return list(self.model.encode(texts))
-  
+    """Embed a text or list of texts.
+    
+    Parameters
+    ----------
+    texts : str or list[str]
+      Either a single text string or a list of text strings to embed.
+    
+    Returns
+    -------
+    list[float] or list[list[float]]
+      The embedding or embeddings computed from the input.
+    """
+    if isinstance(texts, (list, np.ndarray)):
+      return [[] for _ in texts]
+    else:
+      return []
+
   def score(self, text, documents, embeddings=[]):
-    """TBC"""
+    """Score a set of documents relative to a text.
+    
+    Parameters
+    ----------
+    text : str
+      A query text to use in computing scores for each document.
+    documents : list[str]
+      A list of documents to score.
+    embeddings : list[list[float]], optional
+      If embeddings for the documents have already been precomputed, passing the embeddings
+      as an argument will bypass creating new embeddings for the documents.
+    
+    Returns
+    -------
+    list[float]
+      Scores for each document.
+    """
     documents = np.array(documents)
 
     if embeddings and len(embeddings) == len(documents):
@@ -31,9 +78,41 @@ class Embedder:
     return scores.tolist()
 
 
+class STEmbedder(Embedder):
+  """An embedder that uses a native SentenceTransformer model to compute embeddings."""
+
+  def __init__(self, model=EMBEDDING_DEFAULT_MODEL, parallelism=False):
+    """Initialize a SentenceTransformer embedder.
+    
+    Parameters
+    ----------
+    model : str
+      The name of a SentenceTransformer model to use.
+    parallelism : bool, optional
+      Whether to enable or disable model parallelism (default is False).
+    """
+    from sentence_transformers import SentenceTransformer
+    self.model = SentenceTransformer(model)
+    if not parallelism:
+      os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+
+  def embed(self, texts):
+    return list(self.model.encode(texts))
+  
+
 class HFEmbedder(Embedder):
+  """An embedder that uses HuggingFace's API to compute embeddings."""
+
   def __init__(self, host=EMBEDDING_DEFAULT_API, model=EMBEDDING_DEFAULT_MODEL):
-    """TBC"""
+    """Initialize a HuggingFace API embedder.
+    
+    Parameters
+    ----------
+    host : str
+      The URL of the embedding API to use.
+    model : str
+      The name of the specific model to use.
+    """
     self.host = host
     self.model = model
     self.url = host+model
@@ -55,17 +134,13 @@ class HFEmbedder(Embedder):
   
 
 class DummyEmbedder(Embedder):
+  """An embedder that simply computes empty embeddings."""
   def __init__(self):
     pass
-
-  def embed(self, texts):
-    if isinstance(texts, (list, np.ndarray)):
-      return [[] for _ in texts]
-    else:
-      return []
   
 
 def sim(x, y):
+  """Compute the cosine similarity between vectors."""
   if not y:
     return np.array(1.) if not x else np.array([sim(x1, y) for x1 in x])
   return np.dot(x, y)/(np.linalg.norm(x)*np.linalg.norm(y))

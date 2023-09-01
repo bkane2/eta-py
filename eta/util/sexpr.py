@@ -1,9 +1,25 @@
-# Taken from: https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
+"""S-Expression Utilities
+
+Contains functions for parsing and manipulating S-expressions in Python, which are
+represented as recursively nested lists, with strings as "symbols".
+
+Some of this code is borrowed from the following repository:
+https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
+
+Exported functions
+------------------
+parse_s_expr : parse a string containing an S-expression (in LISP form) into a structured list.
+list_to_s_expr : convert an S-expression list structure to a string representing a LISP formatted S-expression.
+list_to_str : convert an S-expression list structure to a flattened string containing each of the symbols.
+read_lisp : read a list of S-expressions from a LISP file.
+write_lisp : write an S-expression to a LISP file.
+"""
 
 from eta.util.general import flatten, replaceall, symbolp, atom, escaped_symbol_p, standardize
 import eta.util.file as file
 
 def balanced_substr(s):
+	"""Find a substring with a balanced number of parentheses."""
 	count = 1
 	for i in range(1, len(s)):
 		c = s[i]
@@ -19,6 +35,7 @@ def balanced_substr(s):
 
 
 def clean_s_expr(s_expr):
+	"""Clean a string representation of an S-expression by removing newlines and standardizing whitespace."""
 	s_expr = s_expr.replace('\n', '')
 	s_expr = s_expr.replace('\t', '')
 	while '  ' in s_expr:
@@ -27,8 +44,7 @@ def clean_s_expr(s_expr):
 
 
 def standardize_symbols(s_expr):
-	"""Standardizes the symbols in an s-expr by mapping to lowercase,
-	   unless enclosed in |...|."""
+	"""Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in |...|."""
 	def standardize_rec(e):
 		if symbolp(e) and not escaped_symbol_p(e):
 			return e.lower()
@@ -41,8 +57,7 @@ def standardize_symbols(s_expr):
 
 
 def convert_quotes(s_expr):
-	"""Convert any quoted word lists (i.e., single ' symbol
-	   followed by a list of symbols) to a string."""
+	"""Convert any quoted word lists (i.e., single ' symbol followed by a list of symbols) to a single quoted string."""
 	def convert_quotes_rec(e):
 		if atom(e):
 			return e
@@ -60,52 +75,74 @@ def convert_quotes(s_expr):
 
 
 def parse_s_expr(s_expr):
-	"""Wrapper function for parse_s_expr1"""
-	return convert_quotes(standardize_symbols(parse_s_expr1(s_expr)))
+	"""Parse a string containing an S-expression (in LISP form) into a structured list.
+	
+	Parameters
+	----------
+	s_expr : str
+		An S-expression in LISP form, e.g., "(a (b c (d e)) '(f g h))".
+	
+	Returns
+	-------
+	s-expr
+		A structured S-expression, i.e., a recursively nested list structure with string "symbols" as atoms.
+		e.g., ['a', ['b', 'c', ['d', 'e']], "f g h"]
+	"""
+	def parse_s_expr_rec(s_expr):
+		s_expr = clean_s_expr(s_expr)
 
+		if len(s_expr) == 0:
+			return None
 
-def parse_s_expr1(s_expr):
-	"""Parses a string containing an s-expr into a structured list"""
-	s_expr = clean_s_expr(s_expr)
+		if s_expr[0] != '(' or s_expr[-1] != ')':
+			return s_expr
 
-	if len(s_expr) == 0:
-		return None
+		items = []
 
-	if s_expr[0] != '(' or s_expr[-1] != ')':
-		return s_expr
-
-	items = []
-
-	item_buf = []
-	i = 1
-	while i < len(s_expr):
-		c = s_expr[i]
-
-		if c == ' ':
-			if len(item_buf) > 0:
-				items.append(''.join(item_buf))
-				item_buf = []
-			i += 1
-		elif c != '(':
-			if c != ')':
-				item_buf.append(c)
-			i += 1
-		else:
-			if len(item_buf) > 0:
-				items.append(''.join(item_buf))
-				item_buf = []
-			inner = balanced_substr(s_expr[i:])
-			items.append(parse_s_expr1(inner))
-			i += len(inner)
-
-	if len(item_buf) > 0:
-		items.append(''.join(item_buf))
 		item_buf = []
+		i = 1
+		while i < len(s_expr):
+			c = s_expr[i]
 
-	return items
+			if c == ' ':
+				if len(item_buf) > 0:
+					items.append(''.join(item_buf))
+					item_buf = []
+				i += 1
+			elif c != '(':
+				if c != ')':
+					item_buf.append(c)
+				i += 1
+			else:
+				if len(item_buf) > 0:
+					items.append(''.join(item_buf))
+					item_buf = []
+				inner = balanced_substr(s_expr[i:])
+				items.append(parse_s_expr_rec(inner))
+				i += len(inner)
+
+		if len(item_buf) > 0:
+			items.append(''.join(item_buf))
+			item_buf = []
+
+		return items
+
+	return convert_quotes(standardize_symbols(parse_s_expr_rec(s_expr)))
 
 
 def list_to_s_expr(lst):
+	"""Convert an S-expression list structure to a string representing a LISP formatted S-expression.
+	
+	Parameters
+	----------
+	lst : s-expr
+		An S-expression in recursively nested list form, e.g., ['a', ['b', ['c', 'd']], 'e'].
+	
+	Returns
+	-------
+	str
+		A LISP formatted string representation of the S-expression, e.g., "(a (b (c d)) e)".
+	"""
 	if type(lst) != list:
 		return str(lst)
 
@@ -122,6 +159,18 @@ def list_to_s_expr(lst):
 
 
 def list_to_str(lst):
+	"""Convert an S-expression list structure to a flattened string containing each of the symbols.
+	
+	Parameters
+	----------
+	lst : s-expr
+		An S-expression in recursively nested list form, e.g., ['a', ['b', ['c', 'd']], 'e'].
+	
+	Returns
+	-------
+	str
+		A flattened string containing each of the symbols, e.g., "a b c d e".
+	"""
 	if type(lst) != list:
 		return str(lst)
 	words = [str(w) for w in flatten(lst)]
@@ -130,8 +179,7 @@ def list_to_str(lst):
 
 
 def clean_lisp(str):
-	"""Cleans S-expressions from a .lisp file by removing comments and
-	   removing escape characters."""
+	"""Clean S-expressions from a LISP file by removing all commented lines and removing escape characters on symbols."""
 	lines = [l.replace('\;', '[TEMP]') for l in str.split('\n')]
 	lines = [l.split(';')[0].strip() for l in lines]
 	lines = [l.replace('[TEMP]', '\;') for l in lines if l]
@@ -146,10 +194,31 @@ def clean_lisp(str):
 
 
 def read_lisp(fname):
+  """Read a list of S-expressions from a LISP file.
+	
+	Parameters
+	----------
+	fname : str
+		The LISP file to read from.
+	
+	Returns
+	-------
+	list[s-expr]
+		A list of S-expressions, in recursively nested list form.
+	"""
   contents = '(' + clean_lisp(file.read_file(fname)) + ')'
   sexpr = parse_s_expr(contents)
   return sexpr
   
 
 def write_lisp(fname, sexpr):
-  file.write_file(fname, list_to_s_expr(sexpr))
+	"""Write an S-expression to a LISP file.
+	
+	Parameters
+	----------
+	fname : str
+		The LISP file to write to.
+	sexpr : s-expr
+		An S-expression, in recursively nested list form, to write to the file in LISP format.
+	"""
+	file.write_file(fname, list_to_s_expr(sexpr))

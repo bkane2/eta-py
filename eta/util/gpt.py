@@ -1,3 +1,27 @@
+"""GPT Utilities
+
+Contains functions for interacting with GPT using the OpenAI API.
+
+We assume that GPT prompts are specified as text strings, possibly including the following special constructs:
+<var>
+  A placeholder in the prompt to be replaced by a value at a later point, where that value may be a string, or
+  a list of strings such that each string is placed on a new line.
+@zip(<var1>, <var2>, ...)
+  A placeholder to be replaced by the string formed by zipping the strings within the argument lists, and placing
+  each combined string on a new line.
+@startexamples ... @endexamples
+  The text between these annotations is treated as an example template, to be later replaced by a list of examples
+  formatted according to the template.
+
+Exported functions
+------------------
+generate_gpt : generate a response from GPT.
+cost_gpt : estimate the cost of a given prompt from GPT.
+subst_kwargs : replace variables within a GPT prompt with the corresponding values.
+subst_examples : fill in any prompt content between @startexamples and @endexamples annotations with examples.
+"""
+
+import re
 import backoff
 import openai
 from openai.error import RateLimitError, Timeout, ServiceUnavailableError, APIConnectionError, APIError
@@ -21,6 +45,36 @@ AVG_TOKENS_PER_CHAR = 0.25
 @backoff.on_exception(backoff.expo, (RateLimitError, Timeout, ServiceUnavailableError, APIConnectionError, APIError))
 def generate_gpt(prompt, preamble=None, examples=[], model='gpt-3.5-turbo', stop=None, max_tokens=2048,
                  postprocessors=[], n_retries=2):
+  """Generate a response from GPT.
+  
+  Parameters
+  ----------
+  prompt : str
+    The prompt to use for generation (coded as a "user" message).
+  preamble : str, optional
+    An initial prompt to give GPT as a "system" message.
+  examples : list[tuple[str, str]], optional
+    A list of example pairs, each consisting of a "user" message and an "assistant" response.
+  model : str
+    The model name to use for generation.
+  stop : list[str], optional
+    A list of stop sequences to use in generation.
+  max_tokens : int, optional
+    The maximum number of tokens to generate.
+  postprocessors : list[function], optional
+    A list of functions to apply to any generated content. If a postprocessor returns 'None',
+    then generation is retried, up to 'n_retries' times. Otherwise, the final result after applying
+    each function is returned.
+  n_retries : int, optional
+    The number of times to retry if a postprocessor determines that a generation is invalid.
+  
+  Returns
+  -------
+  result : object
+    The result of the final postprocessor function (if any), or the direct result string from GPT.
+  cost : float
+    The total cost of this generation call.
+  """
   messages=[]
   if preamble:
     messages.append({"role": "system", "content": preamble})
@@ -58,6 +112,38 @@ def generate_gpt(prompt, preamble=None, examples=[], model='gpt-3.5-turbo', stop
 
 def cost_gpt(prompt, avg_resp_len, preamble=None, examples=[], model='gpt-3.5-turbo', stop=None, max_tokens=2048,
              postprocessors=[], n_retries=2, tokenizer=TOKENIZER):
+  """Estimate the cost of a given prompt from GPT.
+
+  Parameters
+  ----------
+  prompt : str
+    The prompt to use for generation (coded as a "user" message).
+  avg_resp_len : int
+    The estimated length of a response from GPT for the given prompt.
+  preamble : str, optional
+    An initial prompt to give GPT as a "system" message.
+  examples : list[tuple[str, str]], optional
+    A list of example pairs, each consisting of a "user" message and an "assistant" response.
+  model : str
+    The model name to use for generation (the default is gpt-3.5-turbo).
+  stop : list[str], optional
+    A list of stop sequences to use in generation.
+  max_tokens : int, optional
+    The maximum number of tokens to generate (the default is 2048).
+  postprocessors : list[function], optional
+    A list of functions to apply to any generated content. If a postprocessor returns 'None',
+    then generation is retried, up to 'n_retries' times. Otherwise, the final result after applying
+    each function is returned.
+  n_retries : int, optional
+    The number of times to retry if a postprocessor determines that a generation is invalid (the default is 2).
+  tokenizer : object, optional
+    The tokenizer used for estimating the number of tokens created from the prompt.
+  
+  Returns
+  -------
+  tuple[float, float]
+    The minimum and maximum estimated costs, respectively, based on the range of possible retries.
+  """
   n_tokens = 0
   if preamble:
     n_tokens += len(tokenizer(preamble)['input_ids'])
@@ -71,4 +157,38 @@ def cost_gpt(prompt, avg_resp_len, preamble=None, examples=[], model='gpt-3.5-tu
 
 
 def cost_tokens(model, n_tokens):
+  """Estimate the cost of a given number of tokens."""
   return (MODEL_COSTS[model] / 1000) * n_tokens
+
+
+def apply_zip(prompt, kwargs):
+  """Replace any @zip annotations in a prompt with the zipped arguments."""
+  zip_regex = re.compile(r'@zip\((((<[a-zA-Z0-9_-]+>)(,[ ]*)?)+)\)')
+  prompt1 = prompt
+  for m in zip_regex.finditer(prompt):
+    vars = [v.strip() for v in m.group(1).split(',')]
+    vals = [''.join(t) for t in zip(*[kwargs[v.strip('<').strip('>')] for v in vars])]
+    prompt1 = re.sub(fr'@zip\({m.group(1)}\)', '\n'.join(vals), prompt1)
+  return prompt1
+
+
+def subst_kwargs(prompt, kwargs):
+  """Replace variables within a GPT prompt with the corresponding values in 'kwargs'."""
+  prompt = apply_zip(prompt, kwargs)
+  for kw, arg in kwargs.items():
+    if isinstance(arg, list):
+      val = '\n'.join(arg) if arg else 'None'
+    else:
+      val = arg
+    prompt = prompt.replace(f'<{kw}>', val)
+  return prompt
+
+
+def subst_examples(prompt, examples):
+  """Fill in any prompt content between @startexamples and @endexamples annotations with examples."""
+  if not '@startexamples' in prompt or not '@endexamples' in prompt:
+    return prompt
+  prompt1, template = prompt.split('@startexamples')
+  template, prompt2 = template.split('@endexamples')
+  template = template.strip()
+  return prompt1 + '\n\n'.join([subst_kwargs(template, e) for e in examples]) + prompt2

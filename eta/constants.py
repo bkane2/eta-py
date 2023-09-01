@@ -1,70 +1,129 @@
-# Default models/embedding URLs
+"""Eta Global Constants
+
+This module contains definitions for a variety of global constants that are used by
+other Eta modules. Generally, it can be imported using `from eta.constants import *`.
+"""
+
+SLEEPTIME = .1
+"""float: The time used to sleep between each iteration of Eta's core processes."""
+
+REASONING_DEPTH_LIMIT = 3
+"""int: How many 'inference steps' from a direct observation to take during the reasoning process."""
+
 EMBEDDING_DEFAULT_API = "https://api-inference.huggingface.co/pipeline/feature-extraction/"
+"""str: Default embedding API URL, used if no other URL is specified in an embedder API."""
+
 EMBEDDING_DEFAULT_MODEL = "sentence-transformers/all-distilroberta-v1"
+"""str: Default embedding model, used if no other model is specified in an embedder."""
 
-# Directory for API keys
 KEY_PATH = '_keys/'
+"""str: Directory to check for API keys."""
 
-# Coreference mode
-# 0 : simply reconstruct the original ulf
-# 1 : mode 2 but excluding i.pro and you.pro from resolved references
-# 2 : substitute most specific referents only for anaphora and indexical np's (e.g. that block)
-# 3 : substitute most specific referents for all references
+SYMTAB_PATH = 'io/symtab.json'
+"""str: Path used to create the symbol table (a dict structure maintaining indices for each unique symbol)."""
+
 COREFERENCE_MODE = 1
+"""int: The level of coreference to use.
 
-# Recency cutoff used when attempting coreference (i.e. the coreference
-# module will only look this far back, in terms of turns, in the discourse
-# history to find possible referents).
+Supported values:
+  0: simply reconstruct the original ULF.
+  1: the same as level 2, but excluding "I" and "you" from references to resolve.
+  2: substitute canonical names only for anaphora and indexical NP's (e.g., "it" or "that block").
+  3: substitute canonical names for all references.
+"""
+
 RECENCY_CUTOFF = 2
+"""int: The coreference module will only look this many turns back in the discourse history to find possible referents."""
 
-# The certainty of an episode determines the timer period (in seconds) that must be
-# passed for Eta to consider an expected episode failed and move on in the plan.
-# This is a function on the certainty of the episode, with a certainty of 1 having
-# an infinite period, and a certainty of 0 having a period of 0. This constant determines
-# the coefficient on the certainty-to-period function.
-# Currently, this coefficient makes a certainty of ~0.632 correspond to 30 seconds.
 EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT = 30
+"""int: The coefficient to use in the function mapping certainty scores to the period for expected step failures.
 
-# Certainty cutoff used to generate responses given a list of relations+certainties from the blocks world
+The certainty of an episode determines the timer period (in seconds) that must be passed for Eta to consider
+an expected episode failed and move on in the plan. This is a function on the certainty of the episode, with
+a certainty of 1 having an infinite period, and a certainty of 0 having a period of 0. This constant determines
+the coefficient on the certainty-to-period function.
+
+A value of "30" makes a certainty of ~0.632 correspond to 30 seconds.
+"""
+
 CERTAINTY_THRESHOLD = 0.7
+"""float: A ULF must have a certainty greater than or equal to this score to be used in a response."""
 
-# A list of emotions supported by Eta, where the first element is assumed to be the default.
 EMOTIONS_LIST = ['neutral', 'sad', 'happy', 'worried', 'angry']
+"""list[str]: A list of emotions supported by Eta, where the first element is assumed to be the default."""
 
-# Path for input/outputs to be written to and read from
 IO_PATH = 'io/'
+"""str: The path for input/outputs to be written to and read from."""
 
-# The default start schema if none is provided in agent-config
 DEFAULT_START = 'have-eta-dialog.v'
+"""int: The default start schema if none is provided in agent-config."""
 
-# The default importance for new facts stored in memory
 DEFAULT_IMPORTANCE = 0.5
+"""float: The default importance value for new facts stored in memory."""
 
-# Common indexical variables
+
+
+# Common variables/constants
+# ```````````````````````````
+
 ME = '^me'
+"""str: Indexical variable to be used for Eta."""
+
 YOU = '^you'
+"""str: Indexical variable to be used for the user."""
+
 NOW = '^now'
+"""str: Indexical variable to be used for the current time."""
+
 HERE = '^here'
+"""str: Indexical variable to be used for the current location."""
 
-# Common predicates
+
+
+# Common predicates/formulas
+# ````````````````````````````
+
 SAY_TO = 'say-to.v'
+"""str: Predicate for a saying event."""
+
 PARAPHRASE_TO = 'paraphrase-to.v'
-RESPOND_TO = 'respond-to.v'
-REPLY_TO = 'reply-to.v'
-ANSWER = 'answer.v'
-ASK = 'ask.v'
-REACT_TO = 'react-to.v'
+"""str: Predicate for a paraphrasing event (i.e., a gist clause attribution)."""
+
 ARTICULATE_TO = 'articulate-to.v'
+"""str: Predicate for an articulation event (i.e., a ULF attribution)."""
+
+RESPOND_TO = 'respond-to.v'
+"""str: Predicate for a response event."""
+
+REPLY_TO = 'reply-to.v'
+"""str: Predicate for a reply event."""
+
+ANSWER = 'answer.v'
+"""str: Predicate for an answer event."""
+
+ASK = 'ask.v'
+"""str: Predicate for an ask event."""
+
+REACT_TO = 'react-to.v'
+"""str: Predicate for a react event."""
+
 SAY_BYE = 'say-bye.v'
+"""str: Predicate for a saying goodbye event."""
 
-# A list of supported speech acts
 SPEECH_ACTS = [SAY_TO, PARAPHRASE_TO, RESPOND_TO, REPLY_TO, ANSWER, ASK, REACT_TO, ARTICULATE_TO, SAY_BYE]
+"""list[str]: A list of all supported speech acts."""
 
-# Telic predicates, i.e., predicates that denote events that are assumed to be "instantaneous".
-# TODO: create a more systematic classification
 TELIC_VERBS = SPEECH_ACTS + ['move.v']
+"""list[str]: A list of all predicates considered "telic", i.e., that denote events that are assumed to be nearly instantaneous.
 
-# Special "no-op" WFFs used to characterize failed episodes
+TODO: ultimately we need to create a more systemic classification, and provide this as an external resource.
+"""
+
 NOOP_YOU = [YOU, 'do.v', ['no.d', 'thing.n']]
+"""s-expr: A formula used to denote a "failed" expectation of a user event."""
+
 NOOP_GEN = [['no.d', 'thing.n'], 'happen.v']
+"""s-expr: A formula used to denote a "failed" expectation of an external event."""
+
 NOOP = [NOOP_YOU, NOOP_GEN]
+"""list[s-expr]: A list of all formulas that are considered to be "no-op" events."""

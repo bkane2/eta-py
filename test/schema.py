@@ -1,11 +1,12 @@
 from eta.schema import *
+from eta.embedding import *
 
 def testschema():
   sep = '\n----------------------------\n'
   print(sep)
 
   schemas = SchemaLibrary()
-  schemas.from_lisp_dirs(['avatars/test/schemas'])
+  schemas.from_lisp_dirs(['agents/test/schemas'])
 
   print(schemas, sep)
 
@@ -42,7 +43,7 @@ def testcopy():
   print(sep)
 
   schemas = SchemaLibrary()
-  schemas.from_lisp_dirs(['avatars/test/schemas'])
+  schemas.from_lisp_dirs(['agents/test/schemas'])
 
   print(schemas, sep)
 
@@ -80,7 +81,7 @@ def testcond():
   print(sep)
 
   schemas = SchemaLibrary()
-  schemas.from_lisp_dirs(['avatars/test/schemas'])
+  schemas.from_lisp_dirs(['agents/test/schemas'])
 
   print(schemas, sep)
 
@@ -129,8 +130,8 @@ def test_retrieval():
   sep = '\n----------------------------\n'
 
   print('embedding...')
-  schemas = SchemaLibrary(Embedder())
-  schemas.from_lisp_dirs(['avatars/sophie-gpt/schemas'])
+  schemas = SchemaLibrary(STEmbedder())
+  schemas.from_lisp_dirs(['agents/sophie-gpt/schemas'])
   print('done')
 
   print('retrieving...')

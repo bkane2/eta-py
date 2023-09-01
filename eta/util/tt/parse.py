@@ -1,3 +1,14 @@
+"""Choice Tree Parser
+
+Parses a choice tree (a nested dict structure) from a LISP file or directory.
+
+Exported functions
+------------------
+from_lisp_file : read choice trees and word features from a LISP file.
+from_lisp_dirs : recursively read choice trees and word features from all
+                 LISP files within a directory or list of directories.
+"""
+
 import glob
 
 from eta.util.general import remove_duplicates
@@ -6,6 +17,7 @@ from eta.util.tt.match import isa
 
 
 def init_node(pattern):
+  """Initialize a node of a choice tree."""
   return {
     'pattern' : pattern,
     'directive' : None,
@@ -17,32 +29,23 @@ def init_node(pattern):
 
 
 def readrules(packet):
-  """
-  This reads in the set of decomposition and output rules. 
-  It embeds these rules in a tree structure, i.e., nested
-  dictionaries where first children are reached via the
-  'child' property, and subsequent children are connected via
-  the 'next' property. Decomposition and output patterns
-  are stored under the 'pattern' property, and output rules are
-  distinguished by having a non-None 'directive' property.
+  """Create a choice tree from a packet of pattern and template rules.
 
-  Each node also has 'latency' and 'count' properties, which
-  are jointly used to enforce a "cooldown" time before a rule
-  can be used again. As indicated below, in the data set the numeric
-  value of latency and the directive symbol are supplied jointly
-  as a 2-element list, but these become separate properties
-  in the choice tree that is built. The count is always initialized
-  to 0 so that any rule can be initially chosen.
- 
-  'packet' is of form [depth, pattern, optional-pair,
- 	                     depth, pattern, optional-pair, ...]
-  where "depth" is a number =1 for top-level rules, =2 for
-  direct descendants of top-level rules, etc.  "pattern" is
-  a decomposition pattern or other output  and optional-pair
-  is present iff "pattern" is a reassembly pattern or other 
-  output. The first element of optional-pair, if present, is 
-  the latency of the rule. The second element is the directive,
-  such as :out, :subtree, :subtree+clause, :schema, :gist, etc.
+  Parameters
+  ----------
+  packet : list[str]
+    A list of form [depth, pattern, optional-pair, depth, pattern, optional-pair, ...],
+    where "depth" is 1 for top-level rules, 2 for direct children, etc.,
+          "pattern" is a decomposition pattern or other output,
+          "optional-pair" is present iff "pattern" is a reassembly pattern or other output,
+            and consists of a (latency, directive) tuple, where latency is an integer >= 0
+            specifying how long to wait to use a rule again, and directive is a symbol such
+            as :out, :subtree, :gist, etc. specifying how the output should be used.
+
+  Returns
+  -------
+  root : dict
+    The root of the choice tree (a nested dict structure) created from the packet.
   """
   if len(packet) < 2:
     return {}
@@ -97,14 +100,18 @@ def readrules(packet):
 
 
 def attachfeat(feat_xx, feats):
-  """
-  feat-xx: a list of form [feat, x1, x2, ..., xk]
-        where feat is a symbol, regarded as a feature
-        & x1, x2, ... are symbols (perhaps allowing expressions in future?) 
-        that will hereby be assigned feat, i.e., isa(xi, feat) will be
-        true for each xi among x1, x2, ..., xk.
-  We store feat as a feature of x1, x2, ..., xk in the feats dictionary.
-  We avoid duplication, for any xi that already has that feature.
+  """Stores a feature list in a dictionary of word features, modifying the dictionary in-place.
+
+  Parameters
+  ----------
+  feat_xx : list[str]
+    A list of form [feat, x1, x2, ..., xk],
+    where
+      "feat" is a string, regarded as a feature.
+      "x1", "x2", ... are words that will be assigned "feat" as a feature,
+        i.e., isa(xi, feat) will be True for each xi among x1, x2, ..., xk.
+  feats : dict
+    A dict mapping words to features, to be modified in-place.
   """
   feat = feat_xx[0]
   for x in feat_xx[1:]:
@@ -115,8 +122,38 @@ def attachfeat(feat_xx, feats):
         feats[x] = [feat]
 
 
+def merge_feats(feats1, feats2):
+  """Merges two feature dicts."""
+  for x, f in feats2.items():
+    if x in feats1:
+      feats1[x] = remove_duplicates(feats1[x]+f)
+    else:
+      feats1[x] = f
+  return feats1
+
+
+def merge_trees(trees1, trees2):
+  """Merges two choice tree dicts (overriding any duplicates)."""
+  for x, t in trees2.items():
+    trees1[x] = t
+  return trees1
+
+
 def from_lisp_file(fname):
-  """Reads a Lisp file and parses the rule tree(s) contained within"""
+  """Reads a LISP file and parses the rule trees and feature definitions contained within.
+
+  Parameters
+  ----------
+  fname : str
+    The filename to read.
+  
+  Returns
+  -------
+  trees : dict
+    A dictionary mapping names to choice trees roots.
+  feats : dict
+    A dictionary mapping words to feature lists.
+  """
   trees = {}
   feats = {}
   contents = read_lisp(fname)
@@ -134,26 +171,21 @@ def from_lisp_file(fname):
   return trees, feats
 
 
-def merge_feats(feats1, feats2):
-  """Merges two feature dicts"""
-  for x, f in feats2.items():
-    if x in feats1:
-      feats1[x] = remove_duplicates(feats1[x]+f)
-    else:
-      feats1[x] = f
-  return feats1
-
-
-def merge_trees(trees1, trees2):
-  """Merges two tree dicts. For now, we simply override any duplicates"""
-  for x, t in trees2.items():
-    trees1[x] = t
-  return trees1
-
-
 def from_lisp_dirs(dirs):
-  """Recursively reads all .lisp files in a given dir or list of dirs,
-     returning combined trees and feats dicts."""
+  """Recursively reads choice trees and word features from all LISP files in a directory or list of directories.
+
+  Parameters
+  ----------
+  dirs : str or list[str]
+    The directory or directories to read.
+  
+  Returns
+  -------
+  trees : dict
+    A dictionary mapping names to choice trees roots.
+  feats : dict
+    A dictionary mapping words to feature lists.
+  """
   trees = {}
   feats = {}
   if isinstance(dirs, str):

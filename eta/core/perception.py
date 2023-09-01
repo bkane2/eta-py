@@ -1,16 +1,39 @@
+"""Perception Loop
+
+Implements the core loop for collecting observations from registered perceptual
+servers, and also interpreting the user in the case of a speech input.
+
+Exported functions
+------------------
+perception_loop
+"""
+
 from time import sleep
 
 from eta.constants import *
 import eta.util.file as file
 from eta.discourse import Utterance, DialogueTurn, get_prior_turn
 from eta.util.general import standardize, episode_name, append, remove_duplicates
-from eta.lf import parse_eventuality, extract_set
-
-PROMPT_GIST = file.read_file('resources/prompts/gist.txt')
+from eta.lf import parse_eventuality
 
 def perception_loop(ds):
+  """Observe and interpret inputs from perceptual servers.
+
+  The resulting observations are added to dialogue context, as well as
+  to the 'observations' and 'inferences' buffers.
+
+  In the case where the observed input is speech, this also interprets
+  the input as a gist clause, as well as deriving the underlying semantic
+  and pragmatic meanings. The input is also interpreted as a reply to
+  the previous turn in the conversation log, if any. The observed turn
+  is then added to the conversation log.
+  
+  Parameters
+  ----------
+  ds : DialogueState
+  """
   while ds.do_continue():
-    sleep(.1)
+    sleep(SLEEPTIME)
 
     # Observe all facts from registered perception servers
     for source in ds.get_perception_servers():
@@ -25,13 +48,30 @@ def perception_loop(ds):
         observations = process_utterances(inputs, ds)
       else:
         observations = process_observations(inputs)
+        
       ds.add_to_context(observations)
       ds.add_all_to_buffer(observations, 'observations')
-      ds.add_all_to_buffer(observations, 'inferences')
+
+      # Each observation is a new fact for inference with depth 0
+      new_facts = [{'fact':o, 'depth':1} for o in observations]
+      ds.add_all_to_buffer(new_facts, 'inferences')
 
 
 def observe(source):
-  """str -> List[str]"""
+  """Collect all observations from a given perceptual server source.
+  
+  Parameters
+  ----------
+  source : str
+    The name of the perceptual server ('speech' in the special case
+    of a user utterance).
+
+  Returns
+  -------
+  list[str]
+    A list of observations, each being either a natural language string
+    or a LISP-formatted S-expression string representing a logical form.
+  """
   if not file.exists(source):
     return []
   inputs = file.read_lines(source)
@@ -40,16 +80,29 @@ def observe(source):
 
 
 def process_utterances(inputs, ds):
-  """List[str], List[DialogueTurn] -> List[Eventuality]"""
+  """Process utterances by deriving gist clauses, semantics, pragmatics, and logging each turn.
+  
+  Parameters
+  ----------
+  inputs : list[str]
+    A list of speech inputs to process as dialogue turns.
+  ds : DialogueState
+  
+  Returns
+  -------
+  list[Eventuality]
+    All eventualities derived from the input utterances.
+  """
   observations = []
   for input in inputs:
     ep = episode_name()
     input = standardize(input)
     observations += [parse_eventuality([YOU, SAY_TO, ME, f'"{input}"'], ep=ep)]
+    utt = Utterance(input)
 
     # Interpret gist clauses using conversation log
     conversation_log = ds.get_conversation_log()
-    gists = remove_duplicates(ds.apply_transducer('gist', input, conversation_log), order=True)
+    gists = remove_duplicates(ds.apply_transducer('gist', utt, conversation_log), order=True)
     observations += [parse_eventuality([YOU, PARAPHRASE_TO, ME, f'"{gist}"'], ep=ep) for gist in gists]
 
     # Interpret semantic meanings of gist clauses
@@ -69,7 +122,7 @@ def process_utterances(inputs, ds):
     # Add user turn to conversation log
     ds.log_turn(DialogueTurn(
       agent=YOU,
-      utterance=Utterance(input),
+      utterance=utt,
       gists=gists,
       semantics=semantics,
       pragmatics=pragmatics,
@@ -80,5 +133,17 @@ def process_utterances(inputs, ds):
 
   
 def process_observations(inputs):
-  """List[str] -> List[Eventuality]"""
+  """Process non-speech observations by parsing them as eventualities.
+  
+  Parameters
+  ----------
+  inputs : list[str]
+    A list of observed facts, as either natural language strings or
+    LISP-formatted S-expression strings.
+  
+  Returns
+  -------
+  list[Eventuality]
+    All eventualities derived from the observations.
+  """
   return [parse_eventuality(standardize(input)) for input in inputs]

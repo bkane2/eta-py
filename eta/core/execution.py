@@ -1,15 +1,52 @@
+"""Execution Loop
+
+Implements the core loop for executing primitive actions in the plan and matching
+expectations in the plan, producing outputs and modifying the dialogue state accordingly.
+
+Exported functions
+------------------
+execution_loop
+"""
+
 from time import sleep
 
 import eta.util.time as time
 from eta.constants import *
 from eta.util.general import listp, variablep
-from eta.plan import has_elapsed_certainty_period
+from eta.util.time import has_elapsed_certainty_period
 from eta.discourse import DialogueTurn, Utterance, parse_utt_str
 from eta.lf import Condition, Repetition, parse_eventuality
 
 def execution_loop(ds):
+  """Either execute the current intended step of the plan or attempt to match an expectation.
+
+  This will do one of several things depending on the class of the currently pending step:
+
+  1) If a condition or repetition step, advance the plan once none of the conditions are true.
+
+  2) If an expected step, attempt to match the step to a fact in context, until a time period
+     based on the certainty of that step has elapsed, in which case the step is characterized
+     as a failure and the plan is advanced.
+
+  3) If an intended step that contains a primitive action, attempt to execute that action, and
+     advance the plan if successful.
+
+  In any the case where an execution or match is successful, the plan is advanced, and a list of
+  variable bindings obtained from the execution or match is applied throughout the dialogue state.
+  Additionally, if the plan was advanced, the contents of the 'plans' buffer is replaced with
+  the modified plan.
+  
+  Note that, if the plan wasn't advanced but the step is a condition or repetition step,
+  the plan is still added to the 'plans' buffer, but only if currently empty. This is because
+  the condition may change with any observation, so the planning loop must constantly check for
+  possible expansions of that step.
+  
+  Parameters
+  ----------
+  ds : DialogueState
+  """
   while ds.do_continue():
-    sleep(.1)
+    sleep(SLEEPTIME)
 
     plan = ds.get_plan()
     event = plan.step.event
@@ -39,7 +76,19 @@ def execution_loop(ds):
 
 
 def process_condition_step(event, ds):
-  """TBC"""
+  """Process a condition step by advancing only if none of the condition are true.
+  
+  Parameters
+  ----------
+  event : Condition
+    The condition step to process.
+  ds : DialogueState
+
+  Returns
+  -------
+  bool
+    Whether to advance the plan.
+  """
   for (condition, _) in event.conditions:
     if condition == True or ds.eval_truth_value(condition.get_formula()):
       return False
@@ -48,7 +97,19 @@ def process_condition_step(event, ds):
 
 
 def process_repetition_step(event, ds):
-  """TBC"""
+  """Process a repetition step by advancing only if the condition is satisfied.
+  
+  Parameters
+  ----------
+  event : Repetition
+    The repetition step to process.
+  ds : DialogueState
+
+  Returns
+  -------
+  bool
+    Whether to advance the plan.
+  """
   if not ds.eval_truth_value(event.condition.get_formula()):
     return False
   ds.instantiate_curr_step()
@@ -56,7 +117,24 @@ def process_repetition_step(event, ds):
 
 
 def process_expected_step(event, ds):
-  """TBC"""
+  """Process an expected step by failing it if the waiting period has elapsed, or matching it to a fact in context.
+
+  Since an expected user step indicates the user's dialogue turn, we also write the current output buffer at this point.
+
+  The dialogue context is flushed of "telic" predicates, i.e., those assumed to be essentially instantaneous,
+  after a successful match (we assume that such predicates may only be used once in a match before becoming outdated).
+  
+  Parameters
+  ----------
+  event : Eventuality
+    The expected step to process.
+  ds : DialogueState
+
+  Returns
+  -------
+  bool
+    Whether to advance the plan.
+  """
   # It is assumed that it is time to write output and listen for input if expected user turn
   if you_pred(event.get_wff()):
     ds.write_output_buffer()
@@ -74,7 +152,22 @@ def process_expected_step(event, ds):
 
 
 def inquire_truth_of_curr_step(event, ds):
-  """TBC"""
+  """Attempt to match an expected event to a fact in context.
+
+  If a match is successful, this will bind all variables unified in the match
+  throughout the dialogue state.
+  
+  Parameters
+  ----------
+  event : Eventuality
+    The expected step to attempt to match.
+  ds : DialogueState
+
+  Returns
+  -------
+  bool
+    Whether the match was successful.
+  """
   ep_var = event.get_ep()
   wff = event.get_wff()
 
@@ -95,7 +188,19 @@ def inquire_truth_of_curr_step(event, ds):
 
 
 def fail_curr_step(event, ds):
-  """TBC"""
+  """Characterize the current step as a failure using a special 'no-op' predicate.
+  
+  Parameters
+  ----------
+  event : Eventuality
+    The expected step to fail.
+  ds : DialogueState
+
+  Returns
+  -------
+  bool
+    Whether to advance the plan.
+  """
   step = ds.instantiate_curr_step()
   ep = step.event.get_ep()
   wff = step.event.get_wff()
@@ -107,7 +212,22 @@ def fail_curr_step(event, ds):
 
 
 def process_intended_step(event, ds):
-  """TBC"""
+  """Process an intended step by attempting to map it to a primitive action to execute.
+  
+  If an action was successfully executed, the action returns variable bindings that are
+  then applied throughout the dialogue state.
+  
+  Parameters
+  ----------
+  event : Eventuality
+    The expected step to fail.
+  ds : DialogueState
+
+  Returns
+  -------
+  bool
+    Whether to advance the plan.
+  """
   advance_plan = False
   bindings = {}
 
@@ -126,7 +246,25 @@ def process_intended_step(event, ds):
 
 
 def execute_say_to(step, ds):
-  """TBC"""
+  """Execute a say-to step.
+  
+  This will create a response and affect using the corresponding transducers,
+  as well as potentially deriving a gist clause and semantic interpretation
+  from the response. Any obligations are retrieved from the step as well.
+  The resulting dialogue turn is added to the conversation log and pushed onto
+  the output buffer.
+
+  Parameters
+  ----------
+  step : PlanStep
+    The say-to step to execute.
+  ds : DialogueState
+
+  Returns
+  -------
+  dict
+    Dict of variable bindings obtained in the course of execution.
+  """
   bindings = {}
   ep = step.event.get_ep()
   wff = step.event.get_wff()
@@ -151,7 +289,7 @@ def execute_say_to(step, ds):
   utt = Utterance(words, affect)
 
   # Find and store additional gist clauses corresponding to Eta's utterance
-  gists = ds.apply_transducer('gist', words, conversation_log)
+  gists = ds.apply_transducer('gist', utt, conversation_log)
   for e in [parse_eventuality([ME, PARAPHRASE_TO, YOU, f'"{gist}"'], ep=ep) for gist in gists]:
     ds.add_to_context(e)
   gists1 = ds.get_memory().get_characterizing_episode(PARAPHRASE_TO, ep)
@@ -180,7 +318,23 @@ def execute_say_to(step, ds):
 
 
 def execute_say_bye(step, ds):
-  """TBC"""
+  """Execute a say-bye step.
+  
+  This will signal that the conversation should be ended immediately, setting
+  the quit_conversation flag to True in the dialogue state and writing the remaining
+  output buffer.
+
+  Parameters
+  ----------
+  step : PlanStep
+    The say-to step to execute.
+  ds : DialogueState
+
+  Returns
+  -------
+  dict
+    Dict of variable bindings obtained in the course of execution.
+  """
   ds.write_output_buffer()
   ds.set_quit_conversation(True)
   return {}

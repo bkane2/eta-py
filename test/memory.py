@@ -1,4 +1,6 @@
 from eta.memory import *
+from eta.lf import *
+from eta.embedding import *
   
 def test2():
   sep = '\n----------------------------\n'
@@ -106,7 +108,7 @@ def test1():
 def test_retrieval():
   sep = '\n----------------------------\n'
 
-  test = MemoryStorage(Embedder())
+  test = MemoryStorage(STEmbedder())
   test.instantiate(parse_eventuality('(^you ((pres play.v) (k football.n)))'))
   test.instantiate(parse_eventuality('^me like to travel .'))
   test.instantiate(parse_eventuality('(^you ((past go.v) (to.p (the.d store.n)) yesterday.adv-e)'))

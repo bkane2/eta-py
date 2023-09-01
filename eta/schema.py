@@ -1,3 +1,22 @@
+"""Schema
+
+Contains classes for representing different types of schemas.
+
+A schema is, in general, a collection of sections. Each section is a sequence of eventualities (natural language
+expressions or ULF/ELF formulas with associated episode symbols) under a section label, e.g., 'types' or 'preconditions'.
+
+A schema is denoted by a specific predicate string (e.g., 'dog.n' or 'eat.v'), and also has a unique header, which is a
+formula characterizing the schema episode potentially containing participant variables, e.g., ((^me eat.v ?x) ** ?e1).
+
+Exported classes
+----------------
+Schema : an abstract schema class.
+EpiSchema : a schema representing a prototypical episode.
+DialSchema : a schema representing a prototypical dialogue (a subtype of EpiSchema).
+ObjSchema : a schema representing a prototypical object.
+SchemaLibrary : a library of all generic episode, dialogue, and object schemas.
+"""
+
 import glob
 from copy import deepcopy
 
@@ -9,16 +28,30 @@ from eta.util.sexpr import read_lisp, list_to_s_expr
 from eta.lf import ULF, ELF, parse_eventuality_list
 
 class Schema:
+  """An abstract schema class.
+  
+  Attributes
+  ----------
+  id : str
+    A unique ID for this schema.
+  predicate : str
+    The main predicate of the schema (e.g., dog.n or eat.v).
+  participants : list[s-expr]
+    All participant roles of a schema, i.e., variables and constants present as arguments in the header.
+  vars : list[str]
+    All variables scoped within a schema.
+  bindings : dict
+    A mapping from variables to bound values.
+  header : ELF
+    The ELF formula for the header of the schema.
+  contents : ELF
+    The ELF formula for the contents of the schema.
+  sections : dict[str, list[Eventuality]]
+    A dict mapping each section label (e.g., 'types') to a list of eventualities created from the schema contents.
+  embedding : list[float]
+    A vector embedding of this schema (default is empty embedding).
   """
-  Defines a basic schema, which contains the following fields:
-  id            : a unique ID for this schema
-  predicate     : the main predicate of the schema
-  participants  : the participant roles of a schema present in the header (e.g., '(^me ^you))
-  vars          : the variables scoped within a schema
-  bindings      : current bindings for each variable in the schema (initialized to empty hash table)
-  header        : the full header of the schema
-  contents      : the contents of the schema as an s-expr list
-  """
+
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[]):
     self.id = gentemp('SCHEMA')
     self.predicate = predicate
@@ -31,7 +64,7 @@ class Schema:
     self.embedding = []
 
   def read_param_dict(predicate, schema_contents):
-    """Reads an s-expr of the schema contents into a parameter dict."""
+    """Read an S-expression containing schema contents (for a given predicate) into a dict of schema parameters."""
     kwargs = {}
     kwargs['predicate'] = predicate
     header = get_keyword_contents(schema_contents, [':header'])[0]
@@ -42,8 +75,10 @@ class Schema:
     return kwargs
   
   def to_probability_dict(self, eventualities, swap_duals=False):
-    """Given a list of eventualities (i.e., certainty or necessity formulas), create a
-       probability dict with entries of form {<ep>:<prob>}."""
+    """Given a list of certainty or necessity eventualities, create a probability dict with entries of form {<ep>:<prob>}.
+    
+    If 'swap_duals' is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).
+    """
     probabilities = {}
     for e in eventualities:
       pair = e.get_wff()
@@ -56,7 +91,7 @@ class Schema:
     return probabilities
   
   def subst_mappings(self, mappings):
-    """Given a list of variable mappings, apply the mappings to each part of the schema."""
+    """Given a list of variable replacement mappings, apply the mappings to each part of the schema."""
     self.participants = substall(self.participants, mappings)
     self.vars = [m[1] for m in mappings]
     self.bindings = dict_substall_keys(self.bindings, mappings)
@@ -67,8 +102,10 @@ class Schema:
         [e.replacevar(var1, var2) for e in sec]
   
   def duplicate_variables(self):
-    """Duplicate all variables across a schema's sections. Note that this needs to be done
-       in two steps in order to avoid a variable getting mapped to another variable in the mappings."""
+    """Duplicate all variables across a schema, mapping the original variables to the duplicated ones.
+    
+    Note that this needs to be done in two steps to avoid mapping conflicts.
+    """
     mappings = [(var, duplicate_var(var)) for var in self.vars]
     m1 = [(m[0], f'?{m[0]}') for m in mappings]
     m2 = [(f'?{m[0]}', m[1]) for m in mappings]
@@ -76,16 +113,19 @@ class Schema:
     self.subst_mappings(m2)
 
   def instantiate(self, args):
-    """
-    Instantiates a specific instance of a schema given a list of arguments
-    corresponding to the variables in the schema header. This creates a copy
-    of the general schema with specific variable bindings. All variables in
-    the schema are first duplicated to ensure that there are no collisions when
-    binding a variable in the plan.
-    TODO: previously, this also attempted to instantiate objects from the :types
-    and :rigid-conds of the schema based on the dialogue context, adding further
-    inferences to the context. This step is still necessary, but should happen
-    elsewhere directly after instantiation of a schema.
+    """Instantiate a specific instance of a schema given a list of argument values for each variable in the header.
+
+    This creates a deep copy of the schema, with duplicate variables to ensure that no collisions occur if
+    the events in the schema are added to a plan.
+
+    Parameters
+    ----------
+    args : list[s-expr]
+      A list of expressions to bind to each respective header variable.
+    
+    Returns
+    -------
+    Schema
     """
     schema_instance = deepcopy(self)
     schema_instance.duplicate_variables()
@@ -93,7 +133,7 @@ class Schema:
     return schema_instance
 
   def bind(self, var, val):
-    """Binds a variable to a value within a schema and all sub-formulas."""
+    """Bind the given variable symbol to the given value."""
     if not var in self.vars:
       return self
     self.bindings[var] = val
@@ -103,7 +143,7 @@ class Schema:
     return self
   
   def unbind(self, var):
-    """Unbinds a variable within a schema and all sub-formulas."""
+    """Unbind the given variable symbol."""
     if not var in self.vars:
       return self
     if var in self.bindings:
@@ -114,21 +154,21 @@ class Schema:
     return self
   
   def bind_args(self, args):
-    """
-    Substitute the successive arguments in the 'args' list for successive
-    variables occurring in the schema or plan header exclusive of the 
-    episode variable characterized by the header predication (for 
-    episodic headers).
-   
-    Generally, 'args' should correspond to the variables in the participants
-    list of the schema, but we allow for the possibility of ^me and ^you as
-    implicit arguments if fewer arguments than variables are given - in which
-    case, they're added to the arguments list in that order.
-   
+    """Bind variables in the schema header with a list of respective argument values.
+    
+    Generally, we assume that 'args' should correspond to the variables in the participants list of
+    the schema, but we allow for the possibility of ^me and ^you as implicit arguments if fewer arguments
+    than variables are given - in which case, they're added to the arguments list in that order.
+
     On the other hand, if more arguments than variables are given, we assume that
     ^me and ^you might be provided as redundant arguments, and remove those from
     the front of the list if present. Otherwise, we remove superfluous arguments
     starting from the end of the list.
+
+    Parameters
+    ----------
+    args : list[s-expr]
+      A list of expressions to bind to each respective header variable.
     """
     participants = self.participants
     vars = [p for p in participants if variablep(p)]
@@ -173,14 +213,31 @@ class Schema:
     # END bind_args
 
   def embed(self, embedder):
-    """Create embeddings for the schema as a whole, as well as for each eventuality."""
+    """Embed the schema based on the natural language representation of its contents, given an embedder object."""
     self.embedding = embedder.embed(self.contents.to_nl())
     for sec in self.sections.values():
       for eventuality in sec:
         eventuality.embed(embedder)
 
   def retrieve(self, embedder, query, n=5, header=True):
-    """TBC"""
+    """Retrieve some number of facts from the schema according to similarity with a query string, given an embedder object.
+    
+    Parameters
+    ----------
+    embedder : Embedder
+      An Embedder object.
+    query : str
+      A query string to use to compute similarity.
+    n : int, optional
+      The number of facts to retrieve (the default is 5).
+    header : bool, optional
+      Whether to prefix the retrieved facts with the schema header (the default is True).
+
+    Returns
+    -------
+    list[s-expr]
+      The retrieved schema facts as S-expressions.
+    """
     eventualities = self.get_section(':all')
     scores = embedder.score(query, eventualities, [e.embedding for e in eventualities])
     top = argmax(eventualities, scores, n)
@@ -190,17 +247,50 @@ class Schema:
       return [e.get_wff() for e in top]
 
   def get_participants(self, no_bind=False):
+    """Get the schema participants.
+    
+    Parameters
+    ----------
+    no_bind : bool, optional
+      Do not make variable substitutions (the default is False).
+    
+    Returns
+    -------
+    list[s-expr]
+    """
     if no_bind:
       return self.participants
     else:
       return substall(self.participants, list(self.bindings.items()))
 
   def get_contents(self, no_bind=False):
+    """Get the schema contents as an S-expression.
+    
+    Parameters
+    ----------
+    no_bind : bool, optional
+      Do not make variable substitutions (the default is False).
+
+    Returns
+    -------
+    s-expr
+    """
     if no_bind:
       return self.contents.get_formula()
     return substall(self.contents.get_formula(), list(self.bindings.items()))
   
   def get_section(self, sec):
+    """Get the eventualities within a given schema section or list of sections.
+    
+    Parameters
+    ----------
+    sec : str or list[str]
+      A section label or list of section labels, or the keyword ':all' to return all sections.
+
+    Returns
+    -------
+    list[Eventuality]
+    """
     if sec == ':all':
       return append([eventualities for eventualities in self.sections.values()])
     if isinstance(sec, str):
@@ -208,16 +298,43 @@ class Schema:
     return append([self.sections[s] if s in self.sections else [] for s in sec])
   
   def get_section_eps(self, sec, no_bind=False):
+    """Get all episode symbols within a schema section or list of sections.
+    
+    Parameters
+    ----------
+    sec : str or list[str]
+      A section label or list of section labels, or the keyword ':all' to return all sections.
+    no_bind : bool, optional
+      Do not make variable substitutions (the default is False).
+
+    Returns
+    -------
+    list[str]
+    """
     section = self.get_section(sec)
     if no_bind:
       return [e.ep for e in section]
     return [e.get_ep() for e in section]
   
   def get_section_wffs(self, sec, no_bind=False):
+    """Get all wffs within a schema section or list of sections.
+    
+    Parameters
+    ----------
+    sec : str or list[str]
+      A section label or list of section labels, or the keyword ':all' to return all sections.
+    no_bind : bool, optional
+      Do not make variable substitutions (the default is False).
+
+    Returns
+    -------
+    list[s-expr]
+    """
     section = self.get_section(sec)
     return [e.get_wff(no_bind) for e in section]
   
   def format(self, no_bind=False):
+    """Format the contents of this schema as an S-expression string."""
     return list_to_s_expr(self.get_contents(no_bind))
 
   def __str__(self):
@@ -225,20 +342,22 @@ class Schema:
 
 
 class EpiSchema(Schema):
+  """A schema representing a prototypical episode.
+  
+  Sections
+  --------
+  types : the nominal types of each participant/variable.
+  rigid-conds : non-fluent conditions relevant to episode.
+  static-conds : fluent conditions that are not expected to change during episode.
+  preconds : fluent conditions that are expected to hold at the beginning of episode.
+  postconds : fluent conditions that are expected to hold at end of episode.
+  goals : goals of participants in schema (e.g., (^me want.v (that ...))).
+  episodes : the expected/intended sub-episodes of the schema episode.
+  episode-relations : the temporal/causal relations between episodes of schema.
+  necessities : probabilities associated with schema formulas.
+  certainties : probabilities associated with schema episodes.
   """
-  Defines an episode schema, which contains the following additional fields:
-  types             : the nominal types of each participant/variable
-  rigid-conds       : non-fluent conditions relevant to episode
-  static-conds      : fluent conditions that are not expected to change during episode
-  preconds          : fluent conditions that are expected to hold at the beginning of episode
-  postconds         : fluent conditions that are expected to hold at end of episode
-  goals             : goals of participants in schema (e.g., (^me want.v (that ...)))
-  episodes          : the expected/intended sub-episodes of the schema episode
-  episode-relations : the temporal/causal relations between episodes of schema
-  obligations       : dialogue obligations associated with particular episodes
-  necessities       : probabilities associated with schema formulas
-  certainties       : probabilities associated with schema episodes
-  """
+  
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
                types=[], rigid_conds=[], static_conds=[], preconds=[], postconds=[], goals=[],
                episodes=[], episode_relations=[], necessities=[], certainties=[]):
@@ -259,7 +378,6 @@ class EpiSchema(Schema):
     self.sections['episode-relations'] = parse_eventuality_list(episode_relations, prob_dict)
 
   def read_param_dict(predicate, schema_contents):
-    """Reads an s-expr of the schema contents into a parameter dict."""
     kwargs = Schema.read_param_dict(predicate, schema_contents)
     for section in [':types', ':rigid-conds', ':static-conds', ':preconds', ':postconds', ':goals',
                     ':episodes', ':episode-relations', ':necessities', ':certainties']:
@@ -270,10 +388,23 @@ class EpiSchema(Schema):
 
 
 class DialSchema(EpiSchema):
+  """A schema representing a prototypical episode.
+  
+  Sections
+  --------
+  types : the nominal types of each participant/variable.
+  rigid-conds : non-fluent conditions relevant to episode.
+  static-conds : fluent conditions that are not expected to change during episode.
+  preconds : fluent conditions that are expected to hold at the beginning of episode.
+  postconds : fluent conditions that are expected to hold at end of episode.
+  goals : goals of participants in schema (e.g., (^me want.v (that ...))).
+  episodes : the expected/intended sub-episodes of the schema episode.
+  episode-relations : the temporal/causal relations between episodes of schema.
+  obligations : the dialogue obligations associated with episodes within the schema.
+  necessities : probabilities associated with schema formulas.
+  certainties : probabilities associated with schema episodes.
   """
-  Defines a dialogue schema, which is a specific type of episode schema that defines an
-  expected dialogue event.
-  """
+
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
                types=[], rigid_conds=[], static_conds=[], preconds=[], postconds=[], goals=[],
                episodes=[], episode_relations=[], obligations=[], necessities=[], certainties=[]):
@@ -284,7 +415,6 @@ class DialSchema(EpiSchema):
     self.sections['obligations'] = parse_eventuality_list(obligations)
     
   def read_param_dict(predicate, schema_contents):
-    """Reads an s-expr of the schema contents into a parameter dict."""
     kwargs = EpiSchema.read_param_dict(predicate, schema_contents)
     for section in [':obligations']:
       section_contents = get_keyword_contents(schema_contents, [section])
@@ -293,11 +423,19 @@ class DialSchema(EpiSchema):
     return kwargs
   
   def get_obligations_of_ep(self, ep):
-    """
-    Given an ep var/name, return all obligations attached to that ep via the corresponding
-    formulas in :obligations.
-    TODO: eventually we may wish to generalize this accessor function to other types of schema
+    """Return all obligations attached to a given episode symbol.
+
+    TODO: it may be better to create a generalized accessor function for other types of schema
     annotations/episode relations.
+
+    Parameters
+    ----------
+    ep : str
+      An episode symbol.
+
+    Returns
+    -------
+    list[Eventuality]
     """
     obligations = []
     for wff in self.get_section_wffs('obligations'):
@@ -307,14 +445,17 @@ class DialSchema(EpiSchema):
   
       
 class ObjSchema(Schema):
+  """A schema representing a prototypical object.
+  
+  Sections
+  --------
+  types : the nominal types of each participant/variable.
+  rigid-conds : non-fluent conditions relevant to object.
+  skeletal-prototype : 3D mesh decomposition of object (.obj filenames).
+  purposes : telic purpose associated with object.
+  necessities : probabilities associated with schema formulas.
   """
-  Defines an object schema, which contains the following additional fields:
-  types              : the nominal types of each participant/variable
-  rigid-conds        : non-fluent conditions relevant to object
-  skeletal-prototype : 3D mesh decomposition of object (.obj filenames)
-  purposes           : telic purpose associated with object
-  necessities        : probabilities associated with schema formulas
-  """
+
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
                types=[], rigid_conds=[], skeletal_prototype='', purposes=[], necessities=[]):
     super().__init__(predicate, participants, vars, bindings, header, contents)
@@ -328,7 +469,6 @@ class ObjSchema(Schema):
     self.sections['purposes'] = parse_eventuality_list(purposes, prob_dict)
 
   def read_param_dict(predicate, schema_contents):
-    """Reads an s-expr of the schema contents into a parameter dict."""
     kwargs = Schema.read_param_dict(predicate, schema_contents)
     for section in [':types', ':rigid-conds', ':skeletal-prototype', ':purposes', ':necessities']:
       section_contents = get_keyword_contents(schema_contents, [section])
@@ -338,9 +478,20 @@ class ObjSchema(Schema):
   
 
 class SchemaLibrary:
+  """A library of all generic episode, dialogue, and object schemas.
+
+  Attributes
+  ----------
+  dial : dict[str, DialSchema]
+    A dict mapping dialogue schema predicates to dialogue schemas.
+  epi : dict[str, EpiSchema]
+    A dict mapping episode schema predicates to episode schemas.
+  obj : dict[str, ObjSchema]
+    A dict mapping object schema predicates to object schemas.
+  embedder : Embedder, optional
+    If provided, an embedder to embed all schemas that are added.
   """
-  Contains a dictionary of predicate:schema pairs for each type of supported schema.
-  """
+
   def __init__(self, embedder=None):
     self.dial = {}
     self.epi = {}
@@ -348,6 +499,7 @@ class SchemaLibrary:
     self.embedder = embedder
 
   def add(self, schema):
+    """Add a schema object to the library."""
     if isinstance(schema, DialSchema):
       self.dial[schema.predicate] = schema
     elif isinstance(schema, EpiSchema):
@@ -358,6 +510,7 @@ class SchemaLibrary:
       raise Exception(f'Unsupported schema type for {schema.predicate}')
     
   def create(self, predicate, contents):
+    """Create a schema object from the given predicate and contents (an S-expression) and add it to the library."""
     if contents[0] in ['dialogue-schema', 'dial-schema']:
       typ = DialSchema
     elif contents[0] in ['event-schema', 'episode-schema', 'epi-schema']:
@@ -372,7 +525,17 @@ class SchemaLibrary:
     self.add(schema)
 
   def get_schemas(self, type):
-    """TBC"""
+    """Get all schemas of a particular type or list of types.
+    
+    Parameters
+    ----------
+    type : str or list[str]
+      A schema type ('dial', 'epi', or 'obj'), or a list of types.
+
+    Returns
+    -------
+    list[Schema]
+    """
     if isinstance(type, list):
       return append([self.get_schemas(t) for t in type])
     
@@ -382,9 +545,48 @@ class SchemaLibrary:
       return list(self.epi.values())
     elif type=='obj':
       return list(self.obj.values())
+    
+  def is_schema(self, predicate, type=None):
+    """Check whether a given predicate exists in the schema library.
+    
+    Parameters
+    ----------
+    predicate : str
+      The predicate to check.
+    type : str, optional
+      If a type is given, only check that type of schema.
+    
+    Returns
+    -------
+    bool
+    """
+    if type=='dial':
+      return predicate in self.dial
+    elif type=='epi':
+      return predicate in self.epi
+    elif type=='obj':
+      return predicate in self.obj
+    else:
+      return predicate in self.dial or predicate in self.epi or predicate in self.obj
 
   def retrieve(self, type, query=None, m=1):
-    """TBC"""
+    """Retrieve some number of schemas of a particular type (or list of types).
+    
+    Parameters
+    ----------
+    type : str or list[str]
+      A schema type ('dial', 'epi', or 'obj'), or a list of types.
+    query : str, optional
+      A query string to use to compute similarity. If not given (default), or if no embedder is
+      defined, an arbitrary schema is retrieved.
+    m : int, optional
+      The number of schemas to retrieve (the default is 1).
+
+    Returns
+    -------
+    list[Schema]
+      The retrieved schemas.
+    """
     schemas = list(self.get_schemas(type))
     if not schemas:
       return None
@@ -394,14 +596,40 @@ class SchemaLibrary:
     return argmax(schemas, scores, m)
   
   def retrieve_knowledge(self, type, query=None, m=1, n=5, header=True):
-    """TBC"""
+    """Retrieve some number of facts from some number of retrieved schemas of a particular type (or list of types).
+    
+    Parameters
+    ----------
+    type : str or list[str]
+      A schema type ('dial', 'epi', or 'obj'), or a list of types.
+    query : str, optional
+      A query string to use to compute similarity. If not given (default), or if no embedder is
+      defined, an arbitrary schema is retrieved.
+    m : int, optional
+      The number of schemas to retrieve (the default is 1).
+    n : int, optional
+      The number of facts to retrieve from each retrieved schema (the default is 5).
+    header : bool, optional
+      Whether to prefix the retrieved facts with the schema header (the default is True).
+
+    Returns
+    -------
+    list[s-expr]
+      The facts retrieved from each retrieved schema, as S-expressions.
+    """
     schemas = self.retrieve(type, query, m)
     if not schemas:
       return None
     return append([s.retrieve(self.embedder, query, n, header) for s in schemas])
 
   def from_lisp_file(self, fname):
-    """Reads a set of schemas from a .lisp file."""
+    """Read a set of schemas from a LISP file, storing them in the library.
+    
+    Parameters
+    ----------
+    fname : str
+      The LISP file to read.
+    """
     for expr in read_lisp(fname):
       if expr[0] == 'store-schema':
         predicate = expr[1].strip("'")
@@ -411,8 +639,13 @@ class SchemaLibrary:
     return self
 
   def from_lisp_dirs(self, dirs):
-    """Recursively reads all .lisp files in a given dir or list of dirs,
-      returning a dict of generic schemas."""
+    """Recursively read schemas from all LISP files in a given directory or list of directories.
+    
+    Parameters
+    ----------
+    dirs : str or list[str]
+      Either a directory name or a list of directory names to read.
+    """
     if isinstance(dirs, str):
       dirs = [dirs]
     for dir in dirs:

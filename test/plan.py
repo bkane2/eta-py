@@ -1,4 +1,6 @@
 from eta.plan import *
+from eta.lf import *
+from eta.schema import *
 
 def make_test_plan_tree():
   """Creates an artificial plan tree for testing purposes."""
