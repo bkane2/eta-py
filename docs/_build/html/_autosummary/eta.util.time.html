@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.time &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.util.time.certainty_to_period" href="eta.util.time.certainty_to_period.html" />
+    <link rel="prev" title="eta.util.sexpr.write_lisp" href="eta.util.sexpr.write_lisp.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.util.html">eta.util</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.util.buffer.html">eta.util.buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.file.html">eta.util.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.general.html">eta.util.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.gpt.html">eta.util.gpt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.sexpr.html">eta.util.sexpr</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.util.time</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.certainty_to_period.html">eta.util.time.certainty_to_period</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.has_elapsed_certainty_period.html">eta.util.time.has_elapsed_certainty_period</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.now.html">eta.util.time.now</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.TimePoint.html">eta.util.time.TimePoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.time.TimePoint"><code class="docutils literal notranslate"><span class="pre">TimePoint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.time.now"><code class="docutils literal notranslate"><span class="pre">now()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.time.certainty_to_period"><code class="docutils literal notranslate"><span class="pre">certainty_to_period()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.time.has_elapsed_certainty_period"><code class="docutils literal notranslate"><span class="pre">has_elapsed_certainty_period()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.tt.html">eta.util.tt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.ulf.html">eta.util.ulf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.html">eta.util</a></li>
+      <li class="breadcrumb-item active">eta.util.time</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.util.time">
+<span id="eta-util-time"></span><h1>eta.util.time<a class="headerlink" href="#module-eta.util.time" title="Permalink to this heading"></a></h1>
+<p>Utilities for recording and modifying times.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.time.certainty_to_period.html#eta.util.time.certainty_to_period" title="eta.util.time.certainty_to_period"><code class="xref py py-obj docutils literal notranslate"><span class="pre">certainty_to_period</span></code></a></p></td>
+<td><p>Map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.time.has_elapsed_certainty_period.html#eta.util.time.has_elapsed_certainty_period" title="eta.util.time.has_elapsed_certainty_period"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_elapsed_certainty_period</span></code></a></p></td>
+<td><p>Check whether a given time delta has elapsed the period corresponding to a given certainty.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.time.now.html#eta.util.time.now" title="eta.util.time.now"><code class="xref py py-obj docutils literal notranslate"><span class="pre">now</span></code></a></p></td>
+<td><p>Return a POSIX timestamp corresponding to the time of the function call.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.time.TimePoint.html#eta.util.time.TimePoint" title="eta.util.time.TimePoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimePoint</span></code></a></p></td>
+<td><p>A specific point in time.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TimePoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A specific point in time.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.time">
+<span class="sig-name descname"><span class="pre">time</span></span><a class="headerlink" href="#eta.util.time.TimePoint.time" title="Permalink to this definition"></a></dt>
+<dd><p>A Datetime object storing the time corresponding to this TimePoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>If ‘time’ is given, initialize a new TimePoint to that time; otherwise, to the current time.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update this TimePoint to the current time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.to_num">
+<span class="sig-name descname"><span class="pre">to_num</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.to_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.to_num" title="Permalink to this definition"></a></dt>
+<dd><p>Convert this TimePoint to a numerical POSIX representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.format" title="Permalink to this definition"></a></dt>
+<dd><p>Format this TimePoint as a year/month/day/hour/minute/second representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.to_ulf">
+<span class="sig-name descname"><span class="pre">to_ulf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.to_ulf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.to_ulf" title="Permalink to this definition"></a></dt>
+<dd><p>Convert this TimePoint to a ULF record structure.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.time.now">
+<span class="sig-name descname"><span class="pre">now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.now" title="Permalink to this definition"></a></dt>
+<dd><p>Return a POSIX timestamp corresponding to the time of the function call.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.time.certainty_to_period">
+<span class="sig-name descname"><span class="pre">certainty_to_period</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">certainty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#certainty_to_period"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.certainty_to_period" title="Permalink to this definition"></a></dt>
+<dd><p>Map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.</p>
+<p>The proportion between the period and the quantity -log(1 - certainty) is determined by the global
+constant EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT, defined in eta.constants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>certainty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – A certainty value in [0,1]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The period (in seconds), or infinity if the certainty is 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a> or np.inf</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.time.has_elapsed_certainty_period">
+<span class="sig-name descname"><span class="pre">has_elapsed_certainty_period</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">certainty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#has_elapsed_certainty_period"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.has_elapsed_certainty_period" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether a given time delta has elapsed the period corresponding to a given certainty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The difference between two times (POSIX timestamps).</p></li>
+<li><p><strong>certainty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – A certainty value in [0,1]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.util.sexpr.write_lisp.html" class="btn btn-neutral float-left" title="eta.util.sexpr.write_lisp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.util.time.certainty_to_period.html" class="btn btn-neutral float-right" title="eta.util.time.certainty_to_period" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

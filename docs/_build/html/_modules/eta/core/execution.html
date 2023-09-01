@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.core.execution &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.core.execution</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.core.execution</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The core process responsible for executing primitive actions and matching expected events.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+<span class="kn">import</span> <span class="nn">eta.util.time</span> <span class="k">as</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">eta.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">eta.util.general</span> <span class="kn">import</span> <span class="n">listp</span><span class="p">,</span> <span class="n">variablep</span>
+<span class="kn">from</span> <span class="nn">eta.util.time</span> <span class="kn">import</span> <span class="n">has_elapsed_certainty_period</span>
+<span class="kn">from</span> <span class="nn">eta.discourse</span> <span class="kn">import</span> <span class="n">DialogueTurn</span><span class="p">,</span> <span class="n">Utterance</span><span class="p">,</span> <span class="n">parse_utt_str</span>
+<span class="kn">from</span> <span class="nn">eta.lf</span> <span class="kn">import</span> <span class="n">Condition</span><span class="p">,</span> <span class="n">Repetition</span><span class="p">,</span> <span class="n">parse_eventuality</span>
+
+<div class="viewcode-block" id="execution_loop"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.execution_loop.html#eta.core.execution.execution_loop">[docs]</a><span class="k">def</span> <span class="nf">execution_loop</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Either execute the current intended step of the plan or attempt to match an expectation.</span>
+
+<span class="sd">  This will do one of several things depending on the class of the currently pending step:</span>
+
+<span class="sd">  1) If a condition or repetition step, advance the plan once none of the conditions are true.</span>
+
+<span class="sd">  2) If an expected step, attempt to match the step to a fact in context, until a time period</span>
+<span class="sd">     based on the certainty of that step has elapsed, in which case the step is characterized</span>
+<span class="sd">     as a failure and the plan is advanced.</span>
+
+<span class="sd">  3) If an intended step that contains a primitive action, attempt to execute that action, and</span>
+<span class="sd">     advance the plan if successful.</span>
+
+<span class="sd">  In any the case where an execution or match is successful, the plan is advanced, and a list of</span>
+<span class="sd">  variable bindings obtained from the execution or match is applied throughout the dialogue state.</span>
+<span class="sd">  Additionally, if the plan was advanced, the contents of the &#39;plans&#39; buffer is replaced with</span>
+<span class="sd">  the modified plan.</span>
+<span class="sd">  </span>
+<span class="sd">  Note that, if the plan wasn&#39;t advanced but the step is a condition or repetition step,</span>
+<span class="sd">  the plan is still added to the &#39;plans&#39; buffer, but only if currently empty. This is because</span>
+<span class="sd">  the condition may change with any observation, so the planning loop must constantly check for</span>
+<span class="sd">  possible expansions of that step.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">while</span> <span class="n">ds</span><span class="o">.</span><span class="n">do_continue</span><span class="p">():</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="n">SLEEPTIME</span><span class="p">)</span>
+
+    <span class="n">plan</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_plan</span><span class="p">()</span>
+    <span class="n">event</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">event</span>
+    <span class="n">wff</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Condition</span><span class="p">):</span>
+      <span class="n">advance_plan</span> <span class="o">=</span> <span class="n">process_condition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Repetition</span><span class="p">):</span>
+      <span class="n">advance_plan</span> <span class="o">=</span> <span class="n">process_repetition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">you_pred</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+      <span class="n">advance_plan</span> <span class="o">=</span> <span class="n">process_expected_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">me_pred</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+      <span class="n">advance_plan</span> <span class="o">=</span> <span class="n">process_intended_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">advance_plan</span> <span class="o">=</span> <span class="n">process_expected_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">advance_plan</span><span class="p">:</span>
+      <span class="n">ds</span><span class="o">.</span><span class="n">reset_step_failure_timer</span><span class="p">()</span>
+      <span class="n">ds</span><span class="o">.</span><span class="n">advance_plan</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">advance_plan</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Condition</span><span class="p">,</span> <span class="n">Repetition</span><span class="p">]:</span>
+      <span class="n">new_plan</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_plan</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">advance_plan</span><span class="p">:</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">replace_buffer</span><span class="p">(</span><span class="n">new_plan</span><span class="p">,</span> <span class="s1">&#39;plans&#39;</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">add_to_buffer_if_empty</span><span class="p">(</span><span class="n">new_plan</span><span class="p">,</span> <span class="s1">&#39;plans&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="process_condition_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.process_condition_step.html#eta.core.execution.process_condition_step">[docs]</a><span class="k">def</span> <span class="nf">process_condition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Process a condition step by advancing only if none of the condition are true.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Condition</span>
+<span class="sd">    The condition step to process.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  bool</span>
+<span class="sd">    Whether to advance the plan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">conditions</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">condition</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">ds</span><span class="o">.</span><span class="n">eval_truth_value</span><span class="p">(</span><span class="n">condition</span><span class="o">.</span><span class="n">get_formula</span><span class="p">()):</span>
+      <span class="k">return</span> <span class="kc">False</span>
+  <span class="n">ds</span><span class="o">.</span><span class="n">instantiate_curr_step</span><span class="p">()</span>
+  <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="process_repetition_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.process_repetition_step.html#eta.core.execution.process_repetition_step">[docs]</a><span class="k">def</span> <span class="nf">process_repetition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Process a repetition step by advancing only if the condition is satisfied.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Repetition</span>
+<span class="sd">    The repetition step to process.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  bool</span>
+<span class="sd">    Whether to advance the plan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">ds</span><span class="o">.</span><span class="n">eval_truth_value</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">get_formula</span><span class="p">()):</span>
+    <span class="k">return</span> <span class="kc">False</span>
+  <span class="n">ds</span><span class="o">.</span><span class="n">instantiate_curr_step</span><span class="p">()</span>
+  <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="process_expected_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.process_expected_step.html#eta.core.execution.process_expected_step">[docs]</a><span class="k">def</span> <span class="nf">process_expected_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Process an expected step by failing it if the waiting period has elapsed, or matching it to a fact in context.</span>
+
+<span class="sd">  Since an expected user step indicates the user&#39;s dialogue turn, we also write the current output buffer at this point.</span>
+
+<span class="sd">  The dialogue context is flushed of &quot;telic&quot; predicates, i.e., those assumed to be essentially instantaneous,</span>
+<span class="sd">  after a successful match (we assume that such predicates may only be used once in a match before becoming outdated).</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The expected step to process.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  bool</span>
+<span class="sd">    Whether to advance the plan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="c1"># It is assumed that it is time to write output and listen for input if expected user turn</span>
+  <span class="k">if</span> <span class="n">you_pred</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()):</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">write_output_buffer</span><span class="p">()</span>
+
+  <span class="c1"># If the timer exceeds period (function of certainty of step), instantiate a &#39;failed&#39; episode</span>
+  <span class="n">certainty</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">prob</span>
+  <span class="k">if</span> <span class="n">has_elapsed_certainty_period</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_step_failure_timer</span><span class="p">(),</span> <span class="n">certainty</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">fail_curr_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+
+  <span class="c1"># Otherwise, inquire about truth of the immediately pending episode, and advance accordingly</span>
+  <span class="n">match</span> <span class="o">=</span> <span class="n">inquire_truth_of_curr_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">flush_context</span><span class="p">()</span>
+  <span class="k">return</span> <span class="n">match</span></div>
+
+
+<div class="viewcode-block" id="inquire_truth_of_curr_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.inquire_truth_of_curr_step.html#eta.core.execution.inquire_truth_of_curr_step">[docs]</a><span class="k">def</span> <span class="nf">inquire_truth_of_curr_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Attempt to match an expected event to a fact in context.</span>
+
+<span class="sd">  If a match is successful, this will bind all variables unified in the match</span>
+<span class="sd">  throughout the dialogue state.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The expected step to attempt to match.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  bool</span>
+<span class="sd">    Whether the match was successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">ep_var</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span>
+  <span class="n">wff</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+
+  <span class="n">match</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">access_from_context</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">False</span>
+  
+  <span class="n">match</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">event</span>
+  <span class="n">ep</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span>
+
+  <span class="n">ds</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">ep_var</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
+
+  <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">variablep</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">y</span><span class="p">:</span>
+      <span class="n">ds</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+  
+  <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="fail_curr_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.fail_curr_step.html#eta.core.execution.fail_curr_step">[docs]</a><span class="k">def</span> <span class="nf">fail_curr_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Characterize the current step as a failure using a special &#39;no-op&#39; predicate.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The expected step to fail.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  bool</span>
+<span class="sd">    Whether to advance the plan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">step</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">instantiate_curr_step</span><span class="p">()</span>
+  <span class="n">ep</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span>
+  <span class="n">wff</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">you_pred</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">add_to_context</span><span class="p">(</span><span class="n">parse_eventuality</span><span class="p">(</span><span class="n">NOOP_YOU</span><span class="p">,</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">))</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">add_to_context</span><span class="p">(</span><span class="n">parse_eventuality</span><span class="p">(</span><span class="n">NOOP_GEN</span><span class="p">,</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">))</span>
+  <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="process_intended_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.process_intended_step.html#eta.core.execution.process_intended_step">[docs]</a><span class="k">def</span> <span class="nf">process_intended_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Process an intended step by attempting to map it to a primitive action to execute.</span>
+<span class="sd">  </span>
+<span class="sd">  If an action was successfully executed, the action returns variable bindings that are</span>
+<span class="sd">  then applied throughout the dialogue state.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The expected step to fail.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  bool</span>
+<span class="sd">    Whether to advance the plan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">advance_plan</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="n">bindings</span> <span class="o">=</span> <span class="p">{}</span>
+
+  <span class="n">wff</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+  <span class="n">action</span> <span class="o">=</span> <span class="n">get_action</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">action</span><span class="p">:</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">instantiate_curr_step</span><span class="p">()</span>
+    <span class="n">bindings</span> <span class="o">=</span> <span class="n">ACTION_DICT</span><span class="p">[</span><span class="n">action</span><span class="p">](</span><span class="n">step</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="n">advance_plan</span> <span class="o">=</span> <span class="kc">True</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bindings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">advance_plan</span></div>
+
+
+<div class="viewcode-block" id="execute_say_to"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.execute_say_to.html#eta.core.execution.execute_say_to">[docs]</a><span class="k">def</span> <span class="nf">execute_say_to</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Execute a say-to step.</span>
+<span class="sd">  </span>
+<span class="sd">  This will create a response and affect using the corresponding transducers,</span>
+<span class="sd">  as well as potentially deriving a gist clause and semantic interpretation</span>
+<span class="sd">  from the response. Any obligations are retrieved from the step as well.</span>
+<span class="sd">  The resulting dialogue turn is added to the conversation log and pushed onto</span>
+<span class="sd">  the output buffer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  step : PlanStep</span>
+<span class="sd">    The say-to step to execute.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  dict</span>
+<span class="sd">    Dict of variable bindings obtained in the course of execution.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">bindings</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">ep</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span>
+  <span class="n">wff</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+  <span class="n">expr</span> <span class="o">=</span> <span class="n">wff</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+  <span class="n">conversation_log</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_conversation_log</span><span class="p">()</span>
+
+  <span class="c1"># If argument is a variable, use response transducer to generate response</span>
+  <span class="k">if</span> <span class="n">variablep</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+    <span class="n">conds</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># TODO</span>
+    <span class="n">facts</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># TODO</span>
+    <span class="n">utts</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">conds</span><span class="p">,</span> <span class="n">facts</span><span class="p">)</span>
+    <span class="n">utt</span> <span class="o">=</span> <span class="n">utts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">utts</span> <span class="ow">and</span> <span class="n">utts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">bindings</span><span class="p">[</span><span class="n">expr</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">utt</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">utt</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+
+  <span class="c1"># Get affect of utterance and create Utterance object</span>
+  <span class="n">affect</span><span class="p">,</span> <span class="n">words</span> <span class="o">=</span> <span class="n">parse_utt_str</span><span class="p">(</span><span class="n">utt</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">affect</span><span class="p">:</span>
+    <span class="n">affects</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;affect&#39;</span><span class="p">,</span> <span class="n">words</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">)</span>
+    <span class="n">affect</span> <span class="o">=</span> <span class="n">affects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">affects</span> <span class="ow">and</span> <span class="n">affects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="n">EMOTIONS_LIST</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">utt</span> <span class="o">=</span> <span class="n">Utterance</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">affect</span><span class="p">)</span>
+
+  <span class="c1"># Find and store additional gist clauses corresponding to Eta&#39;s utterance</span>
+  <span class="n">gists</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;gist&#39;</span><span class="p">,</span> <span class="n">utt</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="n">parse_eventuality</span><span class="p">([</span><span class="n">ME</span><span class="p">,</span> <span class="n">PARAPHRASE_TO</span><span class="p">,</span> <span class="n">YOU</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">gist</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">],</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">)</span> <span class="k">for</span> <span class="n">gist</span> <span class="ow">in</span> <span class="n">gists</span><span class="p">]:</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">add_to_context</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+  <span class="n">gists1</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_memory</span><span class="p">()</span><span class="o">.</span><span class="n">get_characterizing_episode</span><span class="p">(</span><span class="n">PARAPHRASE_TO</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
+  <span class="n">gists1</span> <span class="o">=</span> <span class="p">[</span><span class="n">gist</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">gist</span> <span class="ow">in</span> <span class="n">gists1</span><span class="p">]</span>
+
+  <span class="c1"># Get semantics corresponding to Eta&#39;s utterance</span>
+  <span class="n">semantics1</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_memory</span><span class="p">()</span><span class="o">.</span><span class="n">get_characterizing_episode</span><span class="p">(</span><span class="n">ARTICULATE_TO</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
+  <span class="n">semantics1</span> <span class="o">=</span> <span class="p">[</span><span class="n">sem</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">sem</span> <span class="ow">in</span> <span class="n">semantics1</span><span class="p">]</span>
+
+  <span class="c1"># Get any obligations placed on the user from the schema this episode is part of</span>
+  <span class="n">obligations</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get_obligations</span><span class="p">()</span>
+
+  <span class="c1"># Log and write dialogue turn</span>
+  <span class="n">ds</span><span class="o">.</span><span class="n">log_turn</span><span class="p">(</span><span class="n">DialogueTurn</span><span class="p">(</span>
+    <span class="n">agent</span><span class="o">=</span><span class="n">ME</span><span class="p">,</span>
+    <span class="n">utterance</span><span class="o">=</span><span class="n">utt</span><span class="p">,</span>
+    <span class="n">gists</span><span class="o">=</span><span class="n">gists1</span><span class="p">,</span>
+    <span class="n">semantics</span><span class="o">=</span><span class="n">semantics1</span><span class="p">,</span>
+    <span class="n">pragmatics</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">obligations</span><span class="o">=</span><span class="n">obligations</span><span class="p">,</span>
+    <span class="n">ep</span><span class="o">=</span><span class="n">ep</span>
+  <span class="p">))</span>
+
+  <span class="n">ds</span><span class="o">.</span><span class="n">push_output_buffer</span><span class="p">(</span><span class="n">utt</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">bindings</span></div>
+
+
+<div class="viewcode-block" id="execute_say_bye"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.execute_say_bye.html#eta.core.execution.execute_say_bye">[docs]</a><span class="k">def</span> <span class="nf">execute_say_bye</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Execute a say-bye step.</span>
+<span class="sd">  </span>
+<span class="sd">  This will signal that the conversation should be ended immediately, setting</span>
+<span class="sd">  the quit_conversation flag to True in the dialogue state and writing the remaining</span>
+<span class="sd">  output buffer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  step : PlanStep</span>
+<span class="sd">    The say-to step to execute.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  dict</span>
+<span class="sd">    Dict of variable bindings obtained in the course of execution.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">ds</span><span class="o">.</span><span class="n">write_output_buffer</span><span class="p">()</span>
+  <span class="n">ds</span><span class="o">.</span><span class="n">set_quit_conversation</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+  <span class="k">return</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="you_pred"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.you_pred.html#eta.core.execution.you_pred">[docs]</a><span class="k">def</span> <span class="nf">you_pred</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">YOU</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">wff</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">YOU</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="me_pred"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.me_pred.html#eta.core.execution.me_pred">[docs]</a><span class="k">def</span> <span class="nf">me_pred</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ME</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">wff</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ME</span><span class="p">)</span></div>
+
+<span class="n">ACTION_DICT</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">SAY_TO</span> <span class="p">:</span> <span class="n">execute_say_to</span><span class="p">,</span>
+  <span class="n">SAY_BYE</span> <span class="p">:</span> <span class="n">execute_say_bye</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="say_to_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.say_to_step.html#eta.core.execution.say_to_step">[docs]</a><span class="k">def</span> <span class="nf">say_to_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">SAY_TO</span><span class="p">,</span> <span class="n">YOU</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="say_bye_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.say_bye_step.html#eta.core.execution.say_bye_step">[docs]</a><span class="k">def</span> <span class="nf">say_bye_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">SAY_BYE</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="get_action"><a class="viewcode-back" href="../../../_autosummary/eta.core.execution.get_action.html#eta.core.execution.get_action">[docs]</a><span class="k">def</span> <span class="nf">get_action</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">say_to_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">SAY_TO</span>
+  <span class="k">elif</span> <span class="n">say_bye_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">SAY_BYE</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

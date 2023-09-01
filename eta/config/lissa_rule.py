@@ -1,3 +1,8 @@
+"""Rule-based Lissa agent.
+
+TODO: untested
+"""
+
 from eta.transducers.tt import *
 from eta.transducers.gpt import *
 from eta.embedding import *

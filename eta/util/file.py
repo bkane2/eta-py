@@ -1,21 +1,4 @@
-"""File Utilities
-
-Contains interface functions for manipulating files.
-
-Exported functions
-------------------
-read_file : read the contents of a given file as a string.
-read_lines : read the lines of a file as a list, removing whitespace lines.
-write_file : write a string to a given file.
-append_file : append a string to a given file.
-load_json : load data from a JSON file.
-write_json : write data to a JSON file.
-clear : clear the contents of a file.
-exists : check if a file exists.
-remove : remove a file if it exists.
-ensure_dir_exists : ensure that a directory exists, creating it if it doesn't.
-ensure_file_exists : ensure that a file exists, creating an empty file if it doesn't.
-"""
+"""Utilities for reading from and writing to external files."""
 
 import json
 import os

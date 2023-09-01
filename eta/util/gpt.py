@@ -1,6 +1,4 @@
-"""GPT Utilities
-
-Contains functions for interacting with GPT using the OpenAI API.
+"""Utilities for interacting with the OpenAI GPT API.
 
 We assume that GPT prompts are specified as text strings, possibly including the following special constructs:
 <var>
@@ -12,13 +10,6 @@ We assume that GPT prompts are specified as text strings, possibly including the
 @startexamples ... @endexamples
   The text between these annotations is treated as an example template, to be later replaced by a list of examples
   formatted according to the template.
-
-Exported functions
-------------------
-generate_gpt : generate a response from GPT.
-cost_gpt : estimate the cost of a given prompt from GPT.
-subst_kwargs : replace variables within a GPT prompt with the corresponding values.
-subst_examples : fill in any prompt content between @startexamples and @endexamples annotations with examples.
 """
 
 import re

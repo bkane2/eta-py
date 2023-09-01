@@ -1,8 +1,8 @@
-"""Eta Dialogue Manager
+"""The core executable for the Eta Dialogue Manager.
 
-The core executable for Eta; running this module will read an agent and user config
-from eta.config and user_config, respectively, before spawning the core multiprocess loops
-that handle interpretation, reasoning, planning, and execution.
+Running this module will read an agent and user config from eta.config and user_config,
+respectively, before spawning the core multiprocess loops that handle interpretation, reasoning,
+planning, and execution.
 
 Note that the agent config is provided as a Python module that exports a 'config' function,
 returning a dict of config parameters, since transducers and other objects may be created within
@@ -14,17 +14,12 @@ dialogue state attributes.
 
 Additionally, a set of buffers (i.e., priority queues) are used for the data being processed
 over the dialogue session, which is necessary for:
-(a) maintaining synchronicity between the processes in the relevant aspects (e.g., completing a
-    series of modifications to the plan before attempting to execute a step).
-(b) ensuring that transducers, which may incur some monetary cost to apply (e.g., in the case of
-    GPT-based transduction), are only applied after a modification to the relevant data.
 
-Command-line arguments
-----------------------
---agent : str, optional
-  The name of an agent config module in eta.config (the default is 'sophie_offline').
---user : str, optional
-  The name of a user config file in ./user_config/ (the default is 'test').
+(a) maintaining synchronicity between the processes in the relevant aspects (e.g., completing a
+series of modifications to the plan before attempting to execute a step).
+
+(b) ensuring that transducers, which may incur some monetary cost to apply (e.g., in the case of
+GPT-based transduction), are only applied after a modification to the relevant data.
 """
 
 import argparse

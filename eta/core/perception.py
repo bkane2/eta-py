@@ -1,12 +1,4 @@
-"""Perception Loop
-
-Implements the core loop for collecting observations from registered perceptual
-servers, and also interpreting the user in the case of a speech input.
-
-Exported functions
-------------------
-perception_loop
-"""
+"""The core process responsible for perceiving and interpreting inputs and adding them to memory."""
 
 from time import sleep
 

@@ -1,20 +1,10 @@
-"""Schema
-
-Contains classes for representing different types of schemas.
+"""Classes and methods for representing and modifying different types of schemas.
 
 A schema is, in general, a collection of sections. Each section is a sequence of eventualities (natural language
 expressions or ULF/ELF formulas with associated episode symbols) under a section label, e.g., 'types' or 'preconditions'.
 
 A schema is denoted by a specific predicate string (e.g., 'dog.n' or 'eat.v'), and also has a unique header, which is a
 formula characterizing the schema episode potentially containing participant variables, e.g., ((^me eat.v ?x) ** ?e1).
-
-Exported classes
-----------------
-Schema : an abstract schema class.
-EpiSchema : a schema representing a prototypical episode.
-DialSchema : a schema representing a prototypical dialogue (a subtype of EpiSchema).
-ObjSchema : a schema representing a prototypical object.
-SchemaLibrary : a library of all generic episode, dialogue, and object schemas.
 """
 
 import glob

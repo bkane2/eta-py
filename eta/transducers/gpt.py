@@ -1,7 +1,6 @@
-"""GPT Transducers
+"""Contains implementations of transducers that rely on OpenAI's GPT API.
 
-Contains implementations of transducers that rely on OpenAI's GPT API. Each transducer type defined
-here subclasses GPTTransducer, which contains the core implementation of the GPT mapping process.
+Each transducer type defined here subclasses GPTTransducer, which contains the core implementation of the GPT mapping process.
 
 Each GPT transducer is instantiated with a prompt (possibly formatted with examples upon initialization)
 as well as a set of validator functions for validating and postprocessing the model output.

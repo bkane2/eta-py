@@ -1,12 +1,4 @@
-"""Memory
-
-Contains classes for representing and processing semantic memory.
-
-Exported classes
-----------------
-Memory : represents a single memory, which consists of a temporally bounded event with some importance value.
-MemoryStorage : stores memories and a context of "true now" facts, keyed on both episode names and predicates for efficient lookup.
-"""
+"""Tools for storing and retrieving eventualities in Eta's semantic memory."""
 
 from eta.constants import DEFAULT_IMPORTANCE, TELIC_VERBS
 from eta.util.general import cons_dict, listp, atom, cons, variablep, to_key, dict_get, dict_rem_val, squash, linsum, argmax

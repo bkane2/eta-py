@@ -1,0 +1,38 @@
+eta.lf.Repetition
+=================
+
+.. currentmodule:: eta.lf
+
+.. autoclass:: Repetition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Repetition.bind
+      ~Repetition.embed
+      ~Repetition.format
+      ~Repetition.get_elf
+      ~Repetition.get_ep
+      ~Repetition.get_nl
+      ~Repetition.get_ulf
+      ~Repetition.get_wff
+      ~Repetition.replacevar
+      ~Repetition.set_elf
+      ~Repetition.set_ep
+      ~Repetition.set_prob
+      ~Repetition.set_ulf
+      ~Repetition.unbind
+   
+   
+
+   
+   
+   

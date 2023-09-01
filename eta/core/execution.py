@@ -1,12 +1,4 @@
-"""Execution Loop
-
-Implements the core loop for executing primitive actions in the plan and matching
-expectations in the plan, producing outputs and modifying the dialogue state accordingly.
-
-Exported functions
-------------------
-execution_loop
-"""
+"""The core process responsible for executing primitive actions and matching expected events."""
 
 from time import sleep
 

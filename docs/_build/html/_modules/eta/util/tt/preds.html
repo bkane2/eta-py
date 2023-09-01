@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.tt.preds &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.util.tt.preds</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.util.tt.preds</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Definitions for custom evaluable predicates used in TT patterns.</span>
+
+<span class="sd">Definitions for custom evaluable predicates used in TT pattern matching and template filling, based</span>
+<span class="sd">on the original LISP definitions:</span>
+<span class="sd">https://github.com/bkane2/eta/blob/master/core/tt/tt-match-predicates.lisp</span>
+
+<span class="sd">Some simplifications were made here, limiting the extensibility and (to a small extent) efficiency</span>
+<span class="sd">of custom predicates. First, due to Python lacking a macro system, all predicates must be defined</span>
+<span class="sd">here, rather than in domain-specific rule files. Second, predicate functions are invoked based on</span>
+<span class="sd">name strings, obtained through manipulation of the corresponding variable strings, rather than through</span>
+<span class="sd">the implicit-pred and *-variant hash tables.</span>
+
+<span class="sd">Ultimately, this should be reworked to allow custom domain-specific definitions of TT predicates, in</span>
+<span class="sd">order to avoid the redundant loading of lexical data into the core code.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">eta.util.general</span> <span class="k">as</span> <span class="nn">gute</span>
+<span class="kn">import</span> <span class="nn">eta.util.ulf.lex</span> <span class="k">as</span> <span class="nn">lex</span>
+
+<span class="n">NEG</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;neg&#39;</span><span class="p">,</span> <span class="s1">&#39;deny&#39;</span><span class="p">,</span> <span class="s1">&#39;disagree&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;nah&#39;</span><span class="p">,</span> <span class="s1">&#39;nope&#39;</span><span class="p">,</span> <span class="s1">&#39;not&#39;</span><span class="p">,</span> <span class="s1">&#39;never&#39;</span><span class="p">,</span> <span class="s1">&#39;zero&#39;</span><span class="p">,</span> <span class="s1">&#39;hardly&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;little&#39;</span><span class="p">,</span> <span class="s1">&#39;barely&#39;</span><span class="p">,</span> <span class="s1">&#39;scarcely&#39;</span><span class="p">,</span> <span class="s1">&#39;incorrect&#39;</span><span class="p">,</span> <span class="s1">&#39;inaccurate&#39;</span><span class="p">,</span> <span class="s1">&#39;untrue&#39;</span><span class="p">,</span> <span class="s1">&#39;disagreed&#39;</span><span class="p">,</span> <span class="s1">&#39;doubt&#39;</span><span class="p">]</span>
+
+<span class="n">NEG_MOD</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;really&#39;</span><span class="p">,</span> <span class="s1">&#39;quite&#39;</span><span class="p">,</span> <span class="s1">&#39;very&#39;</span><span class="p">,</span> <span class="s1">&#39;exactly&#39;</span><span class="p">,</span> <span class="s1">&#39;entirely&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;completely&#39;</span><span class="p">]</span>
+
+<span class="n">AFFIRM_ADV</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;certainly&#39;</span><span class="p">,</span> <span class="s1">&#39;certain&#39;</span><span class="p">,</span> <span class="s1">&#39;absolutely&#39;</span><span class="p">,</span> <span class="s1">&#39;really&#39;</span><span class="p">,</span> <span class="s1">&#39;quite&#39;</span><span class="p">,</span> <span class="s1">&#39;completely&#39;</span><span class="p">,</span> <span class="s1">&#39;exactly&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;entirely&#39;</span><span class="p">,</span> <span class="s1">&#39;sure&#39;</span><span class="p">,</span> <span class="s1">&#39;definitely&#39;</span><span class="p">,</span> <span class="s1">&#39;correct&#39;</span><span class="p">,</span> <span class="s1">&#39;accurate&#39;</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">]</span>
+
+<span class="n">MODAL</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;can&#39;</span><span class="p">,</span> <span class="s1">&#39;will&#39;</span><span class="p">,</span> <span class="s1">&#39;shall&#39;</span><span class="p">,</span> <span class="s1">&#39;could&#39;</span><span class="p">,</span> <span class="s1">&#39;would&#39;</span><span class="p">,</span> <span class="s1">&#39;should&#39;</span><span class="p">,</span> <span class="s1">&#39;might&#39;</span><span class="p">,</span> <span class="s1">&#39;may&#39;</span><span class="p">,</span> <span class="s1">&#39;ought&#39;</span><span class="p">]</span>
+
+<span class="n">NON_ALCOHOLIC</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;water&#39;</span><span class="p">,</span> <span class="s1">&#39;coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;milk&#39;</span><span class="p">,</span> <span class="s1">&#39;tea&#39;</span><span class="p">,</span> <span class="s1">&#39;soda&#39;</span><span class="p">,</span> <span class="s1">&#39;pop&#39;</span><span class="p">]</span>
+
+<span class="n">MEDICINE_GEN</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;medicine&#39;</span><span class="p">,</span> <span class="s1">&#39;medicines&#39;</span><span class="p">,</span> <span class="s1">&#39;medication&#39;</span><span class="p">,</span> <span class="s1">&#39;medications&#39;</span><span class="p">,</span> <span class="s1">&#39;drug&#39;</span><span class="p">,</span> <span class="s1">&#39;drugs&#39;</span><span class="p">,</span> <span class="s1">&#39;pill&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;pills&#39;</span><span class="p">,</span> <span class="s1">&#39;med&#39;</span><span class="p">,</span> <span class="s1">&#39;meds&#39;</span><span class="p">,</span> <span class="s1">&#39;dose&#39;</span><span class="p">,</span> <span class="s1">&#39;doses&#39;</span><span class="p">,</span> <span class="s1">&#39;dosage&#39;</span><span class="p">,</span> <span class="s1">&#39;dosages&#39;</span><span class="p">,</span> <span class="s1">&#39;lortab&#39;</span><span class="p">,</span> <span class="s1">&#39;vicodin&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;norco&#39;</span><span class="p">,</span> <span class="s1">&#39;ibuprofen&#39;</span><span class="p">,</span> <span class="s1">&#39;aleve&#39;</span><span class="p">,</span> <span class="s1">&#39;cozar&#39;</span><span class="p">,</span> <span class="s1">&#39;narcotic&#39;</span><span class="p">,</span> <span class="s1">&#39;narcotics&#39;</span><span class="p">,</span> <span class="s1">&#39;oxycodone&#39;</span><span class="p">,</span> <span class="s1">&#39;morphine&#39;</span><span class="p">]</span>
+
+<span class="n">SENTENCE_CONJUNCTIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;but&#39;</span> <span class="p">,</span><span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;however&#39;</span><span class="p">,</span> <span class="s1">&#39;because&#39;</span><span class="p">,</span> <span class="s1">&#39;since&#39;</span><span class="p">,</span> <span class="s1">&#39;although&#39;</span><span class="p">,</span> <span class="s1">&#39;as&#39;</span><span class="p">,</span> <span class="s1">&#39;if&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="expr"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.expr.html#eta.util.tt.preds.expr">[docs]</a><span class="k">def</span> <span class="nf">expr</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Match any expression.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="atom"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.atom.html#eta.util.tt.preds.atom">[docs]</a><span class="k">def</span> <span class="nf">atom</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Match any atomic expression.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">gute</span><span class="o">.</span><span class="n">atom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="lst"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.lst.html#eta.util.tt.preds.lst">[docs]</a><span class="k">def</span> <span class="nf">lst</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Match any list.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="comma"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.comma.html#eta.util.tt.preds.comma">[docs]</a><span class="k">def</span> <span class="nf">comma</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Match a comma.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;,&#39;</span></div>
+
+<div class="viewcode-block" id="zero"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.zero.html#eta.util.tt.preds.zero">[docs]</a><span class="k">def</span> <span class="nf">zero</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Match zero.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span></div>
+
+<div class="viewcode-block" id="non_neg"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.non_neg.html#eta.util.tt.preds.non_neg">[docs]</a><span class="k">def</span> <span class="nf">non_neg</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Match any word except for negative polarity items.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NEG</span></div>
+
+<div class="viewcode-block" id="non_neg_mod"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.non_neg_mod.html#eta.util.tt.preds.non_neg_mod">[docs]</a><span class="k">def</span> <span class="nf">non_neg_mod</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Matches any word except for negative polarity items or negative modifiers.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NEG</span> <span class="ow">and</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NEG_MOD</span></div>
+
+<div class="viewcode-block" id="affirm_adv"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.affirm_adv.html#eta.util.tt.preds.affirm_adv">[docs]</a><span class="k">def</span> <span class="nf">affirm_adv</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Matches any affirmatory modifier.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">AFFIRM_ADV</span></div>
+
+<div class="viewcode-block" id="modal"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.modal.html#eta.util.tt.preds.modal">[docs]</a><span class="k">def</span> <span class="nf">modal</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Matches any modal word.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">MODAL</span></div>
+
+<div class="viewcode-block" id="not_non_alcoholic"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.not_non_alcoholic.html#eta.util.tt.preds.not_non_alcoholic">[docs]</a><span class="k">def</span> <span class="nf">not_non_alcoholic</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Matches any word for a non-alcoholic beverage.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NON_ALCOHOLIC</span></div>
+
+<div class="viewcode-block" id="not_medicine_gen"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.not_medicine_gen.html#eta.util.tt.preds.not_medicine_gen">[docs]</a><span class="k">def</span> <span class="nf">not_medicine_gen</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Matches any word that doesn&#39;t refer to a generic medicine.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">MEDICINE_GEN</span></div>
+
+<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.test.html#eta.util.tt.preds.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="o">*</span><span class="n">lst</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Predicate to test template filling.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_test&#39;</span></div>
+
+<div class="viewcode-block" id="lex_ulf"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.lex_ulf.html#eta.util.tt.preds.lex_ulf">[docs]</a><span class="k">def</span> <span class="nf">lex_ulf</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;ULF lexicalizer predicate.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">lex</span><span class="o">.</span><span class="n">to_ulf</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="quote_to_list"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.quote_to_list.html#eta.util.tt.preds.quote_to_list">[docs]</a><span class="k">def</span> <span class="nf">quote_to_list</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Predicate to create a word list from a quoted expression.&quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">s</span>
+  <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="split_sentences"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.split_sentences.html#eta.util.tt.preds.split_sentences">[docs]</a><span class="k">def</span> <span class="nf">split_sentences</span><span class="p">(</span><span class="n">wordlist</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Predicate to split a word list into multiple word lists for each sentence.&quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">wordlist</span><span class="p">]):</span>
+    <span class="k">return</span> <span class="n">wordlist</span>
+  
+  <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">cur</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">wordlist</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">]:</span>
+      <span class="n">cur</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+      <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+      <span class="n">cur</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">cur</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">cur</span><span class="p">:</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+  <span class="n">cur</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="c1"># Loop through each word with lookahead to split sentences conjoined by a comma+connective</span>
+  <span class="n">result1</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">words</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">lookahead</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="p">[</span><span class="kc">None</span><span class="p">]):</span>
+      <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lookahead</span> <span class="ow">in</span> <span class="n">SENTENCE_CONJUNCTIONS</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">result1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cur</span><span class="p">:</span>
+      <span class="n">result1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">return</span> <span class="n">gute</span><span class="o">.</span><span class="n">remove_duplicates</span><span class="p">(</span><span class="n">result1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="prefix_each"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.preds.prefix_each.html#eta.util.tt.preds.prefix_each">[docs]</a><span class="k">def</span> <span class="nf">prefix_each</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">lst</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Cons &#39;prefix&#39; to each list in &#39;lst&#39;.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">gute</span><span class="o">.</span><span class="n">cons</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

@@ -1,13 +1,4 @@
-"""Choice Tree Parser
-
-Parses a choice tree (a nested dict structure) from a LISP file or directory.
-
-Exported functions
-------------------
-from_lisp_file : read choice trees and word features from a LISP file.
-from_lisp_dirs : recursively read choice trees and word features from all
-                 LISP files within a directory or list of directories.
-"""
+"""Methods for parsing choice trees and word features from LISP definitions."""
 
 import glob
 
@@ -140,7 +131,7 @@ def merge_trees(trees1, trees2):
 
 
 def from_lisp_file(fname):
-  """Reads a LISP file and parses the rule trees and feature definitions contained within.
+  """Read a LISP file and parse the rule trees and feature definitions contained within.
 
   Parameters
   ----------
@@ -150,9 +141,9 @@ def from_lisp_file(fname):
   Returns
   -------
   trees : dict
-    A dictionary mapping names to choice trees roots.
+    A dict containing all choice trees, keyed on their root names.
   feats : dict
-    A dictionary mapping words to feature lists.
+    A dict mapping words to feature lists.
   """
   trees = {}
   feats = {}
@@ -172,7 +163,7 @@ def from_lisp_file(fname):
 
 
 def from_lisp_dirs(dirs):
-  """Recursively reads choice trees and word features from all LISP files in a directory or list of directories.
+  """Recursively read choice trees and word features from all LISP files in a directory or list of directories.
 
   Parameters
   ----------
@@ -182,9 +173,9 @@ def from_lisp_dirs(dirs):
   Returns
   -------
   trees : dict
-    A dictionary mapping names to choice trees roots.
+    A dict containing all choice trees, keyed on their root names.
   feats : dict
-    A dictionary mapping words to feature lists.
+    A dict mapping words to feature lists.
   """
   trees = {}
   feats = {}

@@ -1,18 +1,10 @@
-"""S-Expression Utilities
+"""Utilities for handling S-expression lists.
 
 Contains functions for parsing and manipulating S-expressions in Python, which are
 represented as recursively nested lists, with strings as "symbols".
 
 Some of this code is borrowed from the following repository:
 https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
-
-Exported functions
-------------------
-parse_s_expr : parse a string containing an S-expression (in LISP form) into a structured list.
-list_to_s_expr : convert an S-expression list structure to a string representing a LISP formatted S-expression.
-list_to_str : convert an S-expression list structure to a flattened string containing each of the symbols.
-read_lisp : read a list of S-expressions from a LISP file.
-write_lisp : write an S-expression to a LISP file.
 """
 
 from eta.util.general import flatten, replaceall, symbolp, atom, escaped_symbol_p, standardize

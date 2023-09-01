@@ -1,6 +1,4 @@
-"""Plan
-
-Contains classes and functions for representing and modifying dialogue plan structures.
+"""Classes and methods for creating and modifying dialogue plan structures.
 
 A plan structure consists of a doubly linked list of plan nodes, interpreted as sequentially ordered
 steps in the system's plan. Each step contains the expected or intended event corresponding to that node.
@@ -15,21 +13,6 @@ held the abstract step).
 
 Similarly, executing a plan consists of advancing the pointer to the currently due plan node within
 the linked list of plan nodes.
-
-Exported classes
-----------------
-PlanNode : a node in the doubly linked list that represents the system's plan.
-PlanStep : a plan step, related to other plan steps through a tree structure.
-
-Exported functions
-------------------
-get_first_plan_node : get the first plan node in a linked list of plan nodes.
-get_last_plan_node : get the last plan node in a linked list of plan nodes.
-expand_plan_node : expand a plan node using the subplan headed by another node.
-insert_before_plan_nodes : insert a new plan directly before a given plan node in the linked list.
-merge_plan_nodes : merge a sequence of plan nodes (bounded between plan-node-start and plan-node-end) into a given subplan node.
-init_plan_from_eventualities : create a plan structure from a list of eventualities, assumed to occur sequentially.
-visualize_plan : visualize a plan as a graph using graphviz dot.
 """
 
 import graphviz

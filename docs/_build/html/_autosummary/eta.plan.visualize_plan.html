@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.plan.visualize_plan &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.plan.PlanNode" href="eta.plan.PlanNode.html" />
+    <link rel="prev" title="eta.plan.merge_plan_nodes" href="eta.plan.merge_plan_nodes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.plan.html">eta.plan</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.expand_plan_node.html">eta.plan.expand_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.get_first_plan_node.html">eta.plan.get_first_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.get_last_plan_node.html">eta.plan.get_last_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.init_plan_from_eventualities.html">eta.plan.init_plan_from_eventualities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.insert_before_plan_node.html">eta.plan.insert_before_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.merge_plan_nodes.html">eta.plan.merge_plan_nodes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.plan.visualize_plan</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.plan.visualize_plan"><code class="docutils literal notranslate"><span class="pre">visualize_plan()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.PlanNode.html">eta.plan.PlanNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.PlanStep.html">eta.plan.PlanStep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.PlanNode"><code class="docutils literal notranslate"><span class="pre">PlanNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.PlanStep"><code class="docutils literal notranslate"><span class="pre">PlanStep</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.get_first_plan_node"><code class="docutils literal notranslate"><span class="pre">get_first_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.get_last_plan_node"><code class="docutils literal notranslate"><span class="pre">get_last_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.expand_plan_node"><code class="docutils literal notranslate"><span class="pre">expand_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.insert_before_plan_node"><code class="docutils literal notranslate"><span class="pre">insert_before_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.merge_plan_nodes"><code class="docutils literal notranslate"><span class="pre">merge_plan_nodes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.init_plan_from_eventualities"><code class="docutils literal notranslate"><span class="pre">init_plan_from_eventualities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.visualize_plan"><code class="docutils literal notranslate"><span class="pre">visualize_plan()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.plan.html">eta.plan</a></li>
+      <li class="breadcrumb-item active">eta.plan.visualize_plan</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-plan-visualize-plan">
+<h1>eta.plan.visualize_plan<a class="headerlink" href="#eta-plan-visualize-plan" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.plan.visualize_plan">
+<span class="sig-name descname"><span class="pre">visualize_plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schemas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'io/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#visualize_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.visualize_plan" title="Permalink to this definition"></a></dt>
+<dd><p>Visualize a plan as a graph using graphviz dot.</p>
+<p>TODO: it may be better to move this function elsewhere in order to have a cleaner dependency structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>before</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of past surface steps to include in the graph (the default is 3).</p></li>
+<li><p><strong>after</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of future surface steps to include in the graph (the default is 5).</p></li>
+<li><p><strong>schemas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to also display schema predicates in the labels for each step (the default is False).</p></li>
+<li><p><strong>vert</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to rotate the direction of the graph to left-right (the default is False).</p></li>
+<li><p><strong>dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – The directory to store the generated graph image (the default is ‘io/’).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.plan.merge_plan_nodes.html" class="btn btn-neutral float-left" title="eta.plan.merge_plan_nodes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.plan.PlanNode.html" class="btn btn-neutral float-right" title="eta.plan.PlanNode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

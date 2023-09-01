@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.plan.PlanStep &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.schema" href="eta.schema.html" />
+    <link rel="prev" title="eta.plan.PlanNode" href="eta.plan.PlanNode.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.plan.html">eta.plan</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.expand_plan_node.html">eta.plan.expand_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.get_first_plan_node.html">eta.plan.get_first_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.get_last_plan_node.html">eta.plan.get_last_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.init_plan_from_eventualities.html">eta.plan.init_plan_from_eventualities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.insert_before_plan_node.html">eta.plan.insert_before_plan_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.merge_plan_nodes.html">eta.plan.merge_plan_nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.visualize_plan.html">eta.plan.visualize_plan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.PlanNode.html">eta.plan.PlanNode</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.plan.PlanStep</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.plan.PlanStep"><code class="docutils literal notranslate"><span class="pre">PlanStep</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.PlanNode"><code class="docutils literal notranslate"><span class="pre">PlanNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.PlanStep"><code class="docutils literal notranslate"><span class="pre">PlanStep</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.get_first_plan_node"><code class="docutils literal notranslate"><span class="pre">get_first_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.get_last_plan_node"><code class="docutils literal notranslate"><span class="pre">get_last_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.expand_plan_node"><code class="docutils literal notranslate"><span class="pre">expand_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.insert_before_plan_node"><code class="docutils literal notranslate"><span class="pre">insert_before_plan_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.merge_plan_nodes"><code class="docutils literal notranslate"><span class="pre">merge_plan_nodes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.init_plan_from_eventualities"><code class="docutils literal notranslate"><span class="pre">init_plan_from_eventualities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.plan.html#eta.plan.visualize_plan"><code class="docutils literal notranslate"><span class="pre">visualize_plan()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.plan.html">eta.plan</a></li>
+      <li class="breadcrumb-item active">eta.plan.PlanStep</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-plan-planstep">
+<h1>eta.plan.PlanStep<a class="headerlink" href="#eta-plan-planstep" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.plan.PlanStep">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PlanStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A plan step containing an eventuality, related to other plan steps through a tree structure.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#eta.plan.PlanStep.id" title="Permalink to this definition"></a></dt>
+<dd><p>A unique ID for this step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.event">
+<span class="sig-name descname"><span class="pre">event</span></span><a class="headerlink" href="#eta.plan.PlanStep.event" title="Permalink to this definition"></a></dt>
+<dd><p>The eventuality corresponding to this step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.substeps">
+<span class="sig-name descname"><span class="pre">substeps</span></span><a class="headerlink" href="#eta.plan.PlanStep.substeps" title="Permalink to this definition"></a></dt>
+<dd><p>A list of more concrete plan steps that together realize this step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="#eta.plan.PlanStep" title="eta.plan.PlanStep">PlanStep</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.supersteps">
+<span class="sig-name descname"><span class="pre">supersteps</span></span><a class="headerlink" href="#eta.plan.PlanStep.supersteps" title="Permalink to this definition"></a></dt>
+<dd><p>A list of more abstract plan steps which this step (partially) realizes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="#eta.plan.PlanStep" title="eta.plan.PlanStep">PlanStep</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.obligations">
+<span class="sig-name descname"><span class="pre">obligations</span></span><a class="headerlink" href="#eta.plan.PlanStep.obligations" title="Permalink to this definition"></a></dt>
+<dd><p>A list of dialogue obligations associated with this plan step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.schemas">
+<span class="sig-name descname"><span class="pre">schemas</span></span><a class="headerlink" href="#eta.plan.PlanStep.schemas" title="Permalink to this definition"></a></dt>
+<dd><p>A list of schemas that this expected/intended step arises from (if any).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.schema.Schema.html#eta.schema.Schema" title="eta.schema.Schema">Schema</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.plan.PlanStep.add_superstep" title="eta.plan.PlanStep.add_superstep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_superstep</span></code></a></p></td>
+<td><p>Add bidirectional subplan/superplan links between this step and a given superstep.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.plan.PlanStep.bind" title="eta.plan.PlanStep.bind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bind</span></code></a></p></td>
+<td><p>Bind the given variable symbol to the given value throughout the entire plan step tree (and associated schemas).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.plan.PlanStep.format" title="eta.plan.PlanStep.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a></p></td>
+<td><p>Format a string representing this plan step as an S-expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.plan.PlanStep.get_obligations" title="eta.plan.PlanStep.get_obligations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_obligations</span></code></a></p></td>
+<td><p>Get any dialogue obligations associated with a particular step in the plan.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.plan.PlanStep.serialize" title="eta.plan.PlanStep.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
+<td><p>Format a string representing a serialized version of the subtree rooted at this step.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.plan.PlanStep.unbind" title="eta.plan.PlanStep.unbind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unbind</span></code></a></p></td>
+<td><p>Unbind the given variable symbol throughout the entire plan step tree (and associated schemas).</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.get_obligations">
+<span class="sig-name descname"><span class="pre">get_obligations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.get_obligations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.get_obligations" title="Permalink to this definition"></a></dt>
+<dd><p>Get any dialogue obligations associated with a particular step in the plan.</p>
+<p>TODO: this is currently a bit of a hack, in that it involves looking at the superstep
+as well if no obligations are found. This is because say-to.v actions may need to access
+the parent paraphrase-to.v actions in order to inherit relevant obligations of the latter.
+It may be possible to instead modify the plan expansion method so that obligations are
+inherited upon expansion.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.add_superstep">
+<span class="sig-name descname"><span class="pre">add_superstep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">superstep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.add_superstep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.add_superstep" title="Permalink to this definition"></a></dt>
+<dd><p>Add bidirectional subplan/superplan links between this step and a given superstep.</p>
+<p>The schemas of the superstep also become the schemas associated with this step, but
+only in the case where this step doesn’t already have associated schemas (e.g.,
+if it was created from an episode list in expanding an action).</p>
+<p>TODO: it’s not clear whether the above is the sensible behavior, or if instead we
+should always append the schemas of the superstep to this step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>superstep</strong> (<a class="reference internal" href="#eta.plan.PlanStep" title="eta.plan.PlanStep"><em>PlanStep</em></a>) – The superstep to add to this step.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.bind" title="Permalink to this definition"></a></dt>
+<dd><p>Bind the given variable symbol to the given value throughout the entire plan step tree (and associated schemas).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.unbind" title="Permalink to this definition"></a></dt>
+<dd><p>Unbind the given variable symbol throughout the entire plan step tree (and associated schemas).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schemas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.serialize" title="Permalink to this definition"></a></dt>
+<dd><p>Format a string representing a serialized version of the subtree rooted at this step.</p>
+<p>This is generated using a DFS, maintaining a record of recurring plan steps so that numerical
+references can be inserted in place of nodes that appear more than once in the tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – If given as True, print the subtree “above” this step rather than below (the default is False).</p></li>
+<li><p><strong>schemas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to also display schema predicates for each step (the default is False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schemas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.format" title="Permalink to this definition"></a></dt>
+<dd><p>Format a string representing this plan step as an S-expression.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>schemas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to also display schema predicates for each step (the default is False).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The step formatted as one of the following S-expression string representations:
+((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;)
+((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;) (:schemas &lt;schema-preds&gt;)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.plan.PlanNode.html" class="btn btn-neutral float-left" title="eta.plan.PlanNode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.schema.html" class="btn btn-neutral float-right" title="eta.schema" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

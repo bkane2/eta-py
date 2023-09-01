@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.buffer &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.util.buffer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.util.buffer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utilities for manipulating priority queues, termed &quot;buffers&quot; in Eta&#39;s architecture.</span>
+
+<span class="sd">NOTE: although importance values are positive, the values stored in the underlying priority queues are</span>
+<span class="sd">negated, since heapq implements a min heap.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">heapq</span>
+
+<div class="viewcode-block" id="enqueue"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.enqueue.html#eta.util.buffer.enqueue">[docs]</a><span class="k">def</span> <span class="nf">enqueue</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">buffer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Enqueue an item (either an object or an (importance, object) tuple) in a buffer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  item : object or tuple[float, object]</span>
+<span class="sd">    If item is an object, enqueue using a default importance value. Otherwise, item is</span>
+<span class="sd">    an (importance, object) tuple, and the object is enqueued with the given importance.</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+    <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="enqueue_ordered"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.enqueue_ordered.html#eta.util.buffer.enqueue_ordered">[docs]</a><span class="k">def</span> <span class="nf">enqueue_ordered</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">inc_val</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Enqueue a list of items, preserving original order unless an importance value is explicitly specified.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  items : list</span>
+<span class="sd">    A list where each item is either an object or (importance, object) tuple. For each item where an importance</span>
+<span class="sd">    is not specified, a default importance value is generated using an increment so as to preserve the original order.</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+<span class="sd">  inc_val : float, optional</span>
+<span class="sd">    The increment to use for generated importance values.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">cur_max</span> <span class="o">=</span> <span class="n">max_importance</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+  <span class="n">inc</span> <span class="o">=</span> <span class="n">inc_val</span>
+  <span class="n">importance</span> <span class="o">=</span> <span class="n">cur_max</span>
+  <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+      <span class="n">importance</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="n">item</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">importance</span> <span class="o">=</span> <span class="n">cur_max</span>
+    <span class="n">importance</span> <span class="o">+=</span> <span class="n">inc</span>
+    <span class="n">enqueue</span><span class="p">((</span><span class="n">importance</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span> <span class="n">buffer</span><span class="p">)</span>
+    <span class="n">inc</span> <span class="o">+=</span> <span class="n">inc_val</span></div>
+
+
+<div class="viewcode-block" id="is_empty"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.is_empty.html#eta.util.buffer.is_empty">[docs]</a><span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Check whether a buffer is empty.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  bool</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">buffer</span> <span class="k">else</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="pop_item"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.pop_item.html#eta.util.buffer.pop_item">[docs]</a><span class="k">def</span> <span class="nf">pop_item</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">importance</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Pop the top item from a buffer.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+<span class="sd">  importance : bool</span>
+<span class="sd">    If True is given, return the importance as well as the object.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  object or tuple[float, object]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  <span class="n">item</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">importance</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="pop_all"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.pop_all.html#eta.util.buffer.pop_all">[docs]</a><span class="k">def</span> <span class="nf">pop_all</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">importance</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Pop all items from a buffer.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+<span class="sd">  importance : bool</span>
+<span class="sd">    If True is given, return the importances as well as the objects.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[object] or list[tuple[float, object]]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">while</span> <span class="ow">not</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+    <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pop_item</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">importance</span><span class="o">=</span><span class="n">importance</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="get_item"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.get_item.html#eta.util.buffer.get_item">[docs]</a><span class="k">def</span> <span class="nf">get_item</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">importance</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get the top item from a buffer without popping it.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+<span class="sd">  importance : bool</span>
+<span class="sd">    If True is given, return the importance as well as the object.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  object or tuple[float, object]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">importance</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="max_importance"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.max_importance.html#eta.util.buffer.max_importance">[docs]</a><span class="k">def</span> <span class="nf">max_importance</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get the maximum importance value from a buffer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  float</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">heapq</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">0</span></div>
+  
+
+<div class="viewcode-block" id="clear"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.clear.html#eta.util.buffer.clear">[docs]</a><span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Empty a buffer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="iterate"><a class="viewcode-back" href="../../../_autosummary/eta.util.buffer.iterate.html#eta.util.buffer.iterate">[docs]</a><span class="k">def</span> <span class="nf">iterate</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Return a buffer as a list (optionally applying some function to each value).</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  buffer : list[tuple[float, object]]</span>
+<span class="sd">  func : function</span>
+<span class="sd">    A function to apply to each value in the buffer.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[object]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">elems</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">heapq</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">),</span> <span class="n">buffer</span><span class="p">)]</span>
+  <span class="k">if</span> <span class="n">func</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">elems</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">elems</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

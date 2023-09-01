@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.core.eta &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.core.eta</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.core.eta</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The core executable for the Eta Dialogue Manager.</span>
+
+<span class="sd">Running this module will read an agent and user config from eta.config and user_config,</span>
+<span class="sd">respectively, before spawning the core multiprocess loops that handle interpretation, reasoning,</span>
+<span class="sd">planning, and execution.</span>
+
+<span class="sd">Note that the agent config is provided as a Python module that exports a &#39;config&#39; function,</span>
+<span class="sd">returning a dict of config parameters, since transducers and other objects may be created within</span>
+<span class="sd">the config. On the other hand, the user config is supplied in JSON format.</span>
+
+<span class="sd">Dialogue state is maintained entirely through a DialogueState class which is shared between each</span>
+<span class="sd">core process using a ProcessManager, and using mutex locks to prevent data races on the underlying</span>
+<span class="sd">dialogue state attributes.</span>
+
+<span class="sd">Additionally, a set of buffers (i.e., priority queues) are used for the data being processed</span>
+<span class="sd">over the dialogue session, which is necessary for:</span>
+
+<span class="sd">(a) maintaining synchronicity between the processes in the relevant aspects (e.g., completing a</span>
+<span class="sd">series of modifications to the plan before attempting to execute a step).</span>
+
+<span class="sd">(b) ensuring that transducers, which may incur some monetary cost to apply (e.g., in the case of</span>
+<span class="sd">GPT-based transduction), are only applied after a modification to the relevant data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Lock</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.managers</span> <span class="kn">import</span> <span class="n">BaseManager</span>
+
+<span class="kn">from</span> <span class="nn">eta.constants</span> <span class="kn">import</span> <span class="n">IO_PATH</span><span class="p">,</span> <span class="n">DEFAULT_START</span>
+<span class="kn">from</span> <span class="nn">eta.util.general</span> <span class="kn">import</span> <span class="n">gentemp</span><span class="p">,</span> <span class="n">clear_symtab</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="p">,</span> <span class="n">remove_nil</span><span class="p">,</span> <span class="n">append</span><span class="p">,</span> <span class="n">variablep</span><span class="p">,</span> <span class="n">episode_name</span>
+<span class="kn">import</span> <span class="nn">eta.util.file</span> <span class="k">as</span> <span class="nn">file</span>
+<span class="kn">import</span> <span class="nn">eta.util.time</span> <span class="k">as</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">eta.util.buffer</span> <span class="k">as</span> <span class="nn">buffer</span>
+<span class="kn">from</span> <span class="nn">eta.lf</span> <span class="kn">import</span> <span class="p">(</span><span class="n">equal_prop_p</span><span class="p">,</span> <span class="n">not_prop_p</span><span class="p">,</span> <span class="n">and_prop_p</span><span class="p">,</span> <span class="n">or_prop_p</span><span class="p">,</span> <span class="n">characterizes_prop_p</span><span class="p">,</span> <span class="n">expectation_p</span><span class="p">,</span>
+                    <span class="n">from_lisp_dirs</span><span class="p">,</span> <span class="n">list_to_s_expr</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">eta.memory</span> <span class="kn">import</span> <span class="n">MemoryStorage</span>
+<span class="kn">from</span> <span class="nn">eta.schema</span> <span class="kn">import</span> <span class="n">SchemaLibrary</span>
+<span class="kn">from</span> <span class="nn">eta.plan</span> <span class="kn">import</span> <span class="n">init_plan_from_eventualities</span>
+
+<span class="kn">from</span> <span class="nn">eta.core.perception</span> <span class="kn">import</span> <span class="n">perception_loop</span>
+<span class="kn">from</span> <span class="nn">eta.core.reasoning</span> <span class="kn">import</span> <span class="n">reasoning_loop</span>
+<span class="kn">from</span> <span class="nn">eta.core.planning</span> <span class="kn">import</span> <span class="n">planning_loop</span>
+<span class="kn">from</span> <span class="nn">eta.core.execution</span> <span class="kn">import</span> <span class="n">execution_loop</span>
+
+
+<div class="viewcode-block" id="DialogueState"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState">[docs]</a><span class="k">class</span> <span class="nc">DialogueState</span><span class="p">():</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A representation of the current dialogue state.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  Session variables</span>
+<span class="sd">  -----------------</span>
+<span class="sd">  id : str</span>
+<span class="sd">    A unique ID for this session.</span>
+<span class="sd">  config_agent : dict</span>
+<span class="sd">    The config parameters for the agent.</span>
+<span class="sd">  config_user : dict</span>
+<span class="sd">    The config parameters for the user.</span>
+<span class="sd">  start_schema : str</span>
+<span class="sd">    The schema predicate used to begin the dialogue session.</span>
+<span class="sd">  io_path : str</span>
+<span class="sd">    The path used to read and write input/output for this session.</span>
+<span class="sd">  me : str</span>
+<span class="sd">    The name of the agent for this session.</span>
+<span class="sd">  you : str</span>
+<span class="sd">    The name of the user for this session.</span>
+<span class="sd">  output_buffer : list[Utterance]</span>
+<span class="sd">    A buffer of output utterances that are accumulated until the system is ready</span>
+<span class="sd">    to write them and listen for user input.</span>
+<span class="sd">  step_failure_timer : float</span>
+<span class="sd">    A POSIX time record used to track time before failing an expected event.</span>
+<span class="sd">  quit_conversation : bool</span>
+<span class="sd">    Whether to quit the current session.</span>
+
+<span class="sd">  Internal mechanisms</span>
+<span class="sd">  -------------------</span>
+<span class="sd">  transducers : dict[str, Transducer or list[Transducer]]</span>
+<span class="sd">    A dict associating Transducer object(s) with named mapping functions (e.g., &#39;gist&#39;).</span>
+<span class="sd">  embedder : Embedder, optional</span>
+<span class="sd">    An embedder object used to compute object embeddings and perform retrieval.</span>
+
+<span class="sd">  Static knowledge</span>
+<span class="sd">  ----------------</span>
+<span class="sd">  schemas : SchemaLibrary</span>
+<span class="sd">    A library of dialogue, episode, and object schemas that form the agent&#39;s generic knowledge.</span>
+<span class="sd">  concept_aliases : None</span>
+<span class="sd">    TODO</span>
+<span class="sd">  concept_sets : None</span>
+<span class="sd">    TODO</span>
+<span class="sd">  init_knowledge : list[Eventuality]</span>
+<span class="sd">    A list of initial facts in the agent&#39;s semantic memory.</span>
+<span class="sd">  </span>
+<span class="sd">  Dialogue variables</span>
+<span class="sd">  ------------------</span>
+<span class="sd">  schema_instances : dict</span>
+<span class="sd">    A dict containing all schema instances (keyed on their unique IDs).</span>
+<span class="sd">  plan : PlanNode</span>
+<span class="sd">    The &quot;currently due&quot; node in the agent&#39;s plan, initialized from the given &#39;start_schema&#39;.</span>
+<span class="sd">  buffers : dict[str, list]</span>
+<span class="sd">    The named buffers (i.e., priority queues) for each type of processed data.</span>
+<span class="sd">  reference_list : list</span>
+<span class="sd">    TODO</span>
+<span class="sd">  equality_sets : dict</span>
+<span class="sd">    TODO</span>
+<span class="sd">  conversation_log : list[DialogueTurn]</span>
+<span class="sd">    A list of turns in the dialogue history.</span>
+<span class="sd">  memory : MemoryStorage</span>
+<span class="sd">    The episodic memory of the agent, initialized from &#39;init_knowledge&#39;.</span>
+<span class="sd">  timegraph : None</span>
+<span class="sd">    TODO</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_agent</span><span class="p">,</span> <span class="n">config_user</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+
+    <span class="c1"># session variables</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">gentemp</span><span class="p">(</span><span class="s1">&#39;SESSION&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">config_agent</span> <span class="o">=</span> <span class="n">config_agent</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">config_user</span> <span class="o">=</span> <span class="n">config_user</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">start_schema</span> <span class="o">=</span> <span class="n">config_agent</span><span class="p">[</span><span class="s1">&#39;start_schema&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;start_schema&#39;</span> <span class="ow">in</span> <span class="n">config_agent</span> <span class="k">else</span> <span class="n">DEFAULT_START</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">io_path</span> <span class="o">=</span> <span class="n">IO_PATH</span> <span class="o">+</span> <span class="n">config_agent</span><span class="p">[</span><span class="s1">&#39;agent&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">config_user</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">me</span> <span class="o">=</span> <span class="n">config_agent</span><span class="p">[</span><span class="s1">&#39;agent_name&#39;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">you</span> <span class="o">=</span> <span class="n">config_user</span><span class="p">[</span><span class="s1">&#39;user_name&#39;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">output_buffer</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">step_failure_timer</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">quit_conversation</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># internal mechanisms</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transducers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_agent</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;transducers&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">embedder</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="s1">&#39;embedder&#39;</span> <span class="ow">in</span> <span class="n">config_agent</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">embedder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_agent</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;embedder&#39;</span><span class="p">)</span>
+
+    <span class="c1"># static knowledge</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span> <span class="o">=</span> <span class="n">SchemaLibrary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedder</span><span class="p">)</span><span class="o">.</span><span class="n">from_lisp_dirs</span><span class="p">(</span><span class="n">config_agent</span><span class="p">[</span><span class="s1">&#39;schema_dirs&#39;</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">concept_aliases</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># TODO</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">concept_sets</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># TODO</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">init_knowledge</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s1">&#39;knowledge_dirs&#39;</span> <span class="ow">in</span> <span class="n">config_agent</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">init_knowledge</span> <span class="o">=</span> <span class="n">from_lisp_dirs</span><span class="p">(</span><span class="n">config_agent</span><span class="p">[</span><span class="s1">&#39;knowledge_dirs&#39;</span><span class="p">])</span>
+
+    <span class="c1"># dialogue variables</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_schema</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">dial</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Start schema for session not found.&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">schema_instances</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_plan_from_schema</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_schema</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">buffers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_buffers</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reference_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">equality_sets</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">conversation_log</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">MemoryStorage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedder</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_knowledge</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">timegraph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_timegraph</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_create_session_io_files</span><span class="p">()</span>
+  
+  <span class="c1"># -----------------</span>
+  <span class="c1"># session functions</span>
+  <span class="c1"># -----------------</span>
+
+<div class="viewcode-block" id="DialogueState.get_io_path"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_io_path">[docs]</a>  <span class="k">def</span> <span class="nf">get_io_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the path for an IO file (if given) or the IO directory for this session.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_path</span> <span class="o">+</span> <span class="n">fname</span></div>
+  
+<div class="viewcode-block" id="DialogueState.get_perception_servers"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_perception_servers">[docs]</a>  <span class="k">def</span> <span class="nf">get_perception_servers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the registered perception servers for this session.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_agent</span><span class="p">[</span><span class="s1">&#39;perception_servers&#39;</span><span class="p">]</span></div>
+  
+<div class="viewcode-block" id="DialogueState.get_specialist_servers"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_specialist_servers">[docs]</a>  <span class="k">def</span> <span class="nf">get_specialist_servers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the registered specialist servers for this session.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_agent</span><span class="p">[</span><span class="s1">&#39;specialist_servers&#39;</span><span class="p">]</span></div>
+  
+<div class="viewcode-block" id="DialogueState.get_user_id"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_user_id">[docs]</a>  <span class="k">def</span> <span class="nf">get_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the user ID for this session.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_user</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DialogueState.get_step_failure_timer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_step_failure_timer">[docs]</a>  <span class="k">def</span> <span class="nf">get_step_failure_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current value of the step failure timer.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_failure_timer</span></div>
+
+<div class="viewcode-block" id="DialogueState.reset_step_failure_timer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.reset_step_failure_timer">[docs]</a>  <span class="k">def</span> <span class="nf">reset_step_failure_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the step failure timer to the current time.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">step_failure_timer</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DialogueState.get_quit_conversation"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_quit_conversation">[docs]</a>  <span class="k">def</span> <span class="nf">get_quit_conversation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether to quit the conversation.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_conversation</span></div>
+
+<div class="viewcode-block" id="DialogueState.set_quit_conversation"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.set_quit_conversation">[docs]</a>  <span class="k">def</span> <span class="nf">set_quit_conversation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set whether to quit the conversation.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">quit_conversation</span> <span class="o">=</span> <span class="n">quit</span></div>
+
+  <span class="c1"># ----------------</span>
+  <span class="c1"># schema functions</span>
+  <span class="c1"># ----------------</span>
+
+<div class="viewcode-block" id="DialogueState.is_schema"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.is_schema">[docs]</a>  <span class="k">def</span> <span class="nf">is_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether a given predicate exists in the agent&#39;s schema library.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">is_schema</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">)</span></div>
+
+  <span class="c1"># --------------</span>
+  <span class="c1"># plan functions</span>
+  <span class="c1"># --------------</span>
+
+<div class="viewcode-block" id="DialogueState.has_plan"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.has_plan">[docs]</a>  <span class="k">def</span> <span class="nf">has_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether the agent currently has a plan.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="DialogueState.get_plan"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_plan">[docs]</a>  <span class="k">def</span> <span class="nf">get_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the agent&#39;s plan.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span></div>
+    
+<div class="viewcode-block" id="DialogueState.set_plan"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.set_plan">[docs]</a>  <span class="k">def</span> <span class="nf">set_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plan</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the agent&#39;s plan to a new plan node.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">return</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="n">plan</span></div>
+    
+<div class="viewcode-block" id="DialogueState.do_continue"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.do_continue">[docs]</a>  <span class="k">def</span> <span class="nf">do_continue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether to continue with the current dialogue.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_plan</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_quit_conversation</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="DialogueState.init_plan_from_schema"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.init_plan_from_schema">[docs]</a>  <span class="k">def</span> <span class="nf">init_plan_from_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a plan from a given schema predicate along with a list of arguments.</span>
+<span class="sd">    </span>
+<span class="sd">    This instantiates the generic schema as a schema instance, binding variables occurring in</span>
+<span class="sd">    the header to the supplied arguments, if any. It then instantiates a plan structure from</span>
+<span class="sd">    the episodes list of that schema.</span>
+
+<span class="sd">    TODO: the plan structure created when instantiating a schema is currently</span>
+<span class="sd">    &quot;flat&quot; - in the future, we might want to add support for annotating abstraction</span>
+<span class="sd">    hierarchies in the schema, in which case these would be added as supersteps to</span>
+<span class="sd">    the steps of the plan-nodes that are created.</span>
+
+<span class="sd">    TODO: by default, we assume that the episodes of the schema define sequential steps.</span>
+<span class="sd">    However, the episode-relations in the schema should be used to impose a different</span>
+<span class="sd">    ordering on the resulting plan.</span>
+
+<span class="sd">    TODO: immediately following schema instantiation, we should also attempt to (a) bind</span>
+<span class="sd">    variables in the schema occurring within the :types section to possible values in the</span>
+<span class="sd">    dialogue context, as well as inferring the facts from the other schema sections, i.e.,</span>
+<span class="sd">    adding them to the context.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">predicate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">dial</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Attempting to instantiate a dialogue schema, </span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s1">, that does not exist.&#39;</span><span class="p">)</span>
+      <span class="n">schema</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">dial</span><span class="p">[</span><span class="n">predicate</span><span class="p">]</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">schema</span><span class="o">.</span><span class="n">get_section</span><span class="p">(</span><span class="s1">&#39;episodes&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Attempting to initialize a plan from a schema, </span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s1">, that has no episodes.&#39;</span><span class="p">)</span>
+
+      <span class="n">schema_instance</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">schema_instances</span><span class="p">[</span><span class="n">schema_instance</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema_instance</span>
+      
+      <span class="k">return</span> <span class="n">init_plan_from_eventualities</span><span class="p">(</span><span class="n">schema_instance</span><span class="o">.</span><span class="n">get_section</span><span class="p">(</span><span class="s1">&#39;episodes&#39;</span><span class="p">),</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema_instance</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DialogueState.advance_plan"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.advance_plan">[docs]</a>  <span class="k">def</span> <span class="nf">advance_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance the plan to the next step (or signal to quit the conversation if none exists).&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="o">.</span><span class="n">next</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quit_conversation</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DialogueState.instantiate_curr_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.instantiate_curr_step">[docs]</a>  <span class="k">def</span> <span class="nf">instantiate_curr_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiate the current plan step.</span>
+
+<span class="sd">    This binds the episode variable for the current plan step with a newly created episode</span>
+<span class="sd">    constant throughout the dialogue state. The event is also added to context, unless it is</span>
+<span class="sd">    an expectation step, in which case it would have already been matched to an event in context.</span>
+
+<span class="sd">    This process recurs for any superstep such that the current step &quot;completes&quot; that superstep.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">instantiate_step_recur</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+      <span class="n">event</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">event</span>
+      <span class="n">ep_var</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">variablep</span><span class="p">(</span><span class="n">ep_var</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">substeps</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">substeps</span>
+
+      <span class="c1"># Only instantiate if no substeps, or all substeps have already been instantiated</span>
+      <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="ow">not</span> <span class="n">variablep</span><span class="p">(</span><span class="n">substep</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_ep</span><span class="p">())</span> <span class="k">for</span> <span class="n">substep</span> <span class="ow">in</span> <span class="n">substeps</span><span class="p">]):</span>
+
+        <span class="c1"># If single substep, share same episode name</span>
+        <span class="k">if</span> <span class="n">substeps</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">substeps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+          <span class="n">ep</span> <span class="o">=</span> <span class="n">substeps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span>
+          <span class="n">ep</span> <span class="o">=</span> <span class="n">episode_name</span><span class="p">()</span> <span class="k">if</span> <span class="n">variablep</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span> <span class="k">else</span> <span class="n">ep</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">ep</span> <span class="o">=</span> <span class="n">episode_name</span><span class="p">()</span>
+
+        <span class="n">event</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">ep_var</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">ep_var</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">substeps</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">expectation_p</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">add_to_context</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+      <span class="c1"># Recur for supersteps</span>
+      <span class="k">return</span> <span class="p">[</span><span class="n">instantiate_step_recur</span><span class="p">(</span><span class="n">superstep</span><span class="p">)</span> <span class="k">for</span> <span class="n">superstep</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+
+    <span class="n">instantiate_step_recur</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="o">.</span><span class="n">step</span></div>
+    
+  <span class="c1"># ----------------</span>
+  <span class="c1"># buffer functions</span>
+  <span class="c1"># ----------------</span>
+
+<div class="viewcode-block" id="DialogueState.add_to_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.add_to_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">add_to_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an element to the buffer of the given type.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">return</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="n">buffer</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DialogueState.add_to_buffer_if_empty"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.add_to_buffer_if_empty">[docs]</a>  <span class="k">def</span> <span class="nf">add_to_buffer_if_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an element to the buffer of the given type iff that buffer is currently empty.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">return</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">buffer</span><span class="o">.</span><span class="n">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">]):</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DialogueState.add_all_to_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.add_all_to_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">add_all_to_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add all elements in a list to the buffer of the given type.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="n">buffer</span><span class="o">.</span><span class="n">enqueue_ordered</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DialogueState.replace_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.replace_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">replace_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace the buffer of the given type with a single element.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">return</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="n">buffer</span><span class="o">.</span><span class="n">pop_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span>
+      <span class="n">buffer</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DialogueState.replace_all_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.replace_all_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">replace_all_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace the buffer of the given type with a list of elements.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="n">buffer</span><span class="o">.</span><span class="n">pop_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span>
+      <span class="n">buffer</span><span class="o">.</span><span class="n">enqueue_ordered</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DialogueState.get_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">get_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the buffer of the given type.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">iterate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="DialogueState.buffer_empty"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.buffer_empty">[docs]</a>  <span class="k">def</span> <span class="nf">buffer_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether the buffer of the given type is empty.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="DialogueState.pop_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.pop_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">pop_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pop an element from the buffer of the given type.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">pop_item</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="DialogueState.pop_all_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.pop_all_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">pop_all_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pop all elements from the buffer of the given type.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">pop_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffers</span><span class="p">[</span><span class="nb">type</span><span class="p">])</span></div>
+
+  <span class="c1"># ------------------------</span>
+  <span class="c1"># reference list functions</span>
+  <span class="c1"># ------------------------</span>
+
+  <span class="c1"># TODO </span>
+
+  <span class="c1"># ----------------------</span>
+  <span class="c1"># equality set functions</span>
+  <span class="c1"># ----------------------</span>
+
+  <span class="c1"># TODO </span>
+
+  <span class="c1"># --------------------------</span>
+  <span class="c1"># conversation log functions</span>
+  <span class="c1"># --------------------------</span>
+
+<div class="viewcode-block" id="DialogueState.get_conversation_log"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_conversation_log">[docs]</a>  <span class="k">def</span> <span class="nf">get_conversation_log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current conversation history.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation_log</span></div>
+    
+<div class="viewcode-block" id="DialogueState.log_turn"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.log_turn">[docs]</a>  <span class="k">def</span> <span class="nf">log_turn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log and write a given DialogueTurn in the conversation log.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">conversation_log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_write_turn</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span></div>
+
+  <span class="c1"># ----------------</span>
+  <span class="c1"># memory functions</span>
+  <span class="c1"># ----------------</span>
+
+<div class="viewcode-block" id="DialogueState.add_to_memory"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.add_to_memory">[docs]</a>  <span class="k">def</span> <span class="nf">add_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a fact to the memory.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueState.add_to_context"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.add_to_context">[docs]</a>  <span class="k">def</span> <span class="nf">add_to_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a fact to the context.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueState.access_from_context"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.access_from_context">[docs]</a>  <span class="k">def</span> <span class="nf">access_from_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred_patt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Access facts from context matching a given predicate pattern.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">get_from_context</span><span class="p">(</span><span class="n">pred_patt</span><span class="p">,</span> <span class="n">access</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DialogueState.flush_context"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.flush_context">[docs]</a>  <span class="k">def</span> <span class="nf">flush_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Flush the dialogue context of &quot;instantaneous&quot; events.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">flush_context</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DialogueState.get_memory"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.get_memory">[docs]</a>  <span class="k">def</span> <span class="nf">get_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the memory storage object.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span></div>
+    
+<div class="viewcode-block" id="DialogueState.eval_truth_value"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.eval_truth_value">[docs]</a>  <span class="k">def</span> <span class="nf">eval_truth_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wff</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate the truth value of a wff in memory/context.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">def</span> <span class="nf">eval_truth_value_recur</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+        <span class="c1"># (wff1 = wff2)</span>
+        <span class="k">if</span> <span class="n">equal_prop_p</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+          <span class="k">return</span> <span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c1"># (not wff1)</span>
+        <span class="k">elif</span> <span class="n">not_prop_p</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+          <span class="n">blarf</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">eval_truth_value_recur</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+          <span class="k">return</span> <span class="n">blarf</span>
+        <span class="c1"># (wff1 and wff2)</span>
+        <span class="k">elif</span> <span class="n">and_prop_p</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+          <span class="k">return</span> <span class="n">eval_truth_value_recur</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="n">eval_truth_value_recur</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="c1"># (wff1 or wff2)</span>
+        <span class="k">elif</span> <span class="n">or_prop_p</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+          <span class="k">return</span> <span class="n">eval_truth_value_recur</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span> <span class="n">eval_truth_value_recur</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="c1"># (wff1 ** e)</span>
+        <span class="k">elif</span> <span class="n">characterizes_prop_p</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">does_characterize_episode</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="c1"># Otherwise, check to see if wff is true in context</span>
+        <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">get_from_context</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
+      <span class="k">return</span> <span class="n">eval_truth_value_recur</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span></div>
+
+  <span class="c1"># -------------------</span>
+  <span class="c1"># timegraph functions</span>
+  <span class="c1"># -------------------</span>
+
+  <span class="c1"># TODO</span>
+
+  <span class="c1"># --------------------</span>
+  <span class="c1"># transducer functions</span>
+  <span class="c1"># --------------------</span>
+    
+<div class="viewcode-block" id="DialogueState.apply_transducer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.apply_transducer">[docs]</a>  <span class="k">def</span> <span class="nf">apply_transducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the transducer(s) of the given type to a list of arguments.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">if</span> <span class="nb">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transducers</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transducers</span><span class="p">[</span><span class="nb">type</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">remove_nil</span><span class="p">(</span><span class="n">remove_duplicates</span><span class="p">(</span><span class="n">append</span><span class="p">([</span><span class="n">t</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transducers</span><span class="p">[</span><span class="nb">type</span><span class="p">]]),</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transducers</span><span class="p">[</span><span class="nb">type</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+    
+  <span class="c1"># ---------------</span>
+  <span class="c1"># other functions</span>
+  <span class="c1"># ---------------</span>
+
+<div class="viewcode-block" id="DialogueState.bind"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.bind">[docs]</a>  <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bind the given variable symbol to the given value throughout the dialogue state.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DialogueState.unbind"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.unbind">[docs]</a>  <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unbind the given variable symbol throughout the dialogue state.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DialogueState.cost"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.cost">[docs]</a>  <span class="k">def</span> <span class="nf">cost</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the accumulated (monetary) cost of each transducer for this session.&quot;&quot;&quot;</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transducers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+          <span class="n">cost</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">t1</span><span class="o">.</span><span class="n">cost</span><span class="p">()</span> <span class="k">for</span> <span class="n">t1</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">cost</span> <span class="o">+=</span> <span class="n">t</span><span class="o">.</span><span class="n">cost</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">cost</span></div>
+  
+<div class="viewcode-block" id="DialogueState.write_output_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.write_output_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">write_output_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write the output buffer (a list of Utterances) to output files.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_buffer</span><span class="p">:</span>
+        <span class="k">return</span>
+      <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">utt</span><span class="o">.</span><span class="n">words</span> <span class="k">for</span> <span class="n">utt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_buffer</span><span class="p">])</span>
+      <span class="n">affects</span> <span class="o">=</span> <span class="p">[</span><span class="n">utt</span><span class="o">.</span><span class="n">affect</span> <span class="k">for</span> <span class="n">utt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_buffer</span> <span class="k">if</span> <span class="n">utt</span><span class="o">.</span><span class="n">affect</span> <span class="o">!=</span> <span class="s1">&#39;neutral&#39;</span><span class="p">]</span>
+      <span class="n">affect</span> <span class="o">=</span> <span class="n">affects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">affects</span> <span class="k">else</span> <span class="s1">&#39;neutral&#39;</span>
+      <span class="n">file</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;turn-output.txt&#39;</span><span class="p">),</span> <span class="n">output</span><span class="p">)</span>
+      <span class="n">file</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;turn-affect.txt&#39;</span><span class="p">),</span> <span class="n">affect</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">output_buffer</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="DialogueState.push_output_buffer"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.push_output_buffer">[docs]</a>  <span class="k">def</span> <span class="nf">push_output_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Push an utterance onto the output buffer.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">output_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utt</span><span class="p">)</span></div>
+  
+<div class="viewcode-block" id="DialogueState.print_schema_instances"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.DialogueState.html#eta.core.eta.DialogueState.print_schema_instances">[docs]</a>  <span class="k">def</span> <span class="nf">print_schema_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_bind</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print all current schema instances.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema_instances</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="nb">print</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">no_bind</span><span class="p">))</span></div>
+
+  <span class="c1"># ----------------</span>
+  <span class="c1"># helper functions</span>
+  <span class="c1"># ----------------</span>
+
+  <span class="k">def</span> <span class="nf">_make_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="s1">&#39;observations&#39;</span> <span class="p">:</span> <span class="p">[],</span>
+      <span class="s1">&#39;inferences&#39;</span> <span class="p">:</span> <span class="p">[],</span>
+      <span class="s1">&#39;actions&#39;</span> <span class="p">:</span> <span class="p">[],</span>
+      <span class="s1">&#39;plans&#39;</span> <span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+  
+  <span class="k">def</span> <span class="nf">_make_timegraph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  
+  <span class="k">def</span> <span class="nf">_create_session_io_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_dir_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">())</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_dir_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;in/&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_dir_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;out/&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_dir_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_perception_servers</span><span class="p">()</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">get_specialist_servers</span><span class="p">():</span>
+      <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;in/</span><span class="si">{</span><span class="n">system</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">))</span>
+      <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;out/</span><span class="si">{</span><span class="n">system</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/text.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/affect.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/gist.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/semantic.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/pragmatic.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/obligations.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;turn-output.txt&#39;</span><span class="p">))</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">ensure_file_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;turn-affect.txt&#39;</span><span class="p">))</span>
+
+  <span class="k">def</span> <span class="nf">_write_turn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">turn</span><span class="o">.</span><span class="n">utterance</span><span class="o">.</span><span class="n">words</span>
+    <span class="n">affect</span> <span class="o">=</span> <span class="n">turn</span><span class="o">.</span><span class="n">utterance</span><span class="o">.</span><span class="n">affect</span>
+    <span class="n">gist</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">list_to_s_expr</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">turn</span><span class="o">.</span><span class="n">gists</span><span class="p">])</span> <span class="k">if</span> <span class="n">turn</span><span class="o">.</span><span class="n">gists</span> <span class="k">else</span> <span class="s1">&#39;NIL&#39;</span>
+    <span class="n">semantics</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">list_to_s_expr</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">turn</span><span class="o">.</span><span class="n">semantics</span><span class="p">])</span> <span class="k">if</span> <span class="n">turn</span><span class="o">.</span><span class="n">semantics</span> <span class="k">else</span> <span class="s1">&#39;NIL&#39;</span>
+    <span class="n">pragmatics</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">list_to_s_expr</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">turn</span><span class="o">.</span><span class="n">pragmatics</span><span class="p">])</span> <span class="k">if</span> <span class="n">turn</span><span class="o">.</span><span class="n">pragmatics</span> <span class="k">else</span> <span class="s1">&#39;NIL&#39;</span>
+    <span class="n">obligations</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">list_to_s_expr</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">turn</span><span class="o">.</span><span class="n">obligations</span><span class="p">])</span> <span class="k">if</span> <span class="n">turn</span><span class="o">.</span><span class="n">obligations</span> <span class="k">else</span> <span class="s1">&#39;NIL&#39;</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/text.txt&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">turn</span><span class="o">.</span><span class="n">agent</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/affect.txt&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">turn</span><span class="o">.</span><span class="n">agent</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">affect</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/gist.txt&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">turn</span><span class="o">.</span><span class="n">agent</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">gist</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/semantic.txt&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">turn</span><span class="o">.</span><span class="n">agent</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">semantics</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/pragmatic.txt&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pragmatics</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="s1">&#39;conversation-log/obligations.txt&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obligations</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="ProcessManager"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.ProcessManager.html#eta.core.eta.ProcessManager">[docs]</a><span class="k">class</span> <span class="nc">ProcessManager</span><span class="p">(</span><span class="n">BaseManager</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Manager to handle multiprocessing.&quot;&quot;&quot;</span>
+  <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="eta"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.eta.html#eta.core.eta.eta">[docs]</a><span class="k">def</span> <span class="nf">eta</span><span class="p">(</span><span class="n">config_agent</span><span class="p">,</span> <span class="n">config_user</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Initialize the dialogue state for a new session and spawn each core process.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  config_agent : dict</span>
+<span class="sd">    A dict of config parameters for the agent.</span>
+<span class="sd">  config_user : dict</span>
+<span class="sd">    A dict of config parameters for the user.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">ProcessManager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;DialogueState&#39;</span><span class="p">,</span> <span class="n">DialogueState</span><span class="p">)</span>
+
+  <span class="k">with</span> <span class="n">ProcessManager</span><span class="p">()</span> <span class="k">as</span> <span class="n">manager</span><span class="p">:</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">DialogueState</span><span class="p">(</span><span class="n">config_agent</span><span class="p">,</span> <span class="n">config_user</span><span class="p">)</span>
+
+    <span class="n">perception</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">perception_loop</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ds</span><span class="p">,))</span>
+    <span class="n">reasoning</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">reasoning_loop</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ds</span><span class="p">,))</span>
+    <span class="n">planning</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">planning_loop</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ds</span><span class="p">,))</span>
+    <span class="n">execution</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">execution_loop</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ds</span><span class="p">,))</span>
+
+    <span class="n">perception</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">reasoning</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">planning</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">execution</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">perception</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">reasoning</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">planning</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">execution</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="c1"># Write any remaining output</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">write_output_buffer</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_memory</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_plan</span><span class="p">())</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;total cost of session: $</span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">cost</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../_autosummary/eta.core.eta.main.html#eta.core.eta.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">agent_config_name</span><span class="p">,</span> <span class="n">user_config_name</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Clear the symbol table, read the agent and user configs, and start Eta.&quot;&quot;&quot;</span>
+  <span class="n">clear_symtab</span><span class="p">()</span>
+  <span class="n">agent_config</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;eta.config.</span><span class="si">{</span><span class="n">agent_config_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">config</span><span class="p">()</span>
+  <span class="n">user_config</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;user_config/</span><span class="si">{</span><span class="n">user_config_name</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">)</span>
+  <span class="n">eta</span><span class="p">(</span><span class="n">agent_config</span><span class="p">,</span> <span class="n">user_config</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+                    <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;eta&#39;</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Starts the Eta dialogue manager&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--agent&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sophie_offline&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The name of an agent config in eta.config&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--user&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The name of a user config in ./user_config/&#39;</span><span class="p">)</span>
+  <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+  <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

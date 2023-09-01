@@ -1,17 +1,4 @@
-"""Time Utilities
-
-Contains classes and functions for representing time.
-
-Exported classes
-----------------
-TimePoint : represents a specific point in time.
-
-Exported functions
-------------------
-now : return a POSIX timestamp corresponding to the time of the function call.
-certainty_to_period : map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.
-has_elapsed_certainty_period : check whether a given time delta has elapsed the period corresponding to a given certainty.
-"""
+"""Utilities for recording and modifying times."""
 
 import math
 import numpy as np

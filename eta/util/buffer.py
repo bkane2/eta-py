@@ -1,21 +1,7 @@
-"""Buffer Utilities
-
-Contains interface functions for manipulating priority queues, termed "buffers" in Eta's architecture.
+"""Utilities for manipulating priority queues, termed "buffers" in Eta's architecture.
 
 NOTE: although importance values are positive, the values stored in the underlying priority queues are
 negated, since heapq implements a min heap.
-
-Exported functions
-------------------
-enqueue : enqueue an item (either an object or an (importance, object) tuple) in a buffer.
-enqueue_ordered : enqueue a list of items in a buffer, ensuring that order is preserved unless specified otherwise.
-is_empty : check if a buffer is empty.
-pop_item : pop the top item from a buffer.
-pop_all : pop all items from a buffer.
-get_item : retrieve the top item from a buffer without popping it.
-max_importance : return the maximum importance value in a buffer.
-clear : empty a buffer.
-iterate : return a buffer as a list (optionally applying some function to each value).
 """
 
 import heapq

@@ -1,36 +1,4 @@
-"""Logical Forms
-
-Contains classes for representing and manipulating logical forms.
-
-Exported classes
-----------------
-Domain : defines a domain of individuals.
-Individual : defines an individual, with some canonical name and a list of aliases.
-Var : defines a variable, with some variable symbol and some value assignment.
-LF : defines an abstract logical form.
-ULF : defines a ULF formula.
-ELF : defines an ELF formula.
-Eventuality : defines an "eventuality", which represents an event or fact at several levels (natural language, ULF, and ELF).
-Condition : defines a special type of Eventuality that represents a conditional event.
-Repetition : defines a special type of Eventuality that represents a repeating event.
-
-Exported functions
-------------------
-parse_eventuality : parse an S-expression into an eventuality.
-parse_eventuality_list : parse a list of alternating episode symbols and formulas into a list of eventualities.
-from_lisp_file : read a list of eventualities from a LISP file.
-from_lisp_dirs : recursively read all LISP files in a given dir or list of dirs, returning a list of eventualities.
-expectation_p : check whether eventuality e is an expectation or intention.
-extract_set : extract a list of items from a wff of form [set-of, 'a', 'b', ...], or of form ['a', and, 'b', and, ...].
-make_set : create a set wff from a list of items.
-is_set : check whether a given S-expression is a set wff.
-set_union : forms a union set wff from two set wffs.
-equal_prop_p : check whether a given wff is an equality predicate.
-not_prop_p : check whether a given wff is a negative predicate.
-and_prop_p : check whether a given wff is a conjunction predicate.
-or_prop_p : check whether a given wff is a disjunction predicate.
-characterizes_prop_p : check whether a given wff is a characterization predicate.
-"""
+"""Classes for representing and modifying logical forms and eventualities."""
 
 import glob
 

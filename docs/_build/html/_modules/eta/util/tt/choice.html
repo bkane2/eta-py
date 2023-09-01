@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.tt.choice &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.util.tt.choice</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.util.tt.choice</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Methods for choosing a result from a choice tree.</span>
+
+<span class="sd">Contains functions for choosing a result using choice trees; primarily a reimplementation of the</span>
+<span class="sd">original &#39;choose-result-for&#39; LISP function defined here: https://github.com/bkane2/eta/blob/master/core/eta.lisp</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">eta.util.general</span> <span class="kn">import</span> <span class="n">listp</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">subst</span><span class="p">,</span> <span class="n">random_element</span>
+<span class="kn">from</span> <span class="nn">eta.util.tt.match</span> <span class="kn">import</span> <span class="n">match</span><span class="p">,</span> <span class="n">fill_template</span>
+
+<div class="viewcode-block" id="is_tree_root"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.choice.is_tree_root.html#eta.util.tt.choice.is_tree_root">[docs]</a><span class="k">def</span> <span class="nf">is_tree_root</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span></div>
+
+<div class="viewcode-block" id="is_tree_root_clause"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.choice.is_tree_root_clause.html#eta.util.tt.choice.is_tree_root_clause">[docs]</a><span class="k">def</span> <span class="nf">is_tree_root_clause</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">listp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_tree_root</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="is_tree_root_list"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.choice.is_tree_root_list.html#eta.util.tt.choice.is_tree_root_list">[docs]</a><span class="k">def</span> <span class="nf">is_tree_root_list</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">listp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="n">is_tree_root</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="choose_result_for"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.choice.choose_result_for.html#eta.util.tt.choice.choose_result_for">[docs]</a><span class="k">def</span> <span class="nf">choose_result_for</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Choose a result for a given clause, starting from a given choice tree root.</span>
+
+<span class="sd">  A choice tree consists of a tree of pattern nodes, with the leaves containing templates and associated</span>
+<span class="sd">  directives specifying how to handle the templates (see eta.util.tt.parse for the specific format of a choice tree).</span>
+
+<span class="sd">  Pattern nodes:</span>
+<span class="sd">    A pattern node contains either a pattern (see eta.util.tt.match), or one of the following special keywords:</span>
+<span class="sd">      [:or, &lt;pattern1&gt;, &lt;pattern2&gt;, ...]</span>
+<span class="sd">        Match this node if any of the specified patterns match.</span>
+<span class="sd">      [:subtree, &lt;subtree-name&gt;]</span>
+<span class="sd">        Match this node if the subtree rooted at &#39;subtree-name&#39; yields a non-null result.</span>
+
+<span class="sd">    The choice algorithm attempts to match each pattern node with the given clause. If successful, we recursively</span>
+<span class="sd">    seek a result from the children of the pattern node. In the case of failure, we recursively seek a result from</span>
+<span class="sd">    the next sibling of the pattern node.</span>
+
+<span class="sd">  Template nodes:</span>
+<span class="sd">    Each template node contains a template, latency, and directive.</span>
+
+<span class="sd">    The latency is used to determine how long to wait until using that template again. If the number of attempted</span>
+<span class="sd">    matches to a template node since the last successful match is lower than the latency, the node is skipped and</span>
+<span class="sd">    we attempt to recur on the next sibling. A latency of &#39;0&#39; means that a node will always be used.</span>
+
+<span class="sd">    The directive specifies how the template is to be used. The directive may be either an &quot;internal&quot; directive,</span>
+<span class="sd">    continuing the choice process by e.g. recurring on some subtree specified by the template, or an &quot;external&quot;</span>
+<span class="sd">    directive, indicating that the template is a final result of a particular type.</span>
+
+<span class="sd">    The following internal directives are currently supported:</span>
+<span class="sd">      :subtree</span>
+<span class="sd">        Given a template of form &lt;subtree-name&gt;, return the result from recurring on that subtree.</span>
+<span class="sd">      :subtree+clause</span>
+<span class="sd">        Given a template of form [&lt;subtree-name&gt;, &lt;clause&gt;], return the result from recurring</span>
+<span class="sd">        on that subtree using the given clause as an input.</span>
+<span class="sd">      :subtree-permute</span>
+<span class="sd">        Given a template of form [&lt;subtree-name&gt;, [&lt;clause1&gt;, ..., &lt;clausek&gt;]], recur on the</span>
+<span class="sd">        subtree with each given clause, and combine the results into a single [:and, ...] result.</span>
+<span class="sd">      :subtrees</span>
+<span class="sd">        Given a template of form [&lt;expr&gt;, &lt;clause&gt;], recur on each subtree specified by &lt;expr&gt; using</span>
+<span class="sd">        the given clause, and combine the results into a single [:and, ...] result. Here, &lt;expr&gt; may be:</span>
+<span class="sd">          [&lt;tree&gt;, &lt;clause1&gt;], in which case the given tree is first used to select the subtrees to search.</span>
+<span class="sd">          [&lt;subtree1&gt;, &lt;subtree2&gt;, ...], in which case the given subtrees are searched directly.</span>
+<span class="sd">      :subtrees-permute</span>
+<span class="sd">        Given a template of form [&lt;expr&gt;, [&lt;clause1&gt;, ..., &lt;clausek&gt;]] (with each arg being</span>
+<span class="sd">        the same as above), permute each subtree with each clause and combine the results.</span>
+<span class="sd">      :ulf-recur</span>
+<span class="sd">        Given a template of form [&lt;parts&gt;, &lt;reassembly-pattern&gt;], compute a result for each part in</span>
+<span class="sd">        &#39;parts&#39;, and then combine them according to &#39;reassembly-pattern&#39;.</span>
+<span class="sd">        Here, &lt;parts&gt; is a list where each element may be:</span>
+<span class="sd">          A subtree followed by a clause, in which case the subtree will be called recursively to obtain a result.</span>
+<span class="sd">          Some other template expression.</span>
+<span class="sd">        And &lt;reassembly-pattern&gt; is an S-expression containing only integers, where each integer indices the</span>
+<span class="sd">        corresponding part in &#39;parts&#39;.</span>
+
+<span class="sd">    An external directive may be anything, but the following ones will be common:</span>
+<span class="sd">      :out</span>
+<span class="sd">        Specifies that a result is to be used as a system output (i.e., essentially shorthand for</span>
+<span class="sd">        using the full ULF (^me say-to.v ^you &lt;result&gt;) as a template).</span>
+<span class="sd">      :gist</span>
+<span class="sd">        Specifies that a result is to be used as a gist clause (i.e., essentially shorthand for</span>
+<span class="sd">        using the full ULF (^you paraphrase-to.v ^me &lt;result&gt;) as a template).</span>
+<span class="sd">      :nl</span>
+<span class="sd">        Specifies that the result is a natural language string.</span>
+<span class="sd">      :ulf</span>
+<span class="sd">        Specifies that the result is a ULF formula.</span>
+<span class="sd">      :schema</span>
+<span class="sd">        Specifies that the result is a schema name, to be instantiated with no arguments.</span>
+<span class="sd">      :schemas</span>
+<span class="sd">        Specifies that the result is a list of schemas.</span>
+<span class="sd">      :schema+args</span>
+<span class="sd">        Specifies that the result is a schema to be instantiated with a list of arguments.</span>
+<span class="sd">      :raw</span>
+<span class="sd">        Specifies that the result is simply a raw output with no additional semantics.</span>
+<span class="sd">      </span>
+<span class="sd">    A template can also use the following keywords:</span>
+<span class="sd">      [:or, &lt;template1&gt;, &lt;template2&gt;, ...]</span>
+<span class="sd">        Randomly select one of the provided templates.</span>
+<span class="sd">      [:and, &lt;template1&gt;, &lt;template2&gt;, ...]</span>
+<span class="sd">        Combine each of the provided templates into a single [:and, ...] result.</span>
+<span class="sd">    </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  clause : s-expr</span>
+<span class="sd">    An S-expression to be matched by the patterns in a choice tree and therefore used to choose a result.</span>
+<span class="sd">  root : str</span>
+<span class="sd">    The name of a choice tree (e.g., &quot;*gist*&quot;) corresponding to the root node of that tree in &#39;trees&#39;.</span>
+<span class="sd">  trees : dict</span>
+<span class="sd">    A dict containing all choice trees, keyed on their root names.</span>
+<span class="sd">  feats : dict</span>
+<span class="sd">    A dict mapping words to feature lists.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  s-expr</span>
+<span class="sd">    Either:</span>
+<span class="sd">      [] if no result is found.</span>
+<span class="sd">      [:&lt;directive&gt;, &lt;result&gt;] if a single result is found.</span>
+<span class="sd">      [:and, &lt;result1&gt;, ..., &lt;resultk&gt;] if multiple results are found.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">rule_node</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rule_node</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">[]</span>
+    
+    <span class="c1"># Get directive and pattern from rule node</span>
+    <span class="n">directive</span> <span class="o">=</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;directive&#39;</span><span class="p">]</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+    <span class="n">latency</span> <span class="o">=</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;latency&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Skip rule if it has a non-zero latency and the countdown for that rule hasn&#39;t yet reached zero</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="ow">and</span> <span class="nb">min</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">latency</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="k">return</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">],</span> <span class="n">visited</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+    
+    <span class="c1"># No directive, i.e., pattern node</span>
+    <span class="c1"># ````````````````````````````````````</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">directive</span><span class="p">:</span>
+      <span class="n">newparts</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="c1"># If pattern is disjunctive, try to match any option within the disjunction</span>
+      <span class="k">if</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:or&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pattern_option</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+          <span class="n">newparts_option</span> <span class="o">=</span> <span class="n">match</span><span class="p">(</span><span class="n">pattern_option</span><span class="p">,</span> <span class="n">clause</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="n">newparts</span> <span class="ow">and</span> <span class="n">newparts_option</span><span class="p">:</span>
+            <span class="n">newparts</span> <span class="o">=</span> <span class="n">newparts_option</span>
+      <span class="c1"># If pattern is a subtree to match, try to match that subtree</span>
+      <span class="k">elif</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:subtree&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">atom</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+          <span class="n">subtree</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+          <span class="n">newparts_option</span> <span class="o">=</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">trees</span><span class="p">[</span><span class="n">subtree</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">newparts_option</span><span class="p">:</span>
+            <span class="n">newparts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;:seq&#39;</span><span class="p">]</span>
+      <span class="c1"># Otherwise, try to match pattern</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">newparts</span> <span class="o">=</span> <span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">clause</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+
+      <span class="c1"># Pattern does not match &#39;clause&#39;, search siblings recursively</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">newparts</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">],</span> <span class="n">visited</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+      
+      <span class="c1"># Pattern matched, try to obtain recursive result from children</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">newparts</span><span class="p">,</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;child&#39;</span><span class="p">],</span> <span class="n">visited</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">],</span> <span class="n">visited</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+      
+    <span class="c1"># The following is a big conditional statement for dealing with all possible directives.</span>
+    <span class="c1"># First, we reset the countdown for the node using the node&#39;s latency.</span>
+    <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">latency</span>
+      
+    <span class="c1"># :subtree directive</span>
+    <span class="c1"># ````````````````````````````</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="o">==</span> <span class="s1">&#39;:subtree&#39;</span><span class="p">:</span>
+      <span class="c1"># Pattern is in wrong format</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">atom</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="c1"># If subtree was already visited, skip rule</span>
+      <span class="k">if</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">rule_node</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">],</span> <span class="n">visited</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+      <span class="c1"># Otherwise, go to subtree and add subtree to list of visited subtrees</span>
+      <span class="n">subtree</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">subtree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="k">return</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">trees</span><span class="p">[</span><span class="n">subtree</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+    
+    <span class="c1"># :subtree+clause directive</span>
+    <span class="c1"># ````````````````````````````</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="o">==</span> <span class="s1">&#39;:subtree+clause&#39;</span><span class="p">:</span>
+      <span class="c1"># Pattern is in wrong format</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">newclause</span> <span class="o">=</span> <span class="n">fill_template</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">)</span>
+      <span class="n">subtree</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">subtree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="k">return</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">newclause</span><span class="p">,</span> <span class="p">[],</span> <span class="n">trees</span><span class="p">[</span><span class="n">subtree</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+    
+    <span class="c1"># :subtree-permute directive</span>
+    <span class="c1"># ``````````````````````````````</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="o">==</span> <span class="s1">&#39;:subtree-permute&#39;</span><span class="p">:</span>
+      <span class="c1"># Pattern is in wrong format</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">newclause</span> <span class="o">=</span> <span class="n">fill_template</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">)</span>
+      <span class="n">subtree</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">subtree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;:and&#39;</span><span class="p">]</span>
+      <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="p">[</span><span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[],</span> <span class="n">trees</span><span class="p">[</span><span class="n">subtree</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">newclause</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">choice</span> <span class="ow">and</span> <span class="n">listp</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:and&#39;</span><span class="p">:</span>
+          <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="n">choice</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="c1"># :subtrees directive</span>
+    <span class="c1"># ````````````````````````````</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="o">==</span> <span class="s1">&#39;:subtrees&#39;</span><span class="p">:</span>
+      <span class="c1"># Pattern is in wrong format</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">newpattern</span> <span class="o">=</span> <span class="n">fill_template</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+      <span class="n">newclause</span> <span class="o">=</span> <span class="n">newpattern</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      <span class="c1"># [*subtree*, &lt;clause&gt;]</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">is_tree_root_list</span><span class="p">(</span><span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="n">trees</span><span class="p">[</span><span class="n">tree</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+          <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">_</span><span class="p">,</span> <span class="n">subtrees</span> <span class="o">=</span> <span class="n">result</span>
+      <span class="c1"># [*tree1*, *tree2*, ..., *treek*]</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">subtrees</span> <span class="o">=</span> <span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">is_tree_root_list</span><span class="p">(</span><span class="n">subtrees</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">subtrees</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">subtrees</span><span class="p">]</span>
+      <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;:and&#39;</span><span class="p">]</span>
+      <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="p">[</span><span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">newclause</span><span class="p">,</span> <span class="p">[],</span> <span class="n">trees</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">subtrees</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">choice</span> <span class="ow">and</span> <span class="n">listp</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:and&#39;</span><span class="p">:</span>
+          <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="n">choice</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">ret</span>
+    
+    <span class="c1"># :subtrees-permute directive</span>
+    <span class="c1"># ````````````````````````````</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="o">==</span> <span class="s1">&#39;:subtrees-permute&#39;</span><span class="p">:</span>
+      <span class="c1"># Pattern is in wrong format</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">newpattern</span> <span class="o">=</span> <span class="n">fill_template</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+      <span class="n">newclause</span> <span class="o">=</span> <span class="n">newpattern</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      <span class="c1"># [*subtree*, &lt;clause&gt;]</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">is_tree_root_list</span><span class="p">(</span><span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="p">[],</span> <span class="n">trees</span><span class="p">[</span><span class="n">tree</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+          <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">_</span><span class="p">,</span> <span class="n">subtrees</span> <span class="o">=</span> <span class="n">result</span>
+      <span class="c1"># [*tree1*, *tree2*, ..., *treek*]</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">subtrees</span> <span class="o">=</span> <span class="n">newpattern</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">is_tree_root_list</span><span class="p">(</span><span class="n">subtrees</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="n">subtrees</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">subtrees</span><span class="p">]</span>
+      <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;:and&#39;</span><span class="p">]</span>
+      <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="p">[</span><span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[],</span> <span class="n">trees</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">cons</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">visited</span><span class="p">),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">newclause</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">subtrees</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">choice</span> <span class="ow">and</span> <span class="n">listp</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:and&#39;</span><span class="p">:</span>
+          <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="n">choice</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">ret</span>
+    
+    <span class="c1"># :ulf-recur directive</span>
+    <span class="c1"># ````````````````````````````</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="o">==</span> <span class="s1">&#39;:ulf-recur&#39;</span><span class="p">:</span>
+      <span class="c1"># Pattern is in wrong format</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+      <span class="c1"># Instantiate shallow analysis</span>
+      <span class="n">newclause</span> <span class="o">=</span> <span class="n">fill_template</span><span class="p">(</span><span class="n">pattern</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parts</span><span class="p">)</span>
+      <span class="c1"># Interpret recursive phrases</span>
+      <span class="n">ulfs</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">newclause</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_tree_root_clause</span><span class="p">(</span><span class="n">phrase</span><span class="p">):</span>
+          <span class="n">ulf</span> <span class="o">=</span> <span class="n">choose_result_for</span><span class="p">(</span><span class="n">phrase</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">phrase</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">ulf</span> <span class="o">=</span> <span class="n">phrase</span>
+        <span class="c1"># Failure case</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ulf</span><span class="p">:</span>
+          <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">ulfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ulf</span><span class="p">)</span>
+      <span class="c1"># Assemble the list of phrasal ULFs into a ULF for the entire input,</span>
+      <span class="c1"># using the second reassembly rule</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">if</span> <span class="n">ulfs</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ulf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ulfs</span><span class="p">):</span>
+          <span class="n">result</span> <span class="o">=</span> <span class="n">subst</span><span class="p">(</span><span class="n">ulf</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">result</span><span class="p">)</span>
+      <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;:ulf&#39;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    
+    <span class="c1"># :misc non-recursive directives</span>
+    <span class="c1"># ``````````````````````````````````</span>
+    <span class="k">if</span> <span class="n">directive</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">directive</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">directive</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span><span class="p">:</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">fill_template</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+      <span class="c1"># If result is disjunctive, randomly choose one element</span>
+      <span class="k">if</span> <span class="n">listp</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:or&#39;</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">random_element</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+      <span class="c1"># If result is conjunctive, return conjunction with :and prefix</span>
+      <span class="k">if</span> <span class="n">listp</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:and&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cons</span><span class="p">(</span><span class="s1">&#39;:and&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">directive</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+      <span class="k">return</span> <span class="p">(</span><span class="n">directive</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+    <span class="c1"># Unexpected</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported directive </span><span class="si">{</span><span class="n">directive</span><span class="si">}</span><span class="s1"> encountered for rule with pattern </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1"> for clause </span><span class="si">{</span><span class="n">clause</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># END choose_result_for_rec</span>
+
+  <span class="n">root</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">[]</span>
+  <span class="k">return</span> <span class="n">choose_result_for_rec</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="p">[],</span> <span class="n">trees</span><span class="p">[</span><span class="n">root</span><span class="p">],</span> <span class="nb">set</span><span class="p">(),</span> <span class="n">trees</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

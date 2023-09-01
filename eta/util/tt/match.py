@@ -1,13 +1,7 @@
-"""Tree Transduction Matching and Template Filling
+"""Methods for matching a TT pattern to an S-expression and filling in a corresponding template.
 
 Contains a Python reimplementation of the original LISP tree transduction (TT) functions
 defined here: https://github.com/bkane2/eta/tree/master/core/tt
-
-Exported functions
-------------------
-match : Matches a pattern with an S-expression, subject to a dict of word features.
-isa : Check whether a given word has a given feature, subject to a dict of word features.
-fill_template : Fills a template S-expression given the results of a successful match.
 """
 
 import eta.util.tt.preds as preds

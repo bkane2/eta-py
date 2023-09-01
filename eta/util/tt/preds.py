@@ -1,4 +1,4 @@
-"""TT Custom Predicates
+"""Definitions for custom evaluable predicates used in TT patterns.
 
 Definitions for custom evaluable predicates used in TT pattern matching and template filling, based
 on the original LISP definitions:

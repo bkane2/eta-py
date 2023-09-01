@@ -1,4 +1,1 @@
-"""Agent Configurations
-
-This package contains configurations for supported Eta agents.
-"""
+"""Configurations for supported Eta agents."""

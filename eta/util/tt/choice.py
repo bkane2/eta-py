@@ -1,11 +1,7 @@
-"""Choice Tree Implementation
+"""Methods for choosing a result from a choice tree.
 
 Contains functions for choosing a result using choice trees; primarily a reimplementation of the
 original 'choose-result-for' LISP function defined here: https://github.com/bkane2/eta/blob/master/core/eta.lisp
-
-Exported functions
-------------------
-choose_result_for : Choose a result for a given clause using a particular choice tree.
 """
 
 from eta.util.general import listp, atom, cons, subst, random_element
@@ -22,7 +18,7 @@ def is_tree_root_list(x):
 
 
 def choose_result_for(clause, root, trees, feats):
-  """Choose a result for a given clause, starting from a choice tree root, given dicts of all choice trees and word features.
+  """Choose a result for a given clause, starting from a given choice tree root.
 
   A choice tree consists of a tree of pattern nodes, with the leaves containing templates and associated
   directives specifying how to handle the templates (see eta.util.tt.parse for the specific format of a choice tree).
@@ -108,7 +104,7 @@ def choose_result_for(clause, root, trees, feats):
   root : str
     The name of a choice tree (e.g., "*gist*") corresponding to the root node of that tree in 'trees'.
   trees : dict
-    A dict mapping a choice tree name to the root node of that choice tree.
+    A dict containing all choice trees, keyed on their root names.
   feats : dict
     A dict mapping words to feature lists.
 

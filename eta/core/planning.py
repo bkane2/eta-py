@@ -1,15 +1,11 @@
-"""Planning Loop
+"""The core process responsible for using schemas and memory to modify the plan.
 
-Implements the core loop for modifying the dialogue plan, including adding possible actions
-to the plan, expanding plan steps, merging plan steps, and reordering plan steps.
+Modifying the plan includes adding possible actions to the plan, expanding plan steps,
+merging plan steps, and reordering plan steps.
 
 NOTE: currently, the 'plans' buffer is handled differently from the other buffers, in that
 we assume it only holds one element at a time, and this element is simply replaced whenever
 the plan is modified in some way.
-
-Exported functions
-------------------
-planning_loop
 """
 
 from time import sleep

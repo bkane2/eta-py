@@ -1,0 +1,37 @@
+eta.util.tt.parse
+=================
+
+.. automodule:: eta.util.tt.parse
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      attachfeat
+      from_lisp_dirs
+      from_lisp_file
+      init_node
+      merge_feats
+      merge_trees
+      readrules
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

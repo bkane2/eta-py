@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.tt.choice &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.util.tt.choice.choose_result_for" href="eta.util.tt.choice.choose_result_for.html" />
+    <link rel="prev" title="eta.util.tt" href="eta.util.tt.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.util.html">eta.util</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.util.buffer.html">eta.util.buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.file.html">eta.util.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.general.html">eta.util.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.gpt.html">eta.util.gpt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.sexpr.html">eta.util.sexpr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.time.html">eta.util.time</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="eta.util.tt.html">eta.util.tt</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">eta.util.tt.choice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.tt.match.html">eta.util.tt.match</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.tt.parse.html">eta.util.tt.parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.tt.preds.html">eta.util.tt.preds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.ulf.html">eta.util.ulf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.html">eta.util</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.tt.html">eta.util.tt</a></li>
+      <li class="breadcrumb-item active">eta.util.tt.choice</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.util.tt.choice">
+<span id="eta-util-tt-choice"></span><h1>eta.util.tt.choice<a class="headerlink" href="#module-eta.util.tt.choice" title="Permalink to this heading"></a></h1>
+<p>Methods for choosing a result from a choice tree.</p>
+<p>Contains functions for choosing a result using choice trees; primarily a reimplementation of the
+original ‘choose-result-for’ LISP function defined here: <a class="reference external" href="https://github.com/bkane2/eta/blob/master/core/eta.lisp">https://github.com/bkane2/eta/blob/master/core/eta.lisp</a></p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.tt.choice.choose_result_for.html#eta.util.tt.choice.choose_result_for" title="eta.util.tt.choice.choose_result_for"><code class="xref py py-obj docutils literal notranslate"><span class="pre">choose_result_for</span></code></a></p></td>
+<td><p>Choose a result for a given clause, starting from a given choice tree root.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.choice.is_tree_root.html#eta.util.tt.choice.is_tree_root" title="eta.util.tt.choice.is_tree_root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_tree_root</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.tt.choice.is_tree_root_clause.html#eta.util.tt.choice.is_tree_root_clause" title="eta.util.tt.choice.is_tree_root_clause"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_tree_root_clause</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.choice.is_tree_root_list.html#eta.util.tt.choice.is_tree_root_list" title="eta.util.tt.choice.is_tree_root_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_tree_root_list</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.choice.choose_result_for">
+<span class="sig-name descname"><span class="pre">choose_result_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clause</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feats</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/choice.html#choose_result_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.choice.choose_result_for" title="Permalink to this definition"></a></dt>
+<dd><p>Choose a result for a given clause, starting from a given choice tree root.</p>
+<p>A choice tree consists of a tree of pattern nodes, with the leaves containing templates and associated
+directives specifying how to handle the templates (see eta.util.tt.parse for the specific format of a choice tree).</p>
+<dl>
+<dt>Pattern nodes:</dt><dd><dl class="simple">
+<dt>A pattern node contains either a pattern (see eta.util.tt.match), or one of the following special keywords:</dt><dd><dl class="simple">
+<dt>[:or, &lt;pattern1&gt;, &lt;pattern2&gt;, …]</dt><dd><p>Match this node if any of the specified patterns match.</p>
+</dd>
+<dt>[:subtree, &lt;subtree-name&gt;]</dt><dd><p>Match this node if the subtree rooted at ‘subtree-name’ yields a non-null result.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>The choice algorithm attempts to match each pattern node with the given clause. If successful, we recursively
+seek a result from the children of the pattern node. In the case of failure, we recursively seek a result from
+the next sibling of the pattern node.</p>
+</dd>
+<dt>Template nodes:</dt><dd><p>Each template node contains a template, latency, and directive.</p>
+<p>The latency is used to determine how long to wait until using that template again. If the number of attempted
+matches to a template node since the last successful match is lower than the latency, the node is skipped and
+we attempt to recur on the next sibling. A latency of ‘0’ means that a node will always be used.</p>
+<p>The directive specifies how the template is to be used. The directive may be either an “internal” directive,
+continuing the choice process by e.g. recurring on some subtree specified by the template, or an “external”
+directive, indicating that the template is a final result of a particular type.</p>
+<dl>
+<dt>The following internal directives are currently supported:</dt><dd><dl>
+<dt>:subtree</dt><dd><p>Given a template of form &lt;subtree-name&gt;, return the result from recurring on that subtree.</p>
+</dd>
+<dt>:subtree+clause</dt><dd><p>Given a template of form [&lt;subtree-name&gt;, &lt;clause&gt;], return the result from recurring
+on that subtree using the given clause as an input.</p>
+</dd>
+<dt>:subtree-permute</dt><dd><p>Given a template of form [&lt;subtree-name&gt;, [&lt;clause1&gt;, …, &lt;clausek&gt;]], recur on the
+subtree with each given clause, and combine the results into a single [:and, …] result.</p>
+</dd>
+<dt>:subtrees</dt><dd><p>Given a template of form [&lt;expr&gt;, &lt;clause&gt;], recur on each subtree specified by &lt;expr&gt; using
+the given clause, and combine the results into a single [:and, …] result. Here, &lt;expr&gt; may be:</p>
+<blockquote>
+<div><p>[&lt;tree&gt;, &lt;clause1&gt;], in which case the given tree is first used to select the subtrees to search.
+[&lt;subtree1&gt;, &lt;subtree2&gt;, …], in which case the given subtrees are searched directly.</p>
+</div></blockquote>
+</dd>
+<dt>:subtrees-permute</dt><dd><p>Given a template of form [&lt;expr&gt;, [&lt;clause1&gt;, …, &lt;clausek&gt;]] (with each arg being
+the same as above), permute each subtree with each clause and combine the results.</p>
+</dd>
+<dt>:ulf-recur</dt><dd><p>Given a template of form [&lt;parts&gt;, &lt;reassembly-pattern&gt;], compute a result for each part in
+‘parts’, and then combine them according to ‘reassembly-pattern’.
+Here, &lt;parts&gt; is a list where each element may be:</p>
+<blockquote>
+<div><p>A subtree followed by a clause, in which case the subtree will be called recursively to obtain a result.
+Some other template expression.</p>
+</div></blockquote>
+<p>And &lt;reassembly-pattern&gt; is an S-expression containing only integers, where each integer indices the
+corresponding part in ‘parts’.</p>
+</dd>
+</dl>
+</dd>
+<dt>An external directive may be anything, but the following ones will be common:</dt><dd><dl class="simple">
+<dt>:out</dt><dd><p>Specifies that a result is to be used as a system output (i.e., essentially shorthand for
+using the full ULF (^me say-to.v ^you &lt;result&gt;) as a template).</p>
+</dd>
+<dt>:gist</dt><dd><p>Specifies that a result is to be used as a gist clause (i.e., essentially shorthand for
+using the full ULF (^you paraphrase-to.v ^me &lt;result&gt;) as a template).</p>
+</dd>
+<dt>:nl</dt><dd><p>Specifies that the result is a natural language string.</p>
+</dd>
+<dt>:ulf</dt><dd><p>Specifies that the result is a ULF formula.</p>
+</dd>
+<dt>:schema</dt><dd><p>Specifies that the result is a schema name, to be instantiated with no arguments.</p>
+</dd>
+<dt>:schemas</dt><dd><p>Specifies that the result is a list of schemas.</p>
+</dd>
+<dt>:schema+args</dt><dd><p>Specifies that the result is a schema to be instantiated with a list of arguments.</p>
+</dd>
+<dt>:raw</dt><dd><p>Specifies that the result is simply a raw output with no additional semantics.</p>
+</dd>
+</dl>
+</dd>
+<dt>A template can also use the following keywords:</dt><dd><dl class="simple">
+<dt>[:or, &lt;template1&gt;, &lt;template2&gt;, …]</dt><dd><p>Randomly select one of the provided templates.</p>
+</dd>
+<dt>[:and, &lt;template1&gt;, &lt;template2&gt;, …]</dt><dd><p>Combine each of the provided templates into a single [:and, …] result.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clause</strong> (<em>s-expr</em>) – An S-expression to be matched by the patterns in a choice tree and therefore used to choose a result.</p></li>
+<li><p><strong>root</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of a choice tree (e.g., “<em>gist</em>”) corresponding to the root node of that tree in ‘trees’.</p></li>
+<li><p><strong>trees</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dict containing all choice trees, keyed on their root names.</p></li>
+<li><p><strong>feats</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dict mapping words to feature lists.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Either:</dt><dd><p>[] if no result is found.
+[:&lt;directive&gt;, &lt;result&gt;] if a single result is found.
+[:and, &lt;result1&gt;, …, &lt;resultk&gt;] if multiple results are found.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>s-expr</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.util.tt.html" class="btn btn-neutral float-left" title="eta.util.tt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.util.tt.choice.choose_result_for.html" class="btn btn-neutral float-right" title="eta.util.tt.choice.choose_result_for" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

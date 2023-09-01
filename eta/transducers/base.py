@@ -1,6 +1,4 @@
-"""Base Transducers
-
-Contains abstract base transducer classes for each supported transducer.
+"""Contains abstract base transducer classes for each supported transducer.
 
 A transducer is an object that maps some set of arguments to some value; multiple
 abstract transducers are supported for various types of mappings with different

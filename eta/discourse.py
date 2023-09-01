@@ -1,20 +1,4 @@
-"""Discourse
-
-Contains classes and functions for representing and processing discourse.
-
-Exported classes
-----------------
-Utterance : represents a single utterance, which contains both the words of the utterance and an affect.
-DialogueTurn : represents a dialogue turn by an agent, which contains the utterance as well as any associated dialogue information.
-
-Exported functions
-------------------
-get_prior_turn : retrieve the immediately prior turn by the specified agent(s).
-parse_utt_str : parse an utterance string into a word string and affect.
-decompress : expand contractions into full phrases (e.g. 'don't' or 'dont' by 'do not').
-compress : replace auxiliary-NOT combinations by -N'T contractions.
-swap_duals : swap first-person pronouns (I, me, ...) with second-person pronouns (you, ...), and vice-versa.
-"""
+"""Tools for storing and processing discourse in Eta dialogues."""
 
 import eta.util.file as file
 from eta.constants import EMOTIONS_LIST

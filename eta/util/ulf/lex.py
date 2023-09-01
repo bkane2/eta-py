@@ -1,12 +1,6 @@
-"""ULF Lexicalization
-
-Functions for converting lexemes to ULF symbols.
+"""Functions for converting lexemes into ULF symbols.
 
 Relies on the NLTK Snowball stemmer.
-
-Exported functions
-------------------
-to_ulf : convert a word to a ULF of a given type category.
 """
 
 from nltk.stem.snowball import SnowballStemmer

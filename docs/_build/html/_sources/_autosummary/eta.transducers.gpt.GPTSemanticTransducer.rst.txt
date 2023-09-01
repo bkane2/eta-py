@@ -1,0 +1,25 @@
+eta.transducers.gpt.GPTSemanticTransducer
+=========================================
+
+.. currentmodule:: eta.transducers.gpt
+
+.. autoclass:: GPTSemanticTransducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~GPTSemanticTransducer.cost
+   
+   
+
+   
+   
+   

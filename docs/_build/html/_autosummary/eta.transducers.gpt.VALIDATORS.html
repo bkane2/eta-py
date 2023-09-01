@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.transducers.gpt.VALIDATORS &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.transducers.gpt.GPTAffectTransducer" href="eta.transducers.gpt.GPTAffectTransducer.html" />
+    <link rel="prev" title="eta.transducers.gpt.PROMPTS" href="eta.transducers.gpt.PROMPTS.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.transducers.html">eta.transducers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.transducers.base.html">eta.transducers.base</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="eta.transducers.gpt.html">eta.transducers.gpt</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#exported-classes">Exported classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.PROMPTS.html">eta.transducers.gpt.PROMPTS</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">eta.transducers.gpt.VALIDATORS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTAffectTransducer.html">eta.transducers.gpt.GPTAffectTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTAnswerTransducer.html">eta.transducers.gpt.GPTAnswerTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTAskTransducer.html">eta.transducers.gpt.GPTAskTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTGistTransducer.html">eta.transducers.gpt.GPTGistTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTParaphraseTransducer.html">eta.transducers.gpt.GPTParaphraseTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTPragmaticTransducer.html">eta.transducers.gpt.GPTPragmaticTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTReactionTransducer.html">eta.transducers.gpt.GPTReactionTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTReasonBottomUpTransducer.html">eta.transducers.gpt.GPTReasonBottomUpTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTReasonTopDownTransducer.html">eta.transducers.gpt.GPTReasonTopDownTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTResponseTransducer.html">eta.transducers.gpt.GPTResponseTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTSemanticTransducer.html">eta.transducers.gpt.GPTSemanticTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTSubplanTransducer.html">eta.transducers.gpt.GPTSubplanTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTTransducer.html">eta.transducers.gpt.GPTTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.PROMPTS"><code class="docutils literal notranslate"><span class="pre">PROMPTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.VALIDATORS"><code class="docutils literal notranslate"><span class="pre">VALIDATORS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTTransducer"><code class="docutils literal notranslate"><span class="pre">GPTTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTReasonTopDownTransducer"><code class="docutils literal notranslate"><span class="pre">GPTReasonTopDownTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTReasonBottomUpTransducer"><code class="docutils literal notranslate"><span class="pre">GPTReasonBottomUpTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTGistTransducer"><code class="docutils literal notranslate"><span class="pre">GPTGistTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTSemanticTransducer"><code class="docutils literal notranslate"><span class="pre">GPTSemanticTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTPragmaticTransducer"><code class="docutils literal notranslate"><span class="pre">GPTPragmaticTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTReactionTransducer"><code class="docutils literal notranslate"><span class="pre">GPTReactionTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTSubplanTransducer"><code class="docutils literal notranslate"><span class="pre">GPTSubplanTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTParaphraseTransducer"><code class="docutils literal notranslate"><span class="pre">GPTParaphraseTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTResponseTransducer"><code class="docutils literal notranslate"><span class="pre">GPTResponseTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTAnswerTransducer"><code class="docutils literal notranslate"><span class="pre">GPTAnswerTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTAskTransducer"><code class="docutils literal notranslate"><span class="pre">GPTAskTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#eta.transducers.gpt.GPTAffectTransducer"><code class="docutils literal notranslate"><span class="pre">GPTAffectTransducer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.transducers.tt.html">eta.transducers.tt</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.transducers.html">eta.transducers</a></li>
+          <li class="breadcrumb-item"><a href="eta.transducers.gpt.html">eta.transducers.gpt</a></li>
+      <li class="breadcrumb-item active">eta.transducers.gpt.VALIDATORS</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-transducers-gpt-validators">
+<h1>eta.transducers.gpt.VALIDATORS<a class="headerlink" href="#eta-transducers-gpt-validators" title="Permalink to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.transducers.gpt.VALIDATORS">
+<span class="sig-name descname"><span class="pre">VALIDATORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'affect':</span> <span class="pre">[&lt;function</span> <span class="pre">_affect_validator&gt;],</span> <span class="pre">'answer':</span> <span class="pre">[&lt;function</span> <span class="pre">_answer_validator&gt;],</span> <span class="pre">'ask':</span> <span class="pre">[],</span> <span class="pre">'gist':</span> <span class="pre">[],</span> <span class="pre">'paraphrase':</span> <span class="pre">[&lt;function</span> <span class="pre">_paraphrase_validator&gt;],</span> <span class="pre">'reason-bottom-up':</span> <span class="pre">[&lt;function</span> <span class="pre">_reason_validator&gt;],</span> <span class="pre">'response':</span> <span class="pre">[]}</span></em><a class="headerlink" href="#eta.transducers.gpt.VALIDATORS" title="Permalink to this definition"></a></dt>
+<dd><p>a dict of validator functions to use for each transducer type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.transducers.gpt.PROMPTS.html" class="btn btn-neutral float-left" title="eta.transducers.gpt.PROMPTS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.transducers.gpt.GPTAffectTransducer.html" class="btn btn-neutral float-right" title="eta.transducers.gpt.GPTAffectTransducer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.schema.Schema &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/my_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.schema.SchemaLibrary" href="eta.schema.SchemaLibrary.html" />
+    <link rel="prev" title="eta.schema.ObjSchema" href="eta.schema.ObjSchema.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.schema.html">eta.schema</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.DialSchema.html">eta.schema.DialSchema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.EpiSchema.html">eta.schema.EpiSchema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.ObjSchema.html">eta.schema.ObjSchema</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.schema.Schema</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.schema.Schema"><code class="docutils literal notranslate"><span class="pre">Schema</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.SchemaLibrary.html">eta.schema.SchemaLibrary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.html#eta.schema.Schema"><code class="docutils literal notranslate"><span class="pre">Schema</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.html#eta.schema.EpiSchema"><code class="docutils literal notranslate"><span class="pre">EpiSchema</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.html#eta.schema.DialSchema"><code class="docutils literal notranslate"><span class="pre">DialSchema</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.html#eta.schema.ObjSchema"><code class="docutils literal notranslate"><span class="pre">ObjSchema</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.schema.html#eta.schema.SchemaLibrary"><code class="docutils literal notranslate"><span class="pre">SchemaLibrary</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.schema.html">eta.schema</a></li>
+      <li class="breadcrumb-item active">eta.schema.Schema</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-schema-schema">
+<h1>eta.schema.Schema<a class="headerlink" href="#eta-schema-schema" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.schema.Schema">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">participants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bindings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>An abstract schema class.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#eta.schema.Schema.id" title="Permalink to this definition"></a></dt>
+<dd><p>A unique ID for this schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.predicate">
+<span class="sig-name descname"><span class="pre">predicate</span></span><a class="headerlink" href="#eta.schema.Schema.predicate" title="Permalink to this definition"></a></dt>
+<dd><p>The main predicate of the schema (e.g., dog.n or eat.v).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.participants">
+<span class="sig-name descname"><span class="pre">participants</span></span><a class="headerlink" href="#eta.schema.Schema.participants" title="Permalink to this definition"></a></dt>
+<dd><p>All participant roles of a schema, i.e., variables and constants present as arguments in the header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.vars">
+<span class="sig-name descname"><span class="pre">vars</span></span><a class="headerlink" href="#eta.schema.Schema.vars" title="Permalink to this definition"></a></dt>
+<dd><p>All variables scoped within a schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.bindings">
+<span class="sig-name descname"><span class="pre">bindings</span></span><a class="headerlink" href="#eta.schema.Schema.bindings" title="Permalink to this definition"></a></dt>
+<dd><p>A mapping from variables to bound values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.header">
+<span class="sig-name descname"><span class="pre">header</span></span><a class="headerlink" href="#eta.schema.Schema.header" title="Permalink to this definition"></a></dt>
+<dd><p>The ELF formula for the header of the schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.contents">
+<span class="sig-name descname"><span class="pre">contents</span></span><a class="headerlink" href="#eta.schema.Schema.contents" title="Permalink to this definition"></a></dt>
+<dd><p>The ELF formula for the contents of the schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.sections">
+<span class="sig-name descname"><span class="pre">sections</span></span><a class="headerlink" href="#eta.schema.Schema.sections" title="Permalink to this definition"></a></dt>
+<dd><p>A dict mapping each section label (e.g., ‘types’) to a list of eventualities created from the schema contents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.schema.Schema.embedding">
+<span class="sig-name descname"><span class="pre">embedding</span></span><a class="headerlink" href="#eta.schema.Schema.embedding" title="Permalink to this definition"></a></dt>
+<dd><p>A vector embedding of this schema (default is empty embedding).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.bind" title="eta.schema.Schema.bind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bind</span></code></a></p></td>
+<td><p>Bind the given variable symbol to the given value.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.bind_args" title="eta.schema.Schema.bind_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bind_args</span></code></a></p></td>
+<td><p>Bind variables in the schema header with a list of respective argument values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.duplicate_variables" title="eta.schema.Schema.duplicate_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_variables</span></code></a></p></td>
+<td><p>Duplicate all variables across a schema, mapping the original variables to the duplicated ones.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.embed" title="eta.schema.Schema.embed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">embed</span></code></a></p></td>
+<td><p>Embed the schema based on the natural language representation of its contents, given an embedder object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.format" title="eta.schema.Schema.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a></p></td>
+<td><p>Format the contents of this schema as an S-expression string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.get_contents" title="eta.schema.Schema.get_contents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_contents</span></code></a></p></td>
+<td><p>Get the schema contents as an S-expression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.get_participants" title="eta.schema.Schema.get_participants"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_participants</span></code></a></p></td>
+<td><p>Get the schema participants.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.get_section" title="eta.schema.Schema.get_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_section</span></code></a></p></td>
+<td><p>Get the eventualities within a given schema section or list of sections.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.get_section_eps" title="eta.schema.Schema.get_section_eps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_section_eps</span></code></a></p></td>
+<td><p>Get all episode symbols within a schema section or list of sections.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.get_section_wffs" title="eta.schema.Schema.get_section_wffs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_section_wffs</span></code></a></p></td>
+<td><p>Get all wffs within a schema section or list of sections.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.instantiate" title="eta.schema.Schema.instantiate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instantiate</span></code></a></p></td>
+<td><p>Instantiate a specific instance of a schema given a list of argument values for each variable in the header.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.read_param_dict" title="eta.schema.Schema.read_param_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_param_dict</span></code></a></p></td>
+<td><p>Read an S-expression containing schema contents (for a given predicate) into a dict of schema parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.retrieve" title="eta.schema.Schema.retrieve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">retrieve</span></code></a></p></td>
+<td><p>Retrieve some number of facts from the schema according to similarity with a query string, given an embedder object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.subst_mappings" title="eta.schema.Schema.subst_mappings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subst_mappings</span></code></a></p></td>
+<td><p>Given a list of variable replacement mappings, apply the mappings to each part of the schema.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.Schema.to_probability_dict" title="eta.schema.Schema.to_probability_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_probability_dict</span></code></a></p></td>
+<td><p>Given a list of certainty or necessity eventualities, create a probability dict with entries of form {&lt;ep&gt;:&lt;prob&gt;}.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.Schema.unbind" title="eta.schema.Schema.unbind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unbind</span></code></a></p></td>
+<td><p>Unbind the given variable symbol.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.read_param_dict">
+<span class="sig-name descname"><span class="pre">read_param_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_contents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.read_param_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.read_param_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Read an S-expression containing schema contents (for a given predicate) into a dict of schema parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.to_probability_dict">
+<span class="sig-name descname"><span class="pre">to_probability_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventualities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap_duals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.to_probability_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.to_probability_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Given a list of certainty or necessity eventualities, create a probability dict with entries of form {&lt;ep&gt;:&lt;prob&gt;}.</p>
+<p>If ‘swap_duals’ is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.subst_mappings">
+<span class="sig-name descname"><span class="pre">subst_mappings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mappings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.subst_mappings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.subst_mappings" title="Permalink to this definition"></a></dt>
+<dd><p>Given a list of variable replacement mappings, apply the mappings to each part of the schema.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.duplicate_variables">
+<span class="sig-name descname"><span class="pre">duplicate_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.duplicate_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.duplicate_variables" title="Permalink to this definition"></a></dt>
+<dd><p>Duplicate all variables across a schema, mapping the original variables to the duplicated ones.</p>
+<p>Note that this needs to be done in two steps to avoid mapping conflicts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.instantiate">
+<span class="sig-name descname"><span class="pre">instantiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.instantiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.instantiate" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate a specific instance of a schema given a list of argument values for each variable in the header.</p>
+<p>This creates a deep copy of the schema, with duplicate variables to ensure that no collisions occur if
+the events in the schema are added to a plan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>s-expr</em><em>]</em>) – A list of expressions to bind to each respective header variable.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#eta.schema.Schema" title="eta.schema.Schema">Schema</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.bind" title="Permalink to this definition"></a></dt>
+<dd><p>Bind the given variable symbol to the given value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.unbind" title="Permalink to this definition"></a></dt>
+<dd><p>Unbind the given variable symbol.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.bind_args">
+<span class="sig-name descname"><span class="pre">bind_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.bind_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.bind_args" title="Permalink to this definition"></a></dt>
+<dd><p>Bind variables in the schema header with a list of respective argument values.</p>
+<p>Generally, we assume that ‘args’ should correspond to the variables in the participants list of
+the schema, but we allow for the possibility of ^me and ^you as implicit arguments if fewer arguments
+than variables are given - in which case, they’re added to the arguments list in that order.</p>
+<p>On the other hand, if more arguments than variables are given, we assume that
+^me and ^you might be provided as redundant arguments, and remove those from
+the front of the list if present. Otherwise, we remove superfluous arguments
+starting from the end of the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>s-expr</em><em>]</em>) – A list of expressions to bind to each respective header variable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.embed">
+<span class="sig-name descname"><span class="pre">embed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.embed" title="Permalink to this definition"></a></dt>
+<dd><p>Embed the schema based on the natural language representation of its contents, given an embedder object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.retrieve">
+<span class="sig-name descname"><span class="pre">retrieve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.retrieve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.retrieve" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve some number of facts from the schema according to similarity with a query string, given an embedder object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embedder</strong> (<a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder"><em>Embedder</em></a>) – An Embedder object.</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A query string to use to compute similarity.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of facts to retrieve (the default is 5).</p></li>
+<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to prefix the retrieved facts with the schema header (the default is True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The retrieved schema facts as S-expressions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.get_participants">
+<span class="sig-name descname"><span class="pre">get_participants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.get_participants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.get_participants" title="Permalink to this definition"></a></dt>
+<dd><p>Get the schema participants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.get_contents">
+<span class="sig-name descname"><span class="pre">get_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.get_contents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.get_contents" title="Permalink to this definition"></a></dt>
+<dd><p>Get the schema contents as an S-expression.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>s-expr</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.get_section">
+<span class="sig-name descname"><span class="pre">get_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.get_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.get_section" title="Permalink to this definition"></a></dt>
+<dd><p>Get the eventualities within a given schema section or list of sections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword ‘:all’ to return all sections.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.get_section_eps">
+<span class="sig-name descname"><span class="pre">get_section_eps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.get_section_eps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.get_section_eps" title="Permalink to this definition"></a></dt>
+<dd><p>Get all episode symbols within a schema section or list of sections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword ‘:all’ to return all sections.</p></li>
+<li><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.get_section_wffs">
+<span class="sig-name descname"><span class="pre">get_section_wffs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.get_section_wffs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.get_section_wffs" title="Permalink to this definition"></a></dt>
+<dd><p>Get all wffs within a schema section or list of sections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword ‘:all’ to return all sections.</p></li>
+<li><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.Schema.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/schema.html#Schema.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.schema.Schema.format" title="Permalink to this definition"></a></dt>
+<dd><p>Format the contents of this schema as an S-expression string.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.schema.ObjSchema.html" class="btn btn-neutral float-left" title="eta.schema.ObjSchema" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.schema.SchemaLibrary.html" class="btn btn-neutral float-right" title="eta.schema.SchemaLibrary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-"""Eta Global Constants
+"""Global constants used by other Eta modules.
 
 This module contains definitions for a variety of global constants that are used by
 other Eta modules. Generally, it can be imported using `from eta.constants import *`.

@@ -1,12 +1,4 @@
-"""Reasoning Loop
-
-Implements the core loop for inferring new facts and possible actions to
-take from previous facts/observations.
-
-Exported functions
-------------------
-reasoning_loop
-"""
+"""The core process responsible for inferring new facts and possible actions to take from previous facts/observations."""
 
 from time import sleep
 

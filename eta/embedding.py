@@ -1,15 +1,6 @@
-"""Embedding Tools
-
-Contains classes that may be used to embed documents or score embedded documents using cosine similarity.
+"""Tools for creating embeddings of Eta documents and scoring embeddings using cosine similarity.
 
 These classes serve as interfaces for invoking various embedding models or APIs.
-
-Exported classes
-----------------
-Embedder : the abstract class for an embedder object.
-STEmbedder : an embedder that uses a native SentenceTransformer model to compute embeddings.
-HFEmbedder : an embedder that uses HuggingFace's API to compute embeddings.
-DummyEmbedder : an embedder that simply computes empty embeddings.
 """
 
 import os

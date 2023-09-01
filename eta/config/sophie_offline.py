@@ -1,3 +1,5 @@
+"""Offline version of SOPHIE agent for testing purposes (i.e., simply outputs text instead of using GPT)."""
+
 from eta.transducers.tt import *
 from eta.transducers.gpt import *
 from eta.embedding import *

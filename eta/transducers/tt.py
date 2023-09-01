@@ -1,8 +1,6 @@
-"""Tree Transduction (TT) Transducers
+"""Contains implementations of Tree Transduction (TT) based transducers.
 
-Contains implementations of transducers that rely on rule-based Tree Transduction (TT). Each
-transducer type defined here subclasses TTTransducer, which contains the core implementation
-of the TT mapping process.
+Each transducer type defined here subclasses TTTransducer, which contains the core implementation of the TT mapping process.
 
 Each TT transducer is instantiated with a forest of choice trees read from a directory of LISP choice tree packets,
 as well as one or multiple root names that are used to begin the choice process for that particular transducer.
