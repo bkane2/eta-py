@@ -8,22 +8,7 @@ as well as a set of validator functions for validating and postprocessing the mo
 Applying a GPT transducer consists of formatting the prompt with the provided arguments, and then
 generating using the GPT API until a valid generation is found.
 
-Full documentation on the GPT interface can be found in the eta.util.gpt module. 
-
-Exported classes
-----------------
-GPTReasonTopDownTransducer
-GPTReasonBottomUpTransducer
-GPTGistTransducer
-GPTSemanticTransducer
-GPTPragmaticTransducer
-GPTReactionTransducer
-GPTSubplanTransducer
-GPTParaphraseTransducer
-GPTResponseTransducer
-GPTAnswerTransducer
-GPTAskTransducer
-GPTAffectTransducer
+Full documentation on the GPT interface can be found in the ``eta.util.gpt`` module.
 """
 
 import re
@@ -87,28 +72,26 @@ class GPTTransducer(Transducer):
   derived from the arguments), and generating some output from GPT until one is found that passes the
   validator functions.
 
-  Attributes
+  Parameters
   ----------
   prompt : str
     An LLM prompt.
   validators : list[function]
     A list of validator functions.
+  examples : list[dict], optional
+    A list of examples to format the prompt with (which should have corresponding ``@startexamples`` and
+    ``@endexamples`` annotations); each example should contain a mapping from placeholders in the prompt
+    to values (which may be strings or lists of strings).
+
+  Attributes
+  ----------
+  prompt : str
+  validators : list[function]
   _cost : float
     An accumulator variable for the total cost of applying a transducer instance within a session.
   """
 
   def __init__(self, prompt, validators, examples=[]):
-    """Create a GPT transducer instance.
-    
-    Parameters
-    ----------
-    prompt : str
-    validators : list[function]
-    examples : list[dict], optional
-      A list of examples to format the prompt with (which should have corresponding @startexamples and
-      @endexamples annotations); each example should contain a mapping from placeholders in the prompt
-      to values (which may be strings or lists of strings).
-    """
     self.prompt = subst_examples(prompt, examples)
     self.validators = validators
     self._cost = 0.

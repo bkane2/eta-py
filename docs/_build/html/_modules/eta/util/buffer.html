@@ -103,7 +103,7 @@
 <span class="sd">    A list where each item is either an object or (importance, object) tuple. For each item where an importance</span>
 <span class="sd">    is not specified, a default importance value is generated using an increment so as to preserve the original order.</span>
 <span class="sd">  buffer : list[tuple[float, object]]</span>
-<span class="sd">  inc_val : float, optional</span>
+<span class="sd">  inc_val : float, default=0.0001</span>
 <span class="sd">    The increment to use for generated importance values.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">cur_max</span> <span class="o">=</span> <span class="n">max_importance</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
@@ -140,7 +140,7 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  buffer : list[tuple[float, object]]</span>
-<span class="sd">  importance : bool</span>
+<span class="sd">  importance : bool, default=False</span>
 <span class="sd">    If True is given, return the importance as well as the object.</span>
 
 <span class="sd">  Returns</span>
@@ -162,7 +162,7 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  buffer : list[tuple[float, object]]</span>
-<span class="sd">  importance : bool</span>
+<span class="sd">  importance : bool, default=False</span>
 <span class="sd">    If True is given, return the importances as well as the objects.</span>
 
 <span class="sd">  Returns</span>
@@ -181,7 +181,7 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  buffer : list[tuple[float, object]]</span>
-<span class="sd">  importance : bool</span>
+<span class="sd">  importance : bool, default=False</span>
 <span class="sd">    If True is given, return the importance as well as the object.</span>
 
 <span class="sd">  Returns</span>
@@ -231,7 +231,7 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  buffer : list[tuple[float, object]]</span>
-<span class="sd">  func : function</span>
+<span class="sd">  func : function, optional</span>
 <span class="sd">    A function to apply to each value in the buffer.</span>
 <span class="sd">  </span>
 <span class="sd">  Returns</span>

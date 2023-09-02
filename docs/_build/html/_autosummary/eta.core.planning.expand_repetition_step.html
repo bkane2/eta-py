@@ -144,11 +144,6 @@
 <dt class="sig sig-object py" id="eta.core.planning.expand_repetition_step">
 <span class="sig-name descname"><span class="pre">expand_repetition_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_repetition_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_repetition_step" title="Permalink to this definition"></a></dt>
 <dd><p>Expand a step containing a repetition eventuality depending on the truth value of its condition.</p>
-<p>TODO: some modifications still need to be made to the method of unbinding local variables, since it
-may be possible that a variable within a :repeat-until section of a schema first appeared within an
-episode outside of the :repeat-until section, yet not within the participants list of the schema.
-This means that these variables will be unbound in memory following execution of the repeating episode,
-although typically the repetition itself still executes as intended.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -164,6 +159,12 @@ although typically the repetition itself still executes as intended.</p>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: some modifications still need to be made to the method of unbinding local variables, since it
+may be possible that a variable within a :repeat-until section of a schema first appeared within an
+episode outside of the :repeat-until section, yet not within the participants list of the schema.
+This means that these variables will be unbound in memory following execution of the repeating episode,
+although typically the repetition itself still executes as intended.</p>
 </dd></dl>
 
 </section>

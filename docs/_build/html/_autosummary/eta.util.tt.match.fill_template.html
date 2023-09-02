@@ -114,25 +114,25 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>template</strong> (<em>s-expr</em>) – <dl class="simple">
-<dt>An S-expression containing:</dt><dd><dl class="simple">
-<dt>Positional indicators such as 3, 3.2, 3.3.2, etc., where pieces of ‘match_result’ are</dt><dd><p>to be placed. E.g., here, the references are to the 3rd element of ‘match_result’,
-the 2nd element of the 3rd element of ‘match_result’, etc. The index 0 is special,
-as it refers to the (flattened) match result as a whole.</p>
-</dd>
-<dt>Evaluable predicates ending in ‘!’ applied to some arguments, e.g., [lex-ulf!, v, 3.2],</dt><dd><p>in which case the result of the predicate called on the given arguments will filled in
-place. Custom predicates must be defined in eta.util.tt.preds, and their arguments must
-match the arguments provided in ‘template’.</p>
-</dd>
-</dl>
+<dt>An S-expression containing:</dt><dd><ul>
+<li><p>Positional indicators such as 3, 3.2, 3.3.2, etc., where pieces of <cite>match_result</cite> are
+to be placed. E.g., here, the references are to the 3rd element of <cite>match_result</cite>,
+the 2nd element of the 3rd element of <cite>match_result</cite>, etc. The index 0 is special,
+as it refers to the (flattened) match result as a whole.</p></li>
+<li><p>Evaluable predicates ending in ‘!’ applied to some arguments, e.g., <code class="docutils literal notranslate"><span class="pre">[lex-ulf!,</span> <span class="pre">v,</span> <span class="pre">3.2]</span></code>,
+in which case the result of the predicate called on the given arguments will filled in
+place. Custom predicates must be defined in <code class="docutils literal notranslate"><span class="pre">eta.util.tt.preds</span></code>, and their arguments must
+match the arguments provided in <cite>template</cite>.</p></li>
+</ul>
 </dd>
 </dl>
 </p></li>
-<li><p><strong>match_result</strong> (<em>s-expr</em>) – An S-expression containing sequence expressions such as [:seq, [a, b], c, [d, [f, g]]].</p></li>
+<li><p><strong>match_result</strong> (<em>s-expr</em>) – An S-expression containing sequence expressions such as <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">[a,</span> <span class="pre">b],</span> <span class="pre">c,</span> <span class="pre">[d,</span> <span class="pre">[f,</span> <span class="pre">g]]]</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The template filled in with “pieces” from match_result, as indicated by the position
-indices it contains. If a position index points to a sequence, i.e., [:seq, …], the
+indices it contains. If a position index points to a sequence, i.e., <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">...]</span></code>, the
 elements of the sequence are inserted into the result without the :seq wrapper.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

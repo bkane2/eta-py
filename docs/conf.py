@@ -29,6 +29,7 @@ extensions = [
   'sphinx.ext.viewcode',
   'sphinx_autodoc_typehints',
   'sphinx.ext.napoleon',
+  # 'autoapi.extension'
 ]
 
 templates_path = ['_templates']
@@ -37,6 +38,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
 }
+
+# autoapi_dirs = ['eta']
 
 autodoc_member_order = 'bysource'
 autodoc_default_options = {

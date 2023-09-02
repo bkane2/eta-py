@@ -97,13 +97,15 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  packet : list[str]</span>
-<span class="sd">    A list of form [depth, pattern, optional-pair, depth, pattern, optional-pair, ...],</span>
-<span class="sd">    where &quot;depth&quot; is 1 for top-level rules, 2 for direct children, etc.,</span>
-<span class="sd">          &quot;pattern&quot; is a decomposition pattern or other output,</span>
-<span class="sd">          &quot;optional-pair&quot; is present iff &quot;pattern&quot; is a reassembly pattern or other output,</span>
-<span class="sd">            and consists of a (latency, directive) tuple, where latency is an integer &gt;= 0</span>
-<span class="sd">            specifying how long to wait to use a rule again, and directive is a symbol such</span>
-<span class="sd">            as :out, :subtree, :gist, etc. specifying how the output should be used.</span>
+<span class="sd">    A list of form ``[depth, pattern, optional-pair, depth, pattern, optional-pair, ...]``,</span>
+<span class="sd">    where:</span>
+<span class="sd">    </span>
+<span class="sd">      - ``depth`` is 1 for top-level rules, 2 for direct children, etc.,</span>
+<span class="sd">      - ``pattern`` is a decomposition pattern or other output,</span>
+<span class="sd">      - ``optional-pair`` is present iff ``pattern`` is a reassembly pattern or other output,</span>
+<span class="sd">        and consists of a ``(latency, directive)`` tuple, where latency is an integer &gt;= 0</span>
+<span class="sd">        specifying how long to wait to use a rule again, and directive is a symbol such</span>
+<span class="sd">        as ``:out``, ``:subtree``, ``:gist``, etc. specifying how the output should be used.</span>
 
 <span class="sd">  Returns</span>
 <span class="sd">  -------</span>
@@ -168,11 +170,13 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  feat_xx : list[str]</span>
-<span class="sd">    A list of form [feat, x1, x2, ..., xk],</span>
-<span class="sd">    where</span>
-<span class="sd">      &quot;feat&quot; is a string, regarded as a feature.</span>
-<span class="sd">      &quot;x1&quot;, &quot;x2&quot;, ... are words that will be assigned &quot;feat&quot; as a feature,</span>
-<span class="sd">        i.e., isa(xi, feat) will be True for each xi among x1, x2, ..., xk.</span>
+<span class="sd">    A list of form ``[feat, x1, x2, ..., xk]``,</span>
+<span class="sd">    where:</span>
+
+<span class="sd">      - ``feat`` is a string, regarded as a feature.</span>
+<span class="sd">      - ``x1``, ``x2``, ... are words that will be assigned ``feat`` as a feature,</span>
+<span class="sd">        i.e., ``isa(xi, feat)`` will be True for each xi among x1, x2, ..., xk.</span>
+
 <span class="sd">  feats : dict</span>
 <span class="sd">    A dict mapping words to features, to be modified in-place.</span>
 <span class="sd">  &quot;&quot;&quot;</span>

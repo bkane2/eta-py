@@ -173,7 +173,8 @@
 <span class="sig-name descname"><span class="pre">execution_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/execution.html#execution_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.execution.execution_loop" title="Permalink to this definition"></a></dt>
 <dd><p>Either execute the current intended step of the plan or attempt to match an expectation.</p>
 <p>This will do one of several things depending on the class of the currently pending step:</p>
-<ol class="arabic simple">
+<blockquote>
+<div><ol class="arabic simple">
 <li><p>If a condition or repetition step, advance the plan once none of the conditions are true.</p></li>
 <li><p>If an expected step, attempt to match the step to a fact in context, until a time period
 based on the certainty of that step has elapsed, in which case the step is characterized
@@ -181,6 +182,7 @@ as a failure and the plan is advanced.</p></li>
 <li><p>If an intended step that contains a primitive action, attempt to execute that action, and
 advance the plan if successful.</p></li>
 </ol>
+</div></blockquote>
 <p>In any the case where an execution or match is successful, the plan is advanced, and a list of
 variable bindings obtained from the execution or match is applied throughout the dialogue state.
 Additionally, if the plan was advanced, the contents of the ‘plans’ buffer is replaced with

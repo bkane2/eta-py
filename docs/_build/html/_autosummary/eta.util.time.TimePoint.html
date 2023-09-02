@@ -114,6 +114,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TimePoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>Datetime</em><em>, </em><em>optional</em>) – Initialize with a given Datetime object if given, otherwise use the current time.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.util.time.TimePoint.time">
 <span class="sig-name descname"><span class="pre">time</span></span><a class="headerlink" href="#eta.util.time.TimePoint.time" title="Permalink to this definition"></a></dt>
@@ -125,7 +130,6 @@
 </dl>
 </dd></dl>
 
-<p>If ‘time’ is given, initialize a new TimePoint to that time; otherwise, to the current time.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -165,6 +169,12 @@
 <dt class="sig sig-object py" id="eta.util.time.TimePoint.to_ulf">
 <span class="sig-name descname"><span class="pre">to_ulf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.to_ulf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.to_ulf" title="Permalink to this definition"></a></dt>
 <dd><p>Convert this TimePoint to a ULF record structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
 </dd></dl>
 
 </dd></dl>

@@ -21,11 +21,6 @@ def clear_symtab():
 def gentemp(str):
 	"""Generate a unique symbol that hasn't been used before by appending an integer suffix i and then incrementing i.
 
-	This currently relies on an external symbol table stored in a file, which
-	exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
-	(see: https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2)
-	However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.
-
 	Parameters
 	----------
 	str : str
@@ -35,6 +30,13 @@ def gentemp(str):
 	-------
 	str
 		A "symbol" with a unique integer suffix attached to the given string.
+
+	Notes
+	-----
+	This currently relies on an external symbol table stored in a file, which
+	exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
+	(see: https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2)
+	However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.
 	"""
 	symtab = file.load_json(SYMTAB_PATH)
 	if not str in symtab:
@@ -56,7 +58,7 @@ def episode_var():
 
 
 def escaped_symbol_p(s):
-	"""Check if a given symbol is an "escaped" symbol, equivalent to '|sym| in LISP."""
+	"""Check if a given symbol is an "escaped" symbol, equivalent to vertical bars in LISP."""
 	return isinstance(s, str) and len(s) >= 2 and s.count('|') == 2
 
 
@@ -68,7 +70,9 @@ def symbolp(s):
 def variablep(s):
 	"""Check if a given input is a variable symbol, i.e., starts with '?' or '!'.
 	
-	NOTE: for now, this excludes indexical variables, such as '^you'.
+	Notes
+	-----
+	For now, this excludes indexical variables, such as '^you'.
 	"""
 	return symbolp(s) and s[0] in ['?', '!'] and s not in ['?', '!']
 
@@ -103,9 +107,9 @@ def replaceall(str, replist):
 		A string whose contents should be replaced.
 	replist : list[tuple]
 		A list of replacements to make. A replacement is a tuple of one of the following forms:
-			(old, new)
-			(old, new, is_regex)
-		If is_regex is given as True (default is False), the old and new values are interpreted as regex strings.
+			- ``(old, new)``
+			- ``(old, new, is_regex)``
+		If is_regex is given as True for a tuple, the old and new values are interpreted as regex strings.
 	
 	Returns
 	-------
@@ -133,11 +137,11 @@ def standardize(str):
 	"""Standardize a string by applying a series of transformations.
 	
 	Specifically:
-	1. Replace -- with -, and _ with whitespace.
-	2. Remove parenthetical content (i.e., [...] or *...*).
-	3. Add whitespace around all punctuation.
-	4. Collapse all whitespace to a single space.
-	5. Convert to lowercase.
+		1. Replace -- with -, and _ with whitespace.
+		2. Remove parenthetical content (i.e., [...] or *...*).
+		3. Add whitespace around all punctuation.
+		4. Collapse all whitespace to a single space.
+		5. Convert to lowercase.
 	"""
 	str = str.replace('--', '-').replace('_', ' ')
 	str = re.sub(r'\[[a-zA-Z0-9\s]*\]', '', str)
@@ -258,7 +262,7 @@ def flatten(lst):
 	
 
 def remove_duplicates(lst, order=False):
-	"""Remove duplicate items in a list, preserving the initial order of 'order' is given as True."""
+	"""Remove duplicate items in a list, preserving the initial order of `order` is given as True."""
 	if order:
 		visited = []
 		lst1 = []
@@ -301,7 +305,7 @@ def random_element(lst):
 
 
 def get_keyword_contents(lst, keys):
-	"""Get the contents immediately following each keyword in 'keys' from a list."""
+	"""Get the contents immediately following each keyword in `keys` from a list."""
 	return [e2 for (e1, e2) in zip(lst, lst[1:]+[None]) if e1 in keys and e2]
 
 
@@ -330,7 +334,7 @@ def dict_substall_keys(dct, replist):
 
 
 def cons_dict(dct, k, v):
-	"""Add v to the list at key k in dct, creating a new list if none exists."""
+	"""Add `v` to the list at key `k` in `dct`, creating a new list if none exists."""
 	if k in dct:
 		dct[k].append(v)
 	else:

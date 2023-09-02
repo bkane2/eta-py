@@ -58,7 +58,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="eta.transducers.html">eta.transducers</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="eta.transducers.base.html">eta.transducers.base</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="eta.transducers.gpt.html">eta.transducers.gpt</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#exported-classes">Exported classes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.PROMPTS.html">eta.transducers.gpt.PROMPTS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.VALIDATORS.html">eta.transducers.gpt.VALIDATORS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTAffectTransducer.html">eta.transducers.gpt.GPTAffectTransducer</a></li>
@@ -131,18 +130,6 @@
 <dt class="sig sig-object py" id="eta.transducers.gpt.GPTPragmaticTransducer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GPTPragmaticTransducer</span></span><a class="reference internal" href="../_modules/eta/transducers/gpt.html#GPTPragmaticTransducer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.transducers.gpt.GPTPragmaticTransducer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.transducers.gpt.GPTTransducer.html#eta.transducers.gpt.GPTTransducer" title="eta.transducers.gpt.GPTTransducer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GPTTransducer</span></code></a>, <a class="reference internal" href="eta.transducers.base.PragmaticTransducer.html#eta.transducers.base.PragmaticTransducer" title="eta.transducers.base.PragmaticTransducer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PragmaticTransducer</span></code></a></p>
-<p>Create a GPT transducer instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>validators</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>function</em><em>]</em>) – </p></li>
-<li><p><strong>examples</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>]</em><em>, </em><em>optional</em>) – A list of examples to format the prompt with (which should have corresponding &#64;startexamples and
-&#64;endexamples annotations); each example should contain a mapping from placeholders in the prompt
-to values (which may be strings or lists of strings).</p></li>
-</ul>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>

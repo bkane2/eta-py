@@ -143,16 +143,15 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.core.planning.expand_plan_steps">
 <span class="sig-name descname"><span class="pre">expand_plan_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_plan_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_plan_steps" title="Permalink to this definition"></a></dt>
-<dd><p>Attempt to expand the surface steps in the plan using one of:
-1. A keyword step, which have special expansion behavior
-2. A schema whose header matches the step WFF (unifying any schema args)
-3. A “primitive” type of plan step whose expansion is directly supported
-4. A pattern transduction tree mapping the step WFF to substep WFF(s)</p>
-<p>TODO: some possible future improvements:
-1) currently, this only attempts to expand the currently due step; however,</p>
-<blockquote>
-<div><p>it may be possible to expand certain other steps in the plan as well.</p>
-</div></blockquote>
+<dd><dl class="simple">
+<dt>Attempt to expand the surface steps in the plan using one of:</dt><dd><ol class="arabic simple">
+<li><p>A keyword step, which have special expansion behavior</p></li>
+<li><p>A schema whose header matches the step WFF (unifying any schema args)</p></li>
+<li><p>A “primitive” type of plan step whose expansion is directly supported</p></li>
+<li><p>A pattern transduction tree mapping the step WFF to substep WFF(s)</p></li>
+</ol>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -165,6 +164,14 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: some possible future improvements:</dt><dd><ol class="arabic simple">
+<li><p>currently, this only attempts to expand the currently due step; however,
+it may be possible to expand certain other steps in the plan as well.</p></li>
+</ol>
 </dd>
 </dl>
 </dd></dl>

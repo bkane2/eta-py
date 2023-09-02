@@ -184,11 +184,13 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A string whose contents should be replaced.</p></li>
 <li><p><strong>replist</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>]</em>) – <dl class="simple">
-<dt>A list of replacements to make. A replacement is a tuple of one of the following forms:</dt><dd><p>(old, new)
-(old, new, is_regex)</p>
+<dt>A list of replacements to make. A replacement is a tuple of one of the following forms:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">(old,</span> <span class="pre">new)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(old,</span> <span class="pre">new,</span> <span class="pre">is_regex)</span></code></p></li>
+</ul>
 </dd>
 </dl>
-<p>If is_regex is given as True (default is False), the old and new values are interpreted as regex strings.</p>
+<p>If is_regex is given as True for a tuple, the old and new values are interpreted as regex strings.</p>
 </p></li>
 </ul>
 </dd>

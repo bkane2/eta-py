@@ -27,9 +27,9 @@ def to_ulf(cat, word):
   Parameters
   ----------
   cat : str
-    The ULF type category to generate (e.g., 'name', 'v', or 'p').
+    The ULF type category to generate (e.g., ``name``, ``v``, or ``p``).
   word : str
-    The word to lexicalize (e.g., 'mercedes', 'are', or 'on-top-of').
+    The word to lexicalize (e.g., ``mercedes``, ``are``, or ``on-top-of``).
 
   Returns
   -------
@@ -122,7 +122,7 @@ def stem_superlative(sup_adv):
   Parameters
   ----------
   sup-adj : str
-    An upper-case symbolic atom such as 'biggest', "smartest', etc.
+    An upper-case symbolic atom such as ``biggest``, ``smartest``, etc.
   
   Returns
   -------

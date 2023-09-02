@@ -111,113 +111,142 @@
 <span class="sig-name descname"><span class="pre">choose_result_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clause</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feats</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/choice.html#choose_result_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.choice.choose_result_for" title="Permalink to this definition"></a></dt>
 <dd><p>Choose a result for a given clause, starting from a given choice tree root.</p>
 <p>A choice tree consists of a tree of pattern nodes, with the leaves containing templates and associated
-directives specifying how to handle the templates (see eta.util.tt.parse for the specific format of a choice tree).</p>
-<dl>
-<dt>Pattern nodes:</dt><dd><dl class="simple">
-<dt>A pattern node contains either a pattern (see eta.util.tt.match), or one of the following special keywords:</dt><dd><dl class="simple">
-<dt>[:or, &lt;pattern1&gt;, &lt;pattern2&gt;, …]</dt><dd><p>Match this node if any of the specified patterns match.</p>
-</dd>
-<dt>[:subtree, &lt;subtree-name&gt;]</dt><dd><p>Match this node if the subtree rooted at ‘subtree-name’ yields a non-null result.</p>
-</dd>
-</dl>
-</dd>
-</dl>
+directives specifying how to handle the templates (see <code class="docutils literal notranslate"><span class="pre">eta.util.tt.parse</span></code> for the specific format of a choice tree).</p>
+<section id="pattern-nodes">
+<h2>Pattern nodes<a class="headerlink" href="#pattern-nodes" title="Permalink to this heading"></a></h2>
+<p>A pattern node contains either a pattern (see <code class="docutils literal notranslate"><span class="pre">eta.util.tt.match</span></code>), or one of the following special keywords:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[:or,</span> <span class="pre">&lt;pattern1&gt;,</span> <span class="pre">&lt;pattern2&gt;,</span> <span class="pre">...]</span></code>
+Match this node if any of the specified patterns match.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[:subtree,</span> <span class="pre">&lt;subtree-name&gt;]</span></code>
+Match this node if the subtree rooted at ‘subtree-name’ yields a non-null result.</p></li>
+</ul>
+</div></blockquote>
 <p>The choice algorithm attempts to match each pattern node with the given clause. If successful, we recursively
 seek a result from the children of the pattern node. In the case of failure, we recursively seek a result from
 the next sibling of the pattern node.</p>
-</dd>
-<dt>Template nodes:</dt><dd><p>Each template node contains a template, latency, and directive.</p>
+</section>
+<section id="template-nodes">
+<h2>Template nodes<a class="headerlink" href="#template-nodes" title="Permalink to this heading"></a></h2>
+<p>Each template node contains a template, latency, and directive.</p>
 <p>The latency is used to determine how long to wait until using that template again. If the number of attempted
 matches to a template node since the last successful match is lower than the latency, the node is skipped and
 we attempt to recur on the next sibling. A latency of ‘0’ means that a node will always be used.</p>
 <p>The directive specifies how the template is to be used. The directive may be either an “internal” directive,
 continuing the choice process by e.g. recurring on some subtree specified by the template, or an “external”
 directive, indicating that the template is a final result of a particular type.</p>
-<dl>
-<dt>The following internal directives are currently supported:</dt><dd><dl>
-<dt>:subtree</dt><dd><p>Given a template of form &lt;subtree-name&gt;, return the result from recurring on that subtree.</p>
-</dd>
-<dt>:subtree+clause</dt><dd><p>Given a template of form [&lt;subtree-name&gt;, &lt;clause&gt;], return the result from recurring
-on that subtree using the given clause as an input.</p>
-</dd>
-<dt>:subtree-permute</dt><dd><p>Given a template of form [&lt;subtree-name&gt;, [&lt;clause1&gt;, …, &lt;clausek&gt;]], recur on the
-subtree with each given clause, and combine the results into a single [:and, …] result.</p>
-</dd>
-<dt>:subtrees</dt><dd><p>Given a template of form [&lt;expr&gt;, &lt;clause&gt;], recur on each subtree specified by &lt;expr&gt; using
-the given clause, and combine the results into a single [:and, …] result. Here, &lt;expr&gt; may be:</p>
+<p>The following internal directives are currently supported:</p>
 <blockquote>
-<div><p>[&lt;tree&gt;, &lt;clause1&gt;], in which case the given tree is first used to select the subtrees to search.
-[&lt;subtree1&gt;, &lt;subtree2&gt;, …], in which case the given subtrees are searched directly.</p>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">:subtree</span></code>
+Given a template of form <code class="docutils literal notranslate"><span class="pre">&lt;subtree-name&gt;</span></code>, return the result from recurring on that subtree.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:subtree+clause</span></code>
+Given a template of form <code class="docutils literal notranslate"><span class="pre">[&lt;subtree-name&gt;,</span> <span class="pre">&lt;clause&gt;]</span></code>, return the result from recurring
+on that subtree using the given clause as an input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:subtree-permute</span></code>
+Given a template of form <code class="docutils literal notranslate"><span class="pre">[&lt;subtree-name&gt;,</span> <span class="pre">[&lt;clause1&gt;,</span> <span class="pre">...,</span> <span class="pre">&lt;clausek&gt;]]</span></code>, recur on the
+subtree with each given clause, and combine the results into a single <code class="docutils literal notranslate"><span class="pre">[:and,</span> <span class="pre">...]</span></code> result.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:subtrees</span></code>
+Given a template of form <code class="docutils literal notranslate"><span class="pre">[&lt;expr&gt;,</span> <span class="pre">&lt;clause&gt;]</span></code>, recur on each subtree specified by &lt;expr&gt; using
+the given clause, and combine the results into a single <code class="docutils literal notranslate"><span class="pre">[:and,</span> <span class="pre">...]</span></code> result. Here, &lt;expr&gt; may be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[&lt;tree&gt;,</span> <span class="pre">&lt;clause1&gt;]</span></code>, in which case the given tree is first used to select the subtrees to search.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[&lt;subtree1&gt;,</span> <span class="pre">&lt;subtree2&gt;,</span> <span class="pre">...]</span></code>, in which case the given subtrees are searched directly.</p></li>
+</ul>
 </div></blockquote>
-</dd>
-<dt>:subtrees-permute</dt><dd><p>Given a template of form [&lt;expr&gt;, [&lt;clause1&gt;, …, &lt;clausek&gt;]] (with each arg being
-the same as above), permute each subtree with each clause and combine the results.</p>
-</dd>
-<dt>:ulf-recur</dt><dd><p>Given a template of form [&lt;parts&gt;, &lt;reassembly-pattern&gt;], compute a result for each part in
-‘parts’, and then combine them according to ‘reassembly-pattern’.
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:subtrees-permute</span></code>
+Given a template of form <code class="docutils literal notranslate"><span class="pre">[&lt;expr&gt;,</span> <span class="pre">[&lt;clause1&gt;,</span> <span class="pre">...,</span> <span class="pre">&lt;clausek&gt;]]</span></code> (with each arg being
+the same as above), permute each subtree with each clause and combine the results.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:ulf-recur</span></code>
+Given a template of form <code class="docutils literal notranslate"><span class="pre">[&lt;parts&gt;,</span> <span class="pre">&lt;reassembly-pattern&gt;]</span></code>, compute a result for each part in
+&lt;parts&gt;, and then combine them according to &lt;reassembly-pattern&gt;.
 Here, &lt;parts&gt; is a list where each element may be:</p>
 <blockquote>
-<div><p>A subtree followed by a clause, in which case the subtree will be called recursively to obtain a result.
-Some other template expression.</p>
+<div><ul class="simple">
+<li><p>A subtree followed by a clause, in which case the subtree will be called recursively to obtain a result.</p></li>
+<li><p>Some other template expression.</p></li>
+</ul>
 </div></blockquote>
 <p>And &lt;reassembly-pattern&gt; is an S-expression containing only integers, where each integer indices the
-corresponding part in ‘parts’.</p>
-</dd>
-</dl>
-</dd>
-<dt>An external directive may be anything, but the following ones will be common:</dt><dd><dl class="simple">
-<dt>:out</dt><dd><p>Specifies that a result is to be used as a system output (i.e., essentially shorthand for
-using the full ULF (^me say-to.v ^you &lt;result&gt;) as a template).</p>
-</dd>
-<dt>:gist</dt><dd><p>Specifies that a result is to be used as a gist clause (i.e., essentially shorthand for
-using the full ULF (^you paraphrase-to.v ^me &lt;result&gt;) as a template).</p>
-</dd>
-<dt>:nl</dt><dd><p>Specifies that the result is a natural language string.</p>
-</dd>
-<dt>:ulf</dt><dd><p>Specifies that the result is a ULF formula.</p>
-</dd>
-<dt>:schema</dt><dd><p>Specifies that the result is a schema name, to be instantiated with no arguments.</p>
-</dd>
-<dt>:schemas</dt><dd><p>Specifies that the result is a list of schemas.</p>
-</dd>
-<dt>:schema+args</dt><dd><p>Specifies that the result is a schema to be instantiated with a list of arguments.</p>
-</dd>
-<dt>:raw</dt><dd><p>Specifies that the result is simply a raw output with no additional semantics.</p>
-</dd>
-</dl>
-</dd>
-<dt>A template can also use the following keywords:</dt><dd><dl class="simple">
-<dt>[:or, &lt;template1&gt;, &lt;template2&gt;, …]</dt><dd><p>Randomly select one of the provided templates.</p>
-</dd>
-<dt>[:and, &lt;template1&gt;, &lt;template2&gt;, …]</dt><dd><p>Combine each of the provided templates into a single [:and, …] result.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>clause</strong> (<em>s-expr</em>) – An S-expression to be matched by the patterns in a choice tree and therefore used to choose a result.</p></li>
-<li><p><strong>root</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of a choice tree (e.g., “<em>gist</em>”) corresponding to the root node of that tree in ‘trees’.</p></li>
-<li><p><strong>trees</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dict containing all choice trees, keyed on their root names.</p></li>
-<li><p><strong>feats</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dict mapping words to feature lists.</p></li>
+corresponding part in &lt;parts&gt;.</p>
+</li>
 </ul>
+</div></blockquote>
+<p>An external directive may be anything, but the following ones will be common:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">:out</span></code>
+Specifies that a result is to be used as a system output (i.e., essentially shorthand for
+using the full ULF <code class="docutils literal notranslate"><span class="pre">(^me</span> <span class="pre">say-to.v</span> <span class="pre">^you</span> <span class="pre">&lt;result&gt;)</span></code> as a template).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:gist</span></code>
+Specifies that a result is to be used as a gist clause (i.e., essentially shorthand for
+using the full ULF <code class="docutils literal notranslate"><span class="pre">(^you</span> <span class="pre">paraphrase-to.v</span> <span class="pre">^me</span> <span class="pre">&lt;result&gt;)</span></code> as a template).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:nl</span></code>
+Specifies that the result is a natural language string.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:ulf</span></code>
+Specifies that the result is a ULF formula.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:schema</span></code>
+Specifies that the result is a schema name, to be instantiated with no arguments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:schemas</span></code>
+Specifies that the result is a list of schemas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:schema+args</span></code>
+Specifies that the result is a schema to be instantiated with a list of arguments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:raw</span></code>
+Specifies that the result is simply a raw output with no additional semantics.</p></li>
+</ul>
+</div></blockquote>
+<p>A template can also use the following keywords:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[:or,</span> <span class="pre">&lt;template1&gt;,</span> <span class="pre">&lt;template2&gt;,</span> <span class="pre">...]</span></code>
+Randomly select one of the provided templates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[:and,</span> <span class="pre">&lt;template1&gt;,</span> <span class="pre">&lt;template2&gt;,</span> <span class="pre">...]</span></code>
+Combine each of the provided templates into a single <code class="docutils literal notranslate"><span class="pre">[:and,</span> <span class="pre">...]</span></code> result.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list">
+<dt class="field-odd">param clause<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An S-expression to be matched by the patterns in a choice tree and therefore used to choose a result.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Either:</dt><dd><p>[] if no result is found.
-[:&lt;directive&gt;, &lt;result&gt;] if a single result is found.
-[:and, &lt;result1&gt;, …, &lt;resultk&gt;] if multiple results are found.</p>
+<dt class="field-even">type clause<span class="colon">:</span></dt>
+<dd class="field-even"><p>s-expr</p>
+</dd>
+<dt class="field-odd">param root<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The name of a choice tree (e.g., <code class="docutils literal notranslate"><span class="pre">gist</span></code>) corresponding to the root node of that tree in <cite>trees</cite>.</p>
+</dd>
+<dt class="field-even">type root<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param trees<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dict containing all choice trees, keyed on their root names.</p>
+</dd>
+<dt class="field-even">type trees<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">param feats<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dict mapping words to feature lists.</p>
+</dd>
+<dt class="field-even">type feats<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Either:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code> if no result is found.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[:&lt;directive&gt;,</span> <span class="pre">&lt;result&gt;]</span></code> if a single result is found.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[:and,</span> <span class="pre">&lt;result1&gt;,</span> <span class="pre">...,</span> <span class="pre">&lt;resultk&gt;]</span></code> if multiple results are found.</p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>s-expr</p>
 </dd>
 </dl>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>s-expr</p>
-</dd>
-</dl>
+</section>
 </dd></dl>
 
 </section>

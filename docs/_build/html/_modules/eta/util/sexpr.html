@@ -108,7 +108,7 @@
 
 
 <div class="viewcode-block" id="standardize_symbols"><a class="viewcode-back" href="../../../_autosummary/eta.util.sexpr.standardize_symbols.html#eta.util.sexpr.standardize_symbols">[docs]</a><span class="k">def</span> <span class="nf">standardize_symbols</span><span class="p">(</span><span class="n">s_expr</span><span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in |...|.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in escape symbols.&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">standardize_rec</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
 		<span class="k">if</span> <span class="n">symbolp</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">escaped_symbol_p</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
 			<span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -144,13 +144,13 @@
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
 <span class="sd">	s_expr : str</span>
-<span class="sd">		An S-expression in LISP form, e.g., &quot;(a (b c (d e)) &#39;(f g h))&quot;.</span>
+<span class="sd">		An S-expression in LISP form, e.g., ``(a (b c (d e)) &#39;(f g h))``.</span>
 <span class="sd">	</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
 <span class="sd">	s-expr</span>
 <span class="sd">		A structured S-expression, i.e., a recursively nested list structure with string &quot;symbols&quot; as atoms.</span>
-<span class="sd">		e.g., [&#39;a&#39;, [&#39;b&#39;, &#39;c&#39;, [&#39;d&#39;, &#39;e&#39;]], &quot;f g h&quot;]</span>
+<span class="sd">		e.g., ``[&#39;a&#39;, [&#39;b&#39;, &#39;c&#39;, [&#39;d&#39;, &#39;e&#39;]], &quot;f g h&quot;]``</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">parse_s_expr_rec</span><span class="p">(</span><span class="n">s_expr</span><span class="p">):</span>
 		<span class="n">s_expr</span> <span class="o">=</span> <span class="n">clean_s_expr</span><span class="p">(</span><span class="n">s_expr</span><span class="p">)</span>
@@ -200,12 +200,12 @@
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
 <span class="sd">	lst : s-expr</span>
-<span class="sd">		An S-expression in recursively nested list form, e.g., [&#39;a&#39;, [&#39;b&#39;, [&#39;c&#39;, &#39;d&#39;]], &#39;e&#39;].</span>
+<span class="sd">		An S-expression in recursively nested list form, e.g., ``[&#39;a&#39;, [&#39;b&#39;, [&#39;c&#39;, &#39;d&#39;]], &#39;e&#39;]``.</span>
 <span class="sd">	</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
 <span class="sd">	str</span>
-<span class="sd">		A LISP formatted string representation of the S-expression, e.g., &quot;(a (b (c d)) e)&quot;.</span>
+<span class="sd">		A LISP formatted string representation of the S-expression, e.g., ``(a (b (c d)) e)``.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
@@ -228,12 +228,12 @@
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
 <span class="sd">	lst : s-expr</span>
-<span class="sd">		An S-expression in recursively nested list form, e.g., [&#39;a&#39;, [&#39;b&#39;, [&#39;c&#39;, &#39;d&#39;]], &#39;e&#39;].</span>
+<span class="sd">		An S-expression in recursively nested list form, e.g., ``[&#39;a&#39;, [&#39;b&#39;, [&#39;c&#39;, &#39;d&#39;]], &#39;e&#39;]``.</span>
 <span class="sd">	</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
 <span class="sd">	str</span>
-<span class="sd">		A flattened string containing each of the symbols, e.g., &quot;a b c d e&quot;.</span>
+<span class="sd">		A flattened string containing each of the symbols, e.g., ``&quot;a b c d e&quot;``.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
 		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>

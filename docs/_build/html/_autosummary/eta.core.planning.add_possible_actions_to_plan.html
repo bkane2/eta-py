@@ -144,17 +144,6 @@
 <dt class="sig sig-object py" id="eta.core.planning.add_possible_actions_to_plan">
 <span class="sig-name descname"><span class="pre">add_possible_actions_to_plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#add_possible_actions_to_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.add_possible_actions_to_plan" title="Permalink to this definition"></a></dt>
 <dd><p>Given a list of possible actions, attempt to add actions into the current plan.</p>
-<p>TODO: some possible future improvements:
-1) For now, we assume that only the first action in a set of possible actions is used.</p>
-<blockquote>
-<div><p>In the future, this might be extended with a policy for attempting to add the top K possible actions.</p>
-</div></blockquote>
-<ol class="arabic simple" start="2">
-<li><p>This currently adds the action unconditionally; ultimately, the system should verify that the action
-can be added to the plan. This may be done by way of a pattern transducer.</p></li>
-<li><p>The action is currently inserted as the current step, but ultimately we should be able to insert actions
-elsewhere in the plan as well.</p></li>
-</ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -167,6 +156,18 @@ elsewhere in the plan as well.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: some possible future improvements:</dt><dd><ol class="arabic simple">
+<li><p>For now, we assume that only the first action in a set of possible actions is used.
+In the future, this might be extended with a policy for attempting to add the top K possible actions.</p></li>
+<li><p>This currently adds the action unconditionally; ultimately, the system should verify that the action
+can be added to the plan. This may be done by way of a pattern transducer.</p></li>
+<li><p>The action is currently inserted as the current step, but ultimately we should be able to insert actions
+elsewhere in the plan as well.</p></li>
+</ol>
 </dd>
 </dl>
 </dd></dl>

@@ -84,12 +84,17 @@
 <div class="viewcode-block" id="Utterance"><a class="viewcode-back" href="../../_autosummary/eta.discourse.Utterance.html#eta.discourse.Utterance">[docs]</a><span class="k">class</span> <span class="nc">Utterance</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents a single utterance, which contains both the words of the utterance and an affect.</span>
 <span class="sd">  </span>
-<span class="sd">  Attributes</span>
+<span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  words : str</span>
 <span class="sd">    The content of the utterance.</span>
-<span class="sd">  affect : str, optional</span>
-<span class="sd">    The affect of the utterance. Must be contained within the list of supported emotions (default is &#39;neutral&#39;).</span>
+<span class="sd">  affect : str, default=&#39;neutral&#39;</span>
+<span class="sd">    The affect of the utterance. Must be contained within the list of supported emotions.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  words : str</span>
+<span class="sd">  affect : str</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">,</span> <span class="n">affect</span><span class="o">=</span><span class="n">EMOTIONS_LIST</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -103,7 +108,7 @@
 <div class="viewcode-block" id="DialogueTurn"><a class="viewcode-back" href="../../_autosummary/eta.discourse.DialogueTurn.html#eta.discourse.DialogueTurn">[docs]</a><span class="k">class</span> <span class="nc">DialogueTurn</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Represents a dialogue turn by an agent, which contains the utterance as well as any associated dialogue information.</span>
 <span class="sd">  </span>
-<span class="sd">  Attributes</span>
+<span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  agent : str</span>
 <span class="sd">    The agent of this turn.</span>
@@ -119,6 +124,16 @@
 <span class="sd">    A list of obligations created by this turn.</span>
 <span class="sd">  ep : str, optional</span>
 <span class="sd">    The episode that this turn corresponds to.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  agent : str</span>
+<span class="sd">  utterance : Utterance</span>
+<span class="sd">  gists : list[str]</span>
+<span class="sd">  semantics : list[s-expr]</span>
+<span class="sd">  pragmatics : list[s-expr]</span>
+<span class="sd">  obligations : list[s-expr]</span>
+<span class="sd">  ep : str or None</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">utterance</span><span class="p">,</span> <span class="n">gists</span><span class="o">=</span><span class="p">[],</span> <span class="n">semantics</span><span class="o">=</span><span class="p">[],</span> <span class="n">pragmatics</span><span class="o">=</span><span class="p">[],</span> <span class="n">obligations</span><span class="o">=</span><span class="p">[],</span> <span class="n">ep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -159,7 +174,7 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  str : str</span>
-<span class="sd">    A string representing an utterance, potentially prefixed by an emotion tag, e.g., [happy] or [sad].</span>
+<span class="sd">    A string representing an utterance, potentially prefixed by an emotion tag, e.g., ``[happy]`` or ``[sad]``.</span>
 <span class="sd">  </span>
 <span class="sd">  Returns</span>
 <span class="sd">  -------</span>
@@ -214,14 +229,12 @@
 <span class="sd">	This function replaces &quot;are&quot; by &quot;are2&quot; when preceded or followed by &quot;you&quot;; similarly, it replaces</span>
 <span class="sd">  &quot;were&quot; by &quot;were2&quot; and &quot;was&quot; by &quot;was2&quot;.</span>
 
-<span class="sd">	It also replaces &quot;you&quot; by &quot;you2&quot; when it is the last word, or</span>
-<span class="sd">	when it is not one of the first two words and is not preceded by</span>
-<span class="sd">	certain conjunctions (&quot;and&quot;, &quot;or&quot;, &quot;but&quot;, &quot;that&quot;, &quot;because&quot;, &quot;if&quot;,</span>
-<span class="sd">	&quot;when&quot;, &quot;then&quot;, &quot;why&quot;, ...), or certain subordinating verbs (&quot;think&quot;,</span>
-<span class="sd">	&quot;believe&quot;, &quot;know&quot;, ...), or when it follows &quot;to&quot;.</span>
+<span class="sd">	It also replaces &quot;you&quot; by &quot;you2&quot; when it is the last word, or when it is not one of the first two</span>
+<span class="sd">  words and is not preceded by certain conjunctions (&quot;and&quot;, &quot;or&quot;, &quot;but&quot;, &quot;that&quot;, &quot;because&quot;, &quot;if&quot;,</span>
+<span class="sd">	&quot;when&quot;, &quot;then&quot;, &quot;why&quot;, ...), or certain subordinating verbs (&quot;think&quot;, &quot;believe&quot;, &quot;know&quot;, ...), or</span>
+<span class="sd">  when it follows &quot;to&quot;.</span>
 
-<span class="sd">	This is in preparation for replacement of &quot;you2&quot; by &quot;me&quot; (rather than &quot;i&quot;)</span>
-<span class="sd">	when swap_duals is applied.</span>
+<span class="sd">	This is in preparation for replacement of &quot;you2&quot; by &quot;me&quot; (rather than &quot;i&quot;) when swap_duals is applied.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
   <span class="n">re_punct</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;?&#39;</span><span class="p">,</span><span class="s1">&#39;!&#39;</span><span class="p">,</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">]</span>
   <span class="n">re_blocker</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;or&#39;</span><span class="p">,</span> <span class="s1">&#39;but&#39;</span><span class="p">,</span> <span class="s1">&#39;that&#39;</span><span class="p">,</span> <span class="s1">&#39;because&#39;</span><span class="p">,</span> <span class="s1">&#39;if&#39;</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">,</span> <span class="s1">&#39;when&#39;</span><span class="p">,</span> <span class="s1">&#39;then&#39;</span><span class="p">,</span> <span class="s1">&#39;why&#39;</span><span class="p">,</span>

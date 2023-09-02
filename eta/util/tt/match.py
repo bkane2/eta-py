@@ -60,16 +60,16 @@ def underlying_feat(x):
 
 
 def flatten_sequences(expr):
-  """Flatten lists marked as sequences, i.e., of the form [:seq, ...].
+  """Flatten lists marked as sequences, i.e., of the form ``[:seq, ...]``.
   
-  [:seq, ...] expressions are not allowed to contain such expressions as sequence elements (i.e., these
+  ``[:seq, ...]`` expressions are not allowed to contain such expressions as sequence elements (i.e., these
   would not be flattened. It would be easy to allow them, but for the pattern transductions here no such
   embeddings occur, because sequence expressions are match-values of single sequence variables, like *atom
   or +expr, and these are matched only against input expressions free of sequence expressions.)
 
-  A top-level expr like [:seq, a] or [:seq, []] or [:seq, [a, b]] becomes a, [], or [a, b] respectively,
-  i.e., a 1-element sequence is turned into that one element. However, an empty sequence [:seq] or longer
-  sequence like [:seq, a, b] is left unchanged, since removing [:seq, ...] doesn't leave a single valid expression.
+  A top-level expr like ``[:seq, a]`` or ``[:seq, []]`` or ``[:seq, [a, b]]`` becomes ``a``, ``[]``, or ``[a, b]`` respectively,
+  i.e., a 1-element sequence is turned into that one element. However, an empty sequence ``[:seq]`` or longer
+  sequence like ``[:seq, a, b]`` is left unchanged, since removing ``[:seq, ...]`` doesn't leave a single valid expression.
   """
   if atom(expr):
     return expr
@@ -108,10 +108,10 @@ def s_variant_of_p_var(p_var):
 def val(var, expr):
   """Determine whether a predicate is true of a given expression.
   
-  If 'var' is a multi-character atom starting with '!', then it's expected
+  If `var` is a multi-character atom starting with '!', then it's expected
   to have a function definition corresponding to the string following the '!'.
   If it starts with ?/*/+ then the corresponding !-predicate must be obtained
-  through string manipulation. If 'var' is a nonnegative integer then the
+  through string manipulation. If `var` is a nonnegative integer then the
   corresponding predicate is !expr, which is true of any expression.
 
   Parameters
@@ -147,9 +147,9 @@ def isa(x, feat, feats):
   Parameters
   ----------
   x : str
-    A word (e.g., 'surgeon' or 'doctor').
+    A word (e.g., ``surgeon`` or ``doctor``).
   feat : str
-    A feature string (e.g., 'professional').
+    A feature string (e.g., ``professional``).
   feats : dict
     A dict mapping words to feature lists.
 
@@ -195,42 +195,40 @@ def isa(x, feat, feats):
 
 def match(pa, ex, feats={}):
   """Match a given pattern S-expression to an input S-expression.
-
-  This function is a wrapper around the main recursive function, match_rec.
   
   :nil results from match_rec are mapped to an empty list, under the assumption
-  that the match_rec([], []) case is unnecessary for Eta rule trees.
+  that the ``match_rec([], [])`` case is unnecessary for Eta rule trees.
 
   Parameters
   ----------
   pa : s-expr
     A pattern, which is any S-expression where atoms may be:
-      A custom predicate of form !<pred>, ?<pred>, *<pred>, or +<pred>,
+      - A custom predicate of form ``!<pred>``, ``?<pred>``, ``*<pred>``, or ``+<pred>``,
         interpreted as matching exactly one expression, 0 or 1 expression,
         0 or more expressions, or 1 or more expressions, respectively. Custom
         predicates must be defined in eta.util.tt.preds. Some basic ones are
         'expr', 'atom', and 'lst', being true respectively of any expression,
         an atom, or a list.
-      An integer >= 0, where 0, 1, 2, ... respectively mean "zero or more expressions",
+      - An integer >= 0, where 0, 1, 2, ... respectively mean "zero or more expressions",
         "at most one expression", "at most 2 expressions", at most 3 expressions", etc.
-      A dotted atom, such as .verb or .branch-of-math, i.e., starting with a dot and
+      - A dotted atom, such as ``.verb`` or ``.branch-of-math``, i.e., starting with a dot and
         denoting features of atoms, as defined by the 'feats' argument. These are matched
         by checking whether a given expression is connected to the feature through a chain
         of 'isa' connections.
-      Any other atom, which simply matches an identical atom in 'ex'.
+      - Any other atom, which simply matches an identical atom in `ex`.
   ex : s-expr
     The input to match.
   feats : dict
     A dict mapping a word w to a feature list x1, ..., xk, such that
-    isa(w, xi) for each feature xi.
+    ``isa(w, xi)`` for each feature xi.
 
   Returns
   -------
   s-expr
-    An empty list [] if no match, otherwise an S-expression containing the
-    result of the match. The result will resemble the input expression 'ex',
+    An empty list ``[]`` if no match, otherwise an S-expression containing the
+    result of the match. The result will resemble the input expression `ex`,
     except that sequences of 0 or more constituents matched by sequence variables
-    will be encoded as [:seq, <item1>, <item2>, ...].
+    will be encoded as ``[:seq, <item1>, <item2>, ...]``.
   """
   def match_rec(pa, ex, feats):
     # An empty pa is a success if and only if matched with an empty ex
@@ -390,12 +388,12 @@ def match(pa, ex, feats={}):
 
 
 def spec_function(x):
-  """Check if x is a user-defined evaluable function, i.e., if it ends with '!'."""
+  """Check if `x` is a user-defined evaluable function, i.e., if it ends with '!'."""
   return isinstance(x, str) and x and x != '!' and x[-1] == '!'
 
 
 def position_index(i):
-  """Map a string denoting a position index to either an integer or list of integers (or return [] if not a position index)."""
+  """Map a string denoting a position index to either an integer or list of integers (or return ``[]`` if not a position index)."""
   if (isinstance(i, int) or (isinstance(i, str) and i.isdigit())):
     return int(i)
   elif not check_position_index_syntax(i):
@@ -405,15 +403,15 @@ def position_index(i):
 
 
 def check_position_index_syntax(i):
-  """Check if i is a valid position index.
+  """Check if `i` is a valid position index.
   
   A position index in tree transductions can take the following syntax:
-  0, 1, 2, 3, ...,
-    (equivalently, 0., 1., 2., 3., ..., but NOT 0.0, 1.0, 2.0, 3.0, ...)
-  or 1.1, 1.2, 1.3, ..., 2.1, 2.2, 2.3, ..., etc.,
-    (equivalently 1.1., 1.2., 1.3., ..., 2.1., 2.2., 2.3., ...)
-  or 1.1.1, 1.1.2, ..., 1.2.1, 1.2.2, ..., 2.1.1, 2.1.2, ... etc.
-    (equivalently 1.1.1., 1.1.2., ..., 1.2.1., 1.2.1., 1.2.2., ... )
+    - 0, 1, 2, 3, ...,
+      (equivalently, 0., 1., 2., 3., ..., but NOT 0.0, 1.0, 2.0, 3.0, ...)
+    - or 1.1, 1.2, 1.3, ..., 2.1, 2.2, 2.3, ..., etc.,
+      (equivalently 1.1., 1.2., 1.3., ..., 2.1., 2.2., 2.3., ...)
+    - or 1.1.1, 1.1.2, ..., 1.2.1, 1.2.2, ..., 2.1.1, 2.1.2, ... etc.
+      (equivalently 1.1.1., 1.1.2., ..., 1.2.1., 1.2.1., 1.2.2., ... )
   
   Since trailing 0 digits are not allowed (except for standalone 0), an input
   like '13.20' should be given as '13.20.'.
@@ -458,22 +456,22 @@ def fill_template(template, match_result):
   ----------
   template : s-expr
     An S-expression containing:
-      Positional indicators such as 3, 3.2, 3.3.2, etc., where pieces of 'match_result' are
-        to be placed. E.g., here, the references are to the 3rd element of 'match_result',
-        the 2nd element of the 3rd element of 'match_result', etc. The index 0 is special,
+      - Positional indicators such as 3, 3.2, 3.3.2, etc., where pieces of `match_result` are
+        to be placed. E.g., here, the references are to the 3rd element of `match_result`,
+        the 2nd element of the 3rd element of `match_result`, etc. The index 0 is special,
         as it refers to the (flattened) match result as a whole.
-      Evaluable predicates ending in '!' applied to some arguments, e.g., [lex-ulf!, v, 3.2],
+      - Evaluable predicates ending in '!' applied to some arguments, e.g., ``[lex-ulf!, v, 3.2]``,
         in which case the result of the predicate called on the given arguments will filled in
-        place. Custom predicates must be defined in eta.util.tt.preds, and their arguments must
-        match the arguments provided in 'template'.
+        place. Custom predicates must be defined in ``eta.util.tt.preds``, and their arguments must
+        match the arguments provided in `template`.
   match_result : s-expr
-    An S-expression containing sequence expressions such as [:seq, [a, b], c, [d, [f, g]]].
+    An S-expression containing sequence expressions such as ``[:seq, [a, b], c, [d, [f, g]]]``.
 
   Returns
   -------
   s-expr
     The template filled in with "pieces" from match_result, as indicated by the position
-    indices it contains. If a position index points to a sequence, i.e., [:seq, ...], the
+    indices it contains. If a position index points to a sequence, i.e., ``[:seq, ...]``, the
     elements of the sequence are inserted into the result without the :seq wrapper.
   """
   if template == 0 or template == '0':

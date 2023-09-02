@@ -1,10 +1,10 @@
 """Classes and methods for representing and modifying different types of schemas.
 
 A schema is, in general, a collection of sections. Each section is a sequence of eventualities (natural language
-expressions or ULF/ELF formulas with associated episode symbols) under a section label, e.g., 'types' or 'preconditions'.
+expressions or ULF/ELF formulas with associated episode symbols) under a section label, e.g., ``types`` or ``preconditions``.
 
-A schema is denoted by a specific predicate string (e.g., 'dog.n' or 'eat.v'), and also has a unique header, which is a
-formula characterizing the schema episode potentially containing participant variables, e.g., ((^me eat.v ?x) ** ?e1).
+A schema is denoted by a specific predicate string (e.g., ``dog.n`` or ``eat.v``), and also has a unique header, which is a
+formula characterizing the schema episode potentially containing participant variables, e.g., ``((^me eat.v ?x) ** ?e1)``.
 """
 
 import glob
@@ -25,7 +25,7 @@ class Schema:
   id : str
     A unique ID for this schema.
   predicate : str
-    The main predicate of the schema (e.g., dog.n or eat.v).
+    The main predicate of the schema (e.g., ``dog.n`` or ``eat.v``).
   participants : list[s-expr]
     All participant roles of a schema, i.e., variables and constants present as arguments in the header.
   vars : list[str]
@@ -37,9 +37,9 @@ class Schema:
   contents : ELF
     The ELF formula for the contents of the schema.
   sections : dict[str, list[Eventuality]]
-    A dict mapping each section label (e.g., 'types') to a list of eventualities created from the schema contents.
+    A dict mapping each section label (e.g., ``types``) to a list of eventualities created from the schema contents.
   embedding : list[float]
-    A vector embedding of this schema (default is empty embedding).
+    A vector embedding of this schema.
   """
 
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[]):
@@ -65,9 +65,9 @@ class Schema:
     return kwargs
   
   def to_probability_dict(self, eventualities, swap_duals=False):
-    """Given a list of certainty or necessity eventualities, create a probability dict with entries of form {<ep>:<prob>}.
+    """Given a list of certainty or necessity eventualities, create a probability dict with entries of form ``{<ep>:<prob>}``.
     
-    If 'swap_duals' is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).
+    If `swap_duals` is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).
     """
     probabilities = {}
     for e in eventualities:
@@ -146,7 +146,7 @@ class Schema:
   def bind_args(self, args):
     """Bind variables in the schema header with a list of respective argument values.
     
-    Generally, we assume that 'args' should correspond to the variables in the participants list of
+    Generally, we assume that `args` should correspond to the variables in the participants list of
     the schema, but we allow for the possibility of ^me and ^you as implicit arguments if fewer arguments
     than variables are given - in which case, they're added to the arguments list in that order.
 
@@ -200,7 +200,6 @@ class Schema:
       self.bind(var, arg)
     
     return self
-    # END bind_args
 
   def embed(self, embedder):
     """Embed the schema based on the natural language representation of its contents, given an embedder object."""
@@ -218,10 +217,10 @@ class Schema:
       An Embedder object.
     query : str
       A query string to use to compute similarity.
-    n : int, optional
-      The number of facts to retrieve (the default is 5).
-    header : bool, optional
-      Whether to prefix the retrieved facts with the schema header (the default is True).
+    n : int, default=5
+      The number of facts to retrieve.
+    header : bool, default=True
+      Whether to prefix the retrieved facts with the schema header.
 
     Returns
     -------
@@ -241,8 +240,8 @@ class Schema:
     
     Parameters
     ----------
-    no_bind : bool, optional
-      Do not make variable substitutions (the default is False).
+    no_bind : bool, default=False
+      Do not make variable substitutions.
     
     Returns
     -------
@@ -258,8 +257,8 @@ class Schema:
     
     Parameters
     ----------
-    no_bind : bool, optional
-      Do not make variable substitutions (the default is False).
+    no_bind : bool, default=False
+      Do not make variable substitutions.
 
     Returns
     -------
@@ -275,7 +274,7 @@ class Schema:
     Parameters
     ----------
     sec : str or list[str]
-      A section label or list of section labels, or the keyword ':all' to return all sections.
+      A section label or list of section labels, or the keyword ``:all`` to return all sections.
 
     Returns
     -------
@@ -293,9 +292,9 @@ class Schema:
     Parameters
     ----------
     sec : str or list[str]
-      A section label or list of section labels, or the keyword ':all' to return all sections.
-    no_bind : bool, optional
-      Do not make variable substitutions (the default is False).
+      A section label or list of section labels, or the keyword ``:all`` to return all sections.
+    no_bind : bool, default=False
+      Do not make variable substitutions.
 
     Returns
     -------
@@ -312,9 +311,9 @@ class Schema:
     Parameters
     ----------
     sec : str or list[str]
-      A section label or list of section labels, or the keyword ':all' to return all sections.
-    no_bind : bool, optional
-      Do not make variable substitutions (the default is False).
+      A section label or list of section labels, or the keyword ``:all`` to return all sections.
+    no_bind : bool, default=False
+      Do not make variable substitutions.
 
     Returns
     -------
@@ -336,16 +335,16 @@ class EpiSchema(Schema):
   
   Sections
   --------
-  types : the nominal types of each participant/variable.
-  rigid-conds : non-fluent conditions relevant to episode.
-  static-conds : fluent conditions that are not expected to change during episode.
-  preconds : fluent conditions that are expected to hold at the beginning of episode.
-  postconds : fluent conditions that are expected to hold at end of episode.
-  goals : goals of participants in schema (e.g., (^me want.v (that ...))).
-  episodes : the expected/intended sub-episodes of the schema episode.
-  episode-relations : the temporal/causal relations between episodes of schema.
-  necessities : probabilities associated with schema formulas.
-  certainties : probabilities associated with schema episodes.
+  - **types** : the nominal types of each participant/variable.
+  - **rigid-conds** : non-fluent conditions relevant to episode.
+  - **static-conds** : fluent conditions that are not expected to change during episode.
+  - **preconds** : fluent conditions that are expected to hold at the beginning of episode.
+  - **postconds** : fluent conditions that are expected to hold at end of episode.
+  - **goals** : goals of participants in schema (e.g., ``(^me want.v (that ...))``).
+  - **episodes** : the expected/intended sub-episodes of the schema episode.
+  - **episode-relations** : the temporal/causal relations between episodes of schema.
+  - **necessities** : probabilities associated with schema formulas.
+  - **certainties** : probabilities associated with schema episodes.
   """
   
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
@@ -382,17 +381,17 @@ class DialSchema(EpiSchema):
   
   Sections
   --------
-  types : the nominal types of each participant/variable.
-  rigid-conds : non-fluent conditions relevant to episode.
-  static-conds : fluent conditions that are not expected to change during episode.
-  preconds : fluent conditions that are expected to hold at the beginning of episode.
-  postconds : fluent conditions that are expected to hold at end of episode.
-  goals : goals of participants in schema (e.g., (^me want.v (that ...))).
-  episodes : the expected/intended sub-episodes of the schema episode.
-  episode-relations : the temporal/causal relations between episodes of schema.
-  obligations : the dialogue obligations associated with episodes within the schema.
-  necessities : probabilities associated with schema formulas.
-  certainties : probabilities associated with schema episodes.
+  - **types** : the nominal types of each participant/variable.
+  - **rigid-conds** : non-fluent conditions relevant to episode.
+  - **static-conds** : fluent conditions that are not expected to change during episode.
+  - **preconds** : fluent conditions that are expected to hold at the beginning of episode.
+  - **postconds** : fluent conditions that are expected to hold at end of episode.
+  - **goals** : goals of participants in schema (e.g., (^me want.v (that ...))).
+  - **episodes** : the expected/intended sub-episodes of the schema episode.
+  - **episode-relations** : the temporal/causal relations between episodes of schema.
+  - **obligations** : the dialogue obligations associated with episodes within the schema.
+  - **necessities** : probabilities associated with schema formulas.
+  - **certainties** : probabilities associated with schema episodes.
   """
 
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
@@ -415,9 +414,6 @@ class DialSchema(EpiSchema):
   def get_obligations_of_ep(self, ep):
     """Return all obligations attached to a given episode symbol.
 
-    TODO: it may be better to create a generalized accessor function for other types of schema
-    annotations/episode relations.
-
     Parameters
     ----------
     ep : str
@@ -426,6 +422,11 @@ class DialSchema(EpiSchema):
     Returns
     -------
     list[Eventuality]
+
+    Notes
+    -----
+    TODO: it may be better to create a generalized accessor function for other types of schema
+    annotations/episode relations.
     """
     obligations = []
     for wff in self.get_section_wffs('obligations'):
@@ -439,11 +440,11 @@ class ObjSchema(Schema):
   
   Sections
   --------
-  types : the nominal types of each participant/variable.
-  rigid-conds : non-fluent conditions relevant to object.
-  skeletal-prototype : 3D mesh decomposition of object (.obj filenames).
-  purposes : telic purpose associated with object.
-  necessities : probabilities associated with schema formulas.
+  - **types** : the nominal types of each participant/variable.
+  - **rigid-conds** : non-fluent conditions relevant to object.
+  - **skeletal-prototype** : 3D mesh decomposition of object (.obj filenames).
+  - **purposes** : telic purpose associated with object.
+  - **necessities** : probabilities associated with schema formulas.
   """
 
   def __init__(self, predicate='', participants=[], vars=[], bindings={}, header=[], contents=[],
@@ -470,6 +471,11 @@ class ObjSchema(Schema):
 class SchemaLibrary:
   """A library of all generic episode, dialogue, and object schemas.
 
+  Parameters
+  ----------
+  embedder : Embedder, optional
+    If provided, an embedder to embed all schemas that are added.
+
   Attributes
   ----------
   dial : dict[str, DialSchema]
@@ -478,8 +484,7 @@ class SchemaLibrary:
     A dict mapping episode schema predicates to episode schemas.
   obj : dict[str, ObjSchema]
     A dict mapping object schema predicates to object schemas.
-  embedder : Embedder, optional
-    If provided, an embedder to embed all schemas that are added.
+  embedder : Embedder
   """
 
   def __init__(self, embedder=None):
@@ -520,7 +525,7 @@ class SchemaLibrary:
     Parameters
     ----------
     type : str or list[str]
-      A schema type ('dial', 'epi', or 'obj'), or a list of types.
+      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.
 
     Returns
     -------
@@ -565,12 +570,12 @@ class SchemaLibrary:
     Parameters
     ----------
     type : str or list[str]
-      A schema type ('dial', 'epi', or 'obj'), or a list of types.
+      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.
     query : str, optional
-      A query string to use to compute similarity. If not given (default), or if no embedder is
+      A query string to use to compute similarity. If not given, or if no embedder is
       defined, an arbitrary schema is retrieved.
-    m : int, optional
-      The number of schemas to retrieve (the default is 1).
+    m : int, default=1
+      The number of schemas to retrieve.
 
     Returns
     -------
@@ -591,16 +596,16 @@ class SchemaLibrary:
     Parameters
     ----------
     type : str or list[str]
-      A schema type ('dial', 'epi', or 'obj'), or a list of types.
+      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.
     query : str, optional
-      A query string to use to compute similarity. If not given (default), or if no embedder is
+      A query string to use to compute similarity. If not given, or if no embedder is
       defined, an arbitrary schema is retrieved.
-    m : int, optional
-      The number of schemas to retrieve (the default is 1).
-    n : int, optional
-      The number of facts to retrieve from each retrieved schema (the default is 5).
-    header : bool, optional
-      Whether to prefix the retrieved facts with the schema header (the default is True).
+    m : int, default=1
+      The number of schemas to retrieve.
+    n : int, default=5
+      The number of facts to retrieve from each retrieved schema.
+    header : bool, default=True
+      Whether to prefix the retrieved facts with the schema header.
 
     Returns
     -------

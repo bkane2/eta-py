@@ -93,6 +93,11 @@
 
 <div class="viewcode-block" id="PlanNode"><a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode">[docs]</a><span class="k">class</span> <span class="nc">PlanNode</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;A node in the doubly linked list that represents the system&#39;s plan.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  step : PlanStep</span>
+<span class="sd">    The plan step contained within this node.</span>
 <span class="sd">  </span>
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
@@ -198,12 +203,12 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    before : int, optional</span>
-<span class="sd">      The number of past surface steps to show (the default is 3).</span>
-<span class="sd">    after : int, optional</span>
-<span class="sd">      The number of future surface steps to show (the default is 5).</span>
-<span class="sd">    schemas : bool, optional</span>
-<span class="sd">      Whether to also display schema predicates for each step (the default is False).</span>
+<span class="sd">    before : int, default=3</span>
+<span class="sd">      The number of past surface steps to show.</span>
+<span class="sd">    after : int, default=5</span>
+<span class="sd">      The number of future surface steps to show.</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -242,8 +247,8 @@
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    schemas : bool, optional</span>
-<span class="sd">      Whether to also display schema predicates for each step (the default is False).</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -256,8 +261,8 @@
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    schemas : bool, optional</span>
-<span class="sd">      Whether to also display schema predicates for each step (the default is False).</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -270,19 +275,19 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    before : int, optional</span>
-<span class="sd">      The number of past surface steps to include in the graph (the default is 3).</span>
-<span class="sd">    after : int, optional</span>
-<span class="sd">      The number of future surface steps to include in the graph (the default is 5).</span>
-<span class="sd">    schemas : bool, optional</span>
-<span class="sd">      Whether to also display schema predicates in the labels for each step (the default is False).</span>
+<span class="sd">    before : int, default=3</span>
+<span class="sd">      The number of past surface steps to include in the graph.</span>
+<span class="sd">    after : int, default=5</span>
+<span class="sd">      The number of future surface steps to include in the graph.</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates in the labels for each step.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    nodes : list[tuple[str, str]]</span>
-<span class="sd">      A list of vertices/nodes in the resulting graph, where each node is an (&lt;id&gt;, &lt;label&gt;) tuple.</span>
+<span class="sd">      A list of vertices/nodes in the resulting graph, where each node is an ``(&lt;id&gt;, &lt;label&gt;)`` tuple.</span>
 <span class="sd">    edges : list[tuple[str, str]]</span>
-<span class="sd">      A list of edges in the resulting graph, where each edge is an (&lt;id1&gt;, &lt;id2&gt;) tuple.</span>
+<span class="sd">      A list of edges in the resulting graph, where each edge is an ``(&lt;id1&gt;, &lt;id2&gt;)`` tuple.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
@@ -332,12 +337,17 @@
 
     <span class="k">return</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span></div>
   
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span></div>
+<div class="viewcode-block" id="PlanNode.__str__"><a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span></div></div>
   
 
 <div class="viewcode-block" id="PlanStep"><a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep">[docs]</a><span class="k">class</span> <span class="nc">PlanStep</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;A plan step containing an eventuality, related to other plan steps through a tree structure.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The eventuality corresponding to this step.</span>
 <span class="sd">  </span>
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
@@ -354,6 +364,7 @@
 <span class="sd">  schemas : list[Schema]</span>
 <span class="sd">    A list of schemas that this expected/intended step arises from (if any).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+  
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">gentemp</span><span class="p">(</span><span class="s1">&#39;STEP&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">event</span>
@@ -365,6 +376,8 @@
 <div class="viewcode-block" id="PlanStep.get_obligations"><a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.get_obligations">[docs]</a>  <span class="k">def</span> <span class="nf">get_obligations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get any dialogue obligations associated with a particular step in the plan.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    TODO: this is currently a bit of a hack, in that it involves looking at the superstep</span>
 <span class="sd">    as well if no obligations are found. This is because say-to.v actions may need to access</span>
 <span class="sd">    the parent paraphrase-to.v actions in order to inherit relevant obligations of the latter.</span>
@@ -383,13 +396,15 @@
 <span class="sd">    only in the case where this step doesn&#39;t already have associated schemas (e.g.,</span>
 <span class="sd">    if it was created from an episode list in expanding an action).</span>
 
-<span class="sd">    TODO: it&#39;s not clear whether the above is the sensible behavior, or if instead we</span>
-<span class="sd">    should always append the schemas of the superstep to this step.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    superstep : PlanStep</span>
 <span class="sd">      The superstep to add to this step.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    TODO: it&#39;s not clear whether the above is the sensible behavior, or if instead we</span>
+<span class="sd">    should always append the schemas of the superstep to this step.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">supersteps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">superstep</span><span class="p">)</span>
     <span class="n">superstep</span><span class="o">.</span><span class="n">substeps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -425,10 +440,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    reverse : bool, optional</span>
-<span class="sd">      If given as True, print the subtree &quot;above&quot; this step rather than below (the default is False).</span>
-<span class="sd">    schemas : bool, optional</span>
-<span class="sd">      Whether to also display schema predicates for each step (the default is False).</span>
+<span class="sd">    reverse : bool, default=False</span>
+<span class="sd">      If given as True, print the subtree &quot;above&quot; this step rather than below.</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -460,15 +475,15 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    schemas : bool, optional</span>
-<span class="sd">      Whether to also display schema predicates for each step (the default is False).</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">      The step formatted as one of the following S-expression string representations:</span>
-<span class="sd">      ((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;)</span>
-<span class="sd">      ((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;) (:schemas &lt;schema-preds&gt;)</span>
+<span class="sd">      - ``((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;)``</span>
+<span class="sd">      - ``((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;) (:schemas &lt;schema-preds&gt;)``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">schemas</span><span class="p">:</span>
       <span class="n">schema_instances</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">predicate</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="p">]</span>
@@ -477,8 +492,8 @@
     <span class="k">else</span><span class="p">:</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div>
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div>
+<div class="viewcode-block" id="PlanStep.__str__"><a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div></div>
   
 
 <div class="viewcode-block" id="get_first_plan_node"><a class="viewcode-back" href="../../_autosummary/eta.plan.get_first_plan_node.html#eta.plan.get_first_plan_node">[docs]</a><span class="k">def</span> <span class="nf">get_first_plan_node</span><span class="p">(</span><span class="n">plan_node</span><span class="p">):</span>
@@ -533,7 +548,7 @@
 <span class="sd">  plan_node : PlanNode</span>
 <span class="sd">    The node to expand.</span>
 <span class="sd">  subplan_node_start : PlanNode</span>
-<span class="sd">    The first node in the subplan to replace &#39;plan_node&#39; with.</span>
+<span class="sd">    The first node in the subplan to replace `plan_node` with.</span>
 
 <span class="sd">  Returns</span>
 <span class="sd">  -------</span>
@@ -559,7 +574,7 @@
 <span class="sd">  plan_node : PlanNode</span>
 <span class="sd">    The node that the new plan should precede.</span>
 <span class="sd">  new_plan_node_start : PlanNode</span>
-<span class="sd">    The first node in the new plan to insert before &#39;plan_node&#39;.</span>
+<span class="sd">    The first node in the new plan to insert before `plan_node`.</span>
 <span class="sd">    </span>
 <span class="sd">  Returns</span>
 <span class="sd">  -------</span>
@@ -576,11 +591,7 @@
 
 
 <div class="viewcode-block" id="merge_plan_nodes"><a class="viewcode-back" href="../../_autosummary/eta.plan.merge_plan_nodes.html#eta.plan.merge_plan_nodes">[docs]</a><span class="k">def</span> <span class="nf">merge_plan_nodes</span><span class="p">(</span><span class="n">plan_node_start</span><span class="p">,</span> <span class="n">plan_node_end</span><span class="p">,</span> <span class="n">new_plan_node</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Merge a sequence of plan nodes (bounded between plan-node-start and plan-node-end) into a given subplan node.</span>
-
-<span class="sd">  Note that this function is effectively the opposite of &#39;expand_plan_node&#39;.</span>
-<span class="sd">  </span>
-<span class="sd">  TODO: this may need to be extended to deal with cases where the plan nodes to merge are discontiguous in the plan.</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Merge a sequence of plan nodes (bounded between a given start and end node) into a given subplan node.</span>
 
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -595,6 +606,10 @@
 <span class="sd">  -------</span>
 <span class="sd">  PlanNode</span>
 <span class="sd">    The new subplan node that replaced the merged sequence.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: this may need to be extended to deal with cases where the plan nodes to merge are discontiguous in the plan.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">new_plan_node</span><span class="o">.</span><span class="n">add_supersteps</span><span class="p">(</span><span class="n">plan_node_start</span><span class="p">,</span> <span class="n">plan_node_end</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">plan_node_start</span><span class="o">.</span><span class="n">prev</span><span class="p">:</span>
@@ -608,9 +623,6 @@
 
 <div class="viewcode-block" id="init_plan_from_eventualities"><a class="viewcode-back" href="../../_autosummary/eta.plan.init_plan_from_eventualities.html#eta.plan.init_plan_from_eventualities">[docs]</a><span class="k">def</span> <span class="nf">init_plan_from_eventualities</span><span class="p">(</span><span class="n">eventualities</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Create a plan structure from a list of eventualities, assumed to occur sequentially.</span>
-<span class="sd">  </span>
-<span class="sd">  TODO: we might, in the future, allow for episode-relations in the schema to provide initial</span>
-<span class="sd">  constraints over plan construction here.</span>
 
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -624,6 +636,11 @@
 <span class="sd">  -------</span>
 <span class="sd">  PlanNode</span>
 <span class="sd">    The first node in the created plan structure.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: we might, in the future, allow for episode-relations in the schema to provide initial</span>
+<span class="sd">  constraints over plan construction here.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">first_node</span> <span class="o">=</span> <span class="kc">None</span>
   <span class="n">prev_node</span> <span class="o">=</span> <span class="kc">None</span>
@@ -651,20 +668,22 @@
 <div class="viewcode-block" id="visualize_plan"><a class="viewcode-back" href="../../_autosummary/eta.plan.visualize_plan.html#eta.plan.visualize_plan">[docs]</a><span class="k">def</span> <span class="nf">visualize_plan</span><span class="p">(</span><span class="n">plan_node</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">vert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;io/&#39;</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Visualize a plan as a graph using graphviz dot.</span>
 
-<span class="sd">  TODO: it may be better to move this function elsewhere in order to have a cleaner dependency structure.</span>
-
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
-<span class="sd">  before : int, optional</span>
-<span class="sd">    The number of past surface steps to include in the graph (the default is 3).</span>
-<span class="sd">  after : int, optional</span>
-<span class="sd">    The number of future surface steps to include in the graph (the default is 5).</span>
-<span class="sd">  schemas : bool, optional</span>
-<span class="sd">    Whether to also display schema predicates in the labels for each step (the default is False).  </span>
-<span class="sd">  vert : bool, optional</span>
-<span class="sd">    Whether to rotate the direction of the graph to left-right (the default is False).</span>
-<span class="sd">  dir : str, optional</span>
-<span class="sd">    The directory to store the generated graph image (the default is &#39;io/&#39;).</span>
+<span class="sd">  before : int, default=3</span>
+<span class="sd">    The number of past surface steps to include in the graph.</span>
+<span class="sd">  after : int, default=5</span>
+<span class="sd">    The number of future surface steps to include in the graph.</span>
+<span class="sd">  schemas : bool, default=False</span>
+<span class="sd">    Whether to also display schema predicates in the labels for each step.</span>
+<span class="sd">  vert : bool, default=False</span>
+<span class="sd">    Whether to rotate the direction of the graph to left-right.</span>
+<span class="sd">  dir : str, default=&#39;io/&#39;</span>
+<span class="sd">    The directory to store the generated graph image.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: it may be better to move this function elsewhere in order to have a cleaner dependency structure.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">to_graph</span><span class="p">(</span><span class="n">before</span><span class="o">=</span><span class="n">before</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="n">after</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="n">schemas</span><span class="p">)</span>
   <span class="n">dot</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>

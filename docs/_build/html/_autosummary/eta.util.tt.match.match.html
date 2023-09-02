@@ -110,41 +110,40 @@
 <dt class="sig sig-object py" id="eta.util.tt.match.match">
 <span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/match.html#match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.match.match" title="Permalink to this definition"></a></dt>
 <dd><p>Match a given pattern S-expression to an input S-expression.</p>
-<p>This function is a wrapper around the main recursive function, match_rec.</p>
 <p>:nil results from match_rec are mapped to an empty list, under the assumption
-that the match_rec([], []) case is unnecessary for Eta rule trees.</p>
+that the <code class="docutils literal notranslate"><span class="pre">match_rec([],</span> <span class="pre">[])</span></code> case is unnecessary for Eta rule trees.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pa</strong> (<em>s-expr</em>) – <dl>
-<dt>A pattern, which is any S-expression where atoms may be:</dt><dd><dl class="simple">
-<dt>A custom predicate of form !&lt;pred&gt;, ?&lt;pred&gt;, <a href="#id1"><span class="problematic" id="id2">*</span></a>&lt;pred&gt;, or +&lt;pred&gt;,</dt><dd><p>interpreted as matching exactly one expression, 0 or 1 expression,
+<li><p><strong>pa</strong> (<em>s-expr</em>) – <dl class="simple">
+<dt>A pattern, which is any S-expression where atoms may be:</dt><dd><ul>
+<li><p>A custom predicate of form <code class="docutils literal notranslate"><span class="pre">!&lt;pred&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">?&lt;pred&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">*&lt;pred&gt;</span></code>, or <code class="docutils literal notranslate"><span class="pre">+&lt;pred&gt;</span></code>,
+interpreted as matching exactly one expression, 0 or 1 expression,
 0 or more expressions, or 1 or more expressions, respectively. Custom
 predicates must be defined in eta.util.tt.preds. Some basic ones are
 ‘expr’, ‘atom’, and ‘lst’, being true respectively of any expression,
-an atom, or a list.</p>
-</dd>
-<dt>An integer &gt;= 0, where 0, 1, 2, … respectively mean “zero or more expressions”,</dt><dd><p>”at most one expression”, “at most 2 expressions”, at most 3 expressions”, etc.</p>
-</dd>
-<dt>A dotted atom, such as .verb or .branch-of-math, i.e., starting with a dot and</dt><dd><p>denoting features of atoms, as defined by the ‘feats’ argument. These are matched
+an atom, or a list.</p></li>
+<li><p>An integer &gt;= 0, where 0, 1, 2, … respectively mean “zero or more expressions”,
+“at most one expression”, “at most 2 expressions”, at most 3 expressions”, etc.</p></li>
+<li><p>A dotted atom, such as <code class="docutils literal notranslate"><span class="pre">.verb</span></code> or <code class="docutils literal notranslate"><span class="pre">.branch-of-math</span></code>, i.e., starting with a dot and
+denoting features of atoms, as defined by the ‘feats’ argument. These are matched
 by checking whether a given expression is connected to the feature through a chain
-of ‘isa’ connections.</p>
-</dd>
-</dl>
-<p>Any other atom, which simply matches an identical atom in ‘ex’.</p>
+of ‘isa’ connections.</p></li>
+<li><p>Any other atom, which simply matches an identical atom in <cite>ex</cite>.</p></li>
+</ul>
 </dd>
 </dl>
 </p></li>
 <li><p><strong>ex</strong> (<em>s-expr</em>) – The input to match.</p></li>
 <li><p><strong>feats</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dict mapping a word w to a feature list x1, …, xk, such that
-isa(w, xi) for each feature xi.</p></li>
+<code class="docutils literal notranslate"><span class="pre">isa(w,</span> <span class="pre">xi)</span></code> for each feature xi.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An empty list [] if no match, otherwise an S-expression containing the
-result of the match. The result will resemble the input expression ‘ex’,
+<dd class="field-even"><p>An empty list <code class="docutils literal notranslate"><span class="pre">[]</span></code> if no match, otherwise an S-expression containing the
+result of the match. The result will resemble the input expression <cite>ex</cite>,
 except that sequences of 0 or more constituents matched by sequence variables
-will be encoded as [:seq, &lt;item1&gt;, &lt;item2&gt;, …].</p>
+will be encoded as <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">&lt;item1&gt;,</span> <span class="pre">&lt;item2&gt;,</span> <span class="pre">...]</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>s-expr</p>

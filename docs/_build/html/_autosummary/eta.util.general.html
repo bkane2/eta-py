@@ -194,7 +194,7 @@
 <td><p>Insert a value to the front of a list or set.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.cons_dict.html#eta.util.general.cons_dict" title="eta.util.general.cons_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cons_dict</span></code></a></p></td>
-<td><p>Add v to the list at key k in dct, creating a new list if none exists.</p></td>
+<td><p>Add <cite>v</cite> to the list at key <cite>k</cite> in <cite>dct</cite>, creating a new list if none exists.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.dict_get.html#eta.util.general.dict_get" title="eta.util.general.dict_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_get</span></code></a></p></td>
 <td><p>Safe version of dict accessor that returns an empty list if key is not found.</p></td>
@@ -221,7 +221,7 @@
 <td><p>Generate a new episode variable.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.escaped_symbol_p.html#eta.util.general.escaped_symbol_p" title="eta.util.general.escaped_symbol_p"><code class="xref py py-obj docutils literal notranslate"><span class="pre">escaped_symbol_p</span></code></a></p></td>
-<td><p>Check if a given symbol is an &quot;escaped&quot; symbol, equivalent to '<a href="#id1"><span class="problematic" id="id2">|sym|</span></a> in LISP.</p></td>
+<td><p>Check if a given symbol is an &quot;escaped&quot; symbol, equivalent to vertical bars in LISP.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.flatten.html#eta.util.general.flatten" title="eta.util.general.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a></p></td>
 <td><p>Recursively flatten a list, creating a single list with no sub-lists.</p></td>
@@ -230,7 +230,7 @@
 <td><p>Generate a unique symbol that hasn't been used before by appending an integer suffix i and then incrementing i.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.get_keyword_contents.html#eta.util.general.get_keyword_contents" title="eta.util.general.get_keyword_contents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_keyword_contents</span></code></a></p></td>
-<td><p>Get the contents immediately following each keyword in 'keys' from a list.</p></td>
+<td><p>Get the contents immediately following each keyword in <cite>keys</cite> from a list.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.indent.html#eta.util.general.indent" title="eta.util.general.indent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">indent</span></code></a></p></td>
 <td><p>Indent a string some number of levels.</p></td>
@@ -260,7 +260,7 @@
 <td><p>Recursively replace some old value with a new value throughout a list.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.remove_duplicates.html#eta.util.general.remove_duplicates" title="eta.util.general.remove_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicates</span></code></a></p></td>
-<td><p>Remove duplicate items in a list, preserving the initial order of 'order' is given as True.</p></td>
+<td><p>Remove duplicate items in a list, preserving the initial order of <cite>order</cite> is given as True.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.remove_nil.html#eta.util.general.remove_nil" title="eta.util.general.remove_nil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_nil</span></code></a></p></td>
 <td><p>Remove any null values from a list.</p></td>
@@ -301,10 +301,6 @@
 <dt class="sig sig-object py" id="eta.util.general.gentemp">
 <span class="sig-name descname"><span class="pre">gentemp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#gentemp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.gentemp" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a unique symbol that hasn’t been used before by appending an integer suffix i and then incrementing i.</p>
-<p>This currently relies on an external symbol table stored in a file, which
-exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
-(see: <a class="reference external" href="https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2">https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2</a>)
-However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – String to use for symbol generation.</p>
@@ -316,6 +312,11 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This currently relies on an external symbol table stored in a file, which
+exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
+(see: <a class="reference external" href="https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2">https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2</a>)
+However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -333,7 +334,7 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.general.escaped_symbol_p">
 <span class="sig-name descname"><span class="pre">escaped_symbol_p</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#escaped_symbol_p"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.escaped_symbol_p" title="Permalink to this definition"></a></dt>
-<dd><p>Check if a given symbol is an “escaped” symbol, equivalent to ‘<a href="#id3"><span class="problematic" id="id4">|sym|</span></a> in LISP.</p>
+<dd><p>Check if a given symbol is an “escaped” symbol, equivalent to vertical bars in LISP.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -346,7 +347,8 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dt class="sig sig-object py" id="eta.util.general.variablep">
 <span class="sig-name descname"><span class="pre">variablep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#variablep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.variablep" title="Permalink to this definition"></a></dt>
 <dd><p>Check if a given input is a variable symbol, i.e., starts with ‘?’ or ‘!’.</p>
-<p>NOTE: for now, this excludes indexical variables, such as ‘^you’.</p>
+<p class="rubric">Notes</p>
+<p>For now, this excludes indexical variables, such as ‘^you’.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -370,11 +372,13 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A string whose contents should be replaced.</p></li>
 <li><p><strong>replist</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>]</em>) – <dl class="simple">
-<dt>A list of replacements to make. A replacement is a tuple of one of the following forms:</dt><dd><p>(old, new)
-(old, new, is_regex)</p>
+<dt>A list of replacements to make. A replacement is a tuple of one of the following forms:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">(old,</span> <span class="pre">new)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(old,</span> <span class="pre">new,</span> <span class="pre">is_regex)</span></code></p></li>
+</ul>
 </dd>
 </dl>
-<p>If is_regex is given as True (default is False), the old and new values are interpreted as regex strings.</p>
+<p>If is_regex is given as True for a tuple, the old and new values are interpreted as regex strings.</p>
 </p></li>
 </ul>
 </dd>
@@ -394,12 +398,16 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dt class="sig sig-object py" id="eta.util.general.standardize">
 <span class="sig-name descname"><span class="pre">standardize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#standardize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.standardize" title="Permalink to this definition"></a></dt>
 <dd><p>Standardize a string by applying a series of transformations.</p>
-<p>Specifically:
-1. Replace – with -, and _ with whitespace.
-2. Remove parenthetical content (i.e., […] or <em>…</em>).
-3. Add whitespace around all punctuation.
-4. Collapse all whitespace to a single space.
-5. Convert to lowercase.</p>
+<dl class="simple">
+<dt>Specifically:</dt><dd><ol class="arabic simple">
+<li><p>Replace – with -, and _ with whitespace.</p></li>
+<li><p>Remove parenthetical content (i.e., […] or <em>…</em>).</p></li>
+<li><p>Add whitespace around all punctuation.</p></li>
+<li><p>Collapse all whitespace to a single space.</p></li>
+<li><p>Convert to lowercase.</p></li>
+</ol>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -481,7 +489,7 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.general.remove_duplicates">
 <span class="sig-name descname"><span class="pre">remove_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#remove_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.remove_duplicates" title="Permalink to this definition"></a></dt>
-<dd><p>Remove duplicate items in a list, preserving the initial order of ‘order’ is given as True.</p>
+<dd><p>Remove duplicate items in a list, preserving the initial order of <cite>order</cite> is given as True.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -511,7 +519,7 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.general.get_keyword_contents">
 <span class="sig-name descname"><span class="pre">get_keyword_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#get_keyword_contents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.get_keyword_contents" title="Permalink to this definition"></a></dt>
-<dd><p>Get the contents immediately following each keyword in ‘keys’ from a list.</p>
+<dd><p>Get the contents immediately following each keyword in <cite>keys</cite> from a list.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -529,7 +537,7 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.general.cons_dict">
 <span class="sig-name descname"><span class="pre">cons_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#cons_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.cons_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Add v to the list at key k in dct, creating a new list if none exists.</p>
+<dd><p>Add <cite>v</cite> to the list at key <cite>k</cite> in <cite>dct</cite>, creating a new list if none exists.</p>
 </dd></dl>
 
 <dl class="py function">

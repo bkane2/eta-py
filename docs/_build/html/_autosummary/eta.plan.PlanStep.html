@@ -116,6 +116,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PlanStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A plan step containing an eventuality, related to other plan steps through a tree structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality"><em>Eventuality</em></a>) – The eventuality corresponding to this step.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.plan.PlanStep.id">
 <span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#eta.plan.PlanStep.id" title="Permalink to this definition"></a></dt>
@@ -209,6 +214,7 @@
 <dt class="sig sig-object py" id="eta.plan.PlanStep.get_obligations">
 <span class="sig-name descname"><span class="pre">get_obligations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.get_obligations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.get_obligations" title="Permalink to this definition"></a></dt>
 <dd><p>Get any dialogue obligations associated with a particular step in the plan.</p>
+<p class="rubric">Notes</p>
 <p>TODO: this is currently a bit of a hack, in that it involves looking at the superstep
 as well if no obligations are found. This is because say-to.v actions may need to access
 the parent paraphrase-to.v actions in order to inherit relevant obligations of the latter.
@@ -223,13 +229,14 @@ inherited upon expansion.</p>
 <p>The schemas of the superstep also become the schemas associated with this step, but
 only in the case where this step doesn’t already have associated schemas (e.g.,
 if it was created from an episode list in expanding an action).</p>
-<p>TODO: it’s not clear whether the above is the sensible behavior, or if instead we
-should always append the schemas of the superstep to this step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>superstep</strong> (<a class="reference internal" href="#eta.plan.PlanStep" title="eta.plan.PlanStep"><em>PlanStep</em></a>) – The superstep to add to this step.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: it’s not clear whether the above is the sensible behavior, or if instead we
+should always append the schemas of the superstep to this step.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -253,8 +260,8 @@ references can be inserted in place of nodes that appear more than once in the t
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – If given as True, print the subtree “above” this step rather than below (the default is False).</p></li>
-<li><p><strong>schemas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to also display schema predicates for each step (the default is False).</p></li>
+<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – If given as True, print the subtree “above” this step rather than below.</p></li>
+<li><p><strong>schemas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Whether to also display schema predicates for each step.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -269,17 +276,23 @@ references can be inserted in place of nodes that appear more than once in the t
 <dd><p>Format a string representing this plan step as an S-expression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>schemas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to also display schema predicates for each step (the default is False).</p>
+<dd class="field-odd"><p><strong>schemas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Whether to also display schema predicates for each step.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The step formatted as one of the following S-expression string representations:
-((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;)
-((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;) (:schemas &lt;schema-preds&gt;)</p>
+- <code class="docutils literal notranslate"><span class="pre">((&lt;ep-name&gt;</span> <span class="pre">&lt;wff&gt;)</span> <span class="pre">&lt;certainty&gt;)</span></code>
+- <code class="docutils literal notranslate"><span class="pre">((&lt;ep-name&gt;</span> <span class="pre">&lt;wff&gt;)</span> <span class="pre">&lt;certainty&gt;)</span> <span class="pre">(:schemas</span> <span class="pre">&lt;schema-preds&gt;)</span></code></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.plan.PlanStep.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#PlanStep.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.PlanStep.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
 </dd></dl>
 
 </dd></dl>

@@ -18,7 +18,6 @@ class Embedder():
   method for scoring a set of documents (possibly with precomputed embeddings) relative to a text.
   """
   def __init__(self):
-    """Initialize the embedder object."""
     pass
 
   def embed(self, texts):
@@ -70,18 +69,21 @@ class Embedder():
 
 
 class STEmbedder(Embedder):
-  """An embedder that uses a native SentenceTransformer model to compute embeddings."""
+  """An embedder that uses a native SentenceTransformer model to compute embeddings.
+  
+  Parameters
+  ----------
+  model : str
+    The name of a SentenceTransformer model to use.
+  parallelism : bool, default=False
+    Whether to enable or disable model parallelism.
+
+  Attributes
+  ----------
+  model : SentenceTransformer
+  """
 
   def __init__(self, model=EMBEDDING_DEFAULT_MODEL, parallelism=False):
-    """Initialize a SentenceTransformer embedder.
-    
-    Parameters
-    ----------
-    model : str
-      The name of a SentenceTransformer model to use.
-    parallelism : bool, optional
-      Whether to enable or disable model parallelism (default is False).
-    """
     from sentence_transformers import SentenceTransformer
     self.model = SentenceTransformer(model)
     if not parallelism:
@@ -92,18 +94,24 @@ class STEmbedder(Embedder):
   
 
 class HFEmbedder(Embedder):
-  """An embedder that uses HuggingFace's API to compute embeddings."""
+  """An embedder that uses HuggingFace's API to compute embeddings.
+  
+  Parameters
+  ----------
+  host : str
+    The URL of the embedding API to use.
+  model : str
+    The name of the specific model to use.
+
+  Attributes
+  ----------
+  host : str
+  model : str
+  url : str
+  header : dict
+  """
 
   def __init__(self, host=EMBEDDING_DEFAULT_API, model=EMBEDDING_DEFAULT_MODEL):
-    """Initialize a HuggingFace API embedder.
-    
-    Parameters
-    ----------
-    host : str
-      The URL of the embedding API to use.
-    model : str
-      The name of the specific model to use.
-    """
     self.host = host
     self.model = model
     self.url = host+model
@@ -126,6 +134,7 @@ class HFEmbedder(Embedder):
 
 class DummyEmbedder(Embedder):
   """An embedder that simply computes empty embeddings."""
+
   def __init__(self):
     pass
   

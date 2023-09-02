@@ -1,15 +1,15 @@
 """Utilities for interacting with the OpenAI GPT API.
 
 We assume that GPT prompts are specified as text strings, possibly including the following special constructs:
-<var>
-  A placeholder in the prompt to be replaced by a value at a later point, where that value may be a string, or
-  a list of strings such that each string is placed on a new line.
-@zip(<var1>, <var2>, ...)
-  A placeholder to be replaced by the string formed by zipping the strings within the argument lists, and placing
-  each combined string on a new line.
-@startexamples ... @endexamples
-  The text between these annotations is treated as an example template, to be later replaced by a list of examples
-  formatted according to the template.
+  - ``<var>``
+    A placeholder in the prompt to be replaced by a value at a later point, where that value may be a string, or
+    a list of strings such that each string is placed on a new line.
+  - ``@zip(<var1>, <var2>, ...)``
+    A placeholder to be replaced by the string formed by zipping the strings within the argument lists, and placing
+    each combined string on a new line.
+  - ``@startexamples ... @endexamples``
+    The text between these annotations is treated as an example template, to be later replaced by a list of examples
+    formatted according to the template.
 """
 
 import re
@@ -46,17 +46,17 @@ def generate_gpt(prompt, preamble=None, examples=[], model='gpt-3.5-turbo', stop
     An initial prompt to give GPT as a "system" message.
   examples : list[tuple[str, str]], optional
     A list of example pairs, each consisting of a "user" message and an "assistant" response.
-  model : str
+  model : str, default='gpt-3.5-turbo'
     The model name to use for generation.
   stop : list[str], optional
     A list of stop sequences to use in generation.
-  max_tokens : int, optional
+  max_tokens : int, default=2048
     The maximum number of tokens to generate.
   postprocessors : list[function], optional
     A list of functions to apply to any generated content. If a postprocessor returns 'None',
-    then generation is retried, up to 'n_retries' times. Otherwise, the final result after applying
+    then generation is retried, up to `n_retries` times. Otherwise, the final result after applying
     each function is returned.
-  n_retries : int, optional
+  n_retries : int, default=2
     The number of times to retry if a postprocessor determines that a generation is invalid.
   
   Returns
@@ -115,19 +115,19 @@ def cost_gpt(prompt, avg_resp_len, preamble=None, examples=[], model='gpt-3.5-tu
     An initial prompt to give GPT as a "system" message.
   examples : list[tuple[str, str]], optional
     A list of example pairs, each consisting of a "user" message and an "assistant" response.
-  model : str
-    The model name to use for generation (the default is gpt-3.5-turbo).
+  model : str, default='gpt-3.5-turbo'
+    The model name to use for generation.
   stop : list[str], optional
     A list of stop sequences to use in generation.
-  max_tokens : int, optional
-    The maximum number of tokens to generate (the default is 2048).
+  max_tokens : int, default=2048
+    The maximum number of tokens to generate.
   postprocessors : list[function], optional
     A list of functions to apply to any generated content. If a postprocessor returns 'None',
-    then generation is retried, up to 'n_retries' times. Otherwise, the final result after applying
+    then generation is retried, up to `n_retries` times. Otherwise, the final result after applying
     each function is returned.
-  n_retries : int, optional
-    The number of times to retry if a postprocessor determines that a generation is invalid (the default is 2).
-  tokenizer : object, optional
+  n_retries : int, default=2
+    The number of times to retry if a postprocessor determines that a generation is invalid.
+  tokenizer : object, default=GPT2Tokenizer
     The tokenizer used for estimating the number of tokens created from the prompt.
   
   Returns
@@ -164,7 +164,7 @@ def apply_zip(prompt, kwargs):
 
 
 def subst_kwargs(prompt, kwargs):
-  """Replace variables within a GPT prompt with the corresponding values in 'kwargs'."""
+  """Replace variables within a GPT prompt with the corresponding values in `kwargs`."""
   prompt = apply_zip(prompt, kwargs)
   for kw, arg in kwargs.items():
     if isinstance(arg, list):
@@ -176,7 +176,7 @@ def subst_kwargs(prompt, kwargs):
 
 
 def subst_examples(prompt, examples):
-  """Fill in any prompt content between @startexamples and @endexamples annotations with examples."""
+  """Fill in any prompt content between ``@startexamples`` and ``@endexamples`` annotations with examples."""
   if not '@startexamples' in prompt or not '@endexamples' in prompt:
     return prompt
   prompt1, template = prompt.split('@startexamples')

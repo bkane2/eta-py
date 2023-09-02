@@ -144,15 +144,19 @@
 <dt class="sig sig-object py" id="eta.core.planning.planning_loop">
 <span class="sig-name descname"><span class="pre">planning_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#planning_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.planning_loop" title="Permalink to this definition"></a></dt>
 <dd><p>Make modifications to the dialogue plan.</p>
-<p>First, all suggested actions are popped from the ‘actions’ buffer, and used to create a new
-plan. The plan of the current dialogue state is updated, and the contents of the ‘plans’ buffer
+<p>First, all suggested actions are popped from the <code class="docutils literal notranslate"><span class="pre">actions</span></code> buffer, and used to create a new
+plan. The plan of the current dialogue state is updated, and the contents of the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer
 is replaced with the updated plan.</p>
-<p>Second, this attempts to modify the plan in the ‘plans’ buffer. This consists of the following substeps:
-1) Attempt to expand top-level steps in the plan into substeps.
-2) Merge equivalent steps in the plan.
-3) Reorder plan steps according to constraints.</p>
+<dl class="simple">
+<dt>Second, this attempts to modify the plan in the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer. This consists of the following substeps:</dt><dd><ol class="arabic simple">
+<li><p>Attempt to expand top-level steps in the plan into substeps.</p></li>
+<li><p>Merge equivalent steps in the plan.</p></li>
+<li><p>Reorder plan steps according to constraints.</p></li>
+</ol>
+</dd>
+</dl>
 <p>If the plan was modified by the previous step, it is used to update the plan of the current dialogue state,
-and is re-added to the ‘plans’ buffer.</p>
+and is re-added to the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p>

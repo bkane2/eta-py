@@ -1,4 +1,4 @@
-eta.transducers.base.PragmaticTransducer
+﻿eta.transducers.base.PragmaticTransducer
 ========================================
 
 .. currentmodule:: eta.transducers.base
@@ -7,7 +7,7 @@ eta.transducers.base.PragmaticTransducer
    :members:
    :show-inheritance:
    :inherited-members:
-   :special-members: __call__, __add__, __mul__
+   :special-members: __call__, __str__, __hash__, __eq__
 
    
    

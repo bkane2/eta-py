@@ -84,22 +84,6 @@
 <span class="sd">Note that each transducer type should return a list; this allows multiple</span>
 <span class="sd">transducer implementations to be &quot;stacked&quot; in practice, e.g., using both a</span>
 <span class="sd">tree transduction and an LLM transducer and collating the results.</span>
-
-<span class="sd">Exported classes</span>
-<span class="sd">----------------</span>
-<span class="sd">Transducer : the base transducer class.</span>
-<span class="sd">ReasonTopDownTransducer : maps from a plan step event and a list of facts to a list of new facts inferred from those.</span>
-<span class="sd">ReasonBottomUpTransducer : maps from a list of facts to a list of new facts inferred from those.</span>
-<span class="sd">GistTransducer : maps an utterance to a list of gist clauses, given a conversation history.</span>
-<span class="sd">SemanticTransducer : maps a gist clause to a list of ULF formulas capturing its semantic meaning.</span>
-<span class="sd">PragmaticTransducer : maps a gist clause to a list of ULF formulas capturing its pragmatic meaning.</span>
-<span class="sd">ReactionTransducer : maps an observed event to a formula for an action that an agent can take.</span>
-<span class="sd">SubplanTransducer : maps a plan step event to a list of subplans, i.e., sequences of events that are substeps of the given step.</span>
-<span class="sd">ParaphraseTransducer : maps a gist clause, given a conversation history and relevant knowledge, to a paraphrased response.</span>
-<span class="sd">ResponseTransducer : maps a conversation history and relevant knowledge to a response utterance.</span>
-<span class="sd">AnswerTransducer : maps a conversation history and relevant knowledge to an answer utterance.</span>
-<span class="sd">AskTransducer : maps a conversation history and relevant knowledge to a question utterance.</span>
-<span class="sd">AffectTransducer : maps the word content of an utterance to an appropriate affect, given a conversation history.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">eta.lf</span> <span class="kn">import</span> <span class="n">Eventuality</span>
@@ -268,9 +252,6 @@
 
 <div class="viewcode-block" id="ReactionTransducer"><a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ReactionTransducer.html#eta.transducers.base.ReactionTransducer">[docs]</a><span class="k">class</span> <span class="nc">ReactionTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps an observed event to a formula for an action that an agent can take.</span>
-
-<span class="sd">  TODO: this should likely be expanded to support a list of observed events rather than a single event,</span>
-<span class="sd">  since in general a reaction may be contingent on multiple combined observations.</span>
 <span class="sd">  </span>
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -281,6 +262,11 @@
 <span class="sd">  -------</span>
 <span class="sd">  list[s-expr]</span>
 <span class="sd">    A list of action formulas that the agent can take in reaction to the observation.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: this should likely be expanded to support a list of observed events rather than a single event,</span>
+<span class="sd">  since in general a reaction may be contingent on multiple combined observations.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

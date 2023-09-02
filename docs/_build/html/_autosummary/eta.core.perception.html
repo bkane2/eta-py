@@ -128,7 +128,7 @@
 <span class="sig-name descname"><span class="pre">perception_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/perception.html#perception_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.perception.perception_loop" title="Permalink to this definition"></a></dt>
 <dd><p>Observe and interpret inputs from perceptual servers.</p>
 <p>The resulting observations are added to dialogue context, as well as
-to the ‘observations’ and ‘inferences’ buffers.</p>
+to the <code class="docutils literal notranslate"><span class="pre">observations</span></code> and <code class="docutils literal notranslate"><span class="pre">inferences</span></code> buffers.</p>
 <p>In the case where the observed input is speech, this also interprets
 the input as a gist clause, as well as deriving the underlying semantic
 and pragmatic meanings. The input is also interpreted as a reply to
@@ -147,7 +147,7 @@ is then added to the conversation log.</p>
 <dd><p>Collect all observations from a given perceptual server source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the perceptual server (‘speech’ in the special case
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the perceptual server (<code class="docutils literal notranslate"><span class="pre">speech</span></code> in the special case
 of a user utterance).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

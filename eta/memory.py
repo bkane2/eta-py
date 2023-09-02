@@ -7,16 +7,16 @@ from eta.util.time import TimePoint
 class Memory:
   """Represents a single memory, which consists of a temporally bounded event with some importance value.
 
-  Note that the start time only marks the earliest time point at which an episode is known to be true;
-  likewise for the end time. Thus, their logical interpretation should be as follows:
-  (<start_time> during <event>.ep)
-  (<end_time> during <event>.ep)
-  Where <end_time> is to be read as an indexical variable ^now if no value is supplied.
-
-  Attributes
+  Parameters
   ----------
   event : Eventuality
     The eventuality of this memory.
+  importance : float, optional
+    A numerical score representing how important this memory is.
+  
+  Attributes
+  ----------
+  event : Eventuality
   start_time : TimePoint
     The earliest time at which the event in this memory is known to be true. This is initialized as the
     current time upon initialization of a new memory.
@@ -26,7 +26,16 @@ class Memory:
   last_access : TimePoint
     The most recent time that this memory was accessed from memory storage, initialized as the start time.
   importance : float
-    A numerical score representing how important this memory is.
+
+  Notes
+  -----
+  The start time only marks the earliest time point at which an episode is known to be true;
+  likewise for the end time. Thus, their logical interpretation should be as follows:
+
+    * ``(<start_time> during <event>.ep)``
+    * ``(<end_time> during <event>.ep)``
+
+  Where ``<end_time>`` is to be read as an indexical variable ``^now`` if no value is supplied.
   """
 
   def __init__(self, event, importance=DEFAULT_IMPORTANCE):
@@ -78,6 +87,11 @@ class Memory:
 
 class MemoryStorage:
   """Stores memories and a context of "true now" facts, keyed on both episode names and predicates for efficient lookup.
+
+  Parameters
+  ----------
+  embedder : Embedder, optional
+    If provided, an embedder to embed all memories that are added to storage.
   
   Attributes
   ----------
@@ -88,17 +102,19 @@ class MemoryStorage:
   wff_ht : dict[str or tuple, Memory]
     A hash table mapping tuples of wff keys to memories of events with wffs matching those keys.
     Valid keys may be:
-      A single predicate string, e.g., pred.
-      A binary predicate tuple, e.g., (subj, pred)
-      A tuple containing the predicate of a wff with one other argument, with other arguments being replaced with None, e.g.,
-        (subj, pred, None, None, ...)
-        (None, pred, obj1, None, ...)
-        (None, pred, None, obj2, ...)
+
+      1. A single predicate string, e.g., ``pred``.
+      2. A binary predicate tuple, e.g., ``(subj, pred)``.
+      3. A tuple containing the predicate of a wff with one other argument, with other arguments being replaced with ``None``, e.g.,
+        - ``(subj, pred, None, None, ...)``
+        - ``(None, pred, obj1, None, ...)``
+        - ``(None, pred, None, obj2, ...)``
+        
   context : set[Memory]
     A set containing all memories that are "true now".
-  embedder : Embedder, optional
-    If provided, an embedder to embed all memories that are added to storage.
+  embedder : Embedder or None
   """
+
   def __init__(self, embedder=None):
     self.memories = set()
     self.ep_ht = {}
@@ -107,7 +123,7 @@ class MemoryStorage:
     self.embedder = embedder
 
   def _get_wff_keys(self, wff):
-    """Create keys for storing a given wff in the wff_ht dict, provided the wff is a logical formula and not a string."""
+    """Create keys for storing a given `wff` in the `wff_ht` dict (provided the wff is a logical formula and not a string)."""
     if isinstance(wff, str):
       return [wff]
     if not wff or not listp(wff):
@@ -122,9 +138,9 @@ class MemoryStorage:
     return keys
   
   def access(self, memory):
-    """'Access' a memory (or list of memories) by updating the most recent access date of that memory.
+    """"Access" a memory (or list of memories) by updating the most recent access date of that memory.
 
-    If the event is telic (i.e., assumed to be "instantaneous"), remove it from the context as well.
+    If the event is telic (i.e., assumed to be "instantaneous"), remove it from `context` as well.
 
     Parameters
     ----------
@@ -145,24 +161,26 @@ class MemoryStorage:
     return memory
     
   def store(self, memory):
-    """Store a memory (or list of memories), adding to each hash table as well as to context.
-
-    TODO: this should be extended so that storing a fact such as (not <wff>) actually removes
-    the embedded wff from context. However, in addition to removing the negated WFF,
-    should the negative WFF then be kept in context? In that case, we would need to
-    remove the negative WFF once the positive version is added, and so on...
-    It seems like, in general, we need some sort of contradiction detection for removing
-    facts from context once contradicting facts are added.
-
-    TODO: in the case of events with duplicate wffs but different episode constants being inserted
-    (e.g., (^you reply-to.v E1) ** E3 and (^you reply-to.v E1) ** E4)), we should probably merge them
-    into a single memory/event with a new episode constant, e.g., E5. We may then either replace all
-    other occurrences of E3 and E4 throughout memory with E5, or we may somehow store that E3 and E4
-    are both sub-events of E5.
+    """Store a memory (or list of memories), adding to each hash table as well as to `context`.
     
     Parameters
     ----------
     memory : Memory or list[Memory]
+
+    Notes
+    -----
+    TODO: this should be extended so that storing a fact such as ``(not <wff>)`` actually removes
+    the embedded wff from `context`. However, in addition to removing the negated WFF,
+    should the negative WFF then be kept in `context`? In that case, we would need to
+    remove the negative WFF once the positive version is added, and so on...
+    It seems like, in general, we need some sort of contradiction detection for removing
+    facts from `context` once contradicting facts are added.
+
+    TODO: in the case of events with duplicate wffs but different episode constants being inserted
+    (e.g., ``(^you reply-to.v E1) ** E3`` and ``(^you reply-to.v E1) ** E4)``), we should probably merge them
+    into a single memory/event with a new episode constant, e.g., E5. We may then either replace all
+    other occurrences of E3 and E4 throughout memory with E5, or we may somehow store that E3 and E4
+    are both sub-events of E5.
     """
     if listp(memory):
       return [self.store(m) for m in memory]
@@ -197,16 +215,18 @@ class MemoryStorage:
       self.context.remove(memory)
 
   def remove_from_context(self, memory):
-    """Remove a memory (or list of memories) from the context, i.e., the set of "true now" events.
-    
-    TODO: currently, this only removes the individual memory from context. However, since multiple memories
-    may characterize the same episode, if one memory characterizing a particular episode is removed from
-    context, should all memories characterizing the same episode be removed from context? This is currently
-    unclear; in the future, we may need to add partial characterization (i.e., (<wff> * <ep>)) to account for this.
+    """Remove a memory (or list of memories) from `context`.
 
     Parameters
     ----------
     memory : Memory or list[Memory]
+
+    Notes
+    -----
+    TODO: currently, this only removes the individual memory from `context`. However, since multiple memories
+    may characterize the same episode, if one memory characterizing a particular episode is removed from
+    `context`, should all memories characterizing the same episode be removed from `context`? This is currently
+    unclear; in the future, we may need to add partial characterization (i.e., ``(<wff> * <ep>)``) to account for this.
     """
     if listp(memory):
       return [self.remove_from_context(m) for m in memory]
@@ -242,8 +262,8 @@ class MemoryStorage:
     ----------
     ep : str
       An episode symbol.
-    access : bool, optional
-      Whether to update the last access time of the memories (default is False).
+    access : bool, default=False
+      Whether to update the last access time of the memories.
     
     Returns
     -------
@@ -255,21 +275,23 @@ class MemoryStorage:
   def get_matching(self, pred_patt, access=False):
     """Get memories matching a given predicate pattern potentially containing variables.
 
-    TODO: currently, due to the indexing scheme used by wff_ht, we only allow variables in the
-    top level of a predication (i.e., variables may not be nested within an S-expression). In
-    the future, we may wish to allow for more general matching.
-
     Parameters
     ----------
     pred_patt : str or s-expr
       A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
-      at the top level, e.g., between.p or [Block1, between.p, ?x, Block2].
-    access : bool, optional
-      Whether to update the last access time of the memories (default is False).
+      at the top level, e.g., ``between.p`` or ``[Block1, between.p, ?x, Block2]``.
+    access : bool, default=False
+      Whether to update the last access time of the memories.
     
     Returns
     -------
     list[Memory]
+
+    Notes
+    -----
+    TODO: currently, due to the indexing scheme used by `wff_ht`, we only allow variables in the
+    top level of a predication (i.e., variables may not be nested within an S-expression). In
+    the future, we may wish to allow for more general matching.
     """
     def match_patt(pred_patt):
       if atom(pred_patt):
@@ -304,15 +326,15 @@ class MemoryStorage:
     return self.access(memories) if access else memories
       
   def get_from_context(self, pred_patt, access=False):
-    """Get a memory from context matching a given predicate pattern potentially containing variables.
+    """Get a memory from `context` matching a given predicate pattern potentially containing variables.
     
     Parameters
     ----------
     pred_patt : str or s-expr
       A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
-      at the top level, e.g., between.p or [Block1, between.p, ?x, Block2].
-    access : bool, optional
-      Whether to update the last access time of the memories (default is False).
+      at the top level, e.g., ``between.p`` or ``[Block1, between.p, ?x, Block2]``.
+    access : bool, default=False
+      Whether to update the last access time of the memories.
     
     Returns
     -------
@@ -340,13 +362,13 @@ class MemoryStorage:
     ----------
     pred_patt : str or s-expr
       A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
-      at the top level, e.g., between.p or [Block1, between.p, ?x, Block2].
+      at the top level, e.g., ``between.p`` or ``[Block1, between.p, ?x, Block2]``.
     """
     memories = self.get_matching(pred_patt)
     self.remove(memories)
 
   def remove_episode_from_context(self, ep):
-    """Remove all memories from context characterizing a given episode.
+    """Remove all memories from `context` characterizing a given episode.
     
     Parameters
     ----------
@@ -357,19 +379,19 @@ class MemoryStorage:
     self.remove_from_context(memories)
 
   def remove_matching_from_context(self, pred_patt):
-    """Remove all memories from context matching a given predicate pattern potentially containing variables.
+    """Remove all memories from `context` matching a given predicate pattern potentially containing variables.
     
     Parameters
     ----------
     pred_patt : str or s-expr
       A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
-      at the top level, e.g., between.p or [Block1, between.p, ?x, Block2].
+      at the top level, e.g., ``between.p`` or ``[Block1, between.p, ?x, Block2]``.
     """
     memories = self.get_matching(pred_patt)
     self.remove_from_context(memories)
 
   def flush_context(self):
-    """Remove from context all "telic" events (i.e., events that we regard as essentially instantaneous)."""
+    """Remove from `context` all "telic" events (i.e., events that we regard as essentially instantaneous)."""
     memories = [m for m in self.context if m.is_telic()]
     for memory in memories:
       self.remove_from_context(memory)
@@ -381,7 +403,7 @@ class MemoryStorage:
     ----------
     pred_patt : str or s-expr
       A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
-      at the top level, e.g., between.p or [Block1, between.p, ?x, Block2].
+      at the top level, e.g., ``between.p`` or ``[Block1, between.p, ?x, Block2]``.
     ep : str
       An episode symbol.
 
@@ -400,7 +422,7 @@ class MemoryStorage:
     ----------
     pred_patt : str or s-expr
       A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
-      at the top level, e.g., between.p or [Block1, between.p, ?x, Block2].
+      at the top level, e.g., ``between.p`` or ``[Block1, between.p, ?x, Block2]``.
     ep : str
       An episode symbol.
 
@@ -416,9 +438,9 @@ class MemoryStorage:
     """Retrieve some number of relevant memories according to recency, importance, and salience.
     
     The following three sub-criteria are used to determine which memories are retrieved:
-    recency : the latest access time of each memory.
-    importance : the importance values assigned to each memory.
-    salience : the embedding similarity between each memory and a query (if given).
+    - recency : the latest access time of each memory.
+    - importance : the importance values assigned to each memory.
+    - salience : the embedding similarity between each memory and a query (if given).
 
     Each sub-criteria score is mapped to a score in [0,1], and the final score is a linear sum of
     each sub-score multiplied by the respective coefficient in 'coeffs'. The highest scoring memories
@@ -427,12 +449,12 @@ class MemoryStorage:
     Parameters
     ----------
     query : str, optional
-      The query to use in computing salience scores. If no query is given (the default value), or if
-      no embedder is defined, the salience score will be 1 for every memory.
-    n : int, optional
-      The number of memories to retrieve (the default is 5).
-    coeffs : tuple[float, float, float]
-      A tuple of coefficients to be used to weight each respective sub-score (the default is (1, 1, 1)).
+      The query to use in computing salience scores. If no query is given, or if
+      no embedder is defined, the salience score will be ``1`` for every memory.
+    n : int, default=5
+      The number of memories to retrieve.
+    coeffs : tuple[float, float, float], default=(1., 1., 1.)
+      A tuple of coefficients to be used to weight each respective sub-score.
 
     Returns
     -------
@@ -451,6 +473,8 @@ class MemoryStorage:
   def forget(self):
     """Evict some facts from memory in order to reduce memory size (TBC).
 
+    Notes
+    -----
     TODO: this function should be implemented to permanently evict facts from memory as memory
     sizes become too large for tractable retrieval. It should remove facts where the combined relevance
     and importance values fall below some threshold.

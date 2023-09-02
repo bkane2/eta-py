@@ -108,15 +108,24 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">STEmbedder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sentence-transformers/all-distilroberta-v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/embedding.html#STEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.embedding.STEmbedder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Embedder</span></code></a></p>
 <p>An embedder that uses a native SentenceTransformer model to compute embeddings.</p>
-<p>Initialize a SentenceTransformer embedder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of a SentenceTransformer model to use.</p></li>
-<li><p><strong>parallelism</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to enable or disable model parallelism (default is False).</p></li>
+<li><p><strong>parallelism</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Whether to enable or disable model parallelism.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.embedding.STEmbedder.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#eta.embedding.STEmbedder.model" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SentenceTransformer</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>

@@ -57,7 +57,6 @@
 <li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="eta.transducers.html">eta.transducers</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">eta.transducers.base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#exported-classes">Exported classes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AffectTransducer.html">eta.transducers.base.AffectTransducer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AnswerTransducer.html">eta.transducers.base.AnswerTransducer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AskTransducer.html">eta.transducers.base.AskTransducer</a></li>
@@ -133,22 +132,6 @@ statistical models, large language models, etc.).</p>
 <p>Note that each transducer type should return a list; this allows multiple
 transducer implementations to be “stacked” in practice, e.g., using both a
 tree transduction and an LLM transducer and collating the results.</p>
-<section id="exported-classes">
-<h2>Exported classes<a class="headerlink" href="#exported-classes" title="Permalink to this heading"></a></h2>
-<p>Transducer : the base transducer class.
-ReasonTopDownTransducer : maps from a plan step event and a list of facts to a list of new facts inferred from those.
-ReasonBottomUpTransducer : maps from a list of facts to a list of new facts inferred from those.
-GistTransducer : maps an utterance to a list of gist clauses, given a conversation history.
-SemanticTransducer : maps a gist clause to a list of ULF formulas capturing its semantic meaning.
-PragmaticTransducer : maps a gist clause to a list of ULF formulas capturing its pragmatic meaning.
-ReactionTransducer : maps an observed event to a formula for an action that an agent can take.
-SubplanTransducer : maps a plan step event to a list of subplans, i.e., sequences of events that are substeps of the given step.
-ParaphraseTransducer : maps a gist clause, given a conversation history and relevant knowledge, to a paraphrased response.
-ResponseTransducer : maps a conversation history and relevant knowledge to a response utterance.
-AnswerTransducer : maps a conversation history and relevant knowledge to an answer utterance.
-AskTransducer : maps a conversation history and relevant knowledge to a question utterance.
-AffectTransducer : maps the word content of an utterance to an appropriate affect, given a conversation history.</p>
-</section>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -307,8 +290,6 @@ AffectTransducer : maps the word content of an utterance to an appropriate affec
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ReactionTransducer</span></span><a class="reference internal" href="../_modules/eta/transducers/base.html#ReactionTransducer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.transducers.base.ReactionTransducer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.transducers.base.Transducer.html#eta.transducers.base.Transducer" title="eta.transducers.base.Transducer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transducer</span></code></a></p>
 <p>Maps an observed event to a formula for an action that an agent can take.</p>
-<p>TODO: this should likely be expanded to support a list of observed events rather than a single event,
-since in general a reaction may be contingent on multiple combined observations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>observation</strong> (<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality"><em>Eventuality</em></a>) – The observed event for the agent to react to.</p>
@@ -320,6 +301,9 @@ since in general a reaction may be contingent on multiple combined observations.
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: this should likely be expanded to support a list of observed events rather than a single event,
+since in general a reaction may be contingent on multiple combined observations.</p>
 </dd></dl>
 
 <dl class="py class">

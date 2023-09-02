@@ -58,7 +58,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="eta.transducers.html">eta.transducers</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="eta.transducers.base.html">eta.transducers.base</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="eta.transducers.gpt.html">eta.transducers.gpt</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.html#exported-classes">Exported classes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.PROMPTS.html">eta.transducers.gpt.PROMPTS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.VALIDATORS.html">eta.transducers.gpt.VALIDATORS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.gpt.GPTAffectTransducer.html">eta.transducers.gpt.GPTAffectTransducer</a></li>
@@ -137,11 +136,21 @@ and a list of validator functions to validate GPT output and perform postprocess
 <p>The transducer performs a mapping by filling in placeholders in the prompt with arguments (or data
 derived from the arguments), and generating some output from GPT until one is found that passes the
 validator functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – An LLM prompt.</p></li>
+<li><p><strong>validators</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>function</em><em>]</em>) – A list of validator functions.</p></li>
+<li><p><strong>examples</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>]</em><em>, </em><em>optional</em>) – A list of examples to format the prompt with (which should have corresponding <code class="docutils literal notranslate"><span class="pre">&#64;startexamples</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&#64;endexamples</span></code> annotations); each example should contain a mapping from placeholders in the prompt
+to values (which may be strings or lists of strings).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.transducers.gpt.GPTTransducer.prompt">
 <span class="sig-name descname"><span class="pre">prompt</span></span><a class="headerlink" href="#eta.transducers.gpt.GPTTransducer.prompt" title="Permalink to this definition"></a></dt>
-<dd><p>An LLM prompt.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
@@ -151,8 +160,7 @@ validator functions.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.transducers.gpt.GPTTransducer.validators">
 <span class="sig-name descname"><span class="pre">validators</span></span><a class="headerlink" href="#eta.transducers.gpt.GPTTransducer.validators" title="Permalink to this definition"></a></dt>
-<dd><p>A list of validator functions.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[function]</p>
 </dd>
@@ -170,18 +178,6 @@ validator functions.</p>
 </dl>
 </dd></dl>
 
-<p>Create a GPT transducer instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>validators</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>function</em><em>]</em>) – </p></li>
-<li><p><strong>examples</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>]</em><em>, </em><em>optional</em>) – A list of examples to format the prompt with (which should have corresponding &#64;startexamples and
-&#64;endexamples annotations); each example should contain a mapping from placeholders in the prompt
-to values (which may be strings or lists of strings).</p></li>
-</ul>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>

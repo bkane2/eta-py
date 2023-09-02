@@ -25,13 +25,15 @@ def readrules(packet):
   Parameters
   ----------
   packet : list[str]
-    A list of form [depth, pattern, optional-pair, depth, pattern, optional-pair, ...],
-    where "depth" is 1 for top-level rules, 2 for direct children, etc.,
-          "pattern" is a decomposition pattern or other output,
-          "optional-pair" is present iff "pattern" is a reassembly pattern or other output,
-            and consists of a (latency, directive) tuple, where latency is an integer >= 0
-            specifying how long to wait to use a rule again, and directive is a symbol such
-            as :out, :subtree, :gist, etc. specifying how the output should be used.
+    A list of form ``[depth, pattern, optional-pair, depth, pattern, optional-pair, ...]``,
+    where:
+    
+      - ``depth`` is 1 for top-level rules, 2 for direct children, etc.,
+      - ``pattern`` is a decomposition pattern or other output,
+      - ``optional-pair`` is present iff ``pattern`` is a reassembly pattern or other output,
+        and consists of a ``(latency, directive)`` tuple, where latency is an integer >= 0
+        specifying how long to wait to use a rule again, and directive is a symbol such
+        as ``:out``, ``:subtree``, ``:gist``, etc. specifying how the output should be used.
 
   Returns
   -------
@@ -96,11 +98,13 @@ def attachfeat(feat_xx, feats):
   Parameters
   ----------
   feat_xx : list[str]
-    A list of form [feat, x1, x2, ..., xk],
-    where
-      "feat" is a string, regarded as a feature.
-      "x1", "x2", ... are words that will be assigned "feat" as a feature,
-        i.e., isa(xi, feat) will be True for each xi among x1, x2, ..., xk.
+    A list of form ``[feat, x1, x2, ..., xk]``,
+    where:
+
+      - ``feat`` is a string, regarded as a feature.
+      - ``x1``, ``x2``, ... are words that will be assigned ``feat`` as a feature,
+        i.e., ``isa(xi, feat)`` will be True for each xi among x1, x2, ..., xk.
+
   feats : dict
     A dict mapping words to features, to be modified in-place.
   """

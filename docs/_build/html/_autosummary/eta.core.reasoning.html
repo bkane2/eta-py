@@ -127,18 +127,18 @@
 <dt class="sig sig-object py" id="eta.core.reasoning.reasoning_loop">
 <span class="sig-name descname"><span class="pre">reasoning_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/reasoning.html#reasoning_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.reasoning.reasoning_loop" title="Permalink to this definition"></a></dt>
 <dd><p>Infer new facts and possible actions from previous facts/observations.</p>
-<p>First, all recent inferences are popped from the ‘inferences’ buffer, and from
+<p>First, all recent inferences are popped from the <code class="docutils literal notranslate"><span class="pre">inferences</span></code> buffer, and from
 these inferences, the system attempts to infer new facts in both a <em>top down</em> and
 a <em>bottom up</em> manner.</p>
 <p>A depth limit is imposed, such that only facts which are below some number of
 inference steps away from a direct observation are considered for further inference.
-Any inferred facts are added back to the ‘inferences’ buffer, with a depth
+Any inferred facts are added back to the <code class="docutils literal notranslate"><span class="pre">inferences</span></code> buffer, with a depth
 that is one greater than the minimum depth of the facts used to infer them.</p>
 <p>In the top down approach, the current state of the dialogue plan is used as
 the context for making inferences from each fact.</p>
 <p>In the bottom up approach, a set of relevant facts are retrieved from memory
 and used to make inferences from each fact.</p>
-<p>Second, all direct observations are popped from the ‘observations’ buffer,
+<p>Second, all direct observations are popped from the <code class="docutils literal notranslate"><span class="pre">observations</span></code> buffer,
 and used to suggest possible actions that the system can take in reaction
 to those observations.</p>
 <dl class="field-list simple">
@@ -172,7 +172,6 @@ to those observations.</p>
 <dt class="sig sig-object py" id="eta.core.reasoning.infer_bottom_up">
 <span class="sig-name descname"><span class="pre">infer_bottom_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">facts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/reasoning.html#infer_bottom_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.reasoning.infer_bottom_up" title="Permalink to this definition"></a></dt>
 <dd><p>Infer new facts in a “bottom-up” manner, using relevant facts in memory.</p>
-<p>TODO: still need to implement retrieval of relevant facts from memory (and generic knowledge?).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -187,24 +186,14 @@ to those observations.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: still need to implement retrieval of relevant facts from memory (and generic knowledge?).</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.core.reasoning.suggest_possible_actions">
 <span class="sig-name descname"><span class="pre">suggest_possible_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/reasoning.html#suggest_possible_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.reasoning.suggest_possible_actions" title="Permalink to this definition"></a></dt>
 <dd><p>Suggest possible actions to take in reaction to a list of observations.</p>
-<p>TODO: some possible future improvements:
-1) Reconsider previous failed plan steps as possible actions to retry.
-2) Consider the system’s desires, and/or obligations placed on the system,</p>
-<blockquote>
-<div><p>as well as observations, in considering possible actions.</p>
-</div></blockquote>
-<ol class="arabic simple" start="3">
-<li><p>Allow urgency scores to be included in the transducer results, allowing
-for differential priority for different kinds of possible actions (e.g.,
-even in a simple chit-chat domain, we may wish for answering a question to
-have a higher urgency than responding to a statement.)</p></li>
-</ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -218,6 +207,19 @@ LISP-formatted S-expression strings).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: some possible future improvements:</dt><dd><ol class="arabic simple">
+<li><p>Reconsider previous failed plan steps as possible actions to retry.</p></li>
+<li><p>Consider the system’s desires, and/or obligations placed on the system,
+as well as observations, in considering possible actions.</p></li>
+<li><p>Allow urgency scores to be included in the transducer results, allowing
+for differential priority for different kinds of possible actions (e.g.,
+even in a simple chit-chat domain, we may wish for answering a question to
+have a higher urgency than responding to a statement.)</p></li>
+</ol>
 </dd>
 </dl>
 </dd></dl>

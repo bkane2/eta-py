@@ -114,9 +114,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.plan.merge_plan_nodes">
 <span class="sig-name descname"><span class="pre">merge_plan_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan_node_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_node_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_plan_node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/plan.html#merge_plan_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.plan.merge_plan_nodes" title="Permalink to this definition"></a></dt>
-<dd><p>Merge a sequence of plan nodes (bounded between plan-node-start and plan-node-end) into a given subplan node.</p>
-<p>Note that this function is effectively the opposite of ‘expand_plan_node’.</p>
-<p>TODO: this may need to be extended to deal with cases where the plan nodes to merge are discontiguous in the plan.</p>
+<dd><p>Merge a sequence of plan nodes (bounded between a given start and end node) into a given subplan node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -132,6 +130,8 @@
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: this may need to be extended to deal with cases where the plan nodes to merge are discontiguous in the plan.</p>
 </dd></dl>
 
 </section>

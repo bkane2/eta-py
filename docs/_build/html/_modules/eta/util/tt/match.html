@@ -132,16 +132,16 @@
 
 
 <div class="viewcode-block" id="flatten_sequences"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.match.flatten_sequences.html#eta.util.tt.match.flatten_sequences">[docs]</a><span class="k">def</span> <span class="nf">flatten_sequences</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Flatten lists marked as sequences, i.e., of the form [:seq, ...].</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Flatten lists marked as sequences, i.e., of the form ``[:seq, ...]``.</span>
 <span class="sd">  </span>
-<span class="sd">  [:seq, ...] expressions are not allowed to contain such expressions as sequence elements (i.e., these</span>
+<span class="sd">  ``[:seq, ...]`` expressions are not allowed to contain such expressions as sequence elements (i.e., these</span>
 <span class="sd">  would not be flattened. It would be easy to allow them, but for the pattern transductions here no such</span>
 <span class="sd">  embeddings occur, because sequence expressions are match-values of single sequence variables, like *atom</span>
 <span class="sd">  or +expr, and these are matched only against input expressions free of sequence expressions.)</span>
 
-<span class="sd">  A top-level expr like [:seq, a] or [:seq, []] or [:seq, [a, b]] becomes a, [], or [a, b] respectively,</span>
-<span class="sd">  i.e., a 1-element sequence is turned into that one element. However, an empty sequence [:seq] or longer</span>
-<span class="sd">  sequence like [:seq, a, b] is left unchanged, since removing [:seq, ...] doesn&#39;t leave a single valid expression.</span>
+<span class="sd">  A top-level expr like ``[:seq, a]`` or ``[:seq, []]`` or ``[:seq, [a, b]]`` becomes ``a``, ``[]``, or ``[a, b]`` respectively,</span>
+<span class="sd">  i.e., a 1-element sequence is turned into that one element. However, an empty sequence ``[:seq]`` or longer</span>
+<span class="sd">  sequence like ``[:seq, a, b]`` is left unchanged, since removing ``[:seq, ...]`` doesn&#39;t leave a single valid expression.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="n">atom</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">expr</span>
@@ -180,10 +180,10 @@
 <div class="viewcode-block" id="val"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.match.val.html#eta.util.tt.match.val">[docs]</a><span class="k">def</span> <span class="nf">val</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Determine whether a predicate is true of a given expression.</span>
 <span class="sd">  </span>
-<span class="sd">  If &#39;var&#39; is a multi-character atom starting with &#39;!&#39;, then it&#39;s expected</span>
+<span class="sd">  If `var` is a multi-character atom starting with &#39;!&#39;, then it&#39;s expected</span>
 <span class="sd">  to have a function definition corresponding to the string following the &#39;!&#39;.</span>
 <span class="sd">  If it starts with ?/*/+ then the corresponding !-predicate must be obtained</span>
-<span class="sd">  through string manipulation. If &#39;var&#39; is a nonnegative integer then the</span>
+<span class="sd">  through string manipulation. If `var` is a nonnegative integer then the</span>
 <span class="sd">  corresponding predicate is !expr, which is true of any expression.</span>
 
 <span class="sd">  Parameters</span>
@@ -219,9 +219,9 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  x : str</span>
-<span class="sd">    A word (e.g., &#39;surgeon&#39; or &#39;doctor&#39;).</span>
+<span class="sd">    A word (e.g., ``surgeon`` or ``doctor``).</span>
 <span class="sd">  feat : str</span>
-<span class="sd">    A feature string (e.g., &#39;professional&#39;).</span>
+<span class="sd">    A feature string (e.g., ``professional``).</span>
 <span class="sd">  feats : dict</span>
 <span class="sd">    A dict mapping words to feature lists.</span>
 
@@ -267,42 +267,40 @@
 
 <div class="viewcode-block" id="match"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.match.match.html#eta.util.tt.match.match">[docs]</a><span class="k">def</span> <span class="nf">match</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">feats</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Match a given pattern S-expression to an input S-expression.</span>
-
-<span class="sd">  This function is a wrapper around the main recursive function, match_rec.</span>
 <span class="sd">  </span>
 <span class="sd">  :nil results from match_rec are mapped to an empty list, under the assumption</span>
-<span class="sd">  that the match_rec([], []) case is unnecessary for Eta rule trees.</span>
+<span class="sd">  that the ``match_rec([], [])`` case is unnecessary for Eta rule trees.</span>
 
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  pa : s-expr</span>
 <span class="sd">    A pattern, which is any S-expression where atoms may be:</span>
-<span class="sd">      A custom predicate of form !&lt;pred&gt;, ?&lt;pred&gt;, *&lt;pred&gt;, or +&lt;pred&gt;,</span>
+<span class="sd">      - A custom predicate of form ``!&lt;pred&gt;``, ``?&lt;pred&gt;``, ``*&lt;pred&gt;``, or ``+&lt;pred&gt;``,</span>
 <span class="sd">        interpreted as matching exactly one expression, 0 or 1 expression,</span>
 <span class="sd">        0 or more expressions, or 1 or more expressions, respectively. Custom</span>
 <span class="sd">        predicates must be defined in eta.util.tt.preds. Some basic ones are</span>
 <span class="sd">        &#39;expr&#39;, &#39;atom&#39;, and &#39;lst&#39;, being true respectively of any expression,</span>
 <span class="sd">        an atom, or a list.</span>
-<span class="sd">      An integer &gt;= 0, where 0, 1, 2, ... respectively mean &quot;zero or more expressions&quot;,</span>
+<span class="sd">      - An integer &gt;= 0, where 0, 1, 2, ... respectively mean &quot;zero or more expressions&quot;,</span>
 <span class="sd">        &quot;at most one expression&quot;, &quot;at most 2 expressions&quot;, at most 3 expressions&quot;, etc.</span>
-<span class="sd">      A dotted atom, such as .verb or .branch-of-math, i.e., starting with a dot and</span>
+<span class="sd">      - A dotted atom, such as ``.verb`` or ``.branch-of-math``, i.e., starting with a dot and</span>
 <span class="sd">        denoting features of atoms, as defined by the &#39;feats&#39; argument. These are matched</span>
 <span class="sd">        by checking whether a given expression is connected to the feature through a chain</span>
 <span class="sd">        of &#39;isa&#39; connections.</span>
-<span class="sd">      Any other atom, which simply matches an identical atom in &#39;ex&#39;.</span>
+<span class="sd">      - Any other atom, which simply matches an identical atom in `ex`.</span>
 <span class="sd">  ex : s-expr</span>
 <span class="sd">    The input to match.</span>
 <span class="sd">  feats : dict</span>
 <span class="sd">    A dict mapping a word w to a feature list x1, ..., xk, such that</span>
-<span class="sd">    isa(w, xi) for each feature xi.</span>
+<span class="sd">    ``isa(w, xi)`` for each feature xi.</span>
 
 <span class="sd">  Returns</span>
 <span class="sd">  -------</span>
 <span class="sd">  s-expr</span>
-<span class="sd">    An empty list [] if no match, otherwise an S-expression containing the</span>
-<span class="sd">    result of the match. The result will resemble the input expression &#39;ex&#39;,</span>
+<span class="sd">    An empty list ``[]`` if no match, otherwise an S-expression containing the</span>
+<span class="sd">    result of the match. The result will resemble the input expression `ex`,</span>
 <span class="sd">    except that sequences of 0 or more constituents matched by sequence variables</span>
-<span class="sd">    will be encoded as [:seq, &lt;item1&gt;, &lt;item2&gt;, ...].</span>
+<span class="sd">    will be encoded as ``[:seq, &lt;item1&gt;, &lt;item2&gt;, ...]``.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">def</span> <span class="nf">match_rec</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">feats</span><span class="p">):</span>
     <span class="c1"># An empty pa is a success if and only if matched with an empty ex</span>
@@ -462,12 +460,12 @@
 
 
 <div class="viewcode-block" id="spec_function"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.match.spec_function.html#eta.util.tt.match.spec_function">[docs]</a><span class="k">def</span> <span class="nf">spec_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Check if x is a user-defined evaluable function, i.e., if it ends with &#39;!&#39;.&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Check if `x` is a user-defined evaluable function, i.e., if it ends with &#39;!&#39;.&quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;!&#39;</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;!&#39;</span></div>
 
 
 <div class="viewcode-block" id="position_index"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.match.position_index.html#eta.util.tt.match.position_index">[docs]</a><span class="k">def</span> <span class="nf">position_index</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Map a string denoting a position index to either an integer or list of integers (or return [] if not a position index).&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Map a string denoting a position index to either an integer or list of integers (or return ``[]`` if not a position index).&quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())):</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
   <span class="k">elif</span> <span class="ow">not</span> <span class="n">check_position_index_syntax</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
@@ -477,15 +475,15 @@
 
 
 <div class="viewcode-block" id="check_position_index_syntax"><a class="viewcode-back" href="../../../../_autosummary/eta.util.tt.match.check_position_index_syntax.html#eta.util.tt.match.check_position_index_syntax">[docs]</a><span class="k">def</span> <span class="nf">check_position_index_syntax</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Check if i is a valid position index.</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Check if `i` is a valid position index.</span>
 <span class="sd">  </span>
 <span class="sd">  A position index in tree transductions can take the following syntax:</span>
-<span class="sd">  0, 1, 2, 3, ...,</span>
-<span class="sd">    (equivalently, 0., 1., 2., 3., ..., but NOT 0.0, 1.0, 2.0, 3.0, ...)</span>
-<span class="sd">  or 1.1, 1.2, 1.3, ..., 2.1, 2.2, 2.3, ..., etc.,</span>
-<span class="sd">    (equivalently 1.1., 1.2., 1.3., ..., 2.1., 2.2., 2.3., ...)</span>
-<span class="sd">  or 1.1.1, 1.1.2, ..., 1.2.1, 1.2.2, ..., 2.1.1, 2.1.2, ... etc.</span>
-<span class="sd">    (equivalently 1.1.1., 1.1.2., ..., 1.2.1., 1.2.1., 1.2.2., ... )</span>
+<span class="sd">    - 0, 1, 2, 3, ...,</span>
+<span class="sd">      (equivalently, 0., 1., 2., 3., ..., but NOT 0.0, 1.0, 2.0, 3.0, ...)</span>
+<span class="sd">    - or 1.1, 1.2, 1.3, ..., 2.1, 2.2, 2.3, ..., etc.,</span>
+<span class="sd">      (equivalently 1.1., 1.2., 1.3., ..., 2.1., 2.2., 2.3., ...)</span>
+<span class="sd">    - or 1.1.1, 1.1.2, ..., 1.2.1, 1.2.2, ..., 2.1.1, 2.1.2, ... etc.</span>
+<span class="sd">      (equivalently 1.1.1., 1.1.2., ..., 1.2.1., 1.2.1., 1.2.2., ... )</span>
 <span class="sd">  </span>
 <span class="sd">  Since trailing 0 digits are not allowed (except for standalone 0), an input</span>
 <span class="sd">  like &#39;13.20&#39; should be given as &#39;13.20.&#39;.</span>
@@ -530,22 +528,22 @@
 <span class="sd">  ----------</span>
 <span class="sd">  template : s-expr</span>
 <span class="sd">    An S-expression containing:</span>
-<span class="sd">      Positional indicators such as 3, 3.2, 3.3.2, etc., where pieces of &#39;match_result&#39; are</span>
-<span class="sd">        to be placed. E.g., here, the references are to the 3rd element of &#39;match_result&#39;,</span>
-<span class="sd">        the 2nd element of the 3rd element of &#39;match_result&#39;, etc. The index 0 is special,</span>
+<span class="sd">      - Positional indicators such as 3, 3.2, 3.3.2, etc., where pieces of `match_result` are</span>
+<span class="sd">        to be placed. E.g., here, the references are to the 3rd element of `match_result`,</span>
+<span class="sd">        the 2nd element of the 3rd element of `match_result`, etc. The index 0 is special,</span>
 <span class="sd">        as it refers to the (flattened) match result as a whole.</span>
-<span class="sd">      Evaluable predicates ending in &#39;!&#39; applied to some arguments, e.g., [lex-ulf!, v, 3.2],</span>
+<span class="sd">      - Evaluable predicates ending in &#39;!&#39; applied to some arguments, e.g., ``[lex-ulf!, v, 3.2]``,</span>
 <span class="sd">        in which case the result of the predicate called on the given arguments will filled in</span>
-<span class="sd">        place. Custom predicates must be defined in eta.util.tt.preds, and their arguments must</span>
-<span class="sd">        match the arguments provided in &#39;template&#39;.</span>
+<span class="sd">        place. Custom predicates must be defined in ``eta.util.tt.preds``, and their arguments must</span>
+<span class="sd">        match the arguments provided in `template`.</span>
 <span class="sd">  match_result : s-expr</span>
-<span class="sd">    An S-expression containing sequence expressions such as [:seq, [a, b], c, [d, [f, g]]].</span>
+<span class="sd">    An S-expression containing sequence expressions such as ``[:seq, [a, b], c, [d, [f, g]]]``.</span>
 
 <span class="sd">  Returns</span>
 <span class="sd">  -------</span>
 <span class="sd">  s-expr</span>
 <span class="sd">    The template filled in with &quot;pieces&quot; from match_result, as indicated by the position</span>
-<span class="sd">    indices it contains. If a position index points to a sequence, i.e., [:seq, ...], the</span>
+<span class="sd">    indices it contains. If a position index points to a sequence, i.e., ``[:seq, ...]``, the</span>
 <span class="sd">    elements of the sequence are inserted into the result without the :seq wrapper.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="n">template</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">template</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>

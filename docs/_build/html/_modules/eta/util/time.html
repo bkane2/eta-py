@@ -81,6 +81,11 @@
 <div class="viewcode-block" id="TimePoint"><a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint">[docs]</a><span class="k">class</span> <span class="nc">TimePoint</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;A specific point in time.</span>
 
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  time : Datetime, optional</span>
+<span class="sd">    Initialize with a given Datetime object if given, otherwise use the current time.</span>
+
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
 <span class="sd">  time : Datetime</span>
@@ -88,7 +93,6 @@
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;If &#39;time&#39; is given, initialize a new TimePoint to that time; otherwise, to the current time.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">time</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
     <span class="k">else</span><span class="p">:</span>
@@ -111,8 +115,8 @@
     <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="s1">&#39;date+time&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">time</span></div>
   
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="TimePoint.__str__"><a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span></div></div>
   
 
 <div class="viewcode-block" id="now"><a class="viewcode-back" href="../../../_autosummary/eta.util.time.now.html#eta.util.time.now">[docs]</a><span class="k">def</span> <span class="nf">now</span><span class="p">():</span>
@@ -123,8 +127,8 @@
 <div class="viewcode-block" id="certainty_to_period"><a class="viewcode-back" href="../../../_autosummary/eta.util.time.certainty_to_period.html#eta.util.time.certainty_to_period">[docs]</a><span class="k">def</span> <span class="nf">certainty_to_period</span><span class="p">(</span><span class="n">certainty</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.</span>
 
-<span class="sd">  The proportion between the period and the quantity -log(1 - certainty) is determined by the global</span>
-<span class="sd">  constant EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT, defined in eta.constants.</span>
+<span class="sd">  The proportion between the period and the quantity ``-log(1 - certainty)`` is determined by the global</span>
+<span class="sd">  constant EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT, defined in ``eta.constants``.</span>
 
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>

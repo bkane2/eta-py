@@ -1,4 +1,4 @@
-eta.plan.PlanStep
+﻿eta.plan.PlanStep
 =================
 
 .. currentmodule:: eta.plan
@@ -7,7 +7,7 @@ eta.plan.PlanStep
    :members:
    :show-inheritance:
    :inherited-members:
-   :special-members: __call__, __add__, __mul__
+   :special-members: __call__, __str__, __hash__, __eq__
 
    
    

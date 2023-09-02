@@ -12,12 +12,17 @@ DUALS = file.load_json('eta/resources/lexical/duals.json')
 class Utterance:
   """Represents a single utterance, which contains both the words of the utterance and an affect.
   
-  Attributes
+  Parameters
   ----------
   words : str
     The content of the utterance.
-  affect : str, optional
-    The affect of the utterance. Must be contained within the list of supported emotions (default is 'neutral').
+  affect : str, default='neutral'
+    The affect of the utterance. Must be contained within the list of supported emotions.
+
+  Attributes
+  ----------
+  words : str
+  affect : str
   """
 
   def __init__(self, words, affect=EMOTIONS_LIST[0]):
@@ -31,7 +36,7 @@ class Utterance:
 class DialogueTurn:
   """Represents a dialogue turn by an agent, which contains the utterance as well as any associated dialogue information.
   
-  Attributes
+  Parameters
   ----------
   agent : str
     The agent of this turn.
@@ -47,6 +52,16 @@ class DialogueTurn:
     A list of obligations created by this turn.
   ep : str, optional
     The episode that this turn corresponds to.
+
+  Attributes
+  ----------
+  agent : str
+  utterance : Utterance
+  gists : list[str]
+  semantics : list[s-expr]
+  pragmatics : list[s-expr]
+  obligations : list[s-expr]
+  ep : str or None
   """
   
   def __init__(self, agent, utterance, gists=[], semantics=[], pragmatics=[], obligations=[], ep=None):
@@ -87,7 +102,7 @@ def parse_utt_str(str):
   Parameters
   ----------
   str : str
-    A string representing an utterance, potentially prefixed by an emotion tag, e.g., [happy] or [sad].
+    A string representing an utterance, potentially prefixed by an emotion tag, e.g., ``[happy]`` or ``[sad]``.
   
   Returns
   -------
@@ -142,14 +157,12 @@ def presubst(str):
 	This function replaces "are" by "are2" when preceded or followed by "you"; similarly, it replaces
   "were" by "were2" and "was" by "was2".
 
-	It also replaces "you" by "you2" when it is the last word, or
-	when it is not one of the first two words and is not preceded by
-	certain conjunctions ("and", "or", "but", "that", "because", "if",
-	"when", "then", "why", ...), or certain subordinating verbs ("think",
-	"believe", "know", ...), or when it follows "to".
+	It also replaces "you" by "you2" when it is the last word, or when it is not one of the first two
+  words and is not preceded by certain conjunctions ("and", "or", "but", "that", "because", "if",
+	"when", "then", "why", ...), or certain subordinating verbs ("think", "believe", "know", ...), or
+  when it follows "to".
 
-	This is in preparation for replacement of "you2" by "me" (rather than "i")
-	when swap_duals is applied.
+	This is in preparation for replacement of "you2" by "me" (rather than "i") when swap_duals is applied.
 	"""
   re_punct = ['?','!',',','.',':',';']
   re_blocker = ['and', 'or', 'but', 'that', 'because', 'if', 'so', 'when', 'then', 'why',

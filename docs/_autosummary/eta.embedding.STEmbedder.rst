@@ -1,4 +1,4 @@
-eta.embedding.STEmbedder
+﻿eta.embedding.STEmbedder
 ========================
 
 .. currentmodule:: eta.embedding
@@ -7,7 +7,7 @@ eta.embedding.STEmbedder
    :members:
    :show-inheritance:
    :inherited-members:
-   :special-members: __call__, __add__, __mul__
+   :special-members: __call__, __str__, __hash__, __eq__
 
    
    

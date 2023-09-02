@@ -158,7 +158,87 @@
 where &lt;condition&gt; is either a ULF or True (for a default condition), and &lt;eventualities&gt; is a list of
 sub-eventualities that occur if the condition is true.</p>
 <p>Such an event is indicated by a :try-in-sequence or :if keyword in e.g. a schema.</p>
-<p>Initialize an Eventuality.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.ep">
+<span class="sig-name descname"><span class="pre">ep</span></span><a class="headerlink" href="#eta.lf.Condition.ep" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.nl">
+<span class="sig-name descname"><span class="pre">nl</span></span><a class="headerlink" href="#eta.lf.Condition.nl" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.ulf">
+<span class="sig-name descname"><span class="pre">ulf</span></span><a class="headerlink" href="#eta.lf.Condition.ulf" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.elf">
+<span class="sig-name descname"><span class="pre">elf</span></span><a class="headerlink" href="#eta.lf.Condition.elf" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.prob">
+<span class="sig-name descname"><span class="pre">prob</span></span><a class="headerlink" href="#eta.lf.Condition.prob" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.bindings">
+<span class="sig-name descname"><span class="pre">bindings</span></span><a class="headerlink" href="#eta.lf.Condition.bindings" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.embedding">
+<span class="sig-name descname"><span class="pre">embedding</span></span><a class="headerlink" href="#eta.lf.Condition.embedding" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.conditions">
+<span class="sig-name descname"><span class="pre">conditions</span></span><a class="headerlink" href="#eta.lf.Condition.conditions" title="Permalink to this definition"></a></dt>
+<dd><p>A list of pairs of conditions and eventuality lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)">tuple</a>[True or <a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -222,6 +302,24 @@ sub-eventualities that occur if the condition is true.</p>
 <dt class="sig sig-object py" id="eta.lf.Condition.replacevar">
 <span class="sig-name descname"><span class="pre">replacevar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Condition.replacevar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Condition.replacevar" title="Permalink to this definition"></a></dt>
 <dd><p>Replace the first variable symbol with the second variable symbol throughout the eventuality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Condition.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eta.lf.Condition.__eq__" title="Permalink to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Condition.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eta.lf.Condition.__hash__" title="Permalink to this definition"></a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Condition.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eta.lf.Condition.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
 </dd></dl>
 
 <dl class="py method">

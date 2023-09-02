@@ -179,10 +179,6 @@
 <dt class="sig sig-object py" id="eta.util.general.gentemp">
 <span class="sig-name descname"><span class="pre">gentemp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#gentemp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.gentemp" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a unique symbol that hasn’t been used before by appending an integer suffix i and then incrementing i.</p>
-<p>This currently relies on an external symbol table stored in a file, which
-exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
-(see: <a class="reference external" href="https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2">https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2</a>)
-However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – String to use for symbol generation.</p>
@@ -194,6 +190,11 @@ However, this is somewhat clumsy/inefficient and should eventually be replaced b
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This currently relies on an external symbol table stored in a file, which
+exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
+(see: <a class="reference external" href="https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2">https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2</a>)
+However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.</p>
 </dd></dl>
 
 </section>

@@ -160,8 +160,8 @@
 the first element, a Condition or Repetition object is created respectively; otherwise,
 a basic Eventuality object is created containing s as a formula.</p></li>
 <li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – If given, use this episode symbol for the created eventuality, rather than generating a new symbol.</p></li>
-<li><p><strong>expectation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, this will interpret the eventuality as an expected episode rather than an observed episode,
-i.e., ‘ep’ will become an episode variable instead of an episode constant.</p></li>
+<li><p><strong>expectation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – If True, this will interpret the eventuality as an expected episode rather than an observed episode,
+i.e., <cite>ep</cite> will become an episode variable instead of an episode constant.</p></li>
 <li><p><strong>prob_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary mapping episode symbols to probabilities, used to set the probability of this eventuality.</p></li>
 </ul>
 </dd>

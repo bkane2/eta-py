@@ -8,13 +8,13 @@ from eta.util.general import remove_duplicates
 def reasoning_loop(ds):
   """Infer new facts and possible actions from previous facts/observations.
 
-  First, all recent inferences are popped from the 'inferences' buffer, and from
+  First, all recent inferences are popped from the ``inferences`` buffer, and from
   these inferences, the system attempts to infer new facts in both a *top down* and
   a *bottom up* manner.
   
   A depth limit is imposed, such that only facts which are below some number of
   inference steps away from a direct observation are considered for further inference.
-  Any inferred facts are added back to the 'inferences' buffer, with a depth
+  Any inferred facts are added back to the ``inferences`` buffer, with a depth
   that is one greater than the minimum depth of the facts used to infer them.
 
   In the top down approach, the current state of the dialogue plan is used as
@@ -23,7 +23,7 @@ def reasoning_loop(ds):
   In the bottom up approach, a set of relevant facts are retrieved from memory
   and used to make inferences from each fact.
 
-  Second, all direct observations are popped from the 'observations' buffer,
+  Second, all direct observations are popped from the ``observations`` buffer,
   and used to suggest possible actions that the system can take in reaction
   to those observations.
   
@@ -77,8 +77,6 @@ def infer_top_down(facts, ds):
 
 def infer_bottom_up(facts, ds):
   """Infer new facts in a "bottom-up" manner, using relevant facts in memory.
-
-  TODO: still need to implement retrieval of relevant facts from memory (and generic knowledge?).
   
   Parameters
   ----------
@@ -90,6 +88,10 @@ def infer_bottom_up(facts, ds):
   -------
   list[Eventuality]
     A list of inferred facts.
+
+  Notes
+  -----
+  TODO: still need to implement retrieval of relevant facts from memory (and generic knowledge?).
   """
   if not facts:
     return []
@@ -100,15 +102,6 @@ def infer_bottom_up(facts, ds):
 
 def suggest_possible_actions(observations, ds):
   """Suggest possible actions to take in reaction to a list of observations.
-  
-  TODO: some possible future improvements:
-  1) Reconsider previous failed plan steps as possible actions to retry.
-  2) Consider the system's desires, and/or obligations placed on the system,
-     as well as observations, in considering possible actions.
-  3) Allow urgency scores to be included in the transducer results, allowing
-     for differential priority for different kinds of possible actions (e.g.,
-     even in a simple chit-chat domain, we may wish for answering a question to
-     have a higher urgency than responding to a statement.)
 
   Parameters
   ----------
@@ -121,6 +114,17 @@ def suggest_possible_actions(observations, ds):
   list[str]
     A list of possible actions (as natural language strings or
     LISP-formatted S-expression strings).
+
+  Notes
+  -----
+  TODO: some possible future improvements:
+    1. Reconsider previous failed plan steps as possible actions to retry.
+    2. Consider the system's desires, and/or obligations placed on the system,
+       as well as observations, in considering possible actions.
+    3. Allow urgency scores to be included in the transducer results, allowing
+       for differential priority for different kinds of possible actions (e.g.,
+       even in a simple chit-chat domain, we may wish for answering a question to
+       have a higher urgency than responding to a statement.)
   """
   actions = []
   for observation in observations:

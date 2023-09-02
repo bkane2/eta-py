@@ -12,22 +12,6 @@ statistical models, large language models, etc.).
 Note that each transducer type should return a list; this allows multiple
 transducer implementations to be "stacked" in practice, e.g., using both a
 tree transduction and an LLM transducer and collating the results.
-
-Exported classes
-----------------
-Transducer : the base transducer class.
-ReasonTopDownTransducer : maps from a plan step event and a list of facts to a list of new facts inferred from those.
-ReasonBottomUpTransducer : maps from a list of facts to a list of new facts inferred from those.
-GistTransducer : maps an utterance to a list of gist clauses, given a conversation history.
-SemanticTransducer : maps a gist clause to a list of ULF formulas capturing its semantic meaning.
-PragmaticTransducer : maps a gist clause to a list of ULF formulas capturing its pragmatic meaning.
-ReactionTransducer : maps an observed event to a formula for an action that an agent can take.
-SubplanTransducer : maps a plan step event to a list of subplans, i.e., sequences of events that are substeps of the given step.
-ParaphraseTransducer : maps a gist clause, given a conversation history and relevant knowledge, to a paraphrased response.
-ResponseTransducer : maps a conversation history and relevant knowledge to a response utterance.
-AnswerTransducer : maps a conversation history and relevant knowledge to an answer utterance.
-AskTransducer : maps a conversation history and relevant knowledge to a question utterance.
-AffectTransducer : maps the word content of an utterance to an appropriate affect, given a conversation history.
 """
 
 from eta.lf import Eventuality
@@ -196,9 +180,6 @@ class PragmaticTransducer(Transducer):
 
 class ReactionTransducer(Transducer):
   """Maps an observed event to a formula for an action that an agent can take.
-
-  TODO: this should likely be expanded to support a list of observed events rather than a single event,
-  since in general a reaction may be contingent on multiple combined observations.
   
   Parameters
   ----------
@@ -209,6 +190,11 @@ class ReactionTransducer(Transducer):
   -------
   list[s-expr]
     A list of action formulas that the agent can take in reaction to the observation.
+
+  Notes
+  -----
+  TODO: this should likely be expanded to support a list of observed events rather than a single event,
+  since in general a reaction may be contingent on multiple combined observations.
   """
 
   def __init__(self):

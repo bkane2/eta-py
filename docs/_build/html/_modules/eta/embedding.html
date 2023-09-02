@@ -90,7 +90,6 @@
 <span class="sd">  method for scoring a set of documents (possibly with precomputed embeddings) relative to a text.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the embedder object.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
 <div class="viewcode-block" id="Embedder.embed"><a class="viewcode-back" href="../../_autosummary/eta.embedding.Embedder.html#eta.embedding.Embedder.embed">[docs]</a>  <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">):</span>
@@ -142,18 +141,21 @@
 
 
 <div class="viewcode-block" id="STEmbedder"><a class="viewcode-back" href="../../_autosummary/eta.embedding.STEmbedder.html#eta.embedding.STEmbedder">[docs]</a><span class="k">class</span> <span class="nc">STEmbedder</span><span class="p">(</span><span class="n">Embedder</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;An embedder that uses a native SentenceTransformer model to compute embeddings.&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;An embedder that uses a native SentenceTransformer model to compute embeddings.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  model : str</span>
+<span class="sd">    The name of a SentenceTransformer model to use.</span>
+<span class="sd">  parallelism : bool, default=False</span>
+<span class="sd">    Whether to enable or disable model parallelism.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  model : SentenceTransformer</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">EMBEDDING_DEFAULT_MODEL</span><span class="p">,</span> <span class="n">parallelism</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a SentenceTransformer embedder.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model : str</span>
-<span class="sd">      The name of a SentenceTransformer model to use.</span>
-<span class="sd">    parallelism : bool, optional</span>
-<span class="sd">      Whether to enable or disable model parallelism (default is False).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">parallelism</span><span class="p">:</span>
@@ -164,18 +166,24 @@
   
 
 <div class="viewcode-block" id="HFEmbedder"><a class="viewcode-back" href="../../_autosummary/eta.embedding.HFEmbedder.html#eta.embedding.HFEmbedder">[docs]</a><span class="k">class</span> <span class="nc">HFEmbedder</span><span class="p">(</span><span class="n">Embedder</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;An embedder that uses HuggingFace&#39;s API to compute embeddings.&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;An embedder that uses HuggingFace&#39;s API to compute embeddings.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  host : str</span>
+<span class="sd">    The URL of the embedding API to use.</span>
+<span class="sd">  model : str</span>
+<span class="sd">    The name of the specific model to use.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  host : str</span>
+<span class="sd">  model : str</span>
+<span class="sd">  url : str</span>
+<span class="sd">  header : dict</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">EMBEDDING_DEFAULT_API</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">EMBEDDING_DEFAULT_MODEL</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a HuggingFace API embedder.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    host : str</span>
-<span class="sd">      The URL of the embedding API to use.</span>
-<span class="sd">    model : str</span>
-<span class="sd">      The name of the specific model to use.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">host</span><span class="o">+</span><span class="n">model</span>
@@ -198,6 +206,7 @@
 
 <div class="viewcode-block" id="DummyEmbedder"><a class="viewcode-back" href="../../_autosummary/eta.embedding.DummyEmbedder.html#eta.embedding.DummyEmbedder">[docs]</a><span class="k">class</span> <span class="nc">DummyEmbedder</span><span class="p">(</span><span class="n">Embedder</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;An embedder that simply computes empty embeddings.&quot;&quot;&quot;</span>
+
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">pass</span></div>
   

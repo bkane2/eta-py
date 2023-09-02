@@ -142,8 +142,9 @@
 <p>The core process responsible for using schemas and memory to modify the plan.</p>
 <p>Modifying the plan includes adding possible actions to the plan, expanding plan steps,
 merging plan steps, and reordering plan steps.</p>
-<p>NOTE: currently, the ‘plans’ buffer is handled differently from the other buffers, in that
-we assume it only holds one element at a time, and this element is simply replaced whenever
+<p class="rubric">Notes</p>
+<p>Currently, the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer is handled differently from the other buffers, in that we
+assume it only holds one element at a time, and this element is simply replaced whenever
 the plan is modified in some way.</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
@@ -164,7 +165,7 @@ the plan is modified in some way.</p>
 <td><p>Expand a step containing a condition eventuality depending on the truth value of its condition.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.expand_plan_steps.html#eta.core.planning.expand_plan_steps" title="eta.core.planning.expand_plan_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_plan_steps</span></code></a></p></td>
-<td><p>Attempt to expand the surface steps in the plan using one of: 1.</p></td>
+<td><p>Attempt to expand the surface steps in the plan using one of:</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.expand_primitive_step.html#eta.core.planning.expand_primitive_step" title="eta.core.planning.expand_primitive_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_primitive_step</span></code></a></p></td>
 <td><p>Expand a primitive step, i.e., one whose expansion method is supported directly.</p></td>
@@ -229,15 +230,19 @@ the plan is modified in some way.</p>
 <dt class="sig sig-object py" id="eta.core.planning.planning_loop">
 <span class="sig-name descname"><span class="pre">planning_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#planning_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.planning_loop" title="Permalink to this definition"></a></dt>
 <dd><p>Make modifications to the dialogue plan.</p>
-<p>First, all suggested actions are popped from the ‘actions’ buffer, and used to create a new
-plan. The plan of the current dialogue state is updated, and the contents of the ‘plans’ buffer
+<p>First, all suggested actions are popped from the <code class="docutils literal notranslate"><span class="pre">actions</span></code> buffer, and used to create a new
+plan. The plan of the current dialogue state is updated, and the contents of the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer
 is replaced with the updated plan.</p>
-<p>Second, this attempts to modify the plan in the ‘plans’ buffer. This consists of the following substeps:
-1) Attempt to expand top-level steps in the plan into substeps.
-2) Merge equivalent steps in the plan.
-3) Reorder plan steps according to constraints.</p>
+<dl class="simple">
+<dt>Second, this attempts to modify the plan in the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer. This consists of the following substeps:</dt><dd><ol class="arabic simple">
+<li><p>Attempt to expand top-level steps in the plan into substeps.</p></li>
+<li><p>Merge equivalent steps in the plan.</p></li>
+<li><p>Reorder plan steps according to constraints.</p></li>
+</ol>
+</dd>
+</dl>
 <p>If the plan was modified by the previous step, it is used to update the plan of the current dialogue state,
-and is re-added to the ‘plans’ buffer.</p>
+and is re-added to the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p>
@@ -249,17 +254,6 @@ and is re-added to the ‘plans’ buffer.</p>
 <dt class="sig sig-object py" id="eta.core.planning.add_possible_actions_to_plan">
 <span class="sig-name descname"><span class="pre">add_possible_actions_to_plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#add_possible_actions_to_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.add_possible_actions_to_plan" title="Permalink to this definition"></a></dt>
 <dd><p>Given a list of possible actions, attempt to add actions into the current plan.</p>
-<p>TODO: some possible future improvements:
-1) For now, we assume that only the first action in a set of possible actions is used.</p>
-<blockquote>
-<div><p>In the future, this might be extended with a policy for attempting to add the top K possible actions.</p>
-</div></blockquote>
-<ol class="arabic simple" start="2">
-<li><p>This currently adds the action unconditionally; ultimately, the system should verify that the action
-can be added to the plan. This may be done by way of a pattern transducer.</p></li>
-<li><p>The action is currently inserted as the current step, but ultimately we should be able to insert actions
-elsewhere in the plan as well.</p></li>
-</ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -274,21 +268,32 @@ elsewhere in the plan as well.</p></li>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: some possible future improvements:</dt><dd><ol class="arabic simple">
+<li><p>For now, we assume that only the first action in a set of possible actions is used.
+In the future, this might be extended with a policy for attempting to add the top K possible actions.</p></li>
+<li><p>This currently adds the action unconditionally; ultimately, the system should verify that the action
+can be added to the plan. This may be done by way of a pattern transducer.</p></li>
+<li><p>The action is currently inserted as the current step, but ultimately we should be able to insert actions
+elsewhere in the plan as well.</p></li>
+</ol>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.core.planning.expand_plan_steps">
 <span class="sig-name descname"><span class="pre">expand_plan_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_plan_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_plan_steps" title="Permalink to this definition"></a></dt>
-<dd><p>Attempt to expand the surface steps in the plan using one of:
-1. A keyword step, which have special expansion behavior
-2. A schema whose header matches the step WFF (unifying any schema args)
-3. A “primitive” type of plan step whose expansion is directly supported
-4. A pattern transduction tree mapping the step WFF to substep WFF(s)</p>
-<p>TODO: some possible future improvements:
-1) currently, this only attempts to expand the currently due step; however,</p>
-<blockquote>
-<div><p>it may be possible to expand certain other steps in the plan as well.</p>
-</div></blockquote>
+<dd><dl class="simple">
+<dt>Attempt to expand the surface steps in the plan using one of:</dt><dd><ol class="arabic simple">
+<li><p>A keyword step, which have special expansion behavior</p></li>
+<li><p>A schema whose header matches the step WFF (unifying any schema args)</p></li>
+<li><p>A “primitive” type of plan step whose expansion is directly supported</p></li>
+<li><p>A pattern transduction tree mapping the step WFF to substep WFF(s)</p></li>
+</ol>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -301,6 +306,14 @@ elsewhere in the plan as well.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: some possible future improvements:</dt><dd><ol class="arabic simple">
+<li><p>currently, this only attempts to expand the currently due step; however,
+it may be possible to expand certain other steps in the plan as well.</p></li>
+</ol>
 </dd>
 </dl>
 </dd></dl>
@@ -309,11 +322,6 @@ elsewhere in the plan as well.</p></li>
 <dt class="sig sig-object py" id="eta.core.planning.merge_plan_steps">
 <span class="sig-name descname"><span class="pre">merge_plan_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#merge_plan_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.merge_plan_steps" title="Permalink to this definition"></a></dt>
 <dd><p>Merge steps in the plan that are equivalent or unifiable.</p>
-<p>TODO: the behavior of this function is currently hard-coded to merge directly
-adjacent reply-to steps in the plan. It should be generalized using a transducer
-that maps a plan to a new plan with merged steps, possibly making use of retrieved
-equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially
-perform this step instead).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -328,13 +336,18 @@ perform this step instead).</p>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: the behavior of this function is currently hard-coded to merge directly
+adjacent reply-to steps in the plan. It should be generalized using a transducer
+that maps a plan to a new plan with merged steps, possibly making use of retrieved
+equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially
+perform this step instead).</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.core.planning.reorder_plan_steps">
 <span class="sig-name descname"><span class="pre">reorder_plan_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#reorder_plan_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.reorder_plan_steps" title="Permalink to this definition"></a></dt>
 <dd><p>Reorder steps in the plan according to imposed constraints.</p>
-<p>TODO: this is a stub that needs implementation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -349,6 +362,8 @@ perform this step instead).</p>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: this is a stub that needs implementation.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -376,11 +391,6 @@ perform this step instead).</p>
 <dt class="sig sig-object py" id="eta.core.planning.expand_repetition_step">
 <span class="sig-name descname"><span class="pre">expand_repetition_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_repetition_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_repetition_step" title="Permalink to this definition"></a></dt>
 <dd><p>Expand a step containing a repetition eventuality depending on the truth value of its condition.</p>
-<p>TODO: some modifications still need to be made to the method of unbinding local variables, since it
-may be possible that a variable within a :repeat-until section of a schema first appeared within an
-episode outside of the :repeat-until section, yet not within the participants list of the schema.
-This means that these variables will be unbound in memory following execution of the repeating episode,
-although typically the repetition itself still executes as intended.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -396,6 +406,12 @@ although typically the repetition itself still executes as intended.</p>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: some modifications still need to be made to the method of unbinding local variables, since it
+may be possible that a variable within a :repeat-until section of a schema first appeared within an
+episode outside of the :repeat-until section, yet not within the participants list of the schema.
+This means that these variables will be unbound in memory following execution of the repeating episode,
+although typically the repetition itself still executes as intended.</p>
 </dd></dl>
 
 <dl class="py function">

@@ -126,5 +126,5 @@ def split_sentences(wordlist):
   return gute.remove_duplicates(result1, order=True)
 
 def prefix_each(prefix, lst):
-  """Cons 'prefix' to each list in 'lst'."""
+  """Cons `prefix` to each list in `lst`."""
   return [gute.cons(prefix, l) for l in lst]

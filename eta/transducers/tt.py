@@ -11,22 +11,7 @@ i.e., string-like directives (:out, :gist, etc.) are joined to create strings, w
 directives (:ulf, :schema, :raw, etc.) are returned as-is. Results using the :and keyword are also
 flattened to create a single list of outputs.
 
-Full documentation on TT can be found in the eta.util.tt package. 
-
-Exported classes
-----------------
-TTReasonTopDownTransducer
-TTReasonBottomUpTransducer
-TTGistTransducer
-TTSemanticTransducer
-TTPragmaticTransducer
-TTReactionTransducer
-TTSubplanTransducer
-TTParaphraseTransducer
-TTResponseTransducer
-TTAnswerTransducer
-TTAskTransducer
-TTAffectTransducer
+Full documentation on TT can be found in the ``eta.util.tt`` package.
 """
 
 from eta.transducers.base import *
@@ -48,6 +33,13 @@ class TTTransducer(Transducer):
   to its root choice tree(s), processing the results based on the directive, and combining them into a
   single flat list.
 
+  Parameters
+  ----------
+  rule_dirs : str or list[str]
+    The directory name(s) containing LISP choice tree packets to read from.
+  roots : str or list[str]
+    The root name(s) to use for choosing results for this transducer instance.
+
   Attributes
   ----------
   trees : dict
@@ -59,15 +51,6 @@ class TTTransducer(Transducer):
   """
 
   def __init__(self, rule_dirs, roots):
-    """Create a TT transducer instance.
-    
-    Parameters
-    ----------
-    rule_dirs : str or list[str]
-      The directory name(s) containing LISP choice tree packets to read from.
-    roots : str or list[str]
-      The root name(s) to use for choosing results for this transducer instance.
-    """
     self.trees, self.feats = from_lisp_dirs(rule_dirs)
     if isinstance(roots, str):
       self.roots = [roots]

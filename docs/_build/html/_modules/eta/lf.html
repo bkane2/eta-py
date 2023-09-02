@@ -100,17 +100,23 @@
 
 <div class="viewcode-block" id="Domain"><a class="viewcode-back" href="../../_autosummary/eta.lf.Domain.html#eta.lf.Domain">[docs]</a><span class="k">class</span> <span class="nc">Domain</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Defines a domain of individuals.</span>
-<span class="sd">  </span>
-<span class="sd">  TODO: currently incomplete and unused.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  individuals : list[Individual], optional</span>
+<span class="sd">    A list of initial individuals to add to the domain.</span>
 
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
 <span class="sd">  domain : dict</span>
 <span class="sd">    A dict mapping the canonical names of an individual to that individual object.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: currently incomplete and unused.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">individuals</span><span class="o">=</span><span class="p">[]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a domain, optionally adding all individuals given in &#39;individuals&#39;.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">individuals</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
@@ -129,19 +135,25 @@
 
 <div class="viewcode-block" id="Individual"><a class="viewcode-back" href="../../_autosummary/eta.lf.Individual.html#eta.lf.Individual">[docs]</a><span class="k">class</span> <span class="nc">Individual</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Defines an individual, with some canonical name and a list of aliases.</span>
-<span class="sd">  </span>
-<span class="sd">  TODO: currently incomplete and unused.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  name : str</span>
+<span class="sd">    The canonical name of the individual.</span>
+<span class="sd">  aliases : list[str], optional</span>
+<span class="sd">    A list of aliases of the individual.</span>
 
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
 <span class="sd">  name : str</span>
-<span class="sd">    The canonical name of the individual.</span>
 <span class="sd">  aliases : list[str]</span>
-<span class="sd">    A list of aliases of the individual.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: currently incomplete and unused.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="p">[]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize an individual with a canonical name and an optional list of aliases.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="n">aliases</span>
   
@@ -149,26 +161,32 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a list of aliases to this individual.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span> <span class="o">+</span> <span class="n">aliases</span></div>
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+<div class="viewcode-block" id="Individual.__str__"><a class="viewcode-back" href="../../_autosummary/eta.lf.Individual.html#eta.lf.Individual.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div></div>
   
 
 <div class="viewcode-block" id="Var"><a class="viewcode-back" href="../../_autosummary/eta.lf.Var.html#eta.lf.Var">[docs]</a><span class="k">class</span> <span class="nc">Var</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Defines a variable, with some variable symbol and some value assignment.</span>
-<span class="sd">  </span>
-<span class="sd">  TODO: currently incomplete and unused.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  var : str</span>
+<span class="sd">    The variable symbol.</span>
+<span class="sd">  val : object, optional</span>
+<span class="sd">    The value this variable is currently bound to. Generally this will be a string,</span>
+<span class="sd">    though it may in principle be some other object (e.g., an Individual) as well.</span>
 
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
 <span class="sd">  var : str</span>
-<span class="sd">    The variable symbol.</span>
 <span class="sd">  val : object</span>
-<span class="sd">    The value this variable is currently bound to. Generally this will be a string,</span>
-<span class="sd">    though it may in principle be some other object (e.g., an Individual) as well.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: currently incomplete and unused.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a variable with some optional initial value.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">var</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
   
@@ -182,11 +200,11 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="bp">self</span></div>
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Var.__str__"><a class="viewcode-back" href="../../_autosummary/eta.lf.Var.html#eta.lf.Var.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
       <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span></div>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span></div></div>
 
 
 <div class="viewcode-block" id="LF"><a class="viewcode-back" href="../../_autosummary/eta.lf.LF.html#eta.lf.LF">[docs]</a><span class="k">class</span> <span class="nc">LF</span><span class="p">:</span>
@@ -195,6 +213,11 @@
 <span class="sd">  A logical form (whether ULF or ELF) must contain a formula, variable bindings, functions</span>
 <span class="sd">  for binding/unbinding variables, for replacing variables, and for getting the formula (or</span>
 <span class="sd">  a natural language representation thereof) after making all variable assignments.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  formula : str or s-expr</span>
+<span class="sd">    The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</span>
 
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
@@ -205,7 +228,6 @@
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formula</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a logical form with a given formula (either a LISP-formatted string or a nested list).&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">formula</span> <span class="o">=</span> <span class="n">parse_s_expr</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -235,6 +257,8 @@
 <div class="viewcode-block" id="LF.to_nl"><a class="viewcode-back" href="../../_autosummary/eta.lf.LF.html#eta.lf.LF.to_nl">[docs]</a>  <span class="k">def</span> <span class="nf">to_nl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts the formula to a natural language string.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    TODO: replace naive implementation with ULF2English.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">formula</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_formula</span><span class="p">()</span>
@@ -246,23 +270,33 @@
     <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
     <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span></div>
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">list_to_s_expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_formula</span><span class="p">())</span></div>
+<div class="viewcode-block" id="LF.__str__"><a class="viewcode-back" href="../../_autosummary/eta.lf.LF.html#eta.lf.LF.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">list_to_s_expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_formula</span><span class="p">())</span></div></div>
   
 
 <div class="viewcode-block" id="ULF"><a class="viewcode-back" href="../../_autosummary/eta.lf.ULF.html#eta.lf.ULF">[docs]</a><span class="k">class</span> <span class="nc">ULF</span><span class="p">(</span><span class="n">LF</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Defines a ULF formula.&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Defines a ULF formula.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  formula : str or s-expr</span>
+<span class="sd">    The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formula</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a ULF formula.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span></div>
     
 
 <div class="viewcode-block" id="ELF"><a class="viewcode-back" href="../../_autosummary/eta.lf.ELF.html#eta.lf.ELF">[docs]</a><span class="k">class</span> <span class="nc">ELF</span><span class="p">(</span><span class="n">LF</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Defines an ELF formula.&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Defines an ELF formula.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  formula : str or s-expr</span>
+<span class="sd">    The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formula</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize an ELF formula.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span></div>
     
 
@@ -279,26 +313,33 @@
 <span class="sd">  semantic parsing, and mapping from ULF to ELF requires disambiguation, scoping, and deindexing. Hence, we want to regard those</span>
 <span class="sd">  upper levels of representation as &quot;optional&quot;, since they may not be needed in simpler dialogue applications.</span>
 
-<span class="sd">  Attributes</span>
+<span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  ep : str</span>
 <span class="sd">    A symbol denoting the episode variable or constant.</span>
 <span class="sd">  nl : str</span>
 <span class="sd">    The natural language representation of the formula characterizing the event.</span>
-<span class="sd">  ulf : ULF</span>
-<span class="sd">    The ULF formula characterizing the event (default is None).</span>
-<span class="sd">  elf : ELF</span>
-<span class="sd">    The ELF formula characterizing the event (default is None).</span>
+<span class="sd">  ulf : ULF, optional</span>
+<span class="sd">    The ULF formula characterizing the event.</span>
+<span class="sd">  elf : ELF, optional</span>
+<span class="sd">    The ELF formula characterizing the event.</span>
+<span class="sd">  prob : float, default=1.</span>
+<span class="sd">    The probability associated with this event.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  ep : str</span>
+<span class="sd">  nl : str</span>
+<span class="sd">  ulf : ULF or None</span>
+<span class="sd">  elf : ELF or None</span>
 <span class="sd">  prob : float</span>
-<span class="sd">    The probability associated with this event (default is 1).</span>
 <span class="sd">  bindings : dict</span>
 <span class="sd">    A mapping from variables to bound values.</span>
 <span class="sd">  embedding : list[float]</span>
-<span class="sd">    A vector embedding of this eventuality (default is empty embedding).</span>
+<span class="sd">    A vector embedding of this eventuality.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">ulf</span><span class="p">,</span> <span class="n">elf</span><span class="p">,</span> <span class="n">prob</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize an Eventuality.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">ep</span> <span class="o">=</span> <span class="n">ep</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">nl</span> <span class="o">=</span> <span class="n">nl</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">set_ulf</span><span class="p">(</span><span class="n">ulf</span><span class="p">)</span>
@@ -398,15 +439,15 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format an eventuality as ((&lt;ep&gt; &lt;wff&gt;) &lt;prob&gt;), where &lt;wff&gt; is the highest level of representation for this eventuality.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;((</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span><span class="si">}</span><span class="s1">) </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="si">}</span><span class="s1">)&#39;</span></div>
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span>
+<div class="viewcode-block" id="Eventuality.__str__"><a class="viewcode-back" href="../../_autosummary/eta.lf.Eventuality.html#eta.lf.Eventuality.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div>
   
-  <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Eventuality.__eq__"><a class="viewcode-back" href="../../_autosummary/eta.lf.Eventuality.html#eta.lf.Eventuality.__eq__">[docs]</a>  <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
     <span class="c1"># Assume that two Eventualities are equivalent if their surface realizations are the same</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span></div>
   
-  <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Eventuality.__hash__"><a class="viewcode-back" href="../../_autosummary/eta.lf.Eventuality.html#eta.lf.Eventuality.__hash__">[docs]</a>  <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Condition"><a class="viewcode-back" href="../../_autosummary/eta.lf.Condition.html#eta.lf.Condition">[docs]</a><span class="k">class</span> <span class="nc">Condition</span><span class="p">(</span><span class="n">Eventuality</span><span class="p">):</span>
@@ -417,6 +458,18 @@
 <span class="sd">  sub-eventualities that occur if the condition is true.</span>
 
 <span class="sd">  Such an event is indicated by a :try-in-sequence or :if keyword in e.g. a schema.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  ep : str</span>
+<span class="sd">  nl : str</span>
+<span class="sd">  ulf : ULF or None</span>
+<span class="sd">  elf : ELF or None</span>
+<span class="sd">  prob : float</span>
+<span class="sd">  bindings : dict</span>
+<span class="sd">  embedding : list[float]</span>
+<span class="sd">  conditions : list[tuple[True or ULF, list[Eventuality]]]</span>
+<span class="sd">    A list of pairs of conditions and eventuality lists.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">ulf</span><span class="p">,</span> <span class="n">elf</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">prob</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">ulf</span><span class="p">,</span> <span class="n">elf</span><span class="p">,</span> <span class="n">prob</span><span class="p">)</span>
@@ -457,6 +510,20 @@
 <span class="sd">  will occur until the condition is no longer true.</span>
 
 <span class="sd">  Such an event is indicated by a :repeat-until keyword in a schema.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  ep : str</span>
+<span class="sd">  nl : str</span>
+<span class="sd">  ulf : ULF or None</span>
+<span class="sd">  elf : ELF or None</span>
+<span class="sd">  prob : float</span>
+<span class="sd">  bindings : dict</span>
+<span class="sd">  embedding : list[float]</span>
+<span class="sd">  condition : True or ULF</span>
+<span class="sd">    The stopping condition for repetition.</span>
+<span class="sd">  eventualities : list[Eventuality]</span>
+<span class="sd">    The list of eventualities to repeat.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">ulf</span><span class="p">,</span> <span class="n">elf</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">eventualities</span><span class="p">,</span> <span class="n">prob</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">nl</span><span class="p">,</span> <span class="n">ulf</span><span class="p">,</span> <span class="n">elf</span><span class="p">,</span> <span class="n">prob</span><span class="p">)</span>
@@ -498,9 +565,9 @@
 <span class="sd">    a basic Eventuality object is created containing s as a formula.</span>
 <span class="sd">  ep : str, optional</span>
 <span class="sd">    If given, use this episode symbol for the created eventuality, rather than generating a new symbol.</span>
-<span class="sd">  expectation : bool, optional</span>
+<span class="sd">  expectation : bool, default=False</span>
 <span class="sd">    If True, this will interpret the eventuality as an expected episode rather than an observed episode,</span>
-<span class="sd">    i.e., &#39;ep&#39; will become an episode variable instead of an episode constant.</span>
+<span class="sd">    i.e., `ep` will become an episode variable instead of an episode constant.</span>
 <span class="sd">  prob_dict : dict, optional</span>
 <span class="sd">    A dictionary mapping episode symbols to probabilities, used to set the probability of this eventuality.</span>
 
@@ -569,7 +636,7 @@
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  lst : list[s-expr]</span>
-<span class="sd">    A list of format [ep1, wff1, ep2, wff2, ...], where each (ep, wff) pair is to be parsed into an eventuality.</span>
+<span class="sd">    A list of format ``[ep1, wff1, ep2, wff2, ...]``, where each ``(ep, wff)`` pair is to be parsed into an eventuality.</span>
 <span class="sd">  prob_dict : dict, optional</span>
 <span class="sd">    A dictionary mapping episode symbols to probabilities, used to set the probability of this eventuality.</span>
 
@@ -634,7 +701,7 @@
 
 
 <div class="viewcode-block" id="extract_set"><a class="viewcode-back" href="../../_autosummary/eta.lf.extract_set.html#eta.lf.extract_set">[docs]</a><span class="k">def</span> <span class="nf">extract_set</span><span class="p">(</span><span class="n">ulf</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Extract a list of items from a wff of form [set-of, &#39;a&#39;, &#39;b&#39;, ...], or of form [&#39;a&#39;, and, &#39;b&#39;, and, ...].&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Extract a list of items from a wff of form ``[set-of, x, y, ...]``, or of form ``[x, and, y, and, ...]``.&quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="n">atom</span><span class="p">(</span><span class="n">ulf</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">ulf</span><span class="p">]</span>
   <span class="k">elif</span> <span class="n">ulf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;set-of&#39;</span><span class="p">:</span>

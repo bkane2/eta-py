@@ -73,10 +73,10 @@
 <span></span><span class="sd">&quot;&quot;&quot;Classes and methods for representing and modifying different types of schemas.</span>
 
 <span class="sd">A schema is, in general, a collection of sections. Each section is a sequence of eventualities (natural language</span>
-<span class="sd">expressions or ULF/ELF formulas with associated episode symbols) under a section label, e.g., &#39;types&#39; or &#39;preconditions&#39;.</span>
+<span class="sd">expressions or ULF/ELF formulas with associated episode symbols) under a section label, e.g., ``types`` or ``preconditions``.</span>
 
-<span class="sd">A schema is denoted by a specific predicate string (e.g., &#39;dog.n&#39; or &#39;eat.v&#39;), and also has a unique header, which is a</span>
-<span class="sd">formula characterizing the schema episode potentially containing participant variables, e.g., ((^me eat.v ?x) ** ?e1).</span>
+<span class="sd">A schema is denoted by a specific predicate string (e.g., ``dog.n`` or ``eat.v``), and also has a unique header, which is a</span>
+<span class="sd">formula characterizing the schema episode potentially containing participant variables, e.g., ``((^me eat.v ?x) ** ?e1)``.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">glob</span>
@@ -97,7 +97,7 @@
 <span class="sd">  id : str</span>
 <span class="sd">    A unique ID for this schema.</span>
 <span class="sd">  predicate : str</span>
-<span class="sd">    The main predicate of the schema (e.g., dog.n or eat.v).</span>
+<span class="sd">    The main predicate of the schema (e.g., ``dog.n`` or ``eat.v``).</span>
 <span class="sd">  participants : list[s-expr]</span>
 <span class="sd">    All participant roles of a schema, i.e., variables and constants present as arguments in the header.</span>
 <span class="sd">  vars : list[str]</span>
@@ -109,9 +109,9 @@
 <span class="sd">  contents : ELF</span>
 <span class="sd">    The ELF formula for the contents of the schema.</span>
 <span class="sd">  sections : dict[str, list[Eventuality]]</span>
-<span class="sd">    A dict mapping each section label (e.g., &#39;types&#39;) to a list of eventualities created from the schema contents.</span>
+<span class="sd">    A dict mapping each section label (e.g., ``types``) to a list of eventualities created from the schema contents.</span>
 <span class="sd">  embedding : list[float]</span>
-<span class="sd">    A vector embedding of this schema (default is empty embedding).</span>
+<span class="sd">    A vector embedding of this schema.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[]):</span>
@@ -137,9 +137,9 @@
     <span class="k">return</span> <span class="n">kwargs</span></div>
   
 <div class="viewcode-block" id="Schema.to_probability_dict"><a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.to_probability_dict">[docs]</a>  <span class="k">def</span> <span class="nf">to_probability_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eventualities</span><span class="p">,</span> <span class="n">swap_duals</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of certainty or necessity eventualities, create a probability dict with entries of form {&lt;ep&gt;:&lt;prob&gt;}.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of certainty or necessity eventualities, create a probability dict with entries of form ``{&lt;ep&gt;:&lt;prob&gt;}``.</span>
 <span class="sd">    </span>
-<span class="sd">    If &#39;swap_duals&#39; is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).</span>
+<span class="sd">    If `swap_duals` is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">probabilities</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eventualities</span><span class="p">:</span>
@@ -218,7 +218,7 @@
 <div class="viewcode-block" id="Schema.bind_args"><a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.bind_args">[docs]</a>  <span class="k">def</span> <span class="nf">bind_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Bind variables in the schema header with a list of respective argument values.</span>
 <span class="sd">    </span>
-<span class="sd">    Generally, we assume that &#39;args&#39; should correspond to the variables in the participants list of</span>
+<span class="sd">    Generally, we assume that `args` should correspond to the variables in the participants list of</span>
 <span class="sd">    the schema, but we allow for the possibility of ^me and ^you as implicit arguments if fewer arguments</span>
 <span class="sd">    than variables are given - in which case, they&#39;re added to the arguments list in that order.</span>
 
@@ -272,7 +272,6 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="bp">self</span></div>
-    <span class="c1"># END bind_args</span>
 
 <div class="viewcode-block" id="Schema.embed"><a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.embed">[docs]</a>  <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Embed the schema based on the natural language representation of its contents, given an embedder object.&quot;&quot;&quot;</span>
@@ -290,10 +289,10 @@
 <span class="sd">      An Embedder object.</span>
 <span class="sd">    query : str</span>
 <span class="sd">      A query string to use to compute similarity.</span>
-<span class="sd">    n : int, optional</span>
-<span class="sd">      The number of facts to retrieve (the default is 5).</span>
-<span class="sd">    header : bool, optional</span>
-<span class="sd">      Whether to prefix the retrieved facts with the schema header (the default is True).</span>
+<span class="sd">    n : int, default=5</span>
+<span class="sd">      The number of facts to retrieve.</span>
+<span class="sd">    header : bool, default=True</span>
+<span class="sd">      Whether to prefix the retrieved facts with the schema header.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -313,8 +312,8 @@
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    no_bind : bool, optional</span>
-<span class="sd">      Do not make variable substitutions (the default is False).</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -330,8 +329,8 @@
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    no_bind : bool, optional</span>
-<span class="sd">      Do not make variable substitutions (the default is False).</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -347,7 +346,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sec : str or list[str]</span>
-<span class="sd">      A section label or list of section labels, or the keyword &#39;:all&#39; to return all sections.</span>
+<span class="sd">      A section label or list of section labels, or the keyword ``:all`` to return all sections.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -365,9 +364,9 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sec : str or list[str]</span>
-<span class="sd">      A section label or list of section labels, or the keyword &#39;:all&#39; to return all sections.</span>
-<span class="sd">    no_bind : bool, optional</span>
-<span class="sd">      Do not make variable substitutions (the default is False).</span>
+<span class="sd">      A section label or list of section labels, or the keyword ``:all`` to return all sections.</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -384,9 +383,9 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sec : str or list[str]</span>
-<span class="sd">      A section label or list of section labels, or the keyword &#39;:all&#39; to return all sections.</span>
-<span class="sd">    no_bind : bool, optional</span>
-<span class="sd">      Do not make variable substitutions (the default is False).</span>
+<span class="sd">      A section label or list of section labels, or the keyword ``:all`` to return all sections.</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -399,8 +398,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format the contents of this schema as an S-expression string.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">list_to_s_expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_contents</span><span class="p">(</span><span class="n">no_bind</span><span class="p">))</span></div>
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Schema.__str__"><a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="EpiSchema"><a class="viewcode-back" href="../../_autosummary/eta.schema.EpiSchema.html#eta.schema.EpiSchema">[docs]</a><span class="k">class</span> <span class="nc">EpiSchema</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
@@ -408,16 +407,16 @@
 <span class="sd">  </span>
 <span class="sd">  Sections</span>
 <span class="sd">  --------</span>
-<span class="sd">  types : the nominal types of each participant/variable.</span>
-<span class="sd">  rigid-conds : non-fluent conditions relevant to episode.</span>
-<span class="sd">  static-conds : fluent conditions that are not expected to change during episode.</span>
-<span class="sd">  preconds : fluent conditions that are expected to hold at the beginning of episode.</span>
-<span class="sd">  postconds : fluent conditions that are expected to hold at end of episode.</span>
-<span class="sd">  goals : goals of participants in schema (e.g., (^me want.v (that ...))).</span>
-<span class="sd">  episodes : the expected/intended sub-episodes of the schema episode.</span>
-<span class="sd">  episode-relations : the temporal/causal relations between episodes of schema.</span>
-<span class="sd">  necessities : probabilities associated with schema formulas.</span>
-<span class="sd">  certainties : probabilities associated with schema episodes.</span>
+<span class="sd">  - **types** : the nominal types of each participant/variable.</span>
+<span class="sd">  - **rigid-conds** : non-fluent conditions relevant to episode.</span>
+<span class="sd">  - **static-conds** : fluent conditions that are not expected to change during episode.</span>
+<span class="sd">  - **preconds** : fluent conditions that are expected to hold at the beginning of episode.</span>
+<span class="sd">  - **postconds** : fluent conditions that are expected to hold at end of episode.</span>
+<span class="sd">  - **goals** : goals of participants in schema (e.g., ``(^me want.v (that ...))``).</span>
+<span class="sd">  - **episodes** : the expected/intended sub-episodes of the schema episode.</span>
+<span class="sd">  - **episode-relations** : the temporal/causal relations between episodes of schema.</span>
+<span class="sd">  - **necessities** : probabilities associated with schema formulas.</span>
+<span class="sd">  - **certainties** : probabilities associated with schema episodes.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[],</span>
@@ -454,17 +453,17 @@
 <span class="sd">  </span>
 <span class="sd">  Sections</span>
 <span class="sd">  --------</span>
-<span class="sd">  types : the nominal types of each participant/variable.</span>
-<span class="sd">  rigid-conds : non-fluent conditions relevant to episode.</span>
-<span class="sd">  static-conds : fluent conditions that are not expected to change during episode.</span>
-<span class="sd">  preconds : fluent conditions that are expected to hold at the beginning of episode.</span>
-<span class="sd">  postconds : fluent conditions that are expected to hold at end of episode.</span>
-<span class="sd">  goals : goals of participants in schema (e.g., (^me want.v (that ...))).</span>
-<span class="sd">  episodes : the expected/intended sub-episodes of the schema episode.</span>
-<span class="sd">  episode-relations : the temporal/causal relations between episodes of schema.</span>
-<span class="sd">  obligations : the dialogue obligations associated with episodes within the schema.</span>
-<span class="sd">  necessities : probabilities associated with schema formulas.</span>
-<span class="sd">  certainties : probabilities associated with schema episodes.</span>
+<span class="sd">  - **types** : the nominal types of each participant/variable.</span>
+<span class="sd">  - **rigid-conds** : non-fluent conditions relevant to episode.</span>
+<span class="sd">  - **static-conds** : fluent conditions that are not expected to change during episode.</span>
+<span class="sd">  - **preconds** : fluent conditions that are expected to hold at the beginning of episode.</span>
+<span class="sd">  - **postconds** : fluent conditions that are expected to hold at end of episode.</span>
+<span class="sd">  - **goals** : goals of participants in schema (e.g., (^me want.v (that ...))).</span>
+<span class="sd">  - **episodes** : the expected/intended sub-episodes of the schema episode.</span>
+<span class="sd">  - **episode-relations** : the temporal/causal relations between episodes of schema.</span>
+<span class="sd">  - **obligations** : the dialogue obligations associated with episodes within the schema.</span>
+<span class="sd">  - **necessities** : probabilities associated with schema formulas.</span>
+<span class="sd">  - **certainties** : probabilities associated with schema episodes.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[],</span>
@@ -487,9 +486,6 @@
 <div class="viewcode-block" id="DialSchema.get_obligations_of_ep"><a class="viewcode-back" href="../../_autosummary/eta.schema.DialSchema.html#eta.schema.DialSchema.get_obligations_of_ep">[docs]</a>  <span class="k">def</span> <span class="nf">get_obligations_of_ep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all obligations attached to a given episode symbol.</span>
 
-<span class="sd">    TODO: it may be better to create a generalized accessor function for other types of schema</span>
-<span class="sd">    annotations/episode relations.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    ep : str</span>
@@ -498,6 +494,11 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list[Eventuality]</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    TODO: it may be better to create a generalized accessor function for other types of schema</span>
+<span class="sd">    annotations/episode relations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">obligations</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">wff</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_section_wffs</span><span class="p">(</span><span class="s1">&#39;obligations&#39;</span><span class="p">):</span>
@@ -511,11 +512,11 @@
 <span class="sd">  </span>
 <span class="sd">  Sections</span>
 <span class="sd">  --------</span>
-<span class="sd">  types : the nominal types of each participant/variable.</span>
-<span class="sd">  rigid-conds : non-fluent conditions relevant to object.</span>
-<span class="sd">  skeletal-prototype : 3D mesh decomposition of object (.obj filenames).</span>
-<span class="sd">  purposes : telic purpose associated with object.</span>
-<span class="sd">  necessities : probabilities associated with schema formulas.</span>
+<span class="sd">  - **types** : the nominal types of each participant/variable.</span>
+<span class="sd">  - **rigid-conds** : non-fluent conditions relevant to object.</span>
+<span class="sd">  - **skeletal-prototype** : 3D mesh decomposition of object (.obj filenames).</span>
+<span class="sd">  - **purposes** : telic purpose associated with object.</span>
+<span class="sd">  - **necessities** : probabilities associated with schema formulas.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[],</span>
@@ -542,6 +543,11 @@
 <div class="viewcode-block" id="SchemaLibrary"><a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary">[docs]</a><span class="k">class</span> <span class="nc">SchemaLibrary</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;A library of all generic episode, dialogue, and object schemas.</span>
 
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  embedder : Embedder, optional</span>
+<span class="sd">    If provided, an embedder to embed all schemas that are added.</span>
+
 <span class="sd">  Attributes</span>
 <span class="sd">  ----------</span>
 <span class="sd">  dial : dict[str, DialSchema]</span>
@@ -550,8 +556,7 @@
 <span class="sd">    A dict mapping episode schema predicates to episode schemas.</span>
 <span class="sd">  obj : dict[str, ObjSchema]</span>
 <span class="sd">    A dict mapping object schema predicates to object schemas.</span>
-<span class="sd">  embedder : Embedder, optional</span>
-<span class="sd">    If provided, an embedder to embed all schemas that are added.</span>
+<span class="sd">  embedder : Embedder</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -592,7 +597,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    type : str or list[str]</span>
-<span class="sd">      A schema type (&#39;dial&#39;, &#39;epi&#39;, or &#39;obj&#39;), or a list of types.</span>
+<span class="sd">      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -637,12 +642,12 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    type : str or list[str]</span>
-<span class="sd">      A schema type (&#39;dial&#39;, &#39;epi&#39;, or &#39;obj&#39;), or a list of types.</span>
+<span class="sd">      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.</span>
 <span class="sd">    query : str, optional</span>
-<span class="sd">      A query string to use to compute similarity. If not given (default), or if no embedder is</span>
+<span class="sd">      A query string to use to compute similarity. If not given, or if no embedder is</span>
 <span class="sd">      defined, an arbitrary schema is retrieved.</span>
-<span class="sd">    m : int, optional</span>
-<span class="sd">      The number of schemas to retrieve (the default is 1).</span>
+<span class="sd">    m : int, default=1</span>
+<span class="sd">      The number of schemas to retrieve.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -663,16 +668,16 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    type : str or list[str]</span>
-<span class="sd">      A schema type (&#39;dial&#39;, &#39;epi&#39;, or &#39;obj&#39;), or a list of types.</span>
+<span class="sd">      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.</span>
 <span class="sd">    query : str, optional</span>
-<span class="sd">      A query string to use to compute similarity. If not given (default), or if no embedder is</span>
+<span class="sd">      A query string to use to compute similarity. If not given, or if no embedder is</span>
 <span class="sd">      defined, an arbitrary schema is retrieved.</span>
-<span class="sd">    m : int, optional</span>
-<span class="sd">      The number of schemas to retrieve (the default is 1).</span>
-<span class="sd">    n : int, optional</span>
-<span class="sd">      The number of facts to retrieve from each retrieved schema (the default is 5).</span>
-<span class="sd">    header : bool, optional</span>
-<span class="sd">      Whether to prefix the retrieved facts with the schema header (the default is True).</span>
+<span class="sd">    m : int, default=1</span>
+<span class="sd">      The number of schemas to retrieve.</span>
+<span class="sd">    n : int, default=5</span>
+<span class="sd">      The number of facts to retrieve from each retrieved schema.</span>
+<span class="sd">    header : bool, default=True</span>
+<span class="sd">      Whether to prefix the retrieved facts with the schema header.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -716,11 +721,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">from_lisp_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span></div>
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SchemaLibrary.__str__"><a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.__str__">[docs]</a>  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;dialogue:&#39;</span><span class="p">,</span> <span class="s1">&#39;episode:&#39;</span><span class="p">,</span> <span class="s1">&#39;object:&#39;</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dial</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">]):</span>
       <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">predicate</span> <span class="k">for</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

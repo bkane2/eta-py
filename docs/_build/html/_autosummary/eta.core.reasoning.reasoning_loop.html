@@ -110,18 +110,18 @@
 <dt class="sig sig-object py" id="eta.core.reasoning.reasoning_loop">
 <span class="sig-name descname"><span class="pre">reasoning_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/reasoning.html#reasoning_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.reasoning.reasoning_loop" title="Permalink to this definition"></a></dt>
 <dd><p>Infer new facts and possible actions from previous facts/observations.</p>
-<p>First, all recent inferences are popped from the ‘inferences’ buffer, and from
+<p>First, all recent inferences are popped from the <code class="docutils literal notranslate"><span class="pre">inferences</span></code> buffer, and from
 these inferences, the system attempts to infer new facts in both a <em>top down</em> and
 a <em>bottom up</em> manner.</p>
 <p>A depth limit is imposed, such that only facts which are below some number of
 inference steps away from a direct observation are considered for further inference.
-Any inferred facts are added back to the ‘inferences’ buffer, with a depth
+Any inferred facts are added back to the <code class="docutils literal notranslate"><span class="pre">inferences</span></code> buffer, with a depth
 that is one greater than the minimum depth of the facts used to infer them.</p>
 <p>In the top down approach, the current state of the dialogue plan is used as
 the context for making inferences from each fact.</p>
 <p>In the bottom up approach, a set of relevant facts are retrieved from memory
 and used to make inferences from each fact.</p>
-<p>Second, all direct observations are popped from the ‘observations’ buffer,
+<p>Second, all direct observations are popped from the <code class="docutils literal notranslate"><span class="pre">observations</span></code> buffer,
 and used to suggest possible actions that the system can take in reaction
 to those observations.</p>
 <dl class="field-list simple">

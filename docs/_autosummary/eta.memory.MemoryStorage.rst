@@ -1,4 +1,4 @@
-eta.memory.MemoryStorage
+﻿eta.memory.MemoryStorage
 ========================
 
 .. currentmodule:: eta.memory
@@ -7,7 +7,7 @@ eta.memory.MemoryStorage
    :members:
    :show-inheritance:
    :inherited-members:
-   :special-members: __call__, __add__, __mul__
+   :special-members: __call__, __str__, __hash__, __eq__
 
    
    

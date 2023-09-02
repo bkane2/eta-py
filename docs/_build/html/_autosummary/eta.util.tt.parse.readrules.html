@@ -112,16 +112,17 @@
 <dd><p>Create a choice tree from a packet of pattern and template rules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>packet</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – <p>A list of form [depth, pattern, optional-pair, depth, pattern, optional-pair, …],
-where “depth” is 1 for top-level rules, 2 for direct children, etc.,</p>
+<dd class="field-odd"><p><strong>packet</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – <p>A list of form <code class="docutils literal notranslate"><span class="pre">[depth,</span> <span class="pre">pattern,</span> <span class="pre">optional-pair,</span> <span class="pre">depth,</span> <span class="pre">pattern,</span> <span class="pre">optional-pair,</span> <span class="pre">...]</span></code>,
+where:</p>
 <blockquote>
-<div><p>”pattern” is a decomposition pattern or other output,
-“optional-pair” is present iff “pattern” is a reassembly pattern or other output,</p>
-<blockquote>
-<div><p>and consists of a (latency, directive) tuple, where latency is an integer &gt;= 0
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">depth</span></code> is 1 for top-level rules, 2 for direct children, etc.,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pattern</span></code> is a decomposition pattern or other output,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optional-pair</span></code> is present iff <code class="docutils literal notranslate"><span class="pre">pattern</span></code> is a reassembly pattern or other output,
+and consists of a <code class="docutils literal notranslate"><span class="pre">(latency,</span> <span class="pre">directive)</span></code> tuple, where latency is an integer &gt;= 0
 specifying how long to wait to use a rule again, and directive is a symbol such
-as :out, :subtree, :gist, etc. specifying how the output should be used.</p>
-</div></blockquote>
+as <code class="docutils literal notranslate"><span class="pre">:out</span></code>, <code class="docutils literal notranslate"><span class="pre">:subtree</span></code>, <code class="docutils literal notranslate"><span class="pre">:gist</span></code>, etc. specifying how the output should be used.</p></li>
+</ul>
 </div></blockquote>
 </p>
 </dd>

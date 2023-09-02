@@ -21,88 +21,98 @@ def choose_result_for(clause, root, trees, feats):
   """Choose a result for a given clause, starting from a given choice tree root.
 
   A choice tree consists of a tree of pattern nodes, with the leaves containing templates and associated
-  directives specifying how to handle the templates (see eta.util.tt.parse for the specific format of a choice tree).
+  directives specifying how to handle the templates (see ``eta.util.tt.parse`` for the specific format of a choice tree).
 
-  Pattern nodes:
-    A pattern node contains either a pattern (see eta.util.tt.match), or one of the following special keywords:
-      [:or, <pattern1>, <pattern2>, ...]
-        Match this node if any of the specified patterns match.
-      [:subtree, <subtree-name>]
-        Match this node if the subtree rooted at 'subtree-name' yields a non-null result.
+  Pattern nodes
+  -------------
+  A pattern node contains either a pattern (see ``eta.util.tt.match``), or one of the following special keywords:
 
-    The choice algorithm attempts to match each pattern node with the given clause. If successful, we recursively
-    seek a result from the children of the pattern node. In the case of failure, we recursively seek a result from
-    the next sibling of the pattern node.
+    - ``[:or, <pattern1>, <pattern2>, ...]``
+      Match this node if any of the specified patterns match.
+    - ``[:subtree, <subtree-name>]``
+      Match this node if the subtree rooted at 'subtree-name' yields a non-null result.
 
-  Template nodes:
-    Each template node contains a template, latency, and directive.
+  The choice algorithm attempts to match each pattern node with the given clause. If successful, we recursively
+  seek a result from the children of the pattern node. In the case of failure, we recursively seek a result from
+  the next sibling of the pattern node.
 
-    The latency is used to determine how long to wait until using that template again. If the number of attempted
-    matches to a template node since the last successful match is lower than the latency, the node is skipped and
-    we attempt to recur on the next sibling. A latency of '0' means that a node will always be used.
+  Template nodes
+  --------------
+  Each template node contains a template, latency, and directive.
 
-    The directive specifies how the template is to be used. The directive may be either an "internal" directive,
-    continuing the choice process by e.g. recurring on some subtree specified by the template, or an "external"
-    directive, indicating that the template is a final result of a particular type.
+  The latency is used to determine how long to wait until using that template again. If the number of attempted
+  matches to a template node since the last successful match is lower than the latency, the node is skipped and
+  we attempt to recur on the next sibling. A latency of '0' means that a node will always be used.
 
-    The following internal directives are currently supported:
-      :subtree
-        Given a template of form <subtree-name>, return the result from recurring on that subtree.
-      :subtree+clause
-        Given a template of form [<subtree-name>, <clause>], return the result from recurring
-        on that subtree using the given clause as an input.
-      :subtree-permute
-        Given a template of form [<subtree-name>, [<clause1>, ..., <clausek>]], recur on the
-        subtree with each given clause, and combine the results into a single [:and, ...] result.
-      :subtrees
-        Given a template of form [<expr>, <clause>], recur on each subtree specified by <expr> using
-        the given clause, and combine the results into a single [:and, ...] result. Here, <expr> may be:
-          [<tree>, <clause1>], in which case the given tree is first used to select the subtrees to search.
-          [<subtree1>, <subtree2>, ...], in which case the given subtrees are searched directly.
-      :subtrees-permute
-        Given a template of form [<expr>, [<clause1>, ..., <clausek>]] (with each arg being
-        the same as above), permute each subtree with each clause and combine the results.
-      :ulf-recur
-        Given a template of form [<parts>, <reassembly-pattern>], compute a result for each part in
-        'parts', and then combine them according to 'reassembly-pattern'.
-        Here, <parts> is a list where each element may be:
-          A subtree followed by a clause, in which case the subtree will be called recursively to obtain a result.
-          Some other template expression.
-        And <reassembly-pattern> is an S-expression containing only integers, where each integer indices the
-        corresponding part in 'parts'.
+  The directive specifies how the template is to be used. The directive may be either an "internal" directive,
+  continuing the choice process by e.g. recurring on some subtree specified by the template, or an "external"
+  directive, indicating that the template is a final result of a particular type.
 
-    An external directive may be anything, but the following ones will be common:
-      :out
-        Specifies that a result is to be used as a system output (i.e., essentially shorthand for
-        using the full ULF (^me say-to.v ^you <result>) as a template).
-      :gist
-        Specifies that a result is to be used as a gist clause (i.e., essentially shorthand for
-        using the full ULF (^you paraphrase-to.v ^me <result>) as a template).
-      :nl
-        Specifies that the result is a natural language string.
-      :ulf
-        Specifies that the result is a ULF formula.
-      :schema
-        Specifies that the result is a schema name, to be instantiated with no arguments.
-      :schemas
-        Specifies that the result is a list of schemas.
-      :schema+args
-        Specifies that the result is a schema to be instantiated with a list of arguments.
-      :raw
-        Specifies that the result is simply a raw output with no additional semantics.
-      
-    A template can also use the following keywords:
-      [:or, <template1>, <template2>, ...]
-        Randomly select one of the provided templates.
-      [:and, <template1>, <template2>, ...]
-        Combine each of the provided templates into a single [:and, ...] result.
+  The following internal directives are currently supported:
+
+    - ``:subtree``
+      Given a template of form ``<subtree-name>``, return the result from recurring on that subtree.
+    - ``:subtree+clause``
+      Given a template of form ``[<subtree-name>, <clause>]``, return the result from recurring
+      on that subtree using the given clause as an input.
+    - ``:subtree-permute``
+      Given a template of form ``[<subtree-name>, [<clause1>, ..., <clausek>]]``, recur on the
+      subtree with each given clause, and combine the results into a single ``[:and, ...]`` result.
+    - ``:subtrees``
+      Given a template of form ``[<expr>, <clause>]``, recur on each subtree specified by <expr> using
+      the given clause, and combine the results into a single ``[:and, ...]`` result. Here, <expr> may be:
+
+        - ``[<tree>, <clause1>]``, in which case the given tree is first used to select the subtrees to search.
+        - ``[<subtree1>, <subtree2>, ...]``, in which case the given subtrees are searched directly.
+
+    - ``:subtrees-permute``
+      Given a template of form ``[<expr>, [<clause1>, ..., <clausek>]]`` (with each arg being
+      the same as above), permute each subtree with each clause and combine the results.
+    - ``:ulf-recur``
+      Given a template of form ``[<parts>, <reassembly-pattern>]``, compute a result for each part in
+      <parts>, and then combine them according to <reassembly-pattern>.
+      Here, <parts> is a list where each element may be:
+
+        - A subtree followed by a clause, in which case the subtree will be called recursively to obtain a result.
+        - Some other template expression.
+        
+      And <reassembly-pattern> is an S-expression containing only integers, where each integer indices the
+      corresponding part in <parts>.
+
+  An external directive may be anything, but the following ones will be common:
+
+    - ``:out``
+      Specifies that a result is to be used as a system output (i.e., essentially shorthand for
+      using the full ULF ``(^me say-to.v ^you <result>)`` as a template).
+    - ``:gist``
+      Specifies that a result is to be used as a gist clause (i.e., essentially shorthand for
+      using the full ULF ``(^you paraphrase-to.v ^me <result>)`` as a template).
+    - ``:nl``
+      Specifies that the result is a natural language string.
+    - ``:ulf``
+      Specifies that the result is a ULF formula.
+    - ``:schema``
+      Specifies that the result is a schema name, to be instantiated with no arguments.
+    - ``:schemas``
+      Specifies that the result is a list of schemas.
+    - ``:schema+args``
+      Specifies that the result is a schema to be instantiated with a list of arguments.
+    - ``:raw``
+      Specifies that the result is simply a raw output with no additional semantics.
+    
+  A template can also use the following keywords:
+
+    - ``[:or, <template1>, <template2>, ...]``
+      Randomly select one of the provided templates.
+    - ``[:and, <template1>, <template2>, ...]``
+      Combine each of the provided templates into a single ``[:and, ...]`` result.
     
   Parameters
   ----------
   clause : s-expr
     An S-expression to be matched by the patterns in a choice tree and therefore used to choose a result.
   root : str
-    The name of a choice tree (e.g., "*gist*") corresponding to the root node of that tree in 'trees'.
+    The name of a choice tree (e.g., ``gist``) corresponding to the root node of that tree in `trees`.
   trees : dict
     A dict containing all choice trees, keyed on their root names.
   feats : dict
@@ -112,9 +122,10 @@ def choose_result_for(clause, root, trees, feats):
   -------
   s-expr
     Either:
-      [] if no result is found.
-      [:<directive>, <result>] if a single result is found.
-      [:and, <result1>, ..., <resultk>] if multiple results are found.
+
+      - ``[]`` if no result is found.
+      - ``[:<directive>, <result>]`` if a single result is found.
+      - ``[:and, <result1>, ..., <resultk>]`` if multiple results are found.
   """
   def choose_result_for_rec(clause, parts, rule_node, visited, trees, feats):
     if not rule_node:
@@ -314,7 +325,6 @@ def choose_result_for(clause, root, trees, feats):
 
     # Unexpected
     raise Exception(f'Unsupported directive {directive} encountered for rule with pattern {pattern} for clause {clause}')
-    # END choose_result_for_rec
 
   root = root.strip('*')
   if not root in trees:

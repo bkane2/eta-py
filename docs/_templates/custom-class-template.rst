@@ -6,7 +6,7 @@
    :members:
    :show-inheritance:
    :inherited-members:
-   :special-members: __call__, __add__, __mul__
+   :special-members: __call__, __str__, __hash__, __eq__
 
    {% block methods %}
    {% if methods %}
@@ -15,7 +15,7 @@
    .. autosummary::
       :nosignatures:
    {% for item in methods %}
-      {%- if not item.startswith('_') %}
+      {%- if not item.startswith('_') or item in ['__call__', '__str__', '__hash__', '__eq__'] %}
       ~{{ name }}.{{ item }}
       {%- endif -%}
    {%- endfor %}

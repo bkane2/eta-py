@@ -153,7 +153,7 @@ represented as recursively nested lists, with strings as “symbols”.</p>
 <td><p>Read a list of S-expressions from a LISP file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.util.sexpr.standardize_symbols.html#eta.util.sexpr.standardize_symbols" title="eta.util.sexpr.standardize_symbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standardize_symbols</span></code></a></p></td>
-<td><p>Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in <a href="#id1"><span class="problematic" id="id2">|...|</span></a>.</p></td>
+<td><p>Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in escape symbols.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.util.sexpr.write_lisp.html#eta.util.sexpr.write_lisp" title="eta.util.sexpr.write_lisp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_lisp</span></code></a></p></td>
 <td><p>Write an S-expression to a LISP file.</p></td>
@@ -175,7 +175,7 @@ represented as recursively nested lists, with strings as “symbols”.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.sexpr.standardize_symbols">
 <span class="sig-name descname"><span class="pre">standardize_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_expr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/sexpr.html#standardize_symbols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.sexpr.standardize_symbols" title="Permalink to this definition"></a></dt>
-<dd><p>Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in <a href="#id3"><span class="problematic" id="id4">|...|</span></a>.</p>
+<dd><p>Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in escape symbols.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -190,11 +190,11 @@ represented as recursively nested lists, with strings as “symbols”.</p>
 <dd><p>Parse a string containing an S-expression (in LISP form) into a structured list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>s_expr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – An S-expression in LISP form, e.g., “(a (b c (d e)) ‘(f g h))”.</p>
+<dd class="field-odd"><p><strong>s_expr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – An S-expression in LISP form, e.g., <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">(b</span> <span class="pre">c</span> <span class="pre">(d</span> <span class="pre">e))</span> <span class="pre">'(f</span> <span class="pre">g</span> <span class="pre">h))</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A structured S-expression, i.e., a recursively nested list structure with string “symbols” as atoms.
-e.g., [‘a’, [‘b’, ‘c’, [‘d’, ‘e’]], “f g h”]</p>
+e.g., <code class="docutils literal notranslate"><span class="pre">['a',</span> <span class="pre">['b',</span> <span class="pre">'c',</span> <span class="pre">['d',</span> <span class="pre">'e']],</span> <span class="pre">&quot;f</span> <span class="pre">g</span> <span class="pre">h&quot;]</span></code></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>s-expr</p>
@@ -208,10 +208,10 @@ e.g., [‘a’, [‘b’, ‘c’, [‘d’, ‘e’]], “f g h”]</p>
 <dd><p>Convert an S-expression list structure to a string representing a LISP formatted S-expression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>lst</strong> (<em>s-expr</em>) – An S-expression in recursively nested list form, e.g., [‘a’, [‘b’, [‘c’, ‘d’]], ‘e’].</p>
+<dd class="field-odd"><p><strong>lst</strong> (<em>s-expr</em>) – An S-expression in recursively nested list form, e.g., <code class="docutils literal notranslate"><span class="pre">['a',</span> <span class="pre">['b',</span> <span class="pre">['c',</span> <span class="pre">'d']],</span> <span class="pre">'e']</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A LISP formatted string representation of the S-expression, e.g., “(a (b (c d)) e)”.</p>
+<dd class="field-even"><p>A LISP formatted string representation of the S-expression, e.g., <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">(b</span> <span class="pre">(c</span> <span class="pre">d))</span> <span class="pre">e)</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
@@ -225,10 +225,10 @@ e.g., [‘a’, [‘b’, ‘c’, [‘d’, ‘e’]], “f g h”]</p>
 <dd><p>Convert an S-expression list structure to a flattened string containing each of the symbols.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>lst</strong> (<em>s-expr</em>) – An S-expression in recursively nested list form, e.g., [‘a’, [‘b’, [‘c’, ‘d’]], ‘e’].</p>
+<dd class="field-odd"><p><strong>lst</strong> (<em>s-expr</em>) – An S-expression in recursively nested list form, e.g., <code class="docutils literal notranslate"><span class="pre">['a',</span> <span class="pre">['b',</span> <span class="pre">['c',</span> <span class="pre">'d']],</span> <span class="pre">'e']</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A flattened string containing each of the symbols, e.g., “a b c d e”.</p>
+<dd class="field-even"><p>A flattened string containing each of the symbols, e.g., <code class="docutils literal notranslate"><span class="pre">&quot;a</span> <span class="pre">b</span> <span class="pre">c</span> <span class="pre">d</span> <span class="pre">e&quot;</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>

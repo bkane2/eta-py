@@ -59,7 +59,6 @@
 <li class="toctree-l3"><a class="reference internal" href="eta.transducers.base.html">eta.transducers.base</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eta.transducers.gpt.html">eta.transducers.gpt</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="eta.transducers.tt.html">eta.transducers.tt</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="eta.transducers.tt.html#exported-classes">Exported classes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.tt.TTAffectTransducer.html">eta.transducers.tt.TTAffectTransducer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.tt.TTAnswerTransducer.html">eta.transducers.tt.TTAnswerTransducer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.tt.TTAskTransducer.html">eta.transducers.tt.TTAskTransducer</a></li>
@@ -133,6 +132,14 @@ choice tree packets, as well as a list of root names to use specific to that par
 <p>The transducer performs a mapping by passing its arguments (or some data derived from the arguments)
 to its root choice tree(s), processing the results based on the directive, and combining them into a
 single flat list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rule_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The directory name(s) containing LISP choice tree packets to read from.</p></li>
+<li><p><strong>roots</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The root name(s) to use for choosing results for this transducer instance.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.transducers.tt.TTTransducer.trees">
 <span class="sig-name descname"><span class="pre">trees</span></span><a class="headerlink" href="#eta.transducers.tt.TTTransducer.trees" title="Permalink to this definition"></a></dt>
@@ -166,15 +173,6 @@ single flat list.</p>
 </dl>
 </dd></dl>
 
-<p>Create a TT transducer instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rule_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The directory name(s) containing LISP choice tree packets to read from.</p></li>
-<li><p><strong>roots</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The root name(s) to use for choosing results for this transducer instance.</p></li>
-</ul>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>

@@ -139,12 +139,29 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#eta.lf.Condition"><code class="docutils literal notranslate"><span class="pre">Condition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.ep"><code class="docutils literal notranslate"><span class="pre">Condition.ep</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.nl"><code class="docutils literal notranslate"><span class="pre">Condition.nl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.ulf"><code class="docutils literal notranslate"><span class="pre">Condition.ulf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.elf"><code class="docutils literal notranslate"><span class="pre">Condition.elf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.prob"><code class="docutils literal notranslate"><span class="pre">Condition.prob</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.bindings"><code class="docutils literal notranslate"><span class="pre">Condition.bindings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.embedding"><code class="docutils literal notranslate"><span class="pre">Condition.embedding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.conditions"><code class="docutils literal notranslate"><span class="pre">Condition.conditions</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.bind"><code class="docutils literal notranslate"><span class="pre">Condition.bind()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.unbind"><code class="docutils literal notranslate"><span class="pre">Condition.unbind()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#eta.lf.Condition.replacevar"><code class="docutils literal notranslate"><span class="pre">Condition.replacevar()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#eta.lf.Repetition"><code class="docutils literal notranslate"><span class="pre">Repetition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.ep"><code class="docutils literal notranslate"><span class="pre">Repetition.ep</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.nl"><code class="docutils literal notranslate"><span class="pre">Repetition.nl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.ulf"><code class="docutils literal notranslate"><span class="pre">Repetition.ulf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.elf"><code class="docutils literal notranslate"><span class="pre">Repetition.elf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.prob"><code class="docutils literal notranslate"><span class="pre">Repetition.prob</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.bindings"><code class="docutils literal notranslate"><span class="pre">Repetition.bindings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.embedding"><code class="docutils literal notranslate"><span class="pre">Repetition.embedding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.condition"><code class="docutils literal notranslate"><span class="pre">Repetition.condition</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.eventualities"><code class="docutils literal notranslate"><span class="pre">Repetition.eventualities</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.bind"><code class="docutils literal notranslate"><span class="pre">Repetition.bind()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.unbind"><code class="docutils literal notranslate"><span class="pre">Repetition.unbind()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#eta.lf.Repetition.replacevar"><code class="docutils literal notranslate"><span class="pre">Repetition.replacevar()</span></code></a></li>
@@ -231,7 +248,7 @@
 <td><p>Check whether eventuality e is an expectation or intention.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.lf.extract_set.html#eta.lf.extract_set" title="eta.lf.extract_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_set</span></code></a></p></td>
-<td><p>Extract a list of items from a wff of form [set-of, 'a', 'b', ...], or of form ['a', and, 'b', and, ...].</p></td>
+<td><p>Extract a list of items from a wff of form <code class="docutils literal notranslate"><span class="pre">[set-of,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">...]</span></code>, or of form <code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">and,</span> <span class="pre">y,</span> <span class="pre">and,</span> <span class="pre">...]</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.lf.from_lisp_dirs.html#eta.lf.from_lisp_dirs" title="eta.lf.from_lisp_dirs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_lisp_dirs</span></code></a></p></td>
 <td><p>Recursively read all LISP files in a given dir or list of dirs, returning a list of eventualities.</p></td>
@@ -336,7 +353,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individuals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Domain" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Defines a domain of individuals.</p>
-<p>TODO: currently incomplete and unused.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>individuals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference internal" href="eta.lf.Individual.html#eta.lf.Individual" title="eta.lf.Individual"><em>Individual</em></a><em>]</em><em>, </em><em>optional</em>) – A list of initial individuals to add to the domain.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Domain.domain">
 <span class="sig-name descname"><span class="pre">domain</span></span><a class="headerlink" href="#eta.lf.Domain.domain" title="Permalink to this definition"></a></dt>
@@ -348,7 +369,8 @@
 </dl>
 </dd></dl>
 
-<p>Initialize a domain, optionally adding all individuals given in ‘individuals’.</p>
+<p class="rubric">Notes</p>
+<p>TODO: currently incomplete and unused.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.Domain.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Domain.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Domain.add" title="Permalink to this definition"></a></dt>
@@ -368,12 +390,18 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Individual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aliases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Individual"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Individual" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Defines an individual, with some canonical name and a list of aliases.</p>
-<p>TODO: currently incomplete and unused.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The canonical name of the individual.</p></li>
+<li><p><strong>aliases</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – A list of aliases of the individual.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Individual.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#eta.lf.Individual.name" title="Permalink to this definition"></a></dt>
-<dd><p>The canonical name of the individual.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
@@ -383,15 +411,15 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Individual.aliases">
 <span class="sig-name descname"><span class="pre">aliases</span></span><a class="headerlink" href="#eta.lf.Individual.aliases" title="Permalink to this definition"></a></dt>
-<dd><p>A list of aliases of the individual.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<p>Initialize an individual with a canonical name and an optional list of aliases.</p>
+<p class="rubric">Notes</p>
+<p>TODO: currently incomplete and unused.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.Individual.add_aliases">
 <span class="sig-name descname"><span class="pre">add_aliases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aliases</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Individual.add_aliases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Individual.add_aliases" title="Permalink to this definition"></a></dt>
@@ -405,12 +433,19 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Var" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Defines a variable, with some variable symbol and some value assignment.</p>
-<p>TODO: currently incomplete and unused.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The variable symbol.</p></li>
+<li><p><strong>val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><em>object</em></a><em>, </em><em>optional</em>) – The value this variable is currently bound to. Generally this will be a string,
+though it may in principle be some other object (e.g., an Individual) as well.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Var.var">
 <span class="sig-name descname"><span class="pre">var</span></span><a class="headerlink" href="#eta.lf.Var.var" title="Permalink to this definition"></a></dt>
-<dd><p>The variable symbol.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
@@ -420,16 +455,15 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Var.val">
 <span class="sig-name descname"><span class="pre">val</span></span><a class="headerlink" href="#eta.lf.Var.val" title="Permalink to this definition"></a></dt>
-<dd><p>The value this variable is currently bound to. Generally this will be a string,
-though it may in principle be some other object (e.g., an Individual) as well.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)">object</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<p>Initialize a variable with some optional initial value.</p>
+<p class="rubric">Notes</p>
+<p>TODO: currently incomplete and unused.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.Var.bind">
 <span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Var.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Var.bind" title="Permalink to this definition"></a></dt>
@@ -452,6 +486,11 @@ though it may in principle be some other object (e.g., an Individual) as well.</
 <p>A logical form (whether ULF or ELF) must contain a formula, variable bindings, functions
 for binding/unbinding variables, for replacing variables, and for getting the formula (or
 a natural language representation thereof) after making all variable assignments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>s-expr</em>) – The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.LF.formula">
 <span class="sig-name descname"><span class="pre">formula</span></span><a class="headerlink" href="#eta.lf.LF.formula" title="Permalink to this definition"></a></dt>
@@ -474,7 +513,6 @@ a natural language representation thereof) after making all variable assignments
 </dl>
 </dd></dl>
 
-<p>Initialize a logical form with a given formula (either a LISP-formatted string or a nested list).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.LF.bind">
 <span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#LF.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.LF.bind" title="Permalink to this definition"></a></dt>
@@ -503,6 +541,7 @@ a natural language representation thereof) after making all variable assignments
 <dt class="sig sig-object py" id="eta.lf.LF.to_nl">
 <span class="sig-name descname"><span class="pre">to_nl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#LF.to_nl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.LF.to_nl" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the formula to a natural language string.</p>
+<p class="rubric">Notes</p>
 <p>TODO: replace naive implementation with ULF2English.</p>
 </dd></dl>
 
@@ -513,7 +552,11 @@ a natural language representation thereof) after making all variable assignments
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ULF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formula</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#ULF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.ULF" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.lf.LF.html#eta.lf.LF" title="eta.lf.LF"><code class="xref py py-class docutils literal notranslate"><span class="pre">LF</span></code></a></p>
 <p>Defines a ULF formula.</p>
-<p>Initialize a ULF formula.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>s-expr</em>) – The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -521,7 +564,11 @@ a natural language representation thereof) after making all variable assignments
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ELF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formula</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#ELF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.ELF" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.lf.LF.html#eta.lf.LF" title="eta.lf.LF"><code class="xref py py-class docutils literal notranslate"><span class="pre">LF</span></code></a></p>
 <p>Defines an ELF formula.</p>
-<p>Initialize an ELF formula.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>s-expr</em>) – The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -537,11 +584,21 @@ representation may be provided.</p>
 and likewise, a ULF may be easily derived from the full ELF. On the other hand, mapping from natural language to ULF requires
 semantic parsing, and mapping from ULF to ELF requires disambiguation, scoping, and deindexing. Hence, we want to regard those
 upper levels of representation as “optional”, since they may not be needed in simpler dialogue applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A symbol denoting the episode variable or constant.</p></li>
+<li><p><strong>nl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The natural language representation of the formula characterizing the event.</p></li>
+<li><p><strong>ulf</strong> (<a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF"><em>ULF</em></a><em>, </em><em>optional</em>) – The ULF formula characterizing the event.</p></li>
+<li><p><strong>elf</strong> (<a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF"><em>ELF</em></a><em>, </em><em>optional</em>) – The ELF formula characterizing the event.</p></li>
+<li><p><strong>prob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>default=1.</em>) – The probability associated with this event.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Eventuality.ep">
 <span class="sig-name descname"><span class="pre">ep</span></span><a class="headerlink" href="#eta.lf.Eventuality.ep" title="Permalink to this definition"></a></dt>
-<dd><p>A symbol denoting the episode variable or constant.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
@@ -551,8 +608,7 @@ upper levels of representation as “optional”, since they may not be needed i
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Eventuality.nl">
 <span class="sig-name descname"><span class="pre">nl</span></span><a class="headerlink" href="#eta.lf.Eventuality.nl" title="Permalink to this definition"></a></dt>
-<dd><p>The natural language representation of the formula characterizing the event.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
@@ -562,10 +618,9 @@ upper levels of representation as “optional”, since they may not be needed i
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Eventuality.ulf">
 <span class="sig-name descname"><span class="pre">ulf</span></span><a class="headerlink" href="#eta.lf.Eventuality.ulf" title="Permalink to this definition"></a></dt>
-<dd><p>The ULF formula characterizing the event (default is None).</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -573,10 +628,9 @@ upper levels of representation as “optional”, since they may not be needed i
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Eventuality.elf">
 <span class="sig-name descname"><span class="pre">elf</span></span><a class="headerlink" href="#eta.lf.Eventuality.elf" title="Permalink to this definition"></a></dt>
-<dd><p>The ELF formula characterizing the event (default is None).</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -584,8 +638,7 @@ upper levels of representation as “optional”, since they may not be needed i
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Eventuality.prob">
 <span class="sig-name descname"><span class="pre">prob</span></span><a class="headerlink" href="#eta.lf.Eventuality.prob" title="Permalink to this definition"></a></dt>
-<dd><p>The probability associated with this event (default is 1).</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
 </dd>
@@ -606,7 +659,7 @@ upper levels of representation as “optional”, since they may not be needed i
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.Eventuality.embedding">
 <span class="sig-name descname"><span class="pre">embedding</span></span><a class="headerlink" href="#eta.lf.Eventuality.embedding" title="Permalink to this definition"></a></dt>
-<dd><p>A vector embedding of this eventuality (default is empty embedding).</p>
+<dd><p>A vector embedding of this eventuality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>]</p>
@@ -614,7 +667,6 @@ upper levels of representation as “optional”, since they may not be needed i
 </dl>
 </dd></dl>
 
-<p>Initialize an Eventuality.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.Eventuality.set_ep">
 <span class="sig-name descname"><span class="pre">set_ep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.set_ep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.set_ep" title="Permalink to this definition"></a></dt>
@@ -710,7 +762,87 @@ upper levels of representation as “optional”, since they may not be needed i
 where &lt;condition&gt; is either a ULF or True (for a default condition), and &lt;eventualities&gt; is a list of
 sub-eventualities that occur if the condition is true.</p>
 <p>Such an event is indicated by a :try-in-sequence or :if keyword in e.g. a schema.</p>
-<p>Initialize an Eventuality.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.ep">
+<span class="sig-name descname"><span class="pre">ep</span></span><a class="headerlink" href="#eta.lf.Condition.ep" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.nl">
+<span class="sig-name descname"><span class="pre">nl</span></span><a class="headerlink" href="#eta.lf.Condition.nl" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.ulf">
+<span class="sig-name descname"><span class="pre">ulf</span></span><a class="headerlink" href="#eta.lf.Condition.ulf" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.elf">
+<span class="sig-name descname"><span class="pre">elf</span></span><a class="headerlink" href="#eta.lf.Condition.elf" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.prob">
+<span class="sig-name descname"><span class="pre">prob</span></span><a class="headerlink" href="#eta.lf.Condition.prob" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.bindings">
+<span class="sig-name descname"><span class="pre">bindings</span></span><a class="headerlink" href="#eta.lf.Condition.bindings" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.embedding">
+<span class="sig-name descname"><span class="pre">embedding</span></span><a class="headerlink" href="#eta.lf.Condition.embedding" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Condition.conditions">
+<span class="sig-name descname"><span class="pre">conditions</span></span><a class="headerlink" href="#eta.lf.Condition.conditions" title="Permalink to this definition"></a></dt>
+<dd><p>A list of pairs of conditions and eventuality lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)">tuple</a>[True or <a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.Condition.bind">
 <span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Condition.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Condition.bind" title="Permalink to this definition"></a></dt>
@@ -740,7 +872,98 @@ sub-eventualities that occur if the condition is true.</p>
 The condition is either a ULF (or True for a repetition with no termination), such that the eventualities
 will occur until the condition is no longer true.</p>
 <p>Such an event is indicated by a :repeat-until keyword in a schema.</p>
-<p>Initialize an Eventuality.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.ep">
+<span class="sig-name descname"><span class="pre">ep</span></span><a class="headerlink" href="#eta.lf.Repetition.ep" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.nl">
+<span class="sig-name descname"><span class="pre">nl</span></span><a class="headerlink" href="#eta.lf.Repetition.nl" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.ulf">
+<span class="sig-name descname"><span class="pre">ulf</span></span><a class="headerlink" href="#eta.lf.Repetition.ulf" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.elf">
+<span class="sig-name descname"><span class="pre">elf</span></span><a class="headerlink" href="#eta.lf.Repetition.elf" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.prob">
+<span class="sig-name descname"><span class="pre">prob</span></span><a class="headerlink" href="#eta.lf.Repetition.prob" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.bindings">
+<span class="sig-name descname"><span class="pre">bindings</span></span><a class="headerlink" href="#eta.lf.Repetition.bindings" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.embedding">
+<span class="sig-name descname"><span class="pre">embedding</span></span><a class="headerlink" href="#eta.lf.Repetition.embedding" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><a class="headerlink" href="#eta.lf.Repetition.condition" title="Permalink to this definition"></a></dt>
+<dd><p>The stopping condition for repetition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True or <a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Repetition.eventualities">
+<span class="sig-name descname"><span class="pre">eventualities</span></span><a class="headerlink" href="#eta.lf.Repetition.eventualities" title="Permalink to this definition"></a></dt>
+<dd><p>The list of eventualities to repeat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.Repetition.bind">
 <span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Repetition.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Repetition.bind" title="Permalink to this definition"></a></dt>
@@ -772,8 +995,8 @@ will occur until the condition is no longer true.</p>
 the first element, a Condition or Repetition object is created respectively; otherwise,
 a basic Eventuality object is created containing s as a formula.</p></li>
 <li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – If given, use this episode symbol for the created eventuality, rather than generating a new symbol.</p></li>
-<li><p><strong>expectation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, this will interpret the eventuality as an expected episode rather than an observed episode,
-i.e., ‘ep’ will become an episode variable instead of an episode constant.</p></li>
+<li><p><strong>expectation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – If True, this will interpret the eventuality as an expected episode rather than an observed episode,
+i.e., <cite>ep</cite> will become an episode variable instead of an episode constant.</p></li>
 <li><p><strong>prob_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary mapping episode symbols to probabilities, used to set the probability of this eventuality.</p></li>
 </ul>
 </dd>
@@ -805,7 +1028,7 @@ i.e., ‘ep’ will become an episode variable instead of an episode constant.</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>s-expr</em><em>]</em>) – A list of format [ep1, wff1, ep2, wff2, …], where each (ep, wff) pair is to be parsed into an eventuality.</p></li>
+<li><p><strong>lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>s-expr</em><em>]</em>) – A list of format <code class="docutils literal notranslate"><span class="pre">[ep1,</span> <span class="pre">wff1,</span> <span class="pre">ep2,</span> <span class="pre">wff2,</span> <span class="pre">...]</span></code>, where each <code class="docutils literal notranslate"><span class="pre">(ep,</span> <span class="pre">wff)</span></code> pair is to be parsed into an eventuality.</p></li>
 <li><p><strong>prob_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary mapping episode symbols to probabilities, used to set the probability of this eventuality.</p></li>
 </ul>
 </dd>
@@ -853,7 +1076,7 @@ i.e., ‘ep’ will become an episode variable instead of an episode constant.</
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.lf.extract_set">
 <span class="sig-name descname"><span class="pre">extract_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ulf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#extract_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.extract_set" title="Permalink to this definition"></a></dt>
-<dd><p>Extract a list of items from a wff of form [set-of, ‘a’, ‘b’, …], or of form [‘a’, and, ‘b’, and, …].</p>
+<dd><p>Extract a list of items from a wff of form <code class="docutils literal notranslate"><span class="pre">[set-of,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">...]</span></code>, or of form <code class="docutils literal notranslate"><span class="pre">[x,</span> <span class="pre">and,</span> <span class="pre">y,</span> <span class="pre">and,</span> <span class="pre">...]</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">

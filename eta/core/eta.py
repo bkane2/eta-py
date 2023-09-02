@@ -15,11 +15,10 @@ dialogue state attributes.
 Additionally, a set of buffers (i.e., priority queues) are used for the data being processed
 over the dialogue session, which is necessary for:
 
-(a) maintaining synchronicity between the processes in the relevant aspects (e.g., completing a
-series of modifications to the plan before attempting to execute a step).
-
-(b) ensuring that transducers, which may incur some monetary cost to apply (e.g., in the case of
-GPT-based transduction), are only applied after a modification to the relevant data.
+  1. maintaining synchronicity between the processes in the relevant aspects (e.g., completing a
+     series of modifications to the plan before attempting to execute a step).
+  2. ensuring that transducers, which may incur some monetary cost to apply (e.g., in the case of
+     GPT-based transduction), are only applied after a modification to the relevant data.
 """
 
 import argparse
@@ -49,10 +48,15 @@ from eta.core.execution import execution_loop
 class DialogueState():
   """A representation of the current dialogue state.
 
+  Parameters
+  ----------
+  config_agent : dict
+    The config parameters for the agent.
+  config_user : dict
+    The config parameters for the user.
+
   Attributes
   ----------
-  Session variables
-  -----------------
   id : str
     A unique ID for this session.
   config_agent : dict
@@ -74,16 +78,10 @@ class DialogueState():
     A POSIX time record used to track time before failing an expected event.
   quit_conversation : bool
     Whether to quit the current session.
-
-  Internal mechanisms
-  -------------------
   transducers : dict[str, Transducer or list[Transducer]]
     A dict associating Transducer object(s) with named mapping functions (e.g., 'gist').
-  embedder : Embedder, optional
+  embedder : Embedder
     An embedder object used to compute object embeddings and perform retrieval.
-
-  Static knowledge
-  ----------------
   schemas : SchemaLibrary
     A library of dialogue, episode, and object schemas that form the agent's generic knowledge.
   concept_aliases : None
@@ -92,13 +90,10 @@ class DialogueState():
     TODO
   init_knowledge : list[Eventuality]
     A list of initial facts in the agent's semantic memory.
-  
-  Dialogue variables
-  ------------------
   schema_instances : dict
     A dict containing all schema instances (keyed on their unique IDs).
   plan : PlanNode
-    The "currently due" node in the agent's plan, initialized from the given 'start_schema'.
+    The "currently due" node in the agent's plan, initialized from the `start_schema`.
   buffers : dict[str, list]
     The named buffers (i.e., priority queues) for each type of processed data.
   reference_list : list
@@ -108,7 +103,7 @@ class DialogueState():
   conversation_log : list[DialogueTurn]
     A list of turns in the dialogue history.
   memory : MemoryStorage
-    The episodic memory of the agent, initialized from 'init_knowledge'.
+    The episodic memory of the agent, initialized from `init_knowledge`.
   timegraph : None
     TODO
   """
@@ -238,6 +233,8 @@ class DialogueState():
     the header to the supplied arguments, if any. It then instantiates a plan structure from
     the episodes list of that schema.
 
+    Notes
+    -----
     TODO: the plan structure created when instantiating a schema is currently
     "flat" - in the future, we might want to add support for annotating abstraction
     hierarchies in the schema, in which case these would be added as supersteps to

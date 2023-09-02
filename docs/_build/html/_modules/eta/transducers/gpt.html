@@ -80,22 +80,7 @@
 <span class="sd">Applying a GPT transducer consists of formatting the prompt with the provided arguments, and then</span>
 <span class="sd">generating using the GPT API until a valid generation is found.</span>
 
-<span class="sd">Full documentation on the GPT interface can be found in the eta.util.gpt module. </span>
-
-<span class="sd">Exported classes</span>
-<span class="sd">----------------</span>
-<span class="sd">GPTReasonTopDownTransducer</span>
-<span class="sd">GPTReasonBottomUpTransducer</span>
-<span class="sd">GPTGistTransducer</span>
-<span class="sd">GPTSemanticTransducer</span>
-<span class="sd">GPTPragmaticTransducer</span>
-<span class="sd">GPTReactionTransducer</span>
-<span class="sd">GPTSubplanTransducer</span>
-<span class="sd">GPTParaphraseTransducer</span>
-<span class="sd">GPTResponseTransducer</span>
-<span class="sd">GPTAnswerTransducer</span>
-<span class="sd">GPTAskTransducer</span>
-<span class="sd">GPTAffectTransducer</span>
+<span class="sd">Full documentation on the GPT interface can be found in the ``eta.util.gpt`` module.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
@@ -159,28 +144,26 @@
 <span class="sd">  derived from the arguments), and generating some output from GPT until one is found that passes the</span>
 <span class="sd">  validator functions.</span>
 
-<span class="sd">  Attributes</span>
+<span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  prompt : str</span>
 <span class="sd">    An LLM prompt.</span>
 <span class="sd">  validators : list[function]</span>
 <span class="sd">    A list of validator functions.</span>
+<span class="sd">  examples : list[dict], optional</span>
+<span class="sd">    A list of examples to format the prompt with (which should have corresponding ``@startexamples`` and</span>
+<span class="sd">    ``@endexamples`` annotations); each example should contain a mapping from placeholders in the prompt</span>
+<span class="sd">    to values (which may be strings or lists of strings).</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  prompt : str</span>
+<span class="sd">  validators : list[function]</span>
 <span class="sd">  _cost : float</span>
 <span class="sd">    An accumulator variable for the total cost of applying a transducer instance within a session.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">validators</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="p">[]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a GPT transducer instance.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    prompt : str</span>
-<span class="sd">    validators : list[function]</span>
-<span class="sd">    examples : list[dict], optional</span>
-<span class="sd">      A list of examples to format the prompt with (which should have corresponding @startexamples and</span>
-<span class="sd">      @endexamples annotations); each example should contain a mapping from placeholders in the prompt</span>
-<span class="sd">      to values (which may be strings or lists of strings).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">subst_examples</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">examples</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">validators</span> <span class="o">=</span> <span class="n">validators</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span> <span class="o">=</span> <span class="mf">0.</span>

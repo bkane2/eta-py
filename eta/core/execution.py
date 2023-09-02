@@ -14,14 +14,14 @@ def execution_loop(ds):
 
   This will do one of several things depending on the class of the currently pending step:
 
-  1) If a condition or repetition step, advance the plan once none of the conditions are true.
+    1. If a condition or repetition step, advance the plan once none of the conditions are true.
 
-  2) If an expected step, attempt to match the step to a fact in context, until a time period
-     based on the certainty of that step has elapsed, in which case the step is characterized
-     as a failure and the plan is advanced.
+    2. If an expected step, attempt to match the step to a fact in context, until a time period
+       based on the certainty of that step has elapsed, in which case the step is characterized
+       as a failure and the plan is advanced.
 
-  3) If an intended step that contains a primitive action, attempt to execute that action, and
-     advance the plan if successful.
+    3. If an intended step that contains a primitive action, attempt to execute that action, and
+       advance the plan if successful.
 
   In any the case where an execution or match is successful, the plan is advanced, and a list of
   variable bindings obtained from the execution or match is applied throughout the dialogue state.

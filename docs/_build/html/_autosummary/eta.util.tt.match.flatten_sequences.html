@@ -109,14 +109,14 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.tt.match.flatten_sequences">
 <span class="sig-name descname"><span class="pre">flatten_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/match.html#flatten_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.match.flatten_sequences" title="Permalink to this definition"></a></dt>
-<dd><p>Flatten lists marked as sequences, i.e., of the form [:seq, …].</p>
-<p>[:seq, …] expressions are not allowed to contain such expressions as sequence elements (i.e., these
+<dd><p>Flatten lists marked as sequences, i.e., of the form <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">...]</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">...]</span></code> expressions are not allowed to contain such expressions as sequence elements (i.e., these
 would not be flattened. It would be easy to allow them, but for the pattern transductions here no such
 embeddings occur, because sequence expressions are match-values of single sequence variables, like <a href="#id1"><span class="problematic" id="id2">*</span></a>atom
 or +expr, and these are matched only against input expressions free of sequence expressions.)</p>
-<p>A top-level expr like [:seq, a] or [:seq, []] or [:seq, [a, b]] becomes a, [], or [a, b] respectively,
-i.e., a 1-element sequence is turned into that one element. However, an empty sequence [:seq] or longer
-sequence like [:seq, a, b] is left unchanged, since removing [:seq, …] doesn’t leave a single valid expression.</p>
+<p>A top-level expr like <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">a]</span></code> or <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">[]]</span></code> or <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">[a,</span> <span class="pre">b]]</span></code> becomes <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">[]</span></code>, or <code class="docutils literal notranslate"><span class="pre">[a,</span> <span class="pre">b]</span></code> respectively,
+i.e., a 1-element sequence is turned into that one element. However, an empty sequence <code class="docutils literal notranslate"><span class="pre">[:seq]</span></code> or longer
+sequence like <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">a,</span> <span class="pre">b]</span></code> is left unchanged, since removing <code class="docutils literal notranslate"><span class="pre">[:seq,</span> <span class="pre">...]</span></code> doesn’t leave a single valid expression.</p>
 </dd></dl>
 
 </section>

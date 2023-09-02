@@ -75,8 +75,10 @@
 <span class="sd">Modifying the plan includes adding possible actions to the plan, expanding plan steps,</span>
 <span class="sd">merging plan steps, and reordering plan steps.</span>
 
-<span class="sd">NOTE: currently, the &#39;plans&#39; buffer is handled differently from the other buffers, in that</span>
-<span class="sd">we assume it only holds one element at a time, and this element is simply replaced whenever</span>
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+<span class="sd">Currently, the ``plans`` buffer is handled differently from the other buffers, in that we</span>
+<span class="sd">assume it only holds one element at a time, and this element is simply replaced whenever</span>
 <span class="sd">the plan is modified in some way.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -90,17 +92,17 @@
 <div class="viewcode-block" id="planning_loop"><a class="viewcode-back" href="../../../_autosummary/eta.core.planning.planning_loop.html#eta.core.planning.planning_loop">[docs]</a><span class="k">def</span> <span class="nf">planning_loop</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Make modifications to the dialogue plan.</span>
 
-<span class="sd">  First, all suggested actions are popped from the &#39;actions&#39; buffer, and used to create a new</span>
-<span class="sd">  plan. The plan of the current dialogue state is updated, and the contents of the &#39;plans&#39; buffer</span>
+<span class="sd">  First, all suggested actions are popped from the ``actions`` buffer, and used to create a new</span>
+<span class="sd">  plan. The plan of the current dialogue state is updated, and the contents of the ``plans`` buffer</span>
 <span class="sd">  is replaced with the updated plan.</span>
 
-<span class="sd">  Second, this attempts to modify the plan in the &#39;plans&#39; buffer. This consists of the following substeps:</span>
-<span class="sd">  1) Attempt to expand top-level steps in the plan into substeps.</span>
-<span class="sd">  2) Merge equivalent steps in the plan.</span>
-<span class="sd">  3) Reorder plan steps according to constraints.</span>
+<span class="sd">  Second, this attempts to modify the plan in the ``plans`` buffer. This consists of the following substeps:</span>
+<span class="sd">    1. Attempt to expand top-level steps in the plan into substeps.</span>
+<span class="sd">    2. Merge equivalent steps in the plan.</span>
+<span class="sd">    3. Reorder plan steps according to constraints.</span>
 
 <span class="sd">  If the plan was modified by the previous step, it is used to update the plan of the current dialogue state,</span>
-<span class="sd">  and is re-added to the &#39;plans&#39; buffer.</span>
+<span class="sd">  and is re-added to the ``plans`` buffer.</span>
 <span class="sd">  </span>
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -128,14 +130,6 @@
 <div class="viewcode-block" id="add_possible_actions_to_plan"><a class="viewcode-back" href="../../../_autosummary/eta.core.planning.add_possible_actions_to_plan.html#eta.core.planning.add_possible_actions_to_plan">[docs]</a><span class="k">def</span> <span class="nf">add_possible_actions_to_plan</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Given a list of possible actions, attempt to add actions into the current plan.</span>
 
-<span class="sd">  TODO: some possible future improvements:</span>
-<span class="sd">  1) For now, we assume that only the first action in a set of possible actions is used.</span>
-<span class="sd">     In the future, this might be extended with a policy for attempting to add the top K possible actions.</span>
-<span class="sd">  2) This currently adds the action unconditionally; ultimately, the system should verify that the action</span>
-<span class="sd">     can be added to the plan. This may be done by way of a pattern transducer.</span>
-<span class="sd">  3) The action is currently inserted as the current step, but ultimately we should be able to insert actions</span>
-<span class="sd">     elsewhere in the plan as well.</span>
-
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  actions : list[str]</span>
@@ -146,6 +140,16 @@
 <span class="sd">  -------</span>
 <span class="sd">  PlanNode or None</span>
 <span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: some possible future improvements:</span>
+<span class="sd">    1. For now, we assume that only the first action in a set of possible actions is used.</span>
+<span class="sd">       In the future, this might be extended with a policy for attempting to add the top K possible actions.</span>
+<span class="sd">    2. This currently adds the action unconditionally; ultimately, the system should verify that the action</span>
+<span class="sd">       can be added to the plan. This may be done by way of a pattern transducer.</span>
+<span class="sd">    3. The action is currently inserted as the current step, but ultimately we should be able to insert actions</span>
+<span class="sd">       elsewhere in the plan as well.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="ow">not</span> <span class="n">actions</span><span class="p">:</span>
     <span class="k">return</span> <span class="kc">None</span>
@@ -157,14 +161,10 @@
 
 <div class="viewcode-block" id="expand_plan_steps"><a class="viewcode-back" href="../../../_autosummary/eta.core.planning.expand_plan_steps.html#eta.core.planning.expand_plan_steps">[docs]</a><span class="k">def</span> <span class="nf">expand_plan_steps</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Attempt to expand the surface steps in the plan using one of:</span>
-<span class="sd">  1. A keyword step, which have special expansion behavior</span>
-<span class="sd">  2. A schema whose header matches the step WFF (unifying any schema args)</span>
-<span class="sd">  3. A &quot;primitive&quot; type of plan step whose expansion is directly supported</span>
-<span class="sd">  4. A pattern transduction tree mapping the step WFF to substep WFF(s)</span>
-
-<span class="sd">  TODO: some possible future improvements:</span>
-<span class="sd">  1) currently, this only attempts to expand the currently due step; however,</span>
-<span class="sd">     it may be possible to expand certain other steps in the plan as well.</span>
+<span class="sd">    1. A keyword step, which have special expansion behavior</span>
+<span class="sd">    2. A schema whose header matches the step WFF (unifying any schema args)</span>
+<span class="sd">    3. A &quot;primitive&quot; type of plan step whose expansion is directly supported</span>
+<span class="sd">    4. A pattern transduction tree mapping the step WFF to substep WFF(s)</span>
 <span class="sd">     </span>
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -176,6 +176,12 @@
 <span class="sd">  -------</span>
 <span class="sd">  PlanNode or None</span>
 <span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: some possible future improvements:</span>
+<span class="sd">    1. currently, this only attempts to expand the currently due step; however,</span>
+<span class="sd">       it may be possible to expand certain other steps in the plan as well.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="ow">not</span> <span class="n">plan</span><span class="p">:</span>
     <span class="k">return</span> <span class="kc">None</span>
@@ -206,12 +212,6 @@
 <div class="viewcode-block" id="merge_plan_steps"><a class="viewcode-back" href="../../../_autosummary/eta.core.planning.merge_plan_steps.html#eta.core.planning.merge_plan_steps">[docs]</a><span class="k">def</span> <span class="nf">merge_plan_steps</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Merge steps in the plan that are equivalent or unifiable.</span>
 
-<span class="sd">  TODO: the behavior of this function is currently hard-coded to merge directly</span>
-<span class="sd">  adjacent reply-to steps in the plan. It should be generalized using a transducer</span>
-<span class="sd">  that maps a plan to a new plan with merged steps, possibly making use of retrieved</span>
-<span class="sd">  equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially</span>
-<span class="sd">  perform this step instead).</span>
-
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  plan : PlanNode or None</span>
@@ -222,6 +222,14 @@
 <span class="sd">  -------</span>
 <span class="sd">  PlanNode or None</span>
 <span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: the behavior of this function is currently hard-coded to merge directly</span>
+<span class="sd">  adjacent reply-to steps in the plan. It should be generalized using a transducer</span>
+<span class="sd">  that maps a plan to a new plan with merged steps, possibly making use of retrieved</span>
+<span class="sd">  equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially</span>
+<span class="sd">  perform this step instead).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="ow">not</span> <span class="n">plan</span><span class="p">:</span>
     <span class="k">return</span> <span class="kc">None</span>
@@ -240,8 +248,6 @@
 
 <div class="viewcode-block" id="reorder_plan_steps"><a class="viewcode-back" href="../../../_autosummary/eta.core.planning.reorder_plan_steps.html#eta.core.planning.reorder_plan_steps">[docs]</a><span class="k">def</span> <span class="nf">reorder_plan_steps</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Reorder steps in the plan according to imposed constraints.</span>
-
-<span class="sd">  TODO: this is a stub that needs implementation.</span>
 <span class="sd">  </span>
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -253,6 +259,10 @@
 <span class="sd">  -------</span>
 <span class="sd">  PlanNode or None</span>
 <span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: this is a stub that needs implementation.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="ow">not</span> <span class="n">plan</span><span class="p">:</span>
     <span class="k">return</span> <span class="kc">None</span>
@@ -286,12 +296,6 @@
 <div class="viewcode-block" id="expand_repetition_step"><a class="viewcode-back" href="../../../_autosummary/eta.core.planning.expand_repetition_step.html#eta.core.planning.expand_repetition_step">[docs]</a><span class="k">def</span> <span class="nf">expand_repetition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Expand a step containing a repetition eventuality depending on the truth value of its condition.</span>
 
-<span class="sd">  TODO: some modifications still need to be made to the method of unbinding local variables, since it</span>
-<span class="sd">  may be possible that a variable within a :repeat-until section of a schema first appeared within an</span>
-<span class="sd">  episode outside of the :repeat-until section, yet not within the participants list of the schema.</span>
-<span class="sd">  This means that these variables will be unbound in memory following execution of the repeating episode,</span>
-<span class="sd">  although typically the repetition itself still executes as intended.</span>
-
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
 <span class="sd">  event : Repetition</span>
@@ -304,6 +308,14 @@
 <span class="sd">  -------</span>
 <span class="sd">  PlanNode or None</span>
 <span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: some modifications still need to be made to the method of unbinding local variables, since it</span>
+<span class="sd">  may be possible that a variable within a :repeat-until section of a schema first appeared within an</span>
+<span class="sd">  episode outside of the :repeat-until section, yet not within the participants list of the schema.</span>
+<span class="sd">  This means that these variables will be unbound in memory following execution of the repeating episode,</span>
+<span class="sd">  although typically the repetition itself still executes as intended.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">condition</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">condition</span>
   <span class="n">eventualities</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">eventualities</span>

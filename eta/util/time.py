@@ -9,6 +9,11 @@ from eta.constants import EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT
 class TimePoint:
   """A specific point in time.
 
+  Parameters
+  ----------
+  time : Datetime, optional
+    Initialize with a given Datetime object if given, otherwise use the current time.
+
   Attributes
   ----------
   time : Datetime
@@ -16,7 +21,6 @@ class TimePoint:
   """
 
   def __init__(self, time=None):
-    """If 'time' is given, initialize a new TimePoint to that time; otherwise, to the current time."""
     if time:
       self.time = time
     else:
@@ -51,8 +55,8 @@ def now():
 def certainty_to_period(certainty):
   """Map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.
 
-  The proportion between the period and the quantity -log(1 - certainty) is determined by the global
-  constant EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT, defined in eta.constants.
+  The proportion between the period and the quantity ``-log(1 - certainty)`` is determined by the global
+  constant EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT, defined in ``eta.constants``.
 
   Parameters
   ----------

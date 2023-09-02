@@ -102,16 +102,18 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#Memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.Memory" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Represents a single memory, which consists of a temporally bounded event with some importance value.</p>
-<p>Note that the start time only marks the earliest time point at which an episode is known to be true;
-likewise for the end time. Thus, their logical interpretation should be as follows:
-(&lt;start_time&gt; during &lt;event&gt;.ep)
-(&lt;end_time&gt; during &lt;event&gt;.ep)
-Where &lt;end_time&gt; is to be read as an indexical variable ^now if no value is supplied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality"><em>Eventuality</em></a>) – The eventuality of this memory.</p></li>
+<li><p><strong>importance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – A numerical score representing how important this memory is.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.memory.Memory.event">
 <span class="sig-name descname"><span class="pre">event</span></span><a class="headerlink" href="#eta.memory.Memory.event" title="Permalink to this definition"></a></dt>
-<dd><p>The eventuality of this memory.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a></p>
 </dd>
@@ -156,14 +158,23 @@ interpreted as the event being “true now”.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.memory.Memory.importance">
 <span class="sig-name descname"><span class="pre">importance</span></span><a class="headerlink" href="#eta.memory.Memory.importance" title="Permalink to this definition"></a></dt>
-<dd><p>A numerical score representing how important this memory is.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
+<p class="rubric">Notes</p>
+<p>The start time only marks the earliest time point at which an episode is known to be true;
+likewise for the end time. Thus, their logical interpretation should be as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(&lt;start_time&gt;</span> <span class="pre">during</span> <span class="pre">&lt;event&gt;.ep)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(&lt;end_time&gt;</span> <span class="pre">during</span> <span class="pre">&lt;event&gt;.ep)</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>Where <code class="docutils literal notranslate"><span class="pre">&lt;end_time&gt;</span></code> is to be read as an indexical variable <code class="docutils literal notranslate"><span class="pre">^now</span></code> if no value is supplied.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -221,6 +232,24 @@ interpreted as the event being “true now”.</p>
 <dt class="sig sig-object py" id="eta.memory.Memory.is_telic">
 <span class="sig-name descname"><span class="pre">is_telic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#Memory.is_telic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.Memory.is_telic" title="Permalink to this definition"></a></dt>
 <dd><p>Check whether this memory represents a telic event (i.e., one that is essentially instantaneous).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.Memory.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#Memory.__hash__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.Memory.__hash__" title="Permalink to this definition"></a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.Memory.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#Memory.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.Memory.__eq__" title="Permalink to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.Memory.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#Memory.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.Memory.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
 </dd></dl>
 
 </dd></dl>

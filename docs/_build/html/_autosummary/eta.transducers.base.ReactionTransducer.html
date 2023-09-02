@@ -57,7 +57,6 @@
 <li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="eta.transducers.html">eta.transducers</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="eta.transducers.base.html">eta.transducers.base</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#exported-classes">Exported classes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AffectTransducer.html">eta.transducers.base.AffectTransducer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AnswerTransducer.html">eta.transducers.base.AnswerTransducer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AskTransducer.html">eta.transducers.base.AskTransducer</a></li>
@@ -128,8 +127,6 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ReactionTransducer</span></span><a class="reference internal" href="../_modules/eta/transducers/base.html#ReactionTransducer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.transducers.base.ReactionTransducer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.transducers.base.Transducer.html#eta.transducers.base.Transducer" title="eta.transducers.base.Transducer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transducer</span></code></a></p>
 <p>Maps an observed event to a formula for an action that an agent can take.</p>
-<p>TODO: this should likely be expanded to support a list of observed events rather than a single event,
-since in general a reaction may be contingent on multiple combined observations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>observation</strong> (<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality"><em>Eventuality</em></a>) – The observed event for the agent to react to.</p>
@@ -141,6 +138,9 @@ since in general a reaction may be contingent on multiple combined observations.
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>TODO: this should likely be expanded to support a list of observed events rather than a single event,
+since in general a reaction may be contingent on multiple combined observations.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>

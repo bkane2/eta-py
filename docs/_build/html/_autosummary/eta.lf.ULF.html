@@ -154,7 +154,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ULF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formula</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#ULF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.ULF" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.lf.LF.html#eta.lf.LF" title="eta.lf.LF"><code class="xref py py-class docutils literal notranslate"><span class="pre">LF</span></code></a></p>
 <p>Defines a ULF formula.</p>
-<p>Initialize a ULF formula.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>s-expr</em>) – The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</p>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -175,6 +179,12 @@
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.ULF.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eta.lf.ULF.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.lf.ULF.bind">
 <span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eta.lf.ULF.bind" title="Permalink to this definition"></a></dt>
@@ -197,6 +207,7 @@
 <dt class="sig sig-object py" id="eta.lf.ULF.to_nl">
 <span class="sig-name descname"><span class="pre">to_nl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eta.lf.ULF.to_nl" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the formula to a natural language string.</p>
+<p class="rubric">Notes</p>
 <p>TODO: replace naive implementation with ULF2English.</p>
 </dd></dl>
 

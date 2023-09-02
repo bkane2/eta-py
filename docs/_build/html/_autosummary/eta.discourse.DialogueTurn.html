@@ -114,11 +114,23 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DialogueTurn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utterance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">semantics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pragmatics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obligations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/discourse.html#DialogueTurn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.discourse.DialogueTurn" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Represents a dialogue turn by an agent, which contains the utterance as well as any associated dialogue information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The agent of this turn.</p></li>
+<li><p><strong>utterance</strong> (<a class="reference internal" href="eta.discourse.Utterance.html#eta.discourse.Utterance" title="eta.discourse.Utterance"><em>Utterance</em></a>) – The utterance of this turn.</p></li>
+<li><p><strong>gists</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – A list of gist clauses capturing the meaning of this turn.</p></li>
+<li><p><strong>semantics</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>s-expr</em><em>]</em><em>, </em><em>optional</em>) – A list of semantic interpretations of this turn.</p></li>
+<li><p><strong>pragmatics</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>s-expr</em><em>]</em><em>, </em><em>optional</em>) – A list of pragmatic inferences drawn from this turn.</p></li>
+<li><p><strong>obligations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>s-expr</em><em>]</em><em>, </em><em>optional</em>) – A list of obligations created by this turn.</p></li>
+<li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – The episode that this turn corresponds to.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.discourse.DialogueTurn.agent">
 <span class="sig-name descname"><span class="pre">agent</span></span><a class="headerlink" href="#eta.discourse.DialogueTurn.agent" title="Permalink to this definition"></a></dt>
-<dd><p>The agent of this turn.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
@@ -128,8 +140,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.discourse.DialogueTurn.utterance">
 <span class="sig-name descname"><span class="pre">utterance</span></span><a class="headerlink" href="#eta.discourse.DialogueTurn.utterance" title="Permalink to this definition"></a></dt>
-<dd><p>The utterance of this turn.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.discourse.Utterance.html#eta.discourse.Utterance" title="eta.discourse.Utterance">Utterance</a></p>
 </dd>
@@ -139,10 +150,9 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.discourse.DialogueTurn.gists">
 <span class="sig-name descname"><span class="pre">gists</span></span><a class="headerlink" href="#eta.discourse.DialogueTurn.gists" title="Permalink to this definition"></a></dt>
-<dd><p>A list of gist clauses capturing the meaning of this turn.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>], optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -150,10 +160,9 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.discourse.DialogueTurn.semantics">
 <span class="sig-name descname"><span class="pre">semantics</span></span><a class="headerlink" href="#eta.discourse.DialogueTurn.semantics" title="Permalink to this definition"></a></dt>
-<dd><p>A list of semantic interpretations of this turn.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr], optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -161,10 +170,9 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.discourse.DialogueTurn.pragmatics">
 <span class="sig-name descname"><span class="pre">pragmatics</span></span><a class="headerlink" href="#eta.discourse.DialogueTurn.pragmatics" title="Permalink to this definition"></a></dt>
-<dd><p>A list of pragmatic inferences drawn from this turn.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr], optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -172,10 +180,9 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.discourse.DialogueTurn.obligations">
 <span class="sig-name descname"><span class="pre">obligations</span></span><a class="headerlink" href="#eta.discourse.DialogueTurn.obligations" title="Permalink to this definition"></a></dt>
-<dd><p>A list of obligations created by this turn.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr], optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -183,10 +190,9 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.discourse.DialogueTurn.ep">
 <span class="sig-name descname"><span class="pre">ep</span></span><a class="headerlink" href="#eta.discourse.DialogueTurn.ep" title="Permalink to this definition"></a></dt>
-<dd><p>The episode that this turn corresponds to.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a> or None</p>
 </dd>
 </dl>
 </dd></dl>

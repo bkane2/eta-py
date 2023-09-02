@@ -117,10 +117,14 @@ core process using a ProcessManager, and using mutex locks to prevent data races
 dialogue state attributes.</p>
 <p>Additionally, a set of buffers (i.e., priority queues) are used for the data being processed
 over the dialogue session, which is necessary for:</p>
-<p>(a) maintaining synchronicity between the processes in the relevant aspects (e.g., completing a
-series of modifications to the plan before attempting to execute a step).</p>
-<p>(b) ensuring that transducers, which may incur some monetary cost to apply (e.g., in the case of
-GPT-based transduction), are only applied after a modification to the relevant data.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>maintaining synchronicity between the processes in the relevant aspects (e.g., completing a
+series of modifications to the plan before attempting to execute a step).</p></li>
+<li><p>ensuring that transducers, which may incur some monetary cost to apply (e.g., in the case of
+GPT-based transduction), are only applied after a modification to the relevant data.</p></li>
+</ol>
+</div></blockquote>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -148,16 +152,14 @@ GPT-based transduction), are only applied after a modification to the relevant d
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DialogueState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A representation of the current dialogue state.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Session</span> <span class="pre">variables</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">-----------------</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_agent</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – The config parameters for the agent.</p></li>
+<li><p><strong>config_user</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – The config parameters for the user.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.core.eta.DialogueState.id">
 <span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.id" title="Permalink to this definition"></a></dt>
@@ -270,16 +272,6 @@ to write them and listen for user input.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Internal</span> <span class="pre">mechanisms</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">-------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="eta.core.eta.DialogueState.transducers">
 <span class="sig-name descname"><span class="pre">transducers</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.transducers" title="Permalink to this definition"></a></dt>
 <dd><p>A dict associating Transducer object(s) with named mapping functions (e.g., ‘gist’).</p>
@@ -296,20 +288,10 @@ to write them and listen for user input.</p>
 <dd><p>An embedder object used to compute object embeddings and perform retrieval.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder">Embedder</a>, optional</p>
+<dd class="field-odd"><p><a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder">Embedder</a></p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Static</span> <span class="pre">knowledge</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------------</span></span></dt>
-<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.core.eta.DialogueState.schemas">
@@ -356,16 +338,6 @@ to write them and listen for user input.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Dialogue</span> <span class="pre">variables</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="eta.core.eta.DialogueState.schema_instances">
 <span class="sig-name descname"><span class="pre">schema_instances</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.schema_instances" title="Permalink to this definition"></a></dt>
 <dd><p>A dict containing all schema instances (keyed on their unique IDs).</p>
@@ -379,7 +351,7 @@ to write them and listen for user input.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.core.eta.DialogueState.plan">
 <span class="sig-name descname"><span class="pre">plan</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.plan" title="Permalink to this definition"></a></dt>
-<dd><p>The “currently due” node in the agent’s plan, initialized from the given ‘start_schema’.</p>
+<dd><p>The “currently due” node in the agent’s plan, initialized from the <cite>start_schema</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a></p>
@@ -434,7 +406,7 @@ to write them and listen for user input.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.core.eta.DialogueState.memory">
 <span class="sig-name descname"><span class="pre">memory</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.memory" title="Permalink to this definition"></a></dt>
-<dd><p>The episodic memory of the agent, initialized from ‘init_knowledge’.</p>
+<dd><p>The episodic memory of the agent, initialized from <cite>init_knowledge</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="eta.memory.MemoryStorage.html#eta.memory.MemoryStorage" title="eta.memory.MemoryStorage">MemoryStorage</a></p>
@@ -538,6 +510,7 @@ to write them and listen for user input.</p>
 <p>This instantiates the generic schema as a schema instance, binding variables occurring in
 the header to the supplied arguments, if any. It then instantiates a plan structure from
 the episodes list of that schema.</p>
+<p class="rubric">Notes</p>
 <p>TODO: the plan structure created when instantiating a schema is currently
 “flat” - in the future, we might want to add support for annotating abstraction
 hierarchies in the schema, in which case these would be added as supersteps to

@@ -86,14 +86,14 @@
 
 <span class="sd">  This will do one of several things depending on the class of the currently pending step:</span>
 
-<span class="sd">  1) If a condition or repetition step, advance the plan once none of the conditions are true.</span>
+<span class="sd">    1. If a condition or repetition step, advance the plan once none of the conditions are true.</span>
 
-<span class="sd">  2) If an expected step, attempt to match the step to a fact in context, until a time period</span>
-<span class="sd">     based on the certainty of that step has elapsed, in which case the step is characterized</span>
-<span class="sd">     as a failure and the plan is advanced.</span>
+<span class="sd">    2. If an expected step, attempt to match the step to a fact in context, until a time period</span>
+<span class="sd">       based on the certainty of that step has elapsed, in which case the step is characterized</span>
+<span class="sd">       as a failure and the plan is advanced.</span>
 
-<span class="sd">  3) If an intended step that contains a primitive action, attempt to execute that action, and</span>
-<span class="sd">     advance the plan if successful.</span>
+<span class="sd">    3. If an intended step that contains a primitive action, attempt to execute that action, and</span>
+<span class="sd">       advance the plan if successful.</span>
 
 <span class="sd">  In any the case where an execution or match is successful, the plan is advanced, and a list of</span>
 <span class="sd">  variable bindings obtained from the execution or match is applied throughout the dialogue state.</span>

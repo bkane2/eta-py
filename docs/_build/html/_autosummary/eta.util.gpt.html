@@ -113,18 +113,18 @@
   <section id="module-eta.util.gpt">
 <span id="eta-util-gpt"></span><h1>eta.util.gpt<a class="headerlink" href="#module-eta.util.gpt" title="Permalink to this heading"></a></h1>
 <p>Utilities for interacting with the OpenAI GPT API.</p>
-<p>We assume that GPT prompts are specified as text strings, possibly including the following special constructs:
-&lt;var&gt;</p>
-<blockquote>
-<div><p>A placeholder in the prompt to be replaced by a value at a later point, where that value may be a string, or
-a list of strings such that each string is placed on a new line.</p>
-</div></blockquote>
 <dl class="simple">
-<dt>&#64;zip(&lt;var1&gt;, &lt;var2&gt;, …)</dt><dd><p>A placeholder to be replaced by the string formed by zipping the strings within the argument lists, and placing
-each combined string on a new line.</p>
-</dd>
-<dt>&#64;startexamples … &#64;endexamples</dt><dd><p>The text between these annotations is treated as an example template, to be later replaced by a list of examples
-formatted according to the template.</p>
+<dt>We assume that GPT prompts are specified as text strings, possibly including the following special constructs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;var&gt;</span></code>
+A placeholder in the prompt to be replaced by a value at a later point, where that value may be a string, or
+a list of strings such that each string is placed on a new line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;zip(&lt;var1&gt;,</span> <span class="pre">&lt;var2&gt;,</span> <span class="pre">...)</span></code>
+A placeholder to be replaced by the string formed by zipping the strings within the argument lists, and placing
+each combined string on a new line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;startexamples</span> <span class="pre">...</span> <span class="pre">&#64;endexamples</span></code>
+The text between these annotations is treated as an example template, to be later replaced by a list of examples
+formatted according to the template.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Functions</p>
@@ -143,10 +143,10 @@ formatted according to the template.</p>
 <td><p>Generate a response from GPT.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="eta.util.gpt.subst_examples.html#eta.util.gpt.subst_examples" title="eta.util.gpt.subst_examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subst_examples</span></code></a></p></td>
-<td><p>Fill in any prompt content between &#64;startexamples and &#64;endexamples annotations with examples.</p></td>
+<td><p>Fill in any prompt content between <code class="docutils literal notranslate"><span class="pre">&#64;startexamples</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;endexamples</span></code> annotations with examples.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="eta.util.gpt.subst_kwargs.html#eta.util.gpt.subst_kwargs" title="eta.util.gpt.subst_kwargs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subst_kwargs</span></code></a></p></td>
-<td><p>Replace variables within a GPT prompt with the corresponding values in 'kwargs'.</p></td>
+<td><p>Replace variables within a GPT prompt with the corresponding values in <cite>kwargs</cite>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -160,13 +160,13 @@ formatted according to the template.</p>
 <li><p><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The prompt to use for generation (coded as a “user” message).</p></li>
 <li><p><strong>preamble</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – An initial prompt to give GPT as a “system” message.</p></li>
 <li><p><strong>examples</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – A list of example pairs, each consisting of a “user” message and an “assistant” response.</p></li>
-<li><p><strong>model</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The model name to use for generation.</p></li>
+<li><p><strong>model</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default='gpt-3.5-turbo'</em>) – The model name to use for generation.</p></li>
 <li><p><strong>stop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – A list of stop sequences to use in generation.</p></li>
-<li><p><strong>max_tokens</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The maximum number of tokens to generate.</p></li>
+<li><p><strong>max_tokens</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=2048</em>) – The maximum number of tokens to generate.</p></li>
 <li><p><strong>postprocessors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>function</em><em>]</em><em>, </em><em>optional</em>) – A list of functions to apply to any generated content. If a postprocessor returns ‘None’,
-then generation is retried, up to ‘n_retries’ times. Otherwise, the final result after applying
+then generation is retried, up to <cite>n_retries</cite> times. Otherwise, the final result after applying
 each function is returned.</p></li>
-<li><p><strong>n_retries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of times to retry if a postprocessor determines that a generation is invalid.</p></li>
+<li><p><strong>n_retries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=2</em>) – The number of times to retry if a postprocessor determines that a generation is invalid.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -190,14 +190,14 @@ each function is returned.</p></li>
 <li><p><strong>avg_resp_len</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The estimated length of a response from GPT for the given prompt.</p></li>
 <li><p><strong>preamble</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – An initial prompt to give GPT as a “system” message.</p></li>
 <li><p><strong>examples</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em><em>, </em><em>optional</em>) – A list of example pairs, each consisting of a “user” message and an “assistant” response.</p></li>
-<li><p><strong>model</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The model name to use for generation (the default is gpt-3.5-turbo).</p></li>
+<li><p><strong>model</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>default='gpt-3.5-turbo'</em>) – The model name to use for generation.</p></li>
 <li><p><strong>stop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – A list of stop sequences to use in generation.</p></li>
-<li><p><strong>max_tokens</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The maximum number of tokens to generate (the default is 2048).</p></li>
+<li><p><strong>max_tokens</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=2048</em>) – The maximum number of tokens to generate.</p></li>
 <li><p><strong>postprocessors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><em>function</em><em>]</em><em>, </em><em>optional</em>) – A list of functions to apply to any generated content. If a postprocessor returns ‘None’,
-then generation is retried, up to ‘n_retries’ times. Otherwise, the final result after applying
+then generation is retried, up to <cite>n_retries</cite> times. Otherwise, the final result after applying
 each function is returned.</p></li>
-<li><p><strong>n_retries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of times to retry if a postprocessor determines that a generation is invalid (the default is 2).</p></li>
-<li><p><strong>tokenizer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><em>object</em></a><em>, </em><em>optional</em>) – The tokenizer used for estimating the number of tokens created from the prompt.</p></li>
+<li><p><strong>n_retries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=2</em>) – The number of times to retry if a postprocessor determines that a generation is invalid.</p></li>
+<li><p><strong>tokenizer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><em>object</em></a><em>, </em><em>default=GPT2Tokenizer</em>) – The tokenizer used for estimating the number of tokens created from the prompt.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -224,13 +224,13 @@ each function is returned.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.gpt.subst_kwargs">
 <span class="sig-name descname"><span class="pre">subst_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/gpt.html#subst_kwargs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.gpt.subst_kwargs" title="Permalink to this definition"></a></dt>
-<dd><p>Replace variables within a GPT prompt with the corresponding values in ‘kwargs’.</p>
+<dd><p>Replace variables within a GPT prompt with the corresponding values in <cite>kwargs</cite>.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eta.util.gpt.subst_examples">
 <span class="sig-name descname"><span class="pre">subst_examples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">examples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/gpt.html#subst_examples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.gpt.subst_examples" title="Permalink to this definition"></a></dt>
-<dd><p>Fill in any prompt content between &#64;startexamples and &#64;endexamples annotations with examples.</p>
+<dd><p>Fill in any prompt content between <code class="docutils literal notranslate"><span class="pre">&#64;startexamples</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;endexamples</span></code> annotations with examples.</p>
 </dd></dl>
 
 </section>

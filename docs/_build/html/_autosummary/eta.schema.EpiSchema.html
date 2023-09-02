@@ -110,16 +110,18 @@
 <p>A schema representing a prototypical episode.</p>
 <section id="sections">
 <h2>Sections<a class="headerlink" href="#sections" title="Permalink to this heading"></a></h2>
-<p>types : the nominal types of each participant/variable.
-rigid-conds : non-fluent conditions relevant to episode.
-static-conds : fluent conditions that are not expected to change during episode.
-preconds : fluent conditions that are expected to hold at the beginning of episode.
-postconds : fluent conditions that are expected to hold at end of episode.
-goals : goals of participants in schema (e.g., (^me want.v (that …))).
-episodes : the expected/intended sub-episodes of the schema episode.
-episode-relations : the temporal/causal relations between episodes of schema.
-necessities : probabilities associated with schema formulas.
-certainties : probabilities associated with schema episodes.</p>
+<ul class="simple">
+<li><p><strong>types</strong> : the nominal types of each participant/variable.</p></li>
+<li><p><strong>rigid-conds</strong> : non-fluent conditions relevant to episode.</p></li>
+<li><p><strong>static-conds</strong> : fluent conditions that are not expected to change during episode.</p></li>
+<li><p><strong>preconds</strong> : fluent conditions that are expected to hold at the beginning of episode.</p></li>
+<li><p><strong>postconds</strong> : fluent conditions that are expected to hold at end of episode.</p></li>
+<li><p><strong>goals</strong> : goals of participants in schema (e.g., <code class="docutils literal notranslate"><span class="pre">(^me</span> <span class="pre">want.v</span> <span class="pre">(that</span> <span class="pre">...))</span></code>).</p></li>
+<li><p><strong>episodes</strong> : the expected/intended sub-episodes of the schema episode.</p></li>
+<li><p><strong>episode-relations</strong> : the temporal/causal relations between episodes of schema.</p></li>
+<li><p><strong>necessities</strong> : probabilities associated with schema formulas.</p></li>
+<li><p><strong>certainties</strong> : probabilities associated with schema episodes.</p></li>
+</ul>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -166,7 +168,7 @@ certainties : probabilities associated with schema episodes.</p>
 <td><p>Given a list of variable replacement mappings, apply the mappings to each part of the schema.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#eta.schema.EpiSchema.to_probability_dict" title="eta.schema.EpiSchema.to_probability_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_probability_dict</span></code></a></p></td>
-<td><p>Given a list of certainty or necessity eventualities, create a probability dict with entries of form {&lt;ep&gt;:&lt;prob&gt;}.</p></td>
+<td><p>Given a list of certainty or necessity eventualities, create a probability dict with entries of form <code class="docutils literal notranslate"><span class="pre">{&lt;ep&gt;:&lt;prob&gt;}</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#eta.schema.EpiSchema.unbind" title="eta.schema.EpiSchema.unbind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unbind</span></code></a></p></td>
 <td><p>Unbind the given variable symbol.</p></td>
@@ -180,6 +182,12 @@ certainties : probabilities associated with schema episodes.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="eta.schema.EpiSchema.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eta.schema.EpiSchema.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="eta.schema.EpiSchema.bind">
 <span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eta.schema.EpiSchema.bind" title="Permalink to this definition"></a></dt>
 <dd><p>Bind the given variable symbol to the given value.</p>
@@ -189,7 +197,7 @@ certainties : probabilities associated with schema episodes.</p>
 <dt class="sig sig-object py" id="eta.schema.EpiSchema.bind_args">
 <span class="sig-name descname"><span class="pre">bind_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eta.schema.EpiSchema.bind_args" title="Permalink to this definition"></a></dt>
 <dd><p>Bind variables in the schema header with a list of respective argument values.</p>
-<p>Generally, we assume that ‘args’ should correspond to the variables in the participants list of
+<p>Generally, we assume that <cite>args</cite> should correspond to the variables in the participants list of
 the schema, but we allow for the possibility of ^me and ^you as implicit arguments if fewer arguments
 than variables are given - in which case, they’re added to the arguments list in that order.</p>
 <p>On the other hand, if more arguments than variables are given, we assume that
@@ -228,7 +236,7 @@ starting from the end of the list.</p>
 <dd><p>Get the schema contents as an S-expression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p>
+<dd class="field-odd"><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Do not make variable substitutions.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>s-expr</p>
@@ -242,7 +250,7 @@ starting from the end of the list.</p>
 <dd><p>Get the schema participants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p>
+<dd class="field-odd"><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Do not make variable substitutions.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[s-expr]</p>
@@ -256,7 +264,7 @@ starting from the end of the list.</p>
 <dd><p>Get the eventualities within a given schema section or list of sections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword ‘:all’ to return all sections.</p>
+<dd class="field-odd"><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword <code class="docutils literal notranslate"><span class="pre">:all</span></code> to return all sections.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]</p>
@@ -271,8 +279,8 @@ starting from the end of the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword ‘:all’ to return all sections.</p></li>
-<li><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p></li>
+<li><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword <code class="docutils literal notranslate"><span class="pre">:all</span></code> to return all sections.</p></li>
+<li><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Do not make variable substitutions.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -288,8 +296,8 @@ starting from the end of the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword ‘:all’ to return all sections.</p></li>
-<li><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Do not make variable substitutions (the default is False).</p></li>
+<li><p><strong>sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A section label or list of section labels, or the keyword <code class="docutils literal notranslate"><span class="pre">:all</span></code> to return all sections.</p></li>
+<li><p><strong>no_bind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=False</em>) – Do not make variable substitutions.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -323,8 +331,8 @@ the events in the schema are added to a plan.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>embedder</strong> (<a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder"><em>Embedder</em></a>) – An Embedder object.</p></li>
 <li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A query string to use to compute similarity.</p></li>
-<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of facts to retrieve (the default is 5).</p></li>
-<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to prefix the retrieved facts with the schema header (the default is True).</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>default=5</em>) – The number of facts to retrieve.</p></li>
+<li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>default=True</em>) – Whether to prefix the retrieved facts with the schema header.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -345,8 +353,8 @@ the events in the schema are added to a plan.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="eta.schema.EpiSchema.to_probability_dict">
 <span class="sig-name descname"><span class="pre">to_probability_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventualities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap_duals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eta.schema.EpiSchema.to_probability_dict" title="Permalink to this definition"></a></dt>
-<dd><p>Given a list of certainty or necessity eventualities, create a probability dict with entries of form {&lt;ep&gt;:&lt;prob&gt;}.</p>
-<p>If ‘swap_duals’ is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).</p>
+<dd><p>Given a list of certainty or necessity eventualities, create a probability dict with entries of form <code class="docutils literal notranslate"><span class="pre">{&lt;ep&gt;:&lt;prob&gt;}</span></code>.</p>
+<p>If <cite>swap_duals</cite> is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).</p>
 </dd></dl>
 
 <dl class="py method">

@@ -157,6 +157,11 @@
 <p>A logical form (whether ULF or ELF) must contain a formula, variable bindings, functions
 for binding/unbinding variables, for replacing variables, and for getting the formula (or
 a natural language representation thereof) after making all variable assignments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>s-expr</em>) – The formula for this logical form (an S-expression or LISP-formatted string representation thereof).</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="eta.lf.LF.formula">
 <span class="sig-name descname"><span class="pre">formula</span></span><a class="headerlink" href="#eta.lf.LF.formula" title="Permalink to this definition"></a></dt>
@@ -179,7 +184,6 @@ a natural language representation thereof) after making all variable assignments
 </dl>
 </dd></dl>
 
-<p>Initialize a logical form with a given formula (either a LISP-formatted string or a nested list).</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -228,7 +232,14 @@ a natural language representation thereof) after making all variable assignments
 <dt class="sig sig-object py" id="eta.lf.LF.to_nl">
 <span class="sig-name descname"><span class="pre">to_nl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#LF.to_nl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.LF.to_nl" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the formula to a natural language string.</p>
+<p class="rubric">Notes</p>
 <p>TODO: replace naive implementation with ULF2English.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.LF.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#LF.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.LF.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
 </dd></dl>
 
 </dd></dl>

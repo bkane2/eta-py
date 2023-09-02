@@ -12,7 +12,7 @@ def perception_loop(ds):
   """Observe and interpret inputs from perceptual servers.
 
   The resulting observations are added to dialogue context, as well as
-  to the 'observations' and 'inferences' buffers.
+  to the ``observations`` and ``inferences`` buffers.
 
   In the case where the observed input is speech, this also interprets
   the input as a gist clause, as well as deriving the underlying semantic
@@ -55,7 +55,7 @@ def observe(source):
   Parameters
   ----------
   source : str
-    The name of the perceptual server ('speech' in the special case
+    The name of the perceptual server (``speech`` in the special case
     of a user utterance).
 
   Returns

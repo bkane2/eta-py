@@ -93,11 +93,6 @@
 <div class="viewcode-block" id="gentemp"><a class="viewcode-back" href="../../../_autosummary/eta.util.general.gentemp.html#eta.util.general.gentemp">[docs]</a><span class="k">def</span> <span class="nf">gentemp</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Generate a unique symbol that hasn&#39;t been used before by appending an integer suffix i and then incrementing i.</span>
 
-<span class="sd">	This currently relies on an external symbol table stored in a file, which</span>
-<span class="sd">	exploits the fact that race conditions with a shared file cannot occur with Python multiprocess</span>
-<span class="sd">	(see: https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2)</span>
-<span class="sd">	However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.</span>
-
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
 <span class="sd">	str : str</span>
@@ -107,6 +102,13 @@
 <span class="sd">	-------</span>
 <span class="sd">	str</span>
 <span class="sd">		A &quot;symbol&quot; with a unique integer suffix attached to the given string.</span>
+
+<span class="sd">	Notes</span>
+<span class="sd">	-----</span>
+<span class="sd">	This currently relies on an external symbol table stored in a file, which</span>
+<span class="sd">	exploits the fact that race conditions with a shared file cannot occur with Python multiprocess</span>
+<span class="sd">	(see: https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2)</span>
+<span class="sd">	However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">symtab</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">SYMTAB_PATH</span><span class="p">)</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="nb">str</span> <span class="ow">in</span> <span class="n">symtab</span><span class="p">:</span>
@@ -128,7 +130,7 @@
 
 
 <div class="viewcode-block" id="escaped_symbol_p"><a class="viewcode-back" href="../../../_autosummary/eta.util.general.escaped_symbol_p.html#eta.util.general.escaped_symbol_p">[docs]</a><span class="k">def</span> <span class="nf">escaped_symbol_p</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;Check if a given symbol is an &quot;escaped&quot; symbol, equivalent to &#39;|sym| in LISP.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Check if a given symbol is an &quot;escaped&quot; symbol, equivalent to vertical bars in LISP.&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span></div>
 
 
@@ -140,7 +142,9 @@
 <div class="viewcode-block" id="variablep"><a class="viewcode-back" href="../../../_autosummary/eta.util.general.variablep.html#eta.util.general.variablep">[docs]</a><span class="k">def</span> <span class="nf">variablep</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Check if a given input is a variable symbol, i.e., starts with &#39;?&#39; or &#39;!&#39;.</span>
 <span class="sd">	</span>
-<span class="sd">	NOTE: for now, this excludes indexical variables, such as &#39;^you&#39;.</span>
+<span class="sd">	Notes</span>
+<span class="sd">	-----</span>
+<span class="sd">	For now, this excludes indexical variables, such as &#39;^you&#39;.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="n">symbolp</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">]</span></div>
 
@@ -175,9 +179,9 @@
 <span class="sd">		A string whose contents should be replaced.</span>
 <span class="sd">	replist : list[tuple]</span>
 <span class="sd">		A list of replacements to make. A replacement is a tuple of one of the following forms:</span>
-<span class="sd">			(old, new)</span>
-<span class="sd">			(old, new, is_regex)</span>
-<span class="sd">		If is_regex is given as True (default is False), the old and new values are interpreted as regex strings.</span>
+<span class="sd">			- ``(old, new)``</span>
+<span class="sd">			- ``(old, new, is_regex)``</span>
+<span class="sd">		If is_regex is given as True for a tuple, the old and new values are interpreted as regex strings.</span>
 <span class="sd">	</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
@@ -205,11 +209,11 @@
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;Standardize a string by applying a series of transformations.</span>
 <span class="sd">	</span>
 <span class="sd">	Specifically:</span>
-<span class="sd">	1. Replace -- with -, and _ with whitespace.</span>
-<span class="sd">	2. Remove parenthetical content (i.e., [...] or *...*).</span>
-<span class="sd">	3. Add whitespace around all punctuation.</span>
-<span class="sd">	4. Collapse all whitespace to a single space.</span>
-<span class="sd">	5. Convert to lowercase.</span>
+<span class="sd">		1. Replace -- with -, and _ with whitespace.</span>
+<span class="sd">		2. Remove parenthetical content (i.e., [...] or *...*).</span>
+<span class="sd">		3. Add whitespace around all punctuation.</span>
+<span class="sd">		4. Collapse all whitespace to a single space.</span>
+<span class="sd">		5. Convert to lowercase.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
 	<span class="nb">str</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[[a-zA-Z0-9\s]*\]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
@@ -330,7 +334,7 @@
 	
 
 <div class="viewcode-block" id="remove_duplicates"><a class="viewcode-back" href="../../../_autosummary/eta.util.general.remove_duplicates.html#eta.util.general.remove_duplicates">[docs]</a><span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;Remove duplicate items in a list, preserving the initial order of &#39;order&#39; is given as True.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Remove duplicate items in a list, preserving the initial order of `order` is given as True.&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">order</span><span class="p">:</span>
 		<span class="n">visited</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">lst1</span> <span class="o">=</span> <span class="p">[]</span>
@@ -373,7 +377,7 @@
 
 
 <div class="viewcode-block" id="get_keyword_contents"><a class="viewcode-back" href="../../../_autosummary/eta.util.general.get_keyword_contents.html#eta.util.general.get_keyword_contents">[docs]</a><span class="k">def</span> <span class="nf">get_keyword_contents</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;Get the contents immediately following each keyword in &#39;keys&#39; from a list.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Get the contents immediately following each keyword in `keys` from a list.&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="p">[</span><span class="n">e2</span> <span class="k">for</span> <span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="p">[</span><span class="kc">None</span><span class="p">])</span> <span class="k">if</span> <span class="n">e1</span> <span class="ow">in</span> <span class="n">keys</span> <span class="ow">and</span> <span class="n">e2</span><span class="p">]</span></div>
 
 
@@ -402,7 +406,7 @@
 
 
 <div class="viewcode-block" id="cons_dict"><a class="viewcode-back" href="../../../_autosummary/eta.util.general.cons_dict.html#eta.util.general.cons_dict">[docs]</a><span class="k">def</span> <span class="nf">cons_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-<span class="w">	</span><span class="sd">&quot;&quot;&quot;Add v to the list at key k in dct, creating a new list if none exists.&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Add `v` to the list at key `k` in `dct`, creating a new list if none exists.&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
 		<span class="n">dct</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>

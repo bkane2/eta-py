@@ -3,8 +3,10 @@
 Modifying the plan includes adding possible actions to the plan, expanding plan steps,
 merging plan steps, and reordering plan steps.
 
-NOTE: currently, the 'plans' buffer is handled differently from the other buffers, in that
-we assume it only holds one element at a time, and this element is simply replaced whenever
+Notes
+-----
+Currently, the ``plans`` buffer is handled differently from the other buffers, in that we
+assume it only holds one element at a time, and this element is simply replaced whenever
 the plan is modified in some way.
 """
 
@@ -18,17 +20,17 @@ from eta.plan import init_plan_from_eventualities, insert_before_plan_node, expa
 def planning_loop(ds):
   """Make modifications to the dialogue plan.
 
-  First, all suggested actions are popped from the 'actions' buffer, and used to create a new
-  plan. The plan of the current dialogue state is updated, and the contents of the 'plans' buffer
+  First, all suggested actions are popped from the ``actions`` buffer, and used to create a new
+  plan. The plan of the current dialogue state is updated, and the contents of the ``plans`` buffer
   is replaced with the updated plan.
 
-  Second, this attempts to modify the plan in the 'plans' buffer. This consists of the following substeps:
-  1) Attempt to expand top-level steps in the plan into substeps.
-  2) Merge equivalent steps in the plan.
-  3) Reorder plan steps according to constraints.
+  Second, this attempts to modify the plan in the ``plans`` buffer. This consists of the following substeps:
+    1. Attempt to expand top-level steps in the plan into substeps.
+    2. Merge equivalent steps in the plan.
+    3. Reorder plan steps according to constraints.
 
   If the plan was modified by the previous step, it is used to update the plan of the current dialogue state,
-  and is re-added to the 'plans' buffer.
+  and is re-added to the ``plans`` buffer.
   
   Parameters
   ----------
@@ -56,14 +58,6 @@ def planning_loop(ds):
 def add_possible_actions_to_plan(actions, ds):
   """Given a list of possible actions, attempt to add actions into the current plan.
 
-  TODO: some possible future improvements:
-  1) For now, we assume that only the first action in a set of possible actions is used.
-     In the future, this might be extended with a policy for attempting to add the top K possible actions.
-  2) This currently adds the action unconditionally; ultimately, the system should verify that the action
-     can be added to the plan. This may be done by way of a pattern transducer.
-  3) The action is currently inserted as the current step, but ultimately we should be able to insert actions
-     elsewhere in the plan as well.
-
   Parameters
   ----------
   actions : list[str]
@@ -74,6 +68,16 @@ def add_possible_actions_to_plan(actions, ds):
   -------
   PlanNode or None
     The updated plan, if successful.
+
+  Notes
+  -----
+  TODO: some possible future improvements:
+    1. For now, we assume that only the first action in a set of possible actions is used.
+       In the future, this might be extended with a policy for attempting to add the top K possible actions.
+    2. This currently adds the action unconditionally; ultimately, the system should verify that the action
+       can be added to the plan. This may be done by way of a pattern transducer.
+    3. The action is currently inserted as the current step, but ultimately we should be able to insert actions
+       elsewhere in the plan as well.
   """
   if not actions:
     return None
@@ -85,14 +89,10 @@ def add_possible_actions_to_plan(actions, ds):
 
 def expand_plan_steps(plan, ds):
   """Attempt to expand the surface steps in the plan using one of:
-  1. A keyword step, which have special expansion behavior
-  2. A schema whose header matches the step WFF (unifying any schema args)
-  3. A "primitive" type of plan step whose expansion is directly supported
-  4. A pattern transduction tree mapping the step WFF to substep WFF(s)
-
-  TODO: some possible future improvements:
-  1) currently, this only attempts to expand the currently due step; however,
-     it may be possible to expand certain other steps in the plan as well.
+    1. A keyword step, which have special expansion behavior
+    2. A schema whose header matches the step WFF (unifying any schema args)
+    3. A "primitive" type of plan step whose expansion is directly supported
+    4. A pattern transduction tree mapping the step WFF to substep WFF(s)
      
   Parameters
   ----------
@@ -104,6 +104,12 @@ def expand_plan_steps(plan, ds):
   -------
   PlanNode or None
     The updated plan, if successful.
+
+  Notes
+  -----
+  TODO: some possible future improvements:
+    1. currently, this only attempts to expand the currently due step; however,
+       it may be possible to expand certain other steps in the plan as well.
   """
   if not plan:
     return None
@@ -134,12 +140,6 @@ def expand_plan_steps(plan, ds):
 def merge_plan_steps(plan, ds):
   """Merge steps in the plan that are equivalent or unifiable.
 
-  TODO: the behavior of this function is currently hard-coded to merge directly
-  adjacent reply-to steps in the plan. It should be generalized using a transducer
-  that maps a plan to a new plan with merged steps, possibly making use of retrieved
-  equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially
-  perform this step instead).
-
   Parameters
   ----------
   plan : PlanNode or None
@@ -150,6 +150,14 @@ def merge_plan_steps(plan, ds):
   -------
   PlanNode or None
     The updated plan, if successful.
+
+  Notes
+  -----
+  TODO: the behavior of this function is currently hard-coded to merge directly
+  adjacent reply-to steps in the plan. It should be generalized using a transducer
+  that maps a plan to a new plan with merged steps, possibly making use of retrieved
+  equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially
+  perform this step instead).
   """
   if not plan:
     return None
@@ -168,8 +176,6 @@ def merge_plan_steps(plan, ds):
 
 def reorder_plan_steps(plan, ds):
   """Reorder steps in the plan according to imposed constraints.
-
-  TODO: this is a stub that needs implementation.
   
   Parameters
   ----------
@@ -181,6 +187,10 @@ def reorder_plan_steps(plan, ds):
   -------
   PlanNode or None
     The updated plan, if successful.
+
+  Notes
+  -----
+  TODO: this is a stub that needs implementation.
   """
   if not plan:
     return None
@@ -214,12 +224,6 @@ def expand_condition_step(event, ds, schema=None):
 def expand_repetition_step(event, ds, schema=None):
   """Expand a step containing a repetition eventuality depending on the truth value of its condition.
 
-  TODO: some modifications still need to be made to the method of unbinding local variables, since it
-  may be possible that a variable within a :repeat-until section of a schema first appeared within an
-  episode outside of the :repeat-until section, yet not within the participants list of the schema.
-  This means that these variables will be unbound in memory following execution of the repeating episode,
-  although typically the repetition itself still executes as intended.
-
   Parameters
   ----------
   event : Repetition
@@ -232,6 +236,14 @@ def expand_repetition_step(event, ds, schema=None):
   -------
   PlanNode or None
     The updated plan, if successful.
+
+  Notes
+  -----
+  TODO: some modifications still need to be made to the method of unbinding local variables, since it
+  may be possible that a variable within a :repeat-until section of a schema first appeared within an
+  episode outside of the :repeat-until section, yet not within the participants list of the schema.
+  This means that these variables will be unbound in memory following execution of the repeating episode,
+  although typically the repetition itself still executes as intended.
   """
   condition = event.condition
   eventualities = event.eventualities

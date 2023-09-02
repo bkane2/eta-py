@@ -36,7 +36,7 @@ def clean_s_expr(s_expr):
 
 
 def standardize_symbols(s_expr):
-	"""Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in |...|."""
+	"""Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in escape symbols."""
 	def standardize_rec(e):
 		if symbolp(e) and not escaped_symbol_p(e):
 			return e.lower()
@@ -72,13 +72,13 @@ def parse_s_expr(s_expr):
 	Parameters
 	----------
 	s_expr : str
-		An S-expression in LISP form, e.g., "(a (b c (d e)) '(f g h))".
+		An S-expression in LISP form, e.g., ``(a (b c (d e)) '(f g h))``.
 	
 	Returns
 	-------
 	s-expr
 		A structured S-expression, i.e., a recursively nested list structure with string "symbols" as atoms.
-		e.g., ['a', ['b', 'c', ['d', 'e']], "f g h"]
+		e.g., ``['a', ['b', 'c', ['d', 'e']], "f g h"]``
 	"""
 	def parse_s_expr_rec(s_expr):
 		s_expr = clean_s_expr(s_expr)
@@ -128,12 +128,12 @@ def list_to_s_expr(lst):
 	Parameters
 	----------
 	lst : s-expr
-		An S-expression in recursively nested list form, e.g., ['a', ['b', ['c', 'd']], 'e'].
+		An S-expression in recursively nested list form, e.g., ``['a', ['b', ['c', 'd']], 'e']``.
 	
 	Returns
 	-------
 	str
-		A LISP formatted string representation of the S-expression, e.g., "(a (b (c d)) e)".
+		A LISP formatted string representation of the S-expression, e.g., ``(a (b (c d)) e)``.
 	"""
 	if type(lst) != list:
 		return str(lst)
@@ -156,12 +156,12 @@ def list_to_str(lst):
 	Parameters
 	----------
 	lst : s-expr
-		An S-expression in recursively nested list form, e.g., ['a', ['b', ['c', 'd']], 'e'].
+		An S-expression in recursively nested list form, e.g., ``['a', ['b', ['c', 'd']], 'e']``.
 	
 	Returns
 	-------
 	str
-		A flattened string containing each of the symbols, e.g., "a b c d e".
+		A flattened string containing each of the symbols, e.g., ``"a b c d e"``.
 	"""
 	if type(lst) != list:
 		return str(lst)

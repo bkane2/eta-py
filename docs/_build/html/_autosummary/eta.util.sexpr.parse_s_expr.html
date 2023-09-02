@@ -127,11 +127,11 @@
 <dd><p>Parse a string containing an S-expression (in LISP form) into a structured list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>s_expr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – An S-expression in LISP form, e.g., “(a (b c (d e)) ‘(f g h))”.</p>
+<dd class="field-odd"><p><strong>s_expr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – An S-expression in LISP form, e.g., <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">(b</span> <span class="pre">c</span> <span class="pre">(d</span> <span class="pre">e))</span> <span class="pre">'(f</span> <span class="pre">g</span> <span class="pre">h))</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A structured S-expression, i.e., a recursively nested list structure with string “symbols” as atoms.
-e.g., [‘a’, [‘b’, ‘c’, [‘d’, ‘e’]], “f g h”]</p>
+e.g., <code class="docutils literal notranslate"><span class="pre">['a',</span> <span class="pre">['b',</span> <span class="pre">'c',</span> <span class="pre">['d',</span> <span class="pre">'e']],</span> <span class="pre">&quot;f</span> <span class="pre">g</span> <span class="pre">h&quot;]</span></code></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>s-expr</p>

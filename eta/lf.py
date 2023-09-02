@@ -28,17 +28,23 @@ def remove_type(atm):
 
 class Domain:
   """Defines a domain of individuals.
-  
-  TODO: currently incomplete and unused.
+
+  Parameters
+  ----------
+  individuals : list[Individual], optional
+    A list of initial individuals to add to the domain.
 
   Attributes
   ----------
   domain : dict
     A dict mapping the canonical names of an individual to that individual object.
+
+  Notes
+  -----
+  TODO: currently incomplete and unused.
   """
 
   def __init__(self, individuals=[]):
-    """Initialize a domain, optionally adding all individuals given in 'individuals'."""
     self.domain = {}
     for i in individuals:
       self.add(i)
@@ -57,19 +63,25 @@ class Domain:
 
 class Individual:
   """Defines an individual, with some canonical name and a list of aliases.
-  
-  TODO: currently incomplete and unused.
+
+  Parameters
+  ----------
+  name : str
+    The canonical name of the individual.
+  aliases : list[str], optional
+    A list of aliases of the individual.
 
   Attributes
   ----------
   name : str
-    The canonical name of the individual.
   aliases : list[str]
-    A list of aliases of the individual.
+
+  Notes
+  -----
+  TODO: currently incomplete and unused.
   """
 
   def __init__(self, name, aliases=[]):
-    """Initialize an individual with a canonical name and an optional list of aliases."""
     self.name = name
     self.aliases = aliases
   
@@ -83,20 +95,26 @@ class Individual:
 
 class Var:
   """Defines a variable, with some variable symbol and some value assignment.
-  
-  TODO: currently incomplete and unused.
+
+  Parameters
+  ----------
+  var : str
+    The variable symbol.
+  val : object, optional
+    The value this variable is currently bound to. Generally this will be a string,
+    though it may in principle be some other object (e.g., an Individual) as well.
 
   Attributes
   ----------
   var : str
-    The variable symbol.
   val : object
-    The value this variable is currently bound to. Generally this will be a string,
-    though it may in principle be some other object (e.g., an Individual) as well.
+
+  Notes
+  -----
+  TODO: currently incomplete and unused.
   """
 
   def __init__(self, var, val=None):
-    """Initialize a variable with some optional initial value."""
     self.var = var
     self.val = val
   
@@ -124,6 +142,11 @@ class LF:
   for binding/unbinding variables, for replacing variables, and for getting the formula (or
   a natural language representation thereof) after making all variable assignments.
 
+  Parameters
+  ----------
+  formula : str or s-expr
+    The formula for this logical form (an S-expression or LISP-formatted string representation thereof).
+
   Attributes
   ----------
   formula : s-expr
@@ -133,7 +156,6 @@ class LF:
   """
 
   def __init__(self, formula):
-    """Initialize a logical form with a given formula (either a LISP-formatted string or a nested list)."""
     if isinstance(formula, str):
       self.formula = parse_s_expr(formula)
     else:
@@ -163,6 +185,8 @@ class LF:
   def to_nl(self):
     """Converts the formula to a natural language string.
 
+    Notes
+    -----
     TODO: replace naive implementation with ULF2English.
     """
     formula = self.get_formula()
@@ -179,18 +203,28 @@ class LF:
   
 
 class ULF(LF):
-  """Defines a ULF formula."""
+  """Defines a ULF formula.
+  
+  Parameters
+  ----------
+  formula : str or s-expr
+    The formula for this logical form (an S-expression or LISP-formatted string representation thereof).
+  """
 
   def __init__(self, formula):
-    """Initialize a ULF formula."""
     super().__init__(formula)
     
 
 class ELF(LF):
-  """Defines an ELF formula."""
+  """Defines an ELF formula.
+  
+  Parameters
+  ----------
+  formula : str or s-expr
+    The formula for this logical form (an S-expression or LISP-formatted string representation thereof).
+  """
 
   def __init__(self, formula):
-    """Initialize an ELF formula."""
     super().__init__(formula)
     
 
@@ -207,26 +241,33 @@ class Eventuality:
   semantic parsing, and mapping from ULF to ELF requires disambiguation, scoping, and deindexing. Hence, we want to regard those
   upper levels of representation as "optional", since they may not be needed in simpler dialogue applications.
 
-  Attributes
+  Parameters
   ----------
   ep : str
     A symbol denoting the episode variable or constant.
   nl : str
     The natural language representation of the formula characterizing the event.
-  ulf : ULF
-    The ULF formula characterizing the event (default is None).
-  elf : ELF
-    The ELF formula characterizing the event (default is None).
+  ulf : ULF, optional
+    The ULF formula characterizing the event.
+  elf : ELF, optional
+    The ELF formula characterizing the event.
+  prob : float, default=1.
+    The probability associated with this event.
+
+  Attributes
+  ----------
+  ep : str
+  nl : str
+  ulf : ULF or None
+  elf : ELF or None
   prob : float
-    The probability associated with this event (default is 1).
   bindings : dict
     A mapping from variables to bound values.
   embedding : list[float]
-    A vector embedding of this eventuality (default is empty embedding).
+    A vector embedding of this eventuality.
   """
 
   def __init__(self, ep, nl, ulf, elf, prob=1.):
-    """Initialize an Eventuality."""
     self.ep = ep
     self.nl = nl
     self.set_ulf(ulf)
@@ -345,6 +386,18 @@ class Condition(Eventuality):
   sub-eventualities that occur if the condition is true.
 
   Such an event is indicated by a :try-in-sequence or :if keyword in e.g. a schema.
+
+  Attributes
+  ----------
+  ep : str
+  nl : str
+  ulf : ULF or None
+  elf : ELF or None
+  prob : float
+  bindings : dict
+  embedding : list[float]
+  conditions : list[tuple[True or ULF, list[Eventuality]]]
+    A list of pairs of conditions and eventuality lists.
   """
   def __init__(self, ep, nl, ulf, elf, conditions, prob=1.):
     super().__init__(ep, nl, ulf, elf, prob)
@@ -385,6 +438,20 @@ class Repetition(Eventuality):
   will occur until the condition is no longer true.
 
   Such an event is indicated by a :repeat-until keyword in a schema.
+
+  Attributes
+  ----------
+  ep : str
+  nl : str
+  ulf : ULF or None
+  elf : ELF or None
+  prob : float
+  bindings : dict
+  embedding : list[float]
+  condition : True or ULF
+    The stopping condition for repetition.
+  eventualities : list[Eventuality]
+    The list of eventualities to repeat.
   """
   def __init__(self, ep, nl, ulf, elf, condition, eventualities, prob=1.):
     super().__init__(ep, nl, ulf, elf, prob)
@@ -426,9 +493,9 @@ def parse_eventuality(s, ep=None, expectation=False, prob_dict={}):
     a basic Eventuality object is created containing s as a formula.
   ep : str, optional
     If given, use this episode symbol for the created eventuality, rather than generating a new symbol.
-  expectation : bool, optional
+  expectation : bool, default=False
     If True, this will interpret the eventuality as an expected episode rather than an observed episode,
-    i.e., 'ep' will become an episode variable instead of an episode constant.
+    i.e., `ep` will become an episode variable instead of an episode constant.
   prob_dict : dict, optional
     A dictionary mapping episode symbols to probabilities, used to set the probability of this eventuality.
 
@@ -497,7 +564,7 @@ def parse_eventuality_list(lst, prob_dict={}):
   Parameters
   ----------
   lst : list[s-expr]
-    A list of format [ep1, wff1, ep2, wff2, ...], where each (ep, wff) pair is to be parsed into an eventuality.
+    A list of format ``[ep1, wff1, ep2, wff2, ...]``, where each ``(ep, wff)`` pair is to be parsed into an eventuality.
   prob_dict : dict, optional
     A dictionary mapping episode symbols to probabilities, used to set the probability of this eventuality.
 
@@ -562,7 +629,7 @@ def expectation_p(e):
 
 
 def extract_set(ulf):
-  """Extract a list of items from a wff of form [set-of, 'a', 'b', ...], or of form ['a', and, 'b', and, ...]."""
+  """Extract a list of items from a wff of form ``[set-of, x, y, ...]``, or of form ``[x, and, y, and, ...]``."""
   if atom(ulf):
     return [ulf]
   elif ulf[0] == 'set-of':

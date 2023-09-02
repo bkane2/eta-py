@@ -73,15 +73,15 @@
 <span></span><span class="sd">&quot;&quot;&quot;Utilities for interacting with the OpenAI GPT API.</span>
 
 <span class="sd">We assume that GPT prompts are specified as text strings, possibly including the following special constructs:</span>
-<span class="sd">&lt;var&gt;</span>
-<span class="sd">  A placeholder in the prompt to be replaced by a value at a later point, where that value may be a string, or</span>
-<span class="sd">  a list of strings such that each string is placed on a new line.</span>
-<span class="sd">@zip(&lt;var1&gt;, &lt;var2&gt;, ...)</span>
-<span class="sd">  A placeholder to be replaced by the string formed by zipping the strings within the argument lists, and placing</span>
-<span class="sd">  each combined string on a new line.</span>
-<span class="sd">@startexamples ... @endexamples</span>
-<span class="sd">  The text between these annotations is treated as an example template, to be later replaced by a list of examples</span>
-<span class="sd">  formatted according to the template.</span>
+<span class="sd">  - ``&lt;var&gt;``</span>
+<span class="sd">    A placeholder in the prompt to be replaced by a value at a later point, where that value may be a string, or</span>
+<span class="sd">    a list of strings such that each string is placed on a new line.</span>
+<span class="sd">  - ``@zip(&lt;var1&gt;, &lt;var2&gt;, ...)``</span>
+<span class="sd">    A placeholder to be replaced by the string formed by zipping the strings within the argument lists, and placing</span>
+<span class="sd">    each combined string on a new line.</span>
+<span class="sd">  - ``@startexamples ... @endexamples``</span>
+<span class="sd">    The text between these annotations is treated as an example template, to be later replaced by a list of examples</span>
+<span class="sd">    formatted according to the template.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
@@ -118,17 +118,17 @@
 <span class="sd">    An initial prompt to give GPT as a &quot;system&quot; message.</span>
 <span class="sd">  examples : list[tuple[str, str]], optional</span>
 <span class="sd">    A list of example pairs, each consisting of a &quot;user&quot; message and an &quot;assistant&quot; response.</span>
-<span class="sd">  model : str</span>
+<span class="sd">  model : str, default=&#39;gpt-3.5-turbo&#39;</span>
 <span class="sd">    The model name to use for generation.</span>
 <span class="sd">  stop : list[str], optional</span>
 <span class="sd">    A list of stop sequences to use in generation.</span>
-<span class="sd">  max_tokens : int, optional</span>
+<span class="sd">  max_tokens : int, default=2048</span>
 <span class="sd">    The maximum number of tokens to generate.</span>
 <span class="sd">  postprocessors : list[function], optional</span>
 <span class="sd">    A list of functions to apply to any generated content. If a postprocessor returns &#39;None&#39;,</span>
-<span class="sd">    then generation is retried, up to &#39;n_retries&#39; times. Otherwise, the final result after applying</span>
+<span class="sd">    then generation is retried, up to `n_retries` times. Otherwise, the final result after applying</span>
 <span class="sd">    each function is returned.</span>
-<span class="sd">  n_retries : int, optional</span>
+<span class="sd">  n_retries : int, default=2</span>
 <span class="sd">    The number of times to retry if a postprocessor determines that a generation is invalid.</span>
 <span class="sd">  </span>
 <span class="sd">  Returns</span>
@@ -187,19 +187,19 @@
 <span class="sd">    An initial prompt to give GPT as a &quot;system&quot; message.</span>
 <span class="sd">  examples : list[tuple[str, str]], optional</span>
 <span class="sd">    A list of example pairs, each consisting of a &quot;user&quot; message and an &quot;assistant&quot; response.</span>
-<span class="sd">  model : str</span>
-<span class="sd">    The model name to use for generation (the default is gpt-3.5-turbo).</span>
+<span class="sd">  model : str, default=&#39;gpt-3.5-turbo&#39;</span>
+<span class="sd">    The model name to use for generation.</span>
 <span class="sd">  stop : list[str], optional</span>
 <span class="sd">    A list of stop sequences to use in generation.</span>
-<span class="sd">  max_tokens : int, optional</span>
-<span class="sd">    The maximum number of tokens to generate (the default is 2048).</span>
+<span class="sd">  max_tokens : int, default=2048</span>
+<span class="sd">    The maximum number of tokens to generate.</span>
 <span class="sd">  postprocessors : list[function], optional</span>
 <span class="sd">    A list of functions to apply to any generated content. If a postprocessor returns &#39;None&#39;,</span>
-<span class="sd">    then generation is retried, up to &#39;n_retries&#39; times. Otherwise, the final result after applying</span>
+<span class="sd">    then generation is retried, up to `n_retries` times. Otherwise, the final result after applying</span>
 <span class="sd">    each function is returned.</span>
-<span class="sd">  n_retries : int, optional</span>
-<span class="sd">    The number of times to retry if a postprocessor determines that a generation is invalid (the default is 2).</span>
-<span class="sd">  tokenizer : object, optional</span>
+<span class="sd">  n_retries : int, default=2</span>
+<span class="sd">    The number of times to retry if a postprocessor determines that a generation is invalid.</span>
+<span class="sd">  tokenizer : object, default=GPT2Tokenizer</span>
 <span class="sd">    The tokenizer used for estimating the number of tokens created from the prompt.</span>
 <span class="sd">  </span>
 <span class="sd">  Returns</span>
@@ -236,7 +236,7 @@
 
 
 <div class="viewcode-block" id="subst_kwargs"><a class="viewcode-back" href="../../../_autosummary/eta.util.gpt.subst_kwargs.html#eta.util.gpt.subst_kwargs">[docs]</a><span class="k">def</span> <span class="nf">subst_kwargs</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Replace variables within a GPT prompt with the corresponding values in &#39;kwargs&#39;.&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Replace variables within a GPT prompt with the corresponding values in `kwargs`.&quot;&quot;&quot;</span>
   <span class="n">prompt</span> <span class="o">=</span> <span class="n">apply_zip</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
   <span class="k">for</span> <span class="n">kw</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -248,7 +248,7 @@
 
 
 <div class="viewcode-block" id="subst_examples"><a class="viewcode-back" href="../../../_autosummary/eta.util.gpt.subst_examples.html#eta.util.gpt.subst_examples">[docs]</a><span class="k">def</span> <span class="nf">subst_examples</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">examples</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;Fill in any prompt content between @startexamples and @endexamples annotations with examples.&quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Fill in any prompt content between ``@startexamples`` and ``@endexamples`` annotations with examples.&quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;@startexamples&#39;</span> <span class="ow">in</span> <span class="n">prompt</span> <span class="ow">or</span> <span class="ow">not</span> <span class="s1">&#39;@endexamples&#39;</span> <span class="ow">in</span> <span class="n">prompt</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">prompt</span>
   <span class="n">prompt1</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@startexamples&#39;</span><span class="p">)</span>

@@ -80,13 +80,13 @@
 <div class="viewcode-block" id="reasoning_loop"><a class="viewcode-back" href="../../../_autosummary/eta.core.reasoning.reasoning_loop.html#eta.core.reasoning.reasoning_loop">[docs]</a><span class="k">def</span> <span class="nf">reasoning_loop</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Infer new facts and possible actions from previous facts/observations.</span>
 
-<span class="sd">  First, all recent inferences are popped from the &#39;inferences&#39; buffer, and from</span>
+<span class="sd">  First, all recent inferences are popped from the ``inferences`` buffer, and from</span>
 <span class="sd">  these inferences, the system attempts to infer new facts in both a *top down* and</span>
 <span class="sd">  a *bottom up* manner.</span>
 <span class="sd">  </span>
 <span class="sd">  A depth limit is imposed, such that only facts which are below some number of</span>
 <span class="sd">  inference steps away from a direct observation are considered for further inference.</span>
-<span class="sd">  Any inferred facts are added back to the &#39;inferences&#39; buffer, with a depth</span>
+<span class="sd">  Any inferred facts are added back to the ``inferences`` buffer, with a depth</span>
 <span class="sd">  that is one greater than the minimum depth of the facts used to infer them.</span>
 
 <span class="sd">  In the top down approach, the current state of the dialogue plan is used as</span>
@@ -95,7 +95,7 @@
 <span class="sd">  In the bottom up approach, a set of relevant facts are retrieved from memory</span>
 <span class="sd">  and used to make inferences from each fact.</span>
 
-<span class="sd">  Second, all direct observations are popped from the &#39;observations&#39; buffer,</span>
+<span class="sd">  Second, all direct observations are popped from the ``observations`` buffer,</span>
 <span class="sd">  and used to suggest possible actions that the system can take in reaction</span>
 <span class="sd">  to those observations.</span>
 <span class="sd">  </span>
@@ -149,8 +149,6 @@
 
 <div class="viewcode-block" id="infer_bottom_up"><a class="viewcode-back" href="../../../_autosummary/eta.core.reasoning.infer_bottom_up.html#eta.core.reasoning.infer_bottom_up">[docs]</a><span class="k">def</span> <span class="nf">infer_bottom_up</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Infer new facts in a &quot;bottom-up&quot; manner, using relevant facts in memory.</span>
-
-<span class="sd">  TODO: still need to implement retrieval of relevant facts from memory (and generic knowledge?).</span>
 <span class="sd">  </span>
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -162,6 +160,10 @@
 <span class="sd">  -------</span>
 <span class="sd">  list[Eventuality]</span>
 <span class="sd">    A list of inferred facts.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: still need to implement retrieval of relevant facts from memory (and generic knowledge?).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="ow">not</span> <span class="n">facts</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">[]</span>
@@ -172,15 +174,6 @@
 
 <div class="viewcode-block" id="suggest_possible_actions"><a class="viewcode-back" href="../../../_autosummary/eta.core.reasoning.suggest_possible_actions.html#eta.core.reasoning.suggest_possible_actions">[docs]</a><span class="k">def</span> <span class="nf">suggest_possible_actions</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Suggest possible actions to take in reaction to a list of observations.</span>
-<span class="sd">  </span>
-<span class="sd">  TODO: some possible future improvements:</span>
-<span class="sd">  1) Reconsider previous failed plan steps as possible actions to retry.</span>
-<span class="sd">  2) Consider the system&#39;s desires, and/or obligations placed on the system,</span>
-<span class="sd">     as well as observations, in considering possible actions.</span>
-<span class="sd">  3) Allow urgency scores to be included in the transducer results, allowing</span>
-<span class="sd">     for differential priority for different kinds of possible actions (e.g.,</span>
-<span class="sd">     even in a simple chit-chat domain, we may wish for answering a question to</span>
-<span class="sd">     have a higher urgency than responding to a statement.)</span>
 
 <span class="sd">  Parameters</span>
 <span class="sd">  ----------</span>
@@ -193,6 +186,17 @@
 <span class="sd">  list[str]</span>
 <span class="sd">    A list of possible actions (as natural language strings or</span>
 <span class="sd">    LISP-formatted S-expression strings).</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: some possible future improvements:</span>
+<span class="sd">    1. Reconsider previous failed plan steps as possible actions to retry.</span>
+<span class="sd">    2. Consider the system&#39;s desires, and/or obligations placed on the system,</span>
+<span class="sd">       as well as observations, in considering possible actions.</span>
+<span class="sd">    3. Allow urgency scores to be included in the transducer results, allowing</span>
+<span class="sd">       for differential priority for different kinds of possible actions (e.g.,</span>
+<span class="sd">       even in a simple chit-chat domain, we may wish for answering a question to</span>
+<span class="sd">       have a higher urgency than responding to a statement.)</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
   <span class="k">for</span> <span class="n">observation</span> <span class="ow">in</span> <span class="n">observations</span><span class="p">:</span>

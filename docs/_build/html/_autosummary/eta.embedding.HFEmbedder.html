@@ -108,7 +108,6 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HFEmbedder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'https://api-inference.huggingface.co/pipeline/feature-extraction/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sentence-transformers/all-distilroberta-v1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/embedding.html#HFEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.embedding.HFEmbedder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Embedder</span></code></a></p>
 <p>An embedder that uses HuggingFace’s API to compute embeddings.</p>
-<p>Initialize a HuggingFace API embedder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -117,6 +116,46 @@
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.embedding.HFEmbedder.host">
+<span class="sig-name descname"><span class="pre">host</span></span><a class="headerlink" href="#eta.embedding.HFEmbedder.host" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.embedding.HFEmbedder.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#eta.embedding.HFEmbedder.model" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.embedding.HFEmbedder.url">
+<span class="sig-name descname"><span class="pre">url</span></span><a class="headerlink" href="#eta.embedding.HFEmbedder.url" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.embedding.HFEmbedder.header">
+<span class="sig-name descname"><span class="pre">header</span></span><a class="headerlink" href="#eta.embedding.HFEmbedder.header" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>

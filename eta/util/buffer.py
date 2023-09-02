@@ -31,7 +31,7 @@ def enqueue_ordered(items, buffer, inc_val=0.0001):
     A list where each item is either an object or (importance, object) tuple. For each item where an importance
     is not specified, a default importance value is generated using an increment so as to preserve the original order.
   buffer : list[tuple[float, object]]
-  inc_val : float, optional
+  inc_val : float, default=0.0001
     The increment to use for generated importance values.
   """
   cur_max = max_importance(buffer)
@@ -68,7 +68,7 @@ def pop_item(buffer, importance=False):
   Parameters
   ----------
   buffer : list[tuple[float, object]]
-  importance : bool
+  importance : bool, default=False
     If True is given, return the importance as well as the object.
 
   Returns
@@ -90,7 +90,7 @@ def pop_all(buffer, importance=False):
   Parameters
   ----------
   buffer : list[tuple[float, object]]
-  importance : bool
+  importance : bool, default=False
     If True is given, return the importances as well as the objects.
 
   Returns
@@ -109,7 +109,7 @@ def get_item(buffer, importance=False):
   Parameters
   ----------
   buffer : list[tuple[float, object]]
-  importance : bool
+  importance : bool, default=False
     If True is given, return the importance as well as the object.
 
   Returns
@@ -159,7 +159,7 @@ def iterate(buffer, func=None):
   Parameters
   ----------
   buffer : list[tuple[float, object]]
-  func : function
+  func : function, optional
     A function to apply to each value in the buffer.
   
   Returns
