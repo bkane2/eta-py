@@ -1,15 +1,17 @@
 """A simple script for reading terminal inputs in dialogue with Eta.
 
-First start Eta using the following command:
-`python3 -m eta.core.eta --agent sophie_gpt --user test`
-
-Then start this script using one of the following commands, depending on
+First start this script using one of the following commands, depending on
 whether the specific Eta agent begins with a user turn or agent turn:
 `python3 terminal.py sophie-gpt _test`
 `python3 terminal.py sophie-gpt _test --agent_start`
 
-In the terminal.py arguments, `sophie-gpt` and `_test` are the agent and
-user IDs as defined in the respective config files.
+Where `sophie-gpt` and `_test` are the agent and user IDs as defined in the
+session respective config files.
+
+Then start Eta using the following command:
+`python3 -m eta.core.eta --agent sophie_gpt --user test`
+
+Where `sophie_gpt` and `test` are the names of the agent and user config files.
 """
 
 import argparse
