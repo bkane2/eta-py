@@ -2,6 +2,7 @@
 
 from eta.transducers.tt import *
 from eta.transducers.gpt import *
+from eta.transducers.misc import *
 from eta.embedding import *
 
 SESSION_NUMBER = 1
@@ -24,7 +25,7 @@ def config():
         # 'reason-bottom-up' : TTReasonBottomUpTransducer(DIRS_RULES),
         'gist' : [TTGistTransducer(DIRS_RULES), GPTGistTransducer(GIST_EXAMPLES)],
         # 'semantic' : TTSemanticTransducer(DIRS_RULES),
-        'pragmatic' : TTPragmaticTransducer(DIRS_RULES),
+        'pragmatic' : [TTPragmaticTransducer(DIRS_RULES), SkillTransducer()],
         'reaction' : TTReactionTransducer(DIRS_RULES),
         # 'subplan' : TTSubplanTransducer(DIRS_RULES),
         'paraphrase' : GPTParaphraseTransducer(PARAPHRASE_EXAMPLES),
