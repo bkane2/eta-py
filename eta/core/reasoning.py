@@ -36,8 +36,9 @@ def reasoning_loop(ds):
 
     # Infer new facts from prior facts (that haven't yet surpassed the depth limit)
     facts = ds.pop_all_buffer('inferences')
-    min_depth = min([f['depth'] for f in facts])
-    facts = [f['fact'] for f in facts if not f['depth'] > REASONING_DEPTH_LIMIT]
+    if facts:
+      min_depth = min([f['depth'] for f in facts])
+      facts = [f['fact'] for f in facts if not f['depth'] > REASONING_DEPTH_LIMIT]
 
     new_facts = []
     new_facts += infer_top_down(facts, ds)
