@@ -28,7 +28,7 @@ from multiprocessing import Process
 from multiprocessing import Lock
 from multiprocessing.managers import BaseManager
 
-from eta.constants import IO_PATH, DEFAULT_START
+from eta.constants import *
 from eta.util.general import gentemp, clear_symtab, remove_duplicates, remove_nil, append, variablep, episode_name
 import eta.util.file as file
 import eta.util.time as time
@@ -65,6 +65,8 @@ class DialogueState():
     The config parameters for the user.
   start_schema : str
     The schema predicate used to begin the dialogue session.
+  start_time : TimePoint
+    The starting time of this dialogue session.
   io_path : str
     The path used to read and write input/output for this session.
   me : str
@@ -116,7 +118,9 @@ class DialogueState():
     self.config_agent = config_agent
     self.config_user = config_user
     self.start_schema = config_agent['start_schema'] if 'start_schema' in config_agent else DEFAULT_START
+    self.start_time = time.TimePoint()
     self.io_path = IO_PATH + config_agent['agent'] + '/' + config_user['user_id'] + '/'
+    self.log_path = LOG_PATH + self.start_time.format_date() + '/'
     self.me = config_agent['agent_name']
     self.you = config_user['user_name']
     self.output_buffer = []
@@ -151,6 +155,7 @@ class DialogueState():
     self.timegraph = self._make_timegraph()
 
     self._create_session_io_files()
+    self._create_session_log_files()
   
   # -----------------
   # session functions
@@ -159,6 +164,10 @@ class DialogueState():
   def get_io_path(self, fname=''):
     """Get the path for an IO file (if given) or the IO directory for this session."""
     return self.io_path + fname
+  
+  def get_log_path(self, fname=''):
+    """Get the path for a log file (if given) or the log directory for this session."""
+    return self.log_path + fname
   
   def get_perception_servers(self):
     """Get the registered perception servers for this session."""
@@ -530,20 +539,23 @@ class DialogueState():
   
   def _create_session_io_files(self):
     file.ensure_dir_exists(self.get_io_path())
-    file.ensure_dir_exists(self.get_io_path('in/'))
-    file.ensure_dir_exists(self.get_io_path('out/'))
-    file.ensure_dir_exists(self.get_io_path('conversation-log/'))
+    file.ensure_dir_exists(self.get_io_path(IO_IN_DIR))
+    file.ensure_dir_exists(self.get_io_path(IO_OUT_DIR))
+    file.ensure_dir_exists(self.get_io_path(IO_CLOG_DIR))
     for system in self.get_perception_servers()+self.get_specialist_servers():
-      file.ensure_file_exists(self.get_io_path(f'in/{system}.txt'))
-      file.ensure_file_exists(self.get_io_path(f'out/{system}.txt'))
-    file.ensure_file_exists(self.get_io_path('conversation-log/text.txt'))
-    file.ensure_file_exists(self.get_io_path('conversation-log/affect.txt'))
-    file.ensure_file_exists(self.get_io_path('conversation-log/gist.txt'))
-    file.ensure_file_exists(self.get_io_path('conversation-log/semantic.txt'))
-    file.ensure_file_exists(self.get_io_path('conversation-log/pragmatic.txt'))
-    file.ensure_file_exists(self.get_io_path('conversation-log/obligations.txt'))
+      file.ensure_file_exists(self.get_io_path(f'{IO_IN_DIR}{system}.txt'))
+      file.ensure_file_exists(self.get_io_path(f'{IO_OUT_DIR}{system}.txt'))
     file.ensure_file_exists(self.get_io_path('turn-output.txt'))
     file.ensure_file_exists(self.get_io_path('turn-affect.txt'))
+    for fname in CLOG_FILES:
+      file.ensure_file_exists(self.get_io_path(f'{IO_CLOG_DIR}{fname}.txt'))
+
+  def _create_session_log_files(self):
+    file.ensure_dir_exists(self.get_log_path())
+    for fname in CLOG_FILES:
+      file.ensure_file_exists(self.get_log_path(f'{fname}.txt'))
+    file.write_json(self.get_log_path('config-agent.json'), self.config_agent, pretty=True)
+    file.write_json(self.get_log_path('config-user.json'), self.config_user, pretty=True)
 
   def _write_turn(self, turn):
     text = turn.utterance.words
@@ -552,12 +564,17 @@ class DialogueState():
     semantics = " ".join([list_to_s_expr(t) for t in turn.semantics]) if turn.semantics else 'NIL'
     pragmatics = " ".join([list_to_s_expr(t) for t in turn.pragmatics]) if turn.pragmatics else 'NIL'
     obligations = " ".join([list_to_s_expr(t) for t in turn.obligations]) if turn.obligations else 'NIL'
-    file.append_file(self.get_io_path('conversation-log/text.txt'), f'{turn.agent} : {text}\n')
-    file.append_file(self.get_io_path('conversation-log/affect.txt'), f'{turn.agent} : {affect}\n')
-    file.append_file(self.get_io_path('conversation-log/gist.txt'), f'{turn.agent} : {gist}\n')
-    file.append_file(self.get_io_path('conversation-log/semantic.txt'), f'{turn.agent} : {semantics}\n')
-    file.append_file(self.get_io_path('conversation-log/pragmatic.txt'), f'{pragmatics}\n')
-    file.append_file(self.get_io_path('conversation-log/obligations.txt'), f'{obligations}\n')
+    outputs = {
+      'text' : f'{turn.agent} : {text}\n',
+      'affect' : f'{turn.agent} : {affect}\n',
+      'gist' : f'{turn.agent} : {gist}\n',
+      'semantic' : f'{turn.agent} : {semantics}\n',
+      'pragmatic' : f'{pragmatics}\n',
+      'obligations' : f'{obligations}\n'
+    }
+    for fname in CLOG_FILES:
+      file.append_file(self.get_io_path(f'{IO_CLOG_DIR}{fname}.txt'), outputs[fname])
+      file.append_file(self.get_log_path(f'{fname}.txt'), outputs[fname])
     
 
 class ProcessManager(BaseManager):

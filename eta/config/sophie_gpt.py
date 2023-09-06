@@ -34,6 +34,6 @@ def config():
         'ask' : GPTAskTransducer(),
         'affect' : GPTAffectTransducer()
     },
-    'embedder': STEmbedder(),
+    'embedder': DummyEmbedder(),
     'session_number': 1
   }

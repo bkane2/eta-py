@@ -5,6 +5,7 @@ def main():
   print(tp)
   print(tp.to_num())
   print(tp.to_ulf())
+  print(tp.format_date())
 
 
 if __name__ == '__main__':

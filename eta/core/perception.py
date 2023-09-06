@@ -29,7 +29,7 @@ def perception_loop(ds):
 
     # Observe all facts from registered perception servers
     for source in ds.get_perception_servers():
-      inputs = observe(ds.get_io_path(f'in/{source}.txt'))
+      inputs = observe(ds.get_io_path(f'{IO_IN_DIR}{source}.txt'))
 
       # Shortcut for quitting conversation
       if any([input == ':q' for input in inputs]):

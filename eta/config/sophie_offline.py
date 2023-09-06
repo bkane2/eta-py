@@ -1,7 +1,7 @@
 """Offline version of SOPHIE agent for testing purposes (i.e., simply outputs text instead of using GPT)."""
 
+import eta.util.file as file
 from eta.transducers.tt import *
-from eta.transducers.gpt import *
 from eta.embedding import *
 
 SESSION_NUMBER = 1
@@ -33,6 +33,6 @@ def config():
         # 'ask' : GPTAskTransducer(),
         # 'affect' : GPTAffectTransducer()
     },
-    'embedder': STEmbedder(),
+    'embedder': DummyEmbedder(),
     'session_number': 1
   }

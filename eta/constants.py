@@ -55,6 +55,21 @@ EMOTIONS_LIST = ['neutral', 'sad', 'happy', 'worried', 'angry']
 IO_PATH = 'io/'
 """str: The path for input/outputs to be written to and read from."""
 
+IO_IN_DIR = 'in/'
+"""str: The directory within the IO path to use for inputs."""
+
+IO_OUT_DIR = 'out/'
+"""str: The directory within the IO path to use for outputs."""
+
+IO_CLOG_DIR = 'conversation-log/'
+"""str: The directory within the IO path to use for writing conversation logs for a session."""
+
+CLOG_FILES = ['text', 'affect', 'gist', 'semantic', 'pragmatic', 'obligations']
+"""list[str]: The list of all supported conversation log files."""
+
+LOG_PATH = 'logs/'
+"""str: The path for archived conversation logs to be written to."""
+
 DEFAULT_START = 'have-eta-dialog.v'
 """int: The default start schema if none is provided in agent-config."""
 

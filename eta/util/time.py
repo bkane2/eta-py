@@ -38,6 +38,10 @@ class TimePoint:
     """Format this TimePoint as a year/month/day/hour/minute/second representation."""
     return self.time.strftime(":year/%Y/:month/%m/:day/%d/:hour/%H/:minute/%M/:sec/%S")
   
+  def format_date(self):
+    """Format this TimePoint as a human-readable year/month/day/hour/minute/second representation."""
+    return self.time.strftime("%Y-%m-%d-%H-%M-%S")
+  
   def to_ulf(self):
     """Convert this TimePoint to a ULF record structure."""
     time = self.format().split('/')

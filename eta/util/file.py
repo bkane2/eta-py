@@ -81,16 +81,21 @@ def load_json(fname):
     return {}
   
 
-def write_json(fname, data):
+def write_json(fname, data, pretty=False):
   """Write data to a JSON file.
   
   Parameters
   ----------
   fname : str
   data : dict
+  pretty : bool, default=False
+    Whether to pretty-print the JSON by indenting new lines.
   """
   with open(fname, 'w+') as f:
-    json.dump(data, f)
+    if pretty:
+      json.dump(data, f, indent=2)
+    else:
+      json.dump(data, f)
 
 
 def clear(fname):
