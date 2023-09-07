@@ -46,7 +46,7 @@ the coefficient on the certainty-to-period function.
 A value of "30" makes a certainty of ~0.632 correspond to 30 seconds.
 """
 
-CERTAINTY_THRESHOLD = 0.7
+CERTAINTY_THRESHOLD = .7
 """float: A ULF must have a certainty greater than or equal to this score to be used in a response."""
 
 EMOTIONS_LIST = ['neutral', 'sad', 'happy', 'worried', 'angry']
@@ -73,8 +73,11 @@ LOG_PATH = 'logs/'
 DEFAULT_START = 'have-eta-dialog.v'
 """int: The default start schema if none is provided in agent-config."""
 
-DEFAULT_IMPORTANCE = 0.5
+DEFAULT_IMPORTANCE = .25
 """float: The default importance value for new facts stored in memory."""
+
+DEFAULT_IMPORTANCE_THRESHOLD = .5
+"""float: The default threshold to place on importance when retrieving facts from memory."""
 
 
 

@@ -150,7 +150,9 @@ class DialogueState():
     self.reference_list = []
     self.equality_sets = {}
     self.conversation_log = []
-    self.memory = MemoryStorage(self.embedder)
+    importance_threshold = (config_agent['importance_threshold'] if 'importance_threshold' in config_agent 
+                            else DEFAULT_IMPORTANCE_THRESHOLD)
+    self.memory = MemoryStorage(self.embedder, importance_threshold=importance_threshold)
     self.add_to_memory(self.init_knowledge, importance=[1. for _ in self.init_knowledge])
     self.timegraph = self._make_timegraph()
 

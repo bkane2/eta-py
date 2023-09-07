@@ -25,7 +25,7 @@ def test2():
     print(m)
   print(sep)
 
-  for m in test.access_matching(['?x', 'say-to.v', '?y', '?words']):
+  for m in test.get_matching(['?x', 'say-to.v', '?y', '?words'], access=True):
     print(m)
   print(sep)
 
@@ -33,7 +33,7 @@ def test2():
     print(m)
   print(sep)
 
-  for m in test.access_matching(['?x', 'be.v', 'happy.a']):
+  for m in test.get_matching(['?x', 'be.v', 'happy.a'], access=True):
     print(m)
   print(sep)
 
@@ -41,11 +41,11 @@ def test2():
     print(m)
   print(sep)
 
-  for m in test.access_from_context(['?x', 'reply-to.v', '?y']):
+  for m in test.get_from_context(['?x', 'reply-to.v', '?y'], access=True):
     print(m)
   print(sep)
 
-  for m in test.access_from_context(['?x', 'reply-to.v', '?y']):
+  for m in test.get_from_context(['?x', 'reply-to.v', '?y'], access=True):
     print(m)
   print(sep)
 
@@ -109,12 +109,13 @@ def test_retrieval():
   sep = '\n----------------------------\n'
 
   test = MemoryStorage(STEmbedder())
-  test.instantiate(parse_eventuality('(^you ((pres play.v) (k football.n)))'))
-  test.instantiate(parse_eventuality('^me like to travel .'))
-  test.instantiate(parse_eventuality('(^you ((past go.v) (to.p (the.d store.n)) yesterday.adv-e)'))
-  test.instantiate(parse_eventuality('(^you say-to.v ^me "this is a test sentence ."'))
-  test.instantiate(parse_eventuality('(^me ((past visit.v) |Spain| (adv-e ({during}.p ({the}.d (last.a year.n)))))'))
-  test.instantiate(parse_eventuality('(^you ((pres test.v) (the.d system.n)))'))
+  importance = 1.
+  test.instantiate(parse_eventuality('(^you ((pres play.v) (k football.n)))'), importance=importance)
+  test.instantiate(parse_eventuality('^me like to travel .'), importance=importance)
+  test.instantiate(parse_eventuality('(^you ((past go.v) (to.p (the.d store.n)) yesterday.adv-e)'), importance=importance)
+  test.instantiate(parse_eventuality('(^you say-to.v ^me "this is a test sentence ."'), importance=importance)
+  test.instantiate(parse_eventuality('(^me ((past visit.v) |Spain| (adv-e ({during}.p ({the}.d (last.a year.n)))))'), importance=importance)
+  test.instantiate(parse_eventuality('(^you ((pres test.v) (the.d system.n)))'), importance=importance)
 
   mems = test.retrieve(query='i like to travel', n=3)
   for m in mems:

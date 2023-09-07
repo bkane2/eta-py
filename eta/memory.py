@@ -1,6 +1,6 @@
 """Tools for storing and retrieving eventualities in Eta's semantic memory."""
 
-from eta.constants import DEFAULT_IMPORTANCE, TELIC_VERBS
+from eta.constants import *
 from eta.util.general import cons_dict, listp, atom, cons, variablep, to_key, dict_get, dict_rem_val, squash, linsum, argmax
 from eta.util.time import TimePoint
 
@@ -92,6 +92,10 @@ class MemoryStorage:
   ----------
   embedder : Embedder, optional
     If provided, an embedder to embed all memories that are added to storage.
+  importance_threshold : float, optional
+    The threshold to place on importance values when retrieving memories (i.e.,
+    only memories above this threshold will be retrieved). If not given, the
+    default threshold defined in eta.constants will be used.
   
   Attributes
   ----------
@@ -113,14 +117,16 @@ class MemoryStorage:
   context : set[Memory]
     A set containing all memories that are "true now".
   embedder : Embedder or None
+  importance_threshold : float
   """
 
-  def __init__(self, embedder=None):
+  def __init__(self, embedder=None, importance_threshold=DEFAULT_IMPORTANCE_THRESHOLD):
     self.memories = set()
     self.ep_ht = {}
     self.wff_ht = {}
     self.context = set()
     self.embedder = embedder
+    self.importance_threshold = importance_threshold
 
   def _get_wff_keys(self, wff):
     """Create keys for storing a given `wff` in the `wff_ht` dict (provided the wff is a logical formula and not a string)."""
@@ -466,12 +472,15 @@ class MemoryStorage:
     list[Memory]
     """
     memories = list(self.memories)
+    memories = [m for m in memories if m.importance >= self.importance_threshold]
+
     recency = squash([m.last_access.to_num() for m in memories])
     importance = squash([m.importance for m in memories])
     if not query or not self.embedder:
       salience = squash([1. for _ in memories])
     else:
       salience = squash(self.embedder.score(query, memories, [m.event.embedding for m in memories]))
+      
     scores = linsum([recency, importance, salience], coeffs)
     return argmax(memories, scores, n)
 
