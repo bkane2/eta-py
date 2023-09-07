@@ -14,6 +14,8 @@ class Utterance:
   
   Parameters
   ----------
+	agent : str
+    The agent making the utterance.
   words : str
     The content of the utterance.
   affect : str, default='neutral'
@@ -21,11 +23,13 @@ class Utterance:
 
   Attributes
   ----------
+  agent : str
   words : str
   affect : str
   """
 
-  def __init__(self, words, affect=EMOTIONS_LIST[0]):
+  def __init__(self, agent, words, affect=EMOTIONS_LIST[0]):
+    self.agent = agent
     self.words = words
     if affect in EMOTIONS_LIST:
       self.affect = affect
@@ -38,8 +42,6 @@ class DialogueTurn:
   
   Parameters
   ----------
-  agent : str
-    The agent of this turn.
   utterance : Utterance
     The utterance of this turn.
   gists : list[str], optional
@@ -56,6 +58,7 @@ class DialogueTurn:
   Attributes
   ----------
   agent : str
+    The agent of this turn (copied from the utterance for convenience).
   utterance : Utterance
   gists : list[str]
   semantics : list[s-expr]
@@ -64,8 +67,8 @@ class DialogueTurn:
   ep : str or None
   """
   
-  def __init__(self, agent, utterance, gists=[], semantics=[], pragmatics=[], obligations=[], ep=None):
-    self.agent = agent
+  def __init__(self, utterance, gists=[], semantics=[], pragmatics=[], obligations=[], ep=None):
+    self.agent = utterance.agent
     self.utterance = utterance
     self.gists = gists
     self.semantics = semantics
@@ -190,25 +193,26 @@ def presubst(str):
   re_blocker = ['and', 'or', 'but', 'that', 'because', 'if', 'so', 'when', 'then', 'why',
 			  				'think', 'see', 'guess', 'believe', 'hope', 'do', 'can', 'would', 'should',
 								'than', 'know', 'i', 'you', '-', '--']
+  str = ' '+str+' '
   str = replaceall(str, [
-		("you are", "you1 are2", False),
-		("are you", "are2 you1", False),
-		("i was", "i was2", False),
-		("was i", "was2 i", False),
-		("you were", "you1 were2", False),
-		("were you", "were2 you1", False),
-		(fr"you ([{'|'.join(re_punct)}])", r"you2 \1", True),
-		("to you", "to you2", False),
+		(" you are ", " you1 are2 ", False),
+		(" are you ", " are2 you1 ", False),
+		(" i was ", " i was2 ", False),
+		(" was i ", " was2 i ", False),
+		(" you were ", " you1 were2 ", False),
+		(" were you ", " were2 you1 ", False),
+		(fr" you ([{'|'.join(re_punct)}]) ", r" you2 \1 ", True),
+		(" to you ", " to you2 ", False),
 	])
-  str = str.replace('you', 'you0')
+  str = str.replace(' you ', ' you0 ')
   str = replaceall(str, [
-		(r"^you0", r"you", True),
-		(r"^([\S]+) you0", r"\1 you", True),
-		(fr"([{'|'.join(re_punct)}]) you0", r"\1 you", True),
-		(fr"([{'|'.join(re_punct)}]) ([\S]+) you0", r"\1 \2 you", True),
-		(fr"({'|'.join(re_blocker)}) you0", r"\1 you", True)
+		(r"^ you0 ", r" you ", True),
+		(r"^ ([\S]+) you0 ", r" \1 you ", True),
+		(fr"([{'|'.join(re_punct)}]) you0 ", r"\1 you ", True),
+		(fr"([{'|'.join(re_punct)}]) ([\S]+) you0 ", r"\1 \2 you ", True),
+		(fr"({'|'.join(re_blocker)}) you0 ", r"\1 you ", True)
   ])
-  return str.replace('you0', 'you2')
+  return str.replace(' you0 ', ' you2 ').strip()
 
 
 def swap_duals(str):

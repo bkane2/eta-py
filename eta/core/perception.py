@@ -90,7 +90,7 @@ def process_utterances(inputs, ds):
     ep = episode_name()
     input = standardize(input)
     observations += [parse_eventuality([YOU, SAY_TO, ME, f'"{input}"'], ep=ep)]
-    utt = Utterance(input)
+    utt = Utterance(YOU, input)
 
     # Interpret gist clauses using conversation log
     conversation_log = ds.get_conversation_log()
@@ -113,7 +113,6 @@ def process_utterances(inputs, ds):
 
     # Add user turn to conversation log
     ds.log_turn(DialogueTurn(
-      agent=YOU,
       utterance=utt,
       gists=gists,
       semantics=semantics,

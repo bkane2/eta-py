@@ -16,7 +16,7 @@ import re
 import eta.util.file as file
 from eta.constants import *
 from eta.util.general import standardize
-from eta.discourse import get_prior_words
+from eta.discourse import get_prior_words, swap_duals
 from eta.transducers.base import *
 from eta.util.gpt import generate_gpt, subst_examples, subst_kwargs 
 from eta.lf import parse_eventuality
@@ -153,15 +153,22 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
 
   def __call__(self, utt, conversation_log):
     self._validate(utt, conversation_log)
-    # TODO: need to deal with pronoun swapping here
+    agent = utt.agent
     utt = utt.words
     prev_utt = get_prior_words(conversation_log, ME)
+    if agent == ME:
+      prev_utt = swap_duals(prev_utt)
+
     gist = super().__call__({'prev-utt': prev_utt, 'utt': utt})
     if gist == 'NONE':
       return []
+    gist = standardize(gist)
+    if agent == YOU:
+      gist = swap_duals(gist)
+    
     # TODO: ultimately we should split each sentence into a separate gist clause,
     # but this likely requires coref.
-    return [standardize(gist)]
+    return [gist]
   
 
 class GPTSemanticTransducer(GPTTransducer, SemanticTransducer):

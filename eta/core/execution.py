@@ -277,7 +277,7 @@ def execute_say_to(step, ds):
   if not affect:
     affects = ds.apply_transducer('affect', words, conversation_log)
     affect = affects[0] if affects and affects[0] else EMOTIONS_LIST[0]
-  utt = Utterance(words, affect)
+  utt = Utterance(ME, words, affect)
 
   # Find and store additional gist clauses corresponding to Eta's utterance
   gists = ds.apply_transducer('gist', utt, conversation_log)
@@ -295,7 +295,6 @@ def execute_say_to(step, ds):
 
   # Log and write dialogue turn
   ds.log_turn(DialogueTurn(
-    agent=ME,
     utterance=utt,
     gists=gists1,
     semantics=semantics1,

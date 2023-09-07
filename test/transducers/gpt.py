@@ -19,14 +19,14 @@ def test3():
   test = GPTGistTransducer(examples)
 
   clog = []
-  utt = Utterance('where is your pain ?')
+  utt = Utterance('^you', 'where is your pain ?')
   print(test(utt, clog))
 
   clog = [
-    DialogueTurn('^me', Utterance('do i really need chemotherapy ?'), gists=['do i need chemotherapy ?']),
-    DialogueTurn('^you', Utterance('hmm ...'))
+    DialogueTurn(Utterance('^me', 'do i really need chemotherapy ?'), gists=['do i need chemotherapy ?']),
+    DialogueTurn(Utterance('^you', 'hmm ...'))
   ]
-  utt = Utterance('yes , i would recommend it . did you come here with anyone today ?')
+  utt = Utterance('^you', 'yes , i would recommend it . did you come here with anyone today ?')
   print(test(utt, clog))
 
 
@@ -36,8 +36,8 @@ def test4():
 
   facts_bg = [parse_eventuality('^me drove here today .'), parse_eventuality('^me wants to see ^my grandson graduate .')]
   clog = [
-    DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
-    DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
+    DialogueTurn(Utterance('^me', 'is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
+    DialogueTurn(Utterance('^you', 'nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
   gist = 'what is my prognosis ?'
   print(test(gist, clog, facts_bg, []), '\n')
@@ -49,8 +49,8 @@ def test5():
   facts_bg = [parse_eventuality('^me should avoid using long words .'), parse_eventuality('^me is having trouble speaking because of how sad and shocked ^me is .')]
   facts_fg = [parse_eventuality('^me drove here today .'), parse_eventuality('^me wants to see ^my grandson graduate .')]
   clog = [
-    DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
-    DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
+    DialogueTurn(Utterance('^me', 'is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
+    DialogueTurn(Utterance('^you', 'nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
   print(test(clog, facts_bg, facts_fg), '\n')
 
@@ -59,20 +59,20 @@ def test6():
   test = GPTAffectTransducer()
 
   clog = [
-    DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
-    DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
+    DialogueTurn(Utterance('^me', 'is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
+    DialogueTurn(Utterance('^you', 'nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
   words = 'how long do you think i have left ?'
   print(test(words, clog), '\n')
 
 
 def main():
-  test1()
-  test2()
+  # test1()
+  # test2()
   test3()
-  test4()
-  test5()
-  test6()
+  # test4()
+  # test5()
+  # test6()
 
 
 if __name__ == '__main__':

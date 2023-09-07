@@ -28,22 +28,22 @@ def test3():
   test = TTGistTransducer(['agents/sophie-gpt/rules', 'agents/sophie-gpt/day1/rules'])
 
   clog = []
-  utt = Utterance('where is your pain ?')
+  utt = Utterance('^you', 'where is your pain ?')
   print(test(utt, clog))
 
   clog = [
-    DialogueTurn('^me', Utterance('do i really need chemotherapy ?'), gists=['do i need chemotherapy ?']),
-    DialogueTurn('^you', Utterance('hmm ...'))
+    DialogueTurn(Utterance('^me', 'do i really need chemotherapy ?'), gists=['do i need chemotherapy ?']),
+    DialogueTurn(Utterance('^you', 'hmm ...'))
   ]
   utt = Utterance('yes , i would recommend it . did you come here with anyone today ?')
   print(test(utt, clog))
 
   clog = [
-    DialogueTurn('^me', Utterance("hi , doctor . i'm meeting with you today to help get some questions answered about my condition .")),
-    DialogueTurn('^me', Utterance("i wanted to talk to you about the recent increase in my pain . i'm not sure why it's been getting worse lately , and i was hoping you could provide some insight ."),
+    DialogueTurn(Utterance('^me', "hi , doctor . i'm meeting with you today to help get some questions answered about my condition .")),
+    DialogueTurn(Utterance('^me', "i wanted to talk to you about the recent increase in my pain . i'm not sure why it's been getting worse lately , and i was hoping you could provide some insight ."),
                  gists=['why has my pain been getting worse recently ?']),
   ]
-  utt = Utterance('unfortunately sophie your cancer has spread .')
+  utt = Utterance('^you', 'unfortunately sophie your cancer has spread .')
   print(test(utt, clog))
 
 
@@ -55,8 +55,8 @@ def test4():
   print(test(gist, clog, [], []))
 
   clog = [
-    DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
-    DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
+    DialogueTurn(Utterance('^me', 'is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
+    DialogueTurn(Utterance('^you', 'nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
   gist = 'what is my prognosis ?'
   print(test(gist, clog, [], []))
