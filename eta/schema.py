@@ -584,7 +584,7 @@ class SchemaLibrary:
     """
     schemas = list(self.get_schemas(type))
     if not schemas:
-      return None
+      return []
     if not query or not self.embedder:
       return schemas[0]
     scores = self.embedder.score(query, schemas, [s.embedding for s in schemas])
@@ -614,7 +614,7 @@ class SchemaLibrary:
     """
     schemas = self.retrieve(type, query, m)
     if not schemas:
-      return None
+      return []
     return append([s.retrieve(self.embedder, query, n, header) for s in schemas])
 
   def from_lisp_file(self, fname):

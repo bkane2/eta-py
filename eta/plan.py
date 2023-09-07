@@ -86,6 +86,10 @@ class PlanNode:
       start = start.next
     start.step.schemas.append(schema)
 
+  def get_schemas(self):
+    """Get all schemas of this plan."""
+    return self.step.schemas
+
   def get_all_roots(self):
     """Get all root plan steps (i.e., the most abstract steps) reachable from the current plan."""
     ret = []

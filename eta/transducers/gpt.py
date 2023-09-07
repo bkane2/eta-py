@@ -16,7 +16,7 @@ import re
 import eta.util.file as file
 from eta.constants import *
 from eta.util.general import standardize
-from eta.discourse import get_prior_turn
+from eta.discourse import get_prior_words
 from eta.transducers.base import *
 from eta.util.gpt import generate_gpt, subst_examples, subst_kwargs 
 from eta.lf import parse_eventuality
@@ -155,10 +155,7 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
     self._validate(utt, conversation_log)
     # TODO: need to deal with pronoun swapping here
     utt = utt.words
-    prev_utt = 'Hello.'
-    prior_turn = get_prior_turn(conversation_log, ME)
-    if prior_turn:
-      prev_utt = prior_turn.utterance.words
+    prev_utt = get_prior_words(conversation_log, ME)
     gist = super().__call__({'prev-utt': prev_utt, 'utt': utt})
     if gist == 'NONE':
       return []
@@ -223,6 +220,9 @@ class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
 
   def __call__(self, gist, conversation_log, facts_bg, facts_fg):
     self._validate(gist, conversation_log, facts_bg, facts_fg)
+    # do not use conversation log if only single Eta utterance so far
+    if len(conversation_log) == 1 and conversation_log[0].agent == ME:
+      conversation_log = []
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     agents_gen = self._to_generic_agents(agents)

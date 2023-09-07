@@ -35,6 +35,7 @@ import eta.util.time as time
 import eta.util.buffer as buffer
 from eta.lf import (equal_prop_p, not_prop_p, and_prop_p, or_prop_p, characterizes_prop_p, expectation_p,
                     from_lisp_dirs, list_to_s_expr)
+from eta.discourse import get_prior_words
 from eta.memory import MemoryStorage
 from eta.schema import SchemaLibrary
 from eta.plan import init_plan_from_eventualities
@@ -501,6 +502,50 @@ class DialogueState():
         else:
           cost += t.cost()
     return cost
+  
+  def retrieve_facts(self, query=None, n_schema=1, n_schema_facts=3, n_memory=3):
+    """Retrieve and combine facts from the current dialogue schema, relevant episode schemas, and memory.
+    
+    The facts are divided into two subsets for facts that are "backgrounded" and those that are "foregrounded",
+    which may be leveraged by downstream tasks (e.g., in generation, we may assume that foregrounded facts should
+    be used in the generated response in some way, whereas backgrounded facts may condition the generation without
+    being directly used).
+
+    Currently, it is assumed that background facts correspond to the current dialogue schema conditions, whereas
+    foregrounded facts are retrieved from relevant episode schemas and memory.
+
+    Parameters
+    ----------
+    query : str, optional
+      The query string to use for retrieval. If not given, the previous user turn will be used.
+    n_schema : int, default=1
+      The number of schemas to retrieve.
+    n_schema_facts : int, default=3
+      The number of facts to use from the retrieved schemas (in addition to schema headers).
+    n_memories : int, default=3
+      The number of facts to use from memory.
+
+    Returns
+    -------
+    facts_bg : list[Eventuality]
+      The retrieved background facts.
+    facts_fg : list[Eventuality]
+      The retrieved foreground facts.
+    """
+    with self._lock:
+      facts_bg = []
+      facts_fg = []
+
+      for sec in ['rigid-conds', 'static-conds', 'preconds', 'goals']:
+        facts_bg += append([schema.get_section(sec) for schema in self.plan.get_schemas()])
+
+      if not query:
+        query = get_prior_words(self.conversation_log, YOU)
+
+      facts_fg += self.schemas.retrieve_knowledge('epi', query=query, m=n_schema, n=n_schema_facts)
+      facts_fg += [m.event for m in self.memory.retrieve(query=query, n=n_memory)]
+
+      return facts_bg, facts_fg
   
   def write_output_buffer(self):
     """Write the output buffer (a list of Utterances) to output files."""

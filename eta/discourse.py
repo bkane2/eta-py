@@ -94,6 +94,28 @@ def get_prior_turn(turns, agent=None):
     return agent_turns[-1] if agent_turns else None
   else:
     return turns[-1] if turns else None
+	
+
+def get_prior_words(turns, agent=None):
+	"""Retrieve the prior utterance in the conversation, using a generic utterance if none is found.
+  
+  Parameters
+  ----------
+  turns : list[DialogueTurn]
+    A list of dialogue turns in the conversation, in chronological order.
+  agent : str, optional
+    The agent whose prior words should be found (by default, find the prior turn by any agent).
+
+  Returns
+  -------
+  str
+    The prior words by the given agent, if one exists, or a generic utterance.
+	"""
+	prior_utt = 'Hello.'
+	prior_turn = get_prior_turn(turns, agent)
+	if prior_turn:
+		prior_utt = prior_turn.utterance.words
+	return prior_utt
   
 
 def parse_utt_str(str):
