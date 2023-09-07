@@ -151,7 +151,7 @@ class DialogueState():
     self.equality_sets = {}
     self.conversation_log = []
     self.memory = MemoryStorage(self.embedder)
-    self.add_to_memory(self.init_knowledge)
+    self.add_to_memory(self.init_knowledge, importance=[1. for _ in self.init_knowledge])
     self.timegraph = self._make_timegraph()
 
     self._create_session_io_files()
@@ -404,15 +404,15 @@ class DialogueState():
   # memory functions
   # ----------------
 
-  def add_to_memory(self, fact):
+  def add_to_memory(self, fact, importance=DEFAULT_IMPORTANCE):
     """Add a fact to the memory."""
     with self._lock:
-      self.memory.store(fact)
+      self.memory.instantiate(fact, importance=importance, context=False)
 
-  def add_to_context(self, fact):
+  def add_to_context(self, fact, importance=DEFAULT_IMPORTANCE):
     """Add a fact to the context."""
     with self._lock:
-      self.memory.instantiate(fact)
+      self.memory.instantiate(fact, importance=importance)
 
   def access_from_context(self, pred_patt):
     """Access facts from context matching a given predicate pattern."""

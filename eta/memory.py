@@ -160,12 +160,14 @@ class MemoryStorage:
       self.remove_from_context(memory)
     return memory
     
-  def store(self, memory):
+  def store(self, memory, context=True):
     """Store a memory (or list of memories), adding to each hash table as well as to `context`.
     
     Parameters
     ----------
     memory : Memory or list[Memory]
+    context : bool, default=True
+      Whether to store the given memory in context.
 
     Notes
     -----
@@ -191,7 +193,8 @@ class MemoryStorage:
     cons_dict(self.ep_ht, ep, memory)
     for key in self._get_wff_keys(wff):
       cons_dict(self.wff_ht, key, memory)
-    self.context.add(memory)
+    if context:
+      self.context.add(memory)
 
   def remove(self, memory):
     """Remove a memory (or list of memories) from all sets and hash tables.
@@ -235,7 +238,7 @@ class MemoryStorage:
       memory.end()
       self.context.remove(memory)
       
-  def instantiate(self, event, importance=DEFAULT_IMPORTANCE):
+  def instantiate(self, event, importance=DEFAULT_IMPORTANCE, context=True):
     """Instantiate an event (or list of events) as a new memory and store it.
     
     Parameters
@@ -244,6 +247,8 @@ class MemoryStorage:
       The eventuality object(s) to store as new memories.
     importance : float or list[float], optional
       The importance value(s) to assign to each new memory.
+    context : bool, default=True
+      Whether to store the instantiated memory in context.
     """
     if listp(event):
       if not (listp(importance) and len(event) == len(importance)):
@@ -253,7 +258,7 @@ class MemoryStorage:
     if self.embedder:
       event.embed(self.embedder)
     memory = Memory(event, importance=importance)
-    self.store(memory)
+    self.store(memory, context=context)
 
   def get_episode(self, ep, access=False):
     """Get memories that characterize a specific episode.
