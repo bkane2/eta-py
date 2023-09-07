@@ -265,9 +265,9 @@ def execute_say_to(step, ds):
 
   # If argument is a variable, use response transducer to generate response
   if variablep(expr):
-    conds = [] # TODO
-    facts = [] # TODO
-    utts = ds.apply_transducer('response', conversation_log, conds, facts)
+    facts_bg = [] # TODO
+    facts_fg = [] # TODO
+    utts = ds.apply_transducer('response', conversation_log, facts_bg, facts_fg)
     utt = utts[0] if utts and utts[0] else ''
     bindings[expr] = f'"{utt}"'
   else:

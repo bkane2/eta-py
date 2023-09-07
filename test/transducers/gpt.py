@@ -34,25 +34,25 @@ def test4():
   examples = file.load_json('agents/sophie-gpt/paraphrase_examples.json')
   test = GPTParaphraseTransducer(examples)
 
-  facts = [parse_eventuality('^me drove here today .'), parse_eventuality('^me wants to see ^my grandson graduate .')]
+  facts_bg = [parse_eventuality('^me drove here today .'), parse_eventuality('^me wants to see ^my grandson graduate .')]
   clog = [
     DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
     DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
   gist = 'what is my prognosis ?'
-  print(test(gist, clog, facts, []), '\n')
+  print(test(gist, clog, facts_bg, []), '\n')
 
 
 def test5():
   test = GPTResponseTransducer()
 
-  conds = [parse_eventuality('^me should avoid using long words .'), parse_eventuality('^me is having trouble speaking because of how sad and shocked ^me is .')]
-  facts = [parse_eventuality('^me drove here today .'), parse_eventuality('^me wants to see ^my grandson graduate .')]
+  facts_bg = [parse_eventuality('^me should avoid using long words .'), parse_eventuality('^me is having trouble speaking because of how sad and shocked ^me is .')]
+  facts_fg = [parse_eventuality('^me drove here today .'), parse_eventuality('^me wants to see ^my grandson graduate .')]
   clog = [
     DialogueTurn('^me', Utterance('is it possible for my cancer to be cured ?'), gists=['can my cancer be cured ?']),
     DialogueTurn('^you', Utterance('nope i am afraid not .'), gists=['the prognosis is that i cannot be cured .'])
   ]
-  print(test(clog, conds, facts), '\n')
+  print(test(clog, facts_bg, facts_fg), '\n')
 
 
 def test6():

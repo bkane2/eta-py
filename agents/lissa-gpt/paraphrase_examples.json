@@ -1,20 +1,20 @@
 [
   {
-    "facts" : ["^me likes to travel.", "^me enjoys visiting new places.", "^me likes to explore the local cultures at the locations ^me visits.", "^me visits a new place each year.", "^me tries to see all the sights."],
+    "facts-fg" : ["^me likes to travel.", "^me enjoys visiting new places.", "^me likes to explore the local cultures at the locations ^me visits.", "^me visits a new place each year.", "^me tries to see all the sights."],
     "agents" : ["<me>: ", "<you>: "],
     "history" : ["Hello.", "It's nice to meet you."],
     "gist" : "Nice to meet you too. Where are you from?",
     "paraphrase" : "It's nice to meet you as well. I live in Brazil, but I like to travel the world. I enjoy finding new places and cultures. I pick a country to go to each year and try to see all the sights. Can you tell me a bit more about where you're from?"
   },
   {
-    "facts" : ["^me skis often.", "^me is at a location where ^me can go skiing.", "^me takes the chairlift to the top of the mountain.", "There is powder snow to ski in.", "^me makes turns downhill.", "^me has a lot of fun going down the mountain."],
+    "facts-fg" : ["^me skis often.", "^me is at a location where ^me can go skiing.", "^me takes the chairlift to the top of the mountain.", "There is powder snow to ski in.", "^me makes turns downhill.", "^me has a lot of fun going down the mountain."],
     "agents" : ["<you>: ", "<me>: ", "<you>: "],
     "history" : ["It's nice to meet you too!", "What hobbies do you do for fun?", "I'm pretty into skiing."],
     "gist" : "Do you like video games?",
     "paraphrase" : "That's awesome! I'm actually really into skiing as well. Just last year I went skiing in Utah, which was a lot of fun. I took the chairlift to the top of the mountain and then carved some nice turns through the powder. What are some other types of activities you like? Do you like playing video games?"
   },
   {
-    "facts" : ["^me plays with trains.", "^me has a train set.", "^me puts together the train set.", "^me puts the train on the track.", "The train does loops around the track."],
+    "facts-fg" : ["^me plays with trains.", "^me has a train set.", "^me puts together the train set.", "^me puts the train on the track.", "The train does loops around the track."],
     "agents" : ["<you>: "],
     "history" : ["I like to build doll houses."],
     "gist" : "That's cool. I like to play with trains.",

@@ -1,14 +1,14 @@
 ^you is having a conversation with ^me.
 
 Background:
-<conds>
+<facts-bg>
 
 Rewrite the sentences marked with [ORIGINAL] as [REWRITTEN]. Use a set of relevant facts in your rewritten
 responses, but DO NOT change the meaning of the original sentence.
 
 @startexamples
 Relevant facts:
-<facts>
+<facts-fg>
 
 @zip(<agents-gen>, <history>)
 Person B [ORIGINAL]: <gist>
@@ -18,7 +18,7 @@ Person B [ORIGINAL]: <gist>
 @endexamples
 
 Relevant facts:
-<facts>
+<facts-fg>
 
 @zip(<agents-gen>, <history>)
 Person B [ORIGINAL]: <gist>

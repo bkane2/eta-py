@@ -246,10 +246,10 @@ class ParaphraseTransducer(Transducer):
     The gist clause to paraphrase.
   conversation_log : list[DialogueTurn]
     The conversation history to use as context for paraphrasing.
-  conds : list[Eventuality]
+  facts_bg : list[Eventuality]
     A list of "background" knowledge to use for paraphrasing, i.e., knowledge that may impact the
     resulting paraphrase, but may not be directly included in the paraphrased response.
-  facts : list[Eventuality]
+  facts_fg : list[Eventuality]
     A list of "foreground" knowledge to use for paraphrasing, i.e., knowledge that should be
     directly included in the paraphrased response.
   
@@ -262,16 +262,16 @@ class ParaphraseTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, gist, conversation_log, conds, facts):
-    self._validate(gist, conversation_log, conds, facts)
+  def __call__(self, gist, conversation_log, facts_bg, facts_fg):
+    self._validate(gist, conversation_log, facts_bg, facts_fg)
     utts = []
     return utts
   
-  def _validate(self, gist, conversation_log, conds, facts):
+  def _validate(self, gist, conversation_log, facts_bg, facts_fg):
     pred1 = isinstance(gist, str)
     pred2 = isinstance(conversation_log, list) and all([isinstance(x, DialogueTurn) for x in conversation_log])
-    pred3 = isinstance(conds, list) and all([isinstance(x, Eventuality) for x in conds])
-    pred4 = isinstance(facts, list) and all([isinstance(x, Eventuality) for x in facts])
+    pred3 = isinstance(facts_bg, list) and all([isinstance(x, Eventuality) for x in facts_bg])
+    pred4 = isinstance(facts_fg, list) and all([isinstance(x, Eventuality) for x in facts_fg])
     assert pred1 and pred2 and pred3 and pred4, 'Incorrect argument type for ParaphraseTransducer.' 
   
 
@@ -282,10 +282,10 @@ class ResponseTransducer(Transducer):
   ----------
   conversation_log : list[DialogueTurn]
     The conversation history to use as context for the response.
-  conds : list[Eventuality]
+  facts_bg : list[Eventuality]
     A list of "background" knowledge to use for the response, i.e., knowledge that may impact the
     resulting response, but may not be directly included in the response.
-  facts : list[Eventuality]
+  facts_fg : list[Eventuality]
     A list of "foreground" knowledge to use for the response, i.e., knowledge that should be
     directly included in the response.
   
@@ -298,15 +298,15 @@ class ResponseTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     utts = []
     return utts
   
-  def _validate(self, conversation_log, conds, facts):
+  def _validate(self, conversation_log, facts_bg, facts_fg):
     pred1 = isinstance(conversation_log, list) and all([isinstance(x, DialogueTurn) for x in conversation_log])
-    pred2 = isinstance(conds, list) and all([isinstance(x, Eventuality) for x in conds])
-    pred3 = isinstance(facts, list) and all([isinstance(x, Eventuality) for x in facts])
+    pred2 = isinstance(facts_bg, list) and all([isinstance(x, Eventuality) for x in facts_bg])
+    pred3 = isinstance(facts_fg, list) and all([isinstance(x, Eventuality) for x in facts_fg])
     assert pred1 and pred2 and pred3, 'Incorrect argument type for ResponseTransducer.'  
   
 
@@ -317,10 +317,10 @@ class AnswerTransducer(Transducer):
   ----------
   conversation_log : list[DialogueTurn]
     The conversation history to use as context for the answer.
-  conds : list[Eventuality]
+  facts_bg : list[Eventuality]
     A list of "background" knowledge to use for the answer, i.e., knowledge that may impact the
     resulting answer, but may not be directly included in the answer.
-  facts : list[Eventuality]
+  facts_fg : list[Eventuality]
     A list of "foreground" knowledge to use for the answer, i.e., knowledge that should be
     directly included in the answer.
   
@@ -333,15 +333,15 @@ class AnswerTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     utts = []
     return utts
   
-  def _validate(self, conversation_log, conds, facts):
+  def _validate(self, conversation_log, facts_bg, facts_fg):
     pred1 = isinstance(conversation_log, list) and all([isinstance(x, DialogueTurn) for x in conversation_log])
-    pred2 = isinstance(conds, list) and all([isinstance(x, Eventuality) for x in conds])
-    pred3 = isinstance(facts, list) and all([isinstance(x, Eventuality) for x in facts])
+    pred2 = isinstance(facts_bg, list) and all([isinstance(x, Eventuality) for x in facts_bg])
+    pred3 = isinstance(facts_fg, list) and all([isinstance(x, Eventuality) for x in facts_fg])
     assert pred1 and pred2 and pred3, 'Incorrect argument type for AnswerTransducer.'  
   
 
@@ -352,10 +352,10 @@ class AskTransducer(Transducer):
   ----------
   conversation_log : list[DialogueTurn]
     The conversation history to use as context for the question.
-  conds : list[Eventuality]
+  facts_bg : list[Eventuality]
     A list of "background" knowledge to use for the question, i.e., knowledge that may impact the
     resulting question, but may not be directly included in the question.
-  facts : list[Eventuality]
+  facts_fg : list[Eventuality]
     A list of "foreground" knowledge to use for the question, i.e., knowledge that should be
     directly included in the question.
   
@@ -368,15 +368,15 @@ class AskTransducer(Transducer):
   def __init__(self):
     pass
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     utts = []
     return utts
   
-  def _validate(self, conversation_log, conds, facts):
+  def _validate(self, conversation_log, facts_bg, facts_fg):
     pred1 = isinstance(conversation_log, list) and all([isinstance(x, DialogueTurn) for x in conversation_log])
-    pred2 = isinstance(conds, list) and all([isinstance(x, Eventuality) for x in conds])
-    pred3 = isinstance(facts, list) and all([isinstance(x, Eventuality) for x in facts])
+    pred2 = isinstance(facts_bg, list) and all([isinstance(x, Eventuality) for x in facts_bg])
+    pred3 = isinstance(facts_fg, list) and all([isinstance(x, Eventuality) for x in facts_fg])
     assert pred1 and pred2 and pred3, 'Incorrect argument type for AskTransducer.'  
   
 

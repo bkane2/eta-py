@@ -221,14 +221,14 @@ class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
       e['agents-gen'] = self._to_generic_agents(e['agents'])
     super().__init__(PROMPTS['paraphrase'], VALIDATORS['paraphrase'], examples=examples)
 
-  def __call__(self, gist, conversation_log, conds, facts):
-    self._validate(gist, conversation_log, conds, facts)
+  def __call__(self, gist, conversation_log, facts_bg, facts_fg):
+    self._validate(gist, conversation_log, facts_bg, facts_fg)
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     agents_gen = self._to_generic_agents(agents)
     utt = super().__call__({
-      'conds' : [cond.get_nl() for cond in conds],
-      'facts' : [fact.get_nl() for fact in facts],
+      'facts-bg' : [fact.get_nl() for fact in facts_bg],
+      'facts-fg' : [fact.get_nl() for fact in facts_fg],
       'agents-gen' : agents_gen,
       'agents' : agents,
       'history' : history,
@@ -245,13 +245,13 @@ class GPTResponseTransducer(GPTTransducer, ResponseTransducer):
   def __init__(self):
     super().__init__(PROMPTS['response'], VALIDATORS['response'])
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     utt = super().__call__({
-      'conds' : [cond.get_nl() for cond in conds],
-      'facts' : [fact.get_nl() for fact in facts],
+      'facts-bg' : [fact.get_nl() for fact in facts_bg],
+      'facts-fg' : [fact.get_nl() for fact in facts_fg],
       'agents' : agents,
       'history' : history
     },
@@ -263,13 +263,13 @@ class GPTAnswerTransducer(GPTTransducer, AnswerTransducer):
   def __init__(self):
     super().__init__(PROMPTS['answer'], VALIDATORS['answer'])
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     utt = super().__call__({
-      'conds' : [cond.get_nl() for cond in conds],
-      'facts' : [fact.get_nl() for fact in facts],
+      'facts-bg' : [fact.get_nl() for fact in facts_bg],
+      'facts-fg' : [fact.get_nl() for fact in facts_fg],
       'agents' : agents,
       'history' : history
     })
@@ -280,13 +280,13 @@ class GPTAskTransducer(GPTTransducer, AskTransducer):
   def __init__(self):
     super().__init__(PROMPTS['ask'], VALIDATORS['ask'])
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     utt = super().__call__({
-      'conds' : [cond.get_nl() for cond in conds],
-      'facts' : [fact.get_nl() for fact in facts],
+      'facts-bg' : [fact.get_nl() for fact in facts_bg],
+      'facts-fg' : [fact.get_nl() for fact in facts_fg],
       'agents' : agents,
       'history' : history
     })

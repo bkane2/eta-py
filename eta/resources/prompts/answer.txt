@@ -1,10 +1,10 @@
 Write a conversation between ^you and ^me.
 
 Background:
-<conds>
+<facts-bg>
 
 Use the following relevant facts in your response:
-<facts>
+<facts-fg>
 
 Do not ask a question in your response.
 

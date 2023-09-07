@@ -313,9 +313,9 @@ def plan_paraphrase(expr, ds):
     return None
   gist = expr.strip('"')
   conversation_log = ds.get_conversation_log()
-  conds = [] # TODO
-  facts = [] # TODO
-  utts = ds.apply_transducer('paraphrase', gist, conversation_log, conds, facts)
+  facts_bg = [] # TODO
+  facts_fg = [] # TODO
+  utts = ds.apply_transducer('paraphrase', gist, conversation_log, facts_bg, facts_fg)
   return say_to_step_from_utts(utts) if utts else say_to_step_from_utt(gist)
 
 
@@ -334,9 +334,9 @@ def plan_respond(expr, ds):
     The updated plan, if successful.
   """
   conversation_log = ds.get_conversation_log()
-  conds = [] # TODO
-  facts = [] # TODO
-  utts = ds.apply_transducer('response', conversation_log, conds, facts)
+  facts_bg = [] # TODO
+  facts_fg = [] # TODO
+  utts = ds.apply_transducer('response', conversation_log, facts_bg, facts_fg)
   return say_to_step_from_utts(utts) if utts else say_to_step_from_utt('NIL Response .')
 
 
@@ -355,9 +355,9 @@ def plan_answer(expr, ds):
     The updated plan, if successful.
   """
   conversation_log = ds.get_conversation_log()
-  conds = [] # TODO
-  facts = [] # TODO
-  utts = ds.apply_transducer('answer', conversation_log, conds, facts)
+  facts_bg = [] # TODO
+  facts_fg = [] # TODO
+  utts = ds.apply_transducer('answer', conversation_log, facts_bg, facts_fg)
   return say_to_step_from_utts(utts) if utts else say_to_step_from_utt('NIL Answer .')
 
 
@@ -376,9 +376,9 @@ def plan_ask(expr, ds):
     The updated plan, if successful.
   """
   conversation_log = ds.get_conversation_log()
-  conds = [] # TODO
-  facts = [] # TODO
-  utts = ds.apply_transducer('ask', conversation_log, conds, facts)
+  facts_bg = [] # TODO
+  facts_fg = [] # TODO
+  utts = ds.apply_transducer('ask', conversation_log, facts_bg, facts_fg)
   return say_to_step_from_utts(utts) if utts else say_to_step_from_utt('NIL Question ?')
 
 

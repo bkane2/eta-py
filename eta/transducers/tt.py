@@ -207,8 +207,8 @@ class TTParaphraseTransducer(TTTransducer, ParaphraseTransducer):
   def __init__(self, rule_dirs):
     super().__init__(rule_dirs, 'paraphrase')
 
-  def __call__(self, gist, conversation_log, conds, facts):
-    self._validate(gist, conversation_log, conds, facts)
+  def __call__(self, gist, conversation_log, facts_bg, facts_fg):
+    self._validate(gist, conversation_log, facts_bg, facts_fg)
     prev_gist = ''
     prior_turn = get_prior_turn(conversation_log, YOU)
     utts = []
@@ -224,8 +224,8 @@ class TTResponseTransducer(TTTransducer, ResponseTransducer):
     # TODO
     pass
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     # TODO
     utts = []
     return utts
@@ -236,8 +236,8 @@ class TTAnswerTransducer(TTTransducer, AnswerTransducer):
     # TODO
     pass
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     # TODO
     utts = []
     return utts
@@ -248,8 +248,8 @@ class TTAskTransducer(TTTransducer, AskTransducer):
     # TODO
     pass
 
-  def __call__(self, conversation_log, conds, facts):
-    self._validate(conversation_log, conds, facts)
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    self._validate(conversation_log, facts_bg, facts_fg)
     # TODO
     utts = []
     return utts
