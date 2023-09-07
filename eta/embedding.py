@@ -143,4 +143,6 @@ def sim(x, y):
   """Compute the cosine similarity between vectors."""
   if not y:
     return np.array(1.) if not x else np.array([sim(x1, y) for x1 in x])
+  if not x:
+    return np.array([])
   return np.dot(x, y)/(np.linalg.norm(x)*np.linalg.norm(y))

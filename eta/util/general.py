@@ -373,6 +373,8 @@ def dict_rem(dct, k):
 
 def squash(vector, range=(0, 1)):
 	"""Squash each number within a vector to be within the given range."""
+	if not vector:
+		return vector
 	if min(vector) == max(vector):
 		return [1. for _ in vector]
 	v = np.array(vector)
