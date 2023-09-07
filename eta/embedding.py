@@ -56,6 +56,9 @@ class Embedder():
     list[float]
       Scores for each document.
     """
+    if not documents:
+      return []
+    
     documents = np.array(documents)
 
     if embeddings and len(embeddings) == len(documents):
