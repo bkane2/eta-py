@@ -42,7 +42,14 @@ def standardize_symbols(s_expr):
 			return e.lower()
 		elif symbolp(e):
 			parts = e.split('|')
-			return parts[0].lower() + parts[1] + parts[2].lower()
+			before = parts[0].lower()
+			escaped = parts[1]
+			after = parts[2].lower()
+			if '.' in escaped:
+				word, suffix = escaped.split('.')
+				escaped = word
+				after = '.'+suffix.lower()+after
+			return before+escaped+after
 		else:
 			return [standardize_rec(x) for x in e]
 	return standardize_rec(s_expr)
