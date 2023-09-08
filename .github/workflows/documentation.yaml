@@ -14,6 +14,8 @@ jobs:
           pip install -r docs/requirements.txt
       - name: Sphinx build
         run: |
+          rm -rf docs/_autosummary/
+          rm -rf docs/_build/
           sphinx-build docs docs/_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
