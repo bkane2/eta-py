@@ -27,25 +27,7 @@ AFFIRM_ADV = ['certainly', 'certain', 'absolutely', 'really', 'quite', 'complete
 
 MODAL = ['can', 'will', 'shall', 'could', 'would', 'should', 'might', 'may', 'ought']
 
-NON_ALCOHOLIC = ['water', 'coffee', 'milk', 'tea', 'soda', 'pop']
-
-MEDICINE_GEN = ['medicine', 'medicines', 'medication', 'medications', 'drug', 'drugs', 'pill',
-                'pills', 'med', 'meds', 'dose', 'doses', 'dosage', 'dosages', 'lortab', 'vicodin',
-                'norco', 'ibuprofen', 'aleve', 'cozar', 'narcotic', 'narcotics', 'oxycodone', 'morphine']
-
 SENTENCE_CONJUNCTIONS = ['but' ,'and', 'however', 'because', 'since', 'although', 'as', 'if']
-
-def expr(x):
-  """Match any expression."""
-  return True
-
-def atom(x):
-  """Match any atomic expression."""
-  return gute.atom(x)
-
-def lst(x):
-  """Match any list."""
-  return isinstance(x, list)
 
 def comma(x):
   """Match a comma."""
@@ -70,18 +52,6 @@ def affirm_adv(x):
 def modal(x):
   """Matches any modal word."""
   return x in MODAL
-
-def not_non_alcoholic(x):
-  """Matches any word for a non-alcoholic beverage."""
-  return x not in NON_ALCOHOLIC
-
-def not_medicine_gen(x):
-  """Matches any word that doesn't refer to a generic medicine."""
-  return x not in MEDICINE_GEN
-
-def test(*lst):
-  """Predicate to test template filling."""
-  return ' '.join(lst) + '_test'
 
 def lex_ulf(cat, word):
   """ULF lexicalizer predicate."""

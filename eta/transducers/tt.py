@@ -51,7 +51,7 @@ class TTTransducer(Transducer):
   """
 
   def __init__(self, rule_dirs, roots):
-    self.trees, self.feats = from_lisp_dirs(rule_dirs)
+    self.trees, self.feats, self.preds = from_lisp_dirs(rule_dirs)
     if isinstance(roots, str):
       self.roots = [roots]
     else:
@@ -85,7 +85,7 @@ class TTTransducer(Transducer):
 
     ret = []
     for root in self.roots:
-      choice = choose_result_for(clause, root, self.trees, self.feats)
+      choice = choose_result_for(clause, root, self.trees, self.feats, self.preds)
       choice = self._process_choice(choice)
       if choice and listp(choice) and choice[0] == ':and':
         ret = ret + choice[1:]
@@ -153,13 +153,17 @@ class TTGistTransducer(TTTransducer, GistTransducer):
   def __call__(self, utt, conversation_log):
     self._validate(utt, conversation_log)
     utt = utt.words
-    prev_gist = ''
+    prev_gists = []
     prior_turn = get_prior_turn(conversation_log, ME)
-    gists = []
     if prior_turn:
       prev_gists = prior_turn.gists
+
+    gists = []
+    if prev_gists:
       for prev_gist in prev_gists:
         gists += super().__call__([prev_gist.split(), utt.split()])
+    else:
+      gists = super().__call__([[], utt.split()])
     return gists
   
 

@@ -35,7 +35,7 @@ def test3():
     DialogueTurn(Utterance('^me', 'do i really need chemotherapy ?'), gists=['do i need chemotherapy ?']),
     DialogueTurn(Utterance('^you', 'hmm ...'))
   ]
-  utt = Utterance('yes , i would recommend it . did you come here with anyone today ?')
+  utt = Utterance('^you', 'yes , i would recommend it . did you come here with anyone today ?')
   print(test(utt, clog))
 
   clog = [
@@ -44,6 +44,12 @@ def test3():
                  gists=['why has my pain been getting worse recently ?']),
   ]
   utt = Utterance('^you', 'unfortunately sophie your cancer has spread .')
+  print(test(utt, clog))
+
+  clog = [
+    DialogueTurn(Utterance('^me', 'hello sophie .'))
+  ]
+  utt = Utterance('^you', 'how frequently do you drink beer ?')
   print(test(utt, clog))
 
 

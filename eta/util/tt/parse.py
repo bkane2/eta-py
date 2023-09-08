@@ -1,10 +1,11 @@
 """Methods for parsing choice trees and word features from LISP definitions."""
 
 import glob
+import importlib
+from transduction.tt import isa
 
 from eta.util.general import remove_duplicates
 from eta.util.sexpr import read_lisp
-from eta.util.tt.match import isa
 
 
 def init_node(pattern):
@@ -134,6 +135,13 @@ def merge_trees(trees1, trees2):
   return trees1
 
 
+def merge_preds(preds1, preds2):
+  """Merges two predicate dicts (overriding any duplicates)."""
+  for x, t in preds2.items():
+    preds1[x] = t
+  return preds1
+
+
 def from_lisp_file(fname):
   """Read a LISP file and parse the rule trees and feature definitions contained within.
 
@@ -166,6 +174,25 @@ def from_lisp_file(fname):
   return trees, feats
 
 
+def read_preds_file(fname):
+  """Read a Python file containing predicate function definitions, and return a predicate dict.
+  
+  Parameters
+  ----------
+  fname : str
+    The filename to read.
+  
+  Returns
+  -------
+  preds : dict
+    A dict mapping predicate names to functions.
+  """
+  mod_name = fname.split('.py')[0].replace("/", ".")
+  mod = importlib.import_module(mod_name)
+  funcs = [f for f in dir(mod) if callable(getattr(mod, f)) and f[0] != '_']
+  return { f.replace('_', '-') : getattr(mod, f) for f in funcs }
+
+
 def from_lisp_dirs(dirs):
   """Recursively read choice trees and word features from all LISP files in a directory or list of directories.
 
@@ -180,9 +207,12 @@ def from_lisp_dirs(dirs):
     A dict containing all choice trees, keyed on their root names.
   feats : dict
     A dict mapping words to feature lists.
+  preds : dict
+    A dict mapping predicate names to functions.
   """
   trees = {}
   feats = {}
+  preds = {}
   if isinstance(dirs, str):
     dirs = [dirs]
   for dir in dirs:
@@ -191,4 +221,8 @@ def from_lisp_dirs(dirs):
       trees_new, feats_new = from_lisp_file(fname)
       trees = merge_trees(trees, trees_new)
       feats = merge_feats(feats, feats_new)
-  return trees, feats
+    pred_fnames = glob.glob(dir + '/**/preds.py', recursive=True)
+    for pred_fname in pred_fnames:
+      preds_new = read_preds_file(pred_fname)
+      preds = merge_preds(preds, preds_new)
+  return trees, feats, preds

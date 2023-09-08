@@ -4,8 +4,24 @@ Contains functions for choosing a result using choice trees; primarily a reimple
 original 'choose-result-for' LISP function defined here: https://github.com/bkane2/eta/blob/master/core/eta.lisp
 """
 
+from transduction import tt
+
 from eta.util.general import listp, atom, cons, subst, random_element
-from eta.util.tt.match import match, fill_template
+from eta.util.tt.preds import (comma, zero, modal, non_neg, non_neg_mod, affirm_adv,
+                               lex_ulf, quote_to_list, split_sentences, prefix_each)
+
+# Additional generic default preds used by Eta
+tt.register_pred(comma)
+tt.register_pred(zero)
+tt.register_pred(non_neg)
+tt.register_pred(non_neg_mod)
+tt.register_pred(affirm_adv)
+tt.register_pred(modal)
+tt.register_pred(lex_ulf)
+tt.register_pred(quote_to_list)
+tt.register_pred(split_sentences)
+tt.register_pred(prefix_each)
+
 
 def is_tree_root(x):
   return x and isinstance(x, str) and x[0] == '*'
@@ -17,7 +33,7 @@ def is_tree_root_list(x):
   return x and listp(x) and all([is_tree_root(y) for y in x])
 
 
-def choose_result_for(clause, root, trees, feats):
+def choose_result_for(clause, root, trees, feats, preds):
   """Choose a result for a given clause, starting from a given choice tree root.
 
   A choice tree consists of a tree of pattern nodes, with the leaves containing templates and associated
@@ -25,7 +41,8 @@ def choose_result_for(clause, root, trees, feats):
 
   Pattern nodes
   -------------
-  A pattern node contains either a pattern (see ``eta.util.tt.match``), or one of the following special keywords:
+  A pattern node contains either a pattern (see https://pypi.org/project/transduction/), or one of the following
+  special keywords:
 
     - ``[:or, <pattern1>, <pattern2>, ...]``
       Match this node if any of the specified patterns match.
@@ -117,6 +134,8 @@ def choose_result_for(clause, root, trees, feats):
     A dict containing all choice trees, keyed on their root names.
   feats : dict
     A dict mapping words to feature lists.
+  preds : dict
+    A dict mapping predicate names to functions.
 
   Returns
   -------
@@ -127,7 +146,9 @@ def choose_result_for(clause, root, trees, feats):
       - ``[:<directive>, <result>]`` if a single result is found.
       - ``[:and, <result1>, ..., <resultk>]`` if multiple results are found.
   """
-  def choose_result_for_rec(clause, parts, rule_node, visited, trees, feats):
+  def choose_result_for_rec(clause, parts, rule_node, visited):
+    nonlocal trees, feats, preds
+
     if not rule_node:
       return []
     
@@ -140,7 +161,7 @@ def choose_result_for(clause, root, trees, feats):
     # Skip rule if it has a non-zero latency and the countdown for that rule hasn't yet reached zero
     if directive and min(count, latency) > 0:
       rule_node['count'] -= 1
-      return choose_result_for_rec(clause, parts, rule_node['next'], visited, trees, feats)
+      return choose_result_for_rec(clause, parts, rule_node['next'], visited)
     
     # No directive, i.e., pattern node
     # ````````````````````````````````````
@@ -149,30 +170,30 @@ def choose_result_for(clause, root, trees, feats):
       # If pattern is disjunctive, try to match any option within the disjunction
       if pattern[0] == ':or':
         for pattern_option in pattern[1:]:
-          newparts_option = match(pattern_option, clause, feats)
+          newparts_option = tt.match(pattern_option, clause, feats, preds)
           if not newparts and newparts_option:
             newparts = newparts_option
       # If pattern is a subtree to match, try to match that subtree
       elif pattern[0] == ':subtree':
         if atom(pattern[1]) and not pattern[1] in visited:
           subtree = pattern[1].strip('*')
-          newparts_option = choose_result_for_rec(clause, parts, trees[subtree], cons(subtree, visited), trees, feats)
+          newparts_option = choose_result_for_rec(clause, parts, trees[subtree], cons(subtree, visited))
           if newparts_option:
             newparts = [':seq']
       # Otherwise, try to match pattern
       else:
-        newparts = match(pattern, clause, feats)
+        newparts = tt.match(pattern, clause, feats, preds)
 
       # Pattern does not match 'clause', search siblings recursively
       if not newparts:
-        return choose_result_for_rec(clause, parts, rule_node['next'], visited, trees, feats)
+        return choose_result_for_rec(clause, parts, rule_node['next'], visited)
       
       # Pattern matched, try to obtain recursive result from children
-      result = choose_result_for_rec(clause, newparts, rule_node['child'], visited, trees, feats)
+      result = choose_result_for_rec(clause, newparts, rule_node['child'], visited)
       if result:
         return result
       else:
-        return choose_result_for_rec(clause, parts, rule_node['next'], visited, trees, feats)
+        return choose_result_for_rec(clause, parts, rule_node['next'], visited)
       
     # The following is a big conditional statement for dealing with all possible directives.
     # First, we reset the countdown for the node using the node's latency.
@@ -186,12 +207,12 @@ def choose_result_for(clause, root, trees, feats):
         return []
       # If subtree was already visited, skip rule
       if pattern in visited:
-        return choose_result_for_rec(clause, parts, rule_node['next'], visited, trees, feats)
+        return choose_result_for_rec(clause, parts, rule_node['next'], visited)
       # Otherwise, go to subtree and add subtree to list of visited subtrees
       subtree = pattern.strip('*')
       if not subtree in trees:
         return []
-      return choose_result_for_rec(clause, parts, trees[subtree], cons(subtree, visited), trees, feats)
+      return choose_result_for_rec(clause, parts, trees[subtree], cons(subtree, visited))
     
     # :subtree+clause directive
     # ````````````````````````````
@@ -199,11 +220,11 @@ def choose_result_for(clause, root, trees, feats):
       # Pattern is in wrong format
       if not listp(pattern) or not len(pattern) == 2:
         return []
-      newclause = fill_template(pattern[1], parts)
+      newclause = tt.fill_template(pattern[1], parts, preds)
       subtree = pattern[0].strip('*')
       if not subtree in trees:
         return []
-      return choose_result_for_rec(newclause, [], trees[subtree], cons(subtree, visited), trees, feats)
+      return choose_result_for_rec(newclause, [], trees[subtree], cons(subtree, visited))
     
     # :subtree-permute directive
     # ``````````````````````````````
@@ -211,12 +232,12 @@ def choose_result_for(clause, root, trees, feats):
       # Pattern is in wrong format
       if not listp(pattern) or not len(pattern) == 2 or not listp(pattern[1]):
         return []
-      newclause = fill_template(pattern[1], parts)
+      newclause = tt.fill_template(pattern[1], parts, preds)
       subtree = pattern[0].strip('*')
       if not subtree in trees:
         return []
       ret = [':and']
-      for choice in [choose_result_for_rec(x, [], trees[subtree], cons(subtree, visited), trees, feats) for x in newclause]:
+      for choice in [choose_result_for_rec(x, [], trees[subtree], cons(subtree, visited)) for x in newclause]:
         if choice and listp(choice) and choice[0] == ':and':
           ret = ret + choice[1:]
         else:
@@ -229,12 +250,12 @@ def choose_result_for(clause, root, trees, feats):
       # Pattern is in wrong format
       if not listp(pattern) or not len(pattern) == 2 or not listp(pattern[0]):
         return []
-      newpattern = fill_template(pattern, parts)
+      newpattern = tt.fill_template(pattern, parts, preds)
       newclause = newpattern[1]
       # [*subtree*, <clause>]
       if not is_tree_root_list(newpattern[0]):
         tree = newpattern[0][0].strip('*')
-        result = choose_result_for_rec(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+        result = choose_result_for_rec(newpattern[0][1], [], trees[tree], cons(tree, visited))
         if not result:
           return []
         else:
@@ -246,7 +267,7 @@ def choose_result_for(clause, root, trees, feats):
         return []
       subtrees = [x.strip('*') for x in subtrees]
       ret = [':and']
-      for choice in [choose_result_for_rec(newclause, [], trees[x], cons(x, visited), trees, feats) for x in subtrees]:
+      for choice in [choose_result_for_rec(newclause, [], trees[x], cons(x, visited)) for x in subtrees]:
         if choice and listp(choice) and choice[0] == ':and':
           ret = ret + choice[1:]
         else:
@@ -259,12 +280,12 @@ def choose_result_for(clause, root, trees, feats):
       # Pattern is in wrong format
       if not listp(pattern) or not len(pattern) == 2 or not listp(pattern[0]) or not listp(pattern[1]):
         return []
-      newpattern = fill_template(pattern, parts)
+      newpattern = tt.fill_template(pattern, parts, preds)
       newclause = newpattern[1]
       # [*subtree*, <clause>]
       if not is_tree_root_list(newpattern[0]):
         tree = newpattern[0][0].strip('*')
-        result = choose_result_for_rec(newpattern[0][1], [], trees[tree], cons(tree, visited), trees, feats)
+        result = choose_result_for_rec(newpattern[0][1], [], trees[tree], cons(tree, visited))
         if not result:
           return []
         else:
@@ -276,7 +297,7 @@ def choose_result_for(clause, root, trees, feats):
         return []
       subtrees = [x.strip('*') for x in subtrees]
       ret = [':and']
-      for choice in [choose_result_for_rec(x, [], trees[y], cons(y, visited), trees, feats) for x in newclause for y in subtrees]:
+      for choice in [choose_result_for_rec(x, [], trees[y], cons(y, visited)) for x in newclause for y in subtrees]:
         if choice and listp(choice) and choice[0] == ':and':
           ret = ret + choice[1:]
         else:
@@ -290,12 +311,12 @@ def choose_result_for(clause, root, trees, feats):
       if not listp(pattern) or not len(pattern) == 2:
         return []
       # Instantiate shallow analysis
-      newclause = fill_template(pattern[0], parts)
+      newclause = tt.fill_template(pattern[0], parts, preds)
       # Interpret recursive phrases
       ulfs = []
       for phrase in newclause:
         if is_tree_root_clause(phrase):
-          ulf = choose_result_for(phrase[1:], phrase[0], trees, feats)[1]
+          ulf = choose_result_for(phrase[1:], phrase[0], trees, feats, preds)[1]
         else:
           ulf = phrase
         # Failure case
@@ -314,7 +335,7 @@ def choose_result_for(clause, root, trees, feats):
     # :misc non-recursive directives
     # ``````````````````````````````````
     if directive and isinstance(directive, str) and directive[0] == ':':
-      result = fill_template(pattern, parts)
+      result = tt.fill_template(pattern, parts, preds)
       # If result is disjunctive, randomly choose one element
       if listp(result) and result[0] == ':or':
         result = random_element(result[1:])
@@ -329,4 +350,4 @@ def choose_result_for(clause, root, trees, feats):
   root = root.strip('*')
   if not root in trees:
     return []
-  return choose_result_for_rec(clause, [], trees[root], set(), trees, feats)
+  return choose_result_for_rec(clause, [], trees[root], set())
