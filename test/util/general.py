@@ -19,6 +19,11 @@ def main():
 
 	print(gentemp('teststr5'))
 	print(gentemp('teststr5'))
+     
+	print(extract_category(['a', [2, 'b'], 3, 'c'],
+                        lambda x: isinstance(x, int),
+                        lambda x: len(x) <= 2))
+  # -> (['a', [2, 'b'], 'c'], [3])
 	
 
 if __name__ == "__main__":

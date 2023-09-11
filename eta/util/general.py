@@ -317,6 +317,79 @@ def to_key(lst):
 		return str(lst)
 	else:
 		return tuple([to_key(x) for x in lst])
+	
+
+def split_by_cond(lst, cndfn):
+	"""Split a list by a given condition function.
+	
+	Parameters
+	----------
+	lst : list
+	cndfn : function
+
+	Returns
+	-------
+	filtered : list
+		The input list with elements matching `cndfn` filtered out.
+	matching : list
+		A list of elements from the input list matching `cndfn`.
+	"""
+	filtered = [x for x in lst if not cndfn(x)]
+	matching = [x for x in lst if cndfn(x)]
+	return filtered, matching
+	
+
+def extract_category(lst, catfn, ignfn=None):
+	"""Recurse through a (possibly nested) list and extract categories that satisfy a given function.
+	
+	Parameters
+	----------
+	lst : s-expr
+	catfn : function
+		A function used to match categories to be extracted.
+	ignfn : function, optional
+		If given, a function used to ignore matching subexpressions (i.e.,
+		avoid recursing within them).
+	
+	Returns
+	-------
+	lst_new : s-expr
+		The input list with matching subexpressions removed.
+	categories : list[s-expr]
+		A list of extracted matching subexpressions.
+	"""
+	def rec(lst):
+		nonlocal catfn, ignfn
+
+		if atom(lst):
+			return lst, []
+		
+		if ignfn is not None and ignfn(lst):
+			no_sent_ops = lst
+			sent_ops = []
+		else:
+			no_sent_ops, sent_ops = split_by_cond(lst, catfn)
+		
+		recursed = [rec(x) for x in no_sent_ops]
+		lst_new = [x[0] for x in recursed]
+		categories = append(cons(sent_ops, [x[1] for x in recursed]))
+		return lst_new, categories
+	return rec(lst)
+
+
+def rec_find(lst, x, test=lambda x,y: x==y):
+	"""Return subexpressions in a tree that are the same as the given symbol.
+	
+	A different binary function can be provided using the `test` argument.
+	"""
+	_, categories = extract_category(lst, lambda y: test(x, y))
+	return categories
+
+
+def rec_find_if(lst, cndfn):
+	"""Return subexpressions in a tree that satisfy `cndfn`."""
+	_, categories = extract_category(lst, cndfn)
+	return categories
 
 
 
