@@ -4,6 +4,10 @@ import json
 import os
 from pathlib import Path
 
+def get_path(fname):
+  return os.path.join(os.path.dirname(os.path.abspath(__file__)), fname)
+
+
 def read_file(fname):
   """Read the contents of a given file as a string.
   
@@ -15,6 +19,7 @@ def read_file(fname):
   -------
   str
   """
+  fname = get_path(fname)
   if exists(fname):
     with open(fname, 'r') as f:
       return f.read()
@@ -33,6 +38,7 @@ def read_lines(fname):
   -------
   list[str]
   """
+  fname = get_path(fname)
   if exists(fname):
     return [l.strip() for l in read_file(fname).split('\n') if l.strip()]
   else:
@@ -47,6 +53,7 @@ def write_file(fname, data):
   fname : str
   data : str
   """
+  fname = get_path(fname)
   with open(fname, 'w+') as f:
     f.write(data)
 
@@ -59,6 +66,7 @@ def append_file(fname, data):
   fname : str
   data : str
   """
+  fname = get_path(fname)
   with open(fname, 'a+') as f:
     f.write(data)
   
@@ -74,6 +82,7 @@ def load_json(fname):
   -------
   dict
   """
+  fname = get_path(fname)
   if exists(fname):
     with open(fname, 'r') as f:
       return json.load(f)
@@ -91,6 +100,7 @@ def write_json(fname, data, pretty=False):
   pretty : bool, default=False
     Whether to pretty-print the JSON by indenting new lines.
   """
+  fname = get_path(fname)
   with open(fname, 'w+') as f:
     if pretty:
       json.dump(data, f, indent=2)
@@ -105,6 +115,7 @@ def clear(fname):
   ----------
   fname : str
   """
+  fname = get_path(fname)
   with open(fname, 'w+') as f:
     f.write('')
 
@@ -120,6 +131,7 @@ def exists(fname):
   -------
   bool
   """
+  fname = get_path(fname)
   return os.path.isfile(fname)
 
 
@@ -130,6 +142,7 @@ def remove(fname):
   ----------
   fname : str
   """
+  fname = get_path(fname)
   if exists(fname):
     os.remove(fname)
 
@@ -141,6 +154,7 @@ def ensure_dir_exists(dirname):
   ----------
   dirname : str
   """
+  fname = get_path(fname)
   Path(dirname).mkdir(parents=True, exist_ok=True)
 
 
@@ -151,5 +165,6 @@ def ensure_file_exists(fname):
   ----------
   fname : str
   """
+  fname = get_path(fname)
   ensure_dir_exists('/'.join(fname.split('/')[:-1]))
   clear(fname)
