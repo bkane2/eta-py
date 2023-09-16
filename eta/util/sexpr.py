@@ -32,6 +32,9 @@ def clean_s_expr(s_expr):
 	s_expr = s_expr.replace('\t', '')
 	while '  ' in s_expr:
 		s_expr = s_expr.replace('  ', ' ')
+	s_expr = replaceall(s_expr,
+						[(r'\| ([a-zA-Z0-9-_]+)\|', r'|\1|', True),
+						 (r'\|([a-zA-Z0-9-_]+) \|', r'|\1|', True)])
 	return s_expr
 
 
