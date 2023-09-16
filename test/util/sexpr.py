@@ -23,6 +23,10 @@ def main():
   s_expr = parse_s_expr(test)
   print(s_expr)
 
+  test = "((WHAT.PRO ((PRES BE.V) (= (THE.D (N+PREDS BLOCK.N (BETWEEN.P ((THE.D (| Toyota.N| {BLOCK}.N)) AND.CC (THE.D (| SRI.N| BLOCK.N))))))))) ?)"
+  s_expr = parse_s_expr(test)
+  print(s_expr)
+
 
 if __name__ == "__main__":
   main()
