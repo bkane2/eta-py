@@ -7,7 +7,7 @@ Some of this code is borrowed from the following repository:
 https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 """
 
-from eta.util.general import flatten, replaceall, symbolp, atom, escaped_symbol_p, quotation_p, standardize
+from eta.util.general import flatten, replaceall, symbolp, atom, escaped_symbol_p, isquote, standardize
 import eta.util.file as file
 
 def balanced_substr(s):
@@ -46,7 +46,7 @@ def clean_s_expr(s_expr):
 def standardize_symbols(s_expr):
 	"""Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in escape symbols."""
 	def standardize_rec(e):
-		if symbolp(e) and not escaped_symbol_p(e) and not quotation_p(e):
+		if symbolp(e) and not escaped_symbol_p(e) and not isquote(e):
 			return e.lower()
 		elif symbolp(e) and escaped_symbol_p(e):
 			parts = e.split('|')
@@ -61,7 +61,7 @@ def standardize_symbols(s_expr):
 					after = '.'+suffix.lower()+after
 			escaped = escaped.strip('_').replace('_', ' ')
 			return before+escaped+after
-		elif symbolp(e) and quotation_p(e):
+		elif symbolp(e) and isquote(e):
 			return e
 		else:
 			return [standardize_rec(x) for x in e]
