@@ -27,6 +27,10 @@ def main():
   s_expr = parse_s_expr(test)
   print(s_expr)
 
+  test = "(({YOU}.PRO ((PRES NAME.V) ((|Li'l Abner| 'S) (FAVORITE.A (|Indian.A| DRINK.N))))) !)"
+  s_expr = parse_s_expr(test)
+  print(s_expr)
+
 
 if __name__ == "__main__":
   main()

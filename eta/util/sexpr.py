@@ -30,11 +30,16 @@ def clean_s_expr(s_expr):
 	"""Clean a string representation of an S-expression by removing newlines and standardizing whitespace."""
 	s_expr = s_expr.replace('\n', '')
 	s_expr = s_expr.replace('\t', '')
+	s_expr = replaceall(s_expr,
+						[(r"\| ([a-zA-Z0-9-_.']+)\|", r'|\1|', True),
+						 (r"\|([a-zA-Z0-9-_.']+) \|", r'|\1|', True),
+						 # For handling proper names with multiple words (up to 4)
+						 (r"\|([a-zA-Z0-9-_.']+)[ ]?([a-zA-Z0-9-_.']+)?[ ]?([a-zA-Z0-9-_.']+)?[ ]?([a-zA-Z0-9-_.']+)?\|",
+							r'|\1_\2_\3_\4|', True)])
+	while '__' in s_expr:
+		s_expr = s_expr.replace('__', '_')
 	while '  ' in s_expr:
 		s_expr = s_expr.replace('  ', ' ')
-	s_expr = replaceall(s_expr,
-						[(r'\| ([a-zA-Z0-9-_.]+)\|', r'|\1|', True),
-						 (r'\|([a-zA-Z0-9-_.]+) \|', r'|\1|', True)])
 	return s_expr
 
 
@@ -51,7 +56,9 @@ def standardize_symbols(s_expr):
 			if '.' in escaped:
 				word, suffix = escaped.split('.')
 				escaped = word
+				suffix = suffix.strip('_')
 				after = '.'+suffix.lower()+after
+			escaped = escaped.strip('_').replace('_', ' ')
 			return before+escaped+after
 		else:
 			return [standardize_rec(x) for x in e]
