@@ -1,6 +1,7 @@
 """Classes for representing and modifying logical forms and eventualities."""
 
 import glob
+from ulf2english import ulf2english
 
 from eta.constants import *
 from eta.util.sexpr import parse_s_expr, list_to_str, list_to_s_expr, read_lisp
@@ -179,24 +180,15 @@ class LF:
     self.formula = subst(var2, var1, self.formula)
   
   def get_formula(self):
-    """Gets the formula, applying any variable assignments first."""
+    """Get the formula, applying any variable assignments first."""
     return substall(self.formula, list(self.bindings.items()))
   
   def to_nl(self):
-    """Converts the formula to a natural language string.
-
-    Notes
-    -----
-    TODO: replace naive implementation with ULF2English.
-    """
+    """Convert the formula to a natural language string."""
     formula = self.get_formula()
     formula = rec_replace(['^me', "'s"], '^my', formula)
     formula = rec_replace(['^you', "'s"], '^your', formula)
-    words = [remove_type(w) for w in list_to_str(formula).split() if w not in KEYWORDS_R]
-    words = [w for w in words if w[0] != '{']
-    words = flatten([w.split('-') for w in words])
-    words = [w.replace('_', ' ') for w in words]
-    return ' '.join(words)
+    return ulf2english.convert(formula, standardize=True)
 
   def __str__(self):
     return list_to_s_expr(self.get_formula())

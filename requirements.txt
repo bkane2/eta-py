@@ -1,5 +1,7 @@
 backoff
 transduction
+ulflib
+ulf2english
 openai
 transformers
 nltk

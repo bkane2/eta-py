@@ -34,6 +34,12 @@ def test1():
   fact7.bind('?location', ['the.d', 'store.n'])
   print(fact7)
 
+  fact8 = parse_eventuality("(^me ((pres want.v) (to (be.v able.a (to (watch.v ((^me 's) grandson.n) (ke graduate.v)))))))")
+  print(fact8.get_nl())
+
+  fact9 = parse_eventuality("(^me ((pres want.v) (to (know.v (more.d (n+preds {information}.n (about.p ((^me 's) (n+preds (possible.a (plur option.n)) (for.p (k treatment.n)))))))))))")
+  print(fact9.get_nl())
+
   facts = parse_eventuality_list(['!t1', ['^me', 'person.n'], '?s1', ['^me', [['pres', 'be.v'], ['at.p', ['the.d', 'store.n']]]],
                                   '?e1', ['^you', 'meet.v', '^me']])
   for f in facts:
@@ -46,9 +52,9 @@ def test1():
 
 def main():
   test1()
-  knowledge = from_lisp_dirs('agents/test/knowledge')
-  for e in knowledge:
-    print(e)
+  # knowledge = from_lisp_dirs('agents/test/knowledge')
+  # for e in knowledge:
+  #   print(e)
 
 
 if __name__ == '__main__':
