@@ -31,6 +31,10 @@ def main():
   s_expr = parse_s_expr(test)
   print(s_expr)
 
+  test = '({THE}.D (N+PREDS POLLSTER.N (= |Robert M. Teeter|)))'
+  s_expr = parse_s_expr(test)
+  print(s_expr)
+
 
 if __name__ == "__main__":
   main()

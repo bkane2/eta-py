@@ -55,9 +55,10 @@ def standardize_symbols(s_expr):
 			after = parts[2].lower()
 			if '.' in escaped:
 				word, suffix = escaped.split('.')
-				escaped = word
-				suffix = suffix.strip('_')
-				after = '.'+suffix.lower()+after
+				if suffix and suffix[0] != '_':
+					escaped = word
+					suffix = suffix.strip('_')
+					after = '.'+suffix.lower()+after
 			escaped = escaped.strip('_').replace('_', ' ')
 			return before+escaped+after
 		else:
