@@ -40,13 +40,13 @@ def _affect_validator(prompt, resp):
   return resp
 
 PROMPTS = {
-  'reason-bottom-up' : file.read_file('eta/resources/prompts/reason-bottom-up.txt'),
-  'gist' : file.read_file('eta/resources/prompts/gist.txt'),
-  'paraphrase' : file.read_file('eta/resources/prompts/paraphrase.txt'),
-  'response' : file.read_file('eta/resources/prompts/response.txt'),
-  'answer' : file.read_file('eta/resources/prompts/answer.txt'),
-  'ask' : file.read_file('eta/resources/prompts/ask.txt'),
-  'affect' : file.read_file('eta/resources/prompts/affect.txt')
+  'reason-bottom-up' : file.read_file('eta/resources/prompts/reason-bottom-up.txt', in_module=True),
+  'gist' : file.read_file('eta/resources/prompts/gist.txt', in_module=True),
+  'paraphrase' : file.read_file('eta/resources/prompts/paraphrase.txt', in_module=True),
+  'response' : file.read_file('eta/resources/prompts/response.txt', in_module=True),
+  'answer' : file.read_file('eta/resources/prompts/answer.txt', in_module=True),
+  'ask' : file.read_file('eta/resources/prompts/ask.txt', in_module=True),
+  'affect' : file.read_file('eta/resources/prompts/affect.txt', in_module=True),
 }
 """dict: a dict of prompts to use for initializing each transducer type."""
 
