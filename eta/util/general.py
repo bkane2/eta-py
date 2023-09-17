@@ -62,6 +62,11 @@ def escaped_symbol_p(s):
 	return isinstance(s, str) and len(s) >= 2 and s.count('|') == 2
 
 
+def quotation_p(s):
+	"""Check if a given symbol is a quoted string."""
+	return isinstance(s, str) and len(s) >= 2 and s[0] == '"' and s[-1] == '"'
+
+
 def symbolp(s):
 	"""Check if a given variable is a "symbol" (i.e., a string)."""
 	return isinstance(s, str)

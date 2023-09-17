@@ -7,7 +7,7 @@ Some of this code is borrowed from the following repository:
 https://github.com/bitbanger/schemas/blob/master/pyschemas/sexpr.py
 """
 
-from eta.util.general import flatten, replaceall, symbolp, atom, escaped_symbol_p, standardize
+from eta.util.general import flatten, replaceall, symbolp, atom, escaped_symbol_p, quotation_p, standardize
 import eta.util.file as file
 
 def balanced_substr(s):
@@ -46,9 +46,9 @@ def clean_s_expr(s_expr):
 def standardize_symbols(s_expr):
 	"""Standardize the symbols within an S-expression by mapping to lowercase, unless enclosed in escape symbols."""
 	def standardize_rec(e):
-		if symbolp(e) and not escaped_symbol_p(e):
+		if symbolp(e) and not escaped_symbol_p(e) and not quotation_p(e):
 			return e.lower()
-		elif symbolp(e):
+		elif symbolp(e) and escaped_symbol_p(e):
 			parts = e.split('|')
 			before = parts[0].lower()
 			escaped = parts[1]
@@ -61,6 +61,8 @@ def standardize_symbols(s_expr):
 					after = '.'+suffix.lower()+after
 			escaped = escaped.strip('_').replace('_', ' ')
 			return before+escaped+after
+		elif symbolp(e) and quotation_p(e):
+			return e
 		else:
 			return [standardize_rec(x) for x in e]
 	return standardize_rec(s_expr)
@@ -82,6 +84,42 @@ def convert_quotes(s_expr):
 					e1.append(x2)
 			return [convert_quotes_rec(x) for x in e1]
 	return convert_quotes_rec(s_expr)
+
+
+def compress_quotes(s_expr):
+	"""Compress quoted expressions that were split between multiple words during parsing."""
+	def compress_quotes_rec(e):
+		if atom(e):
+			return e
+		elif len(e) == 1:
+			return [compress_quotes_rec(e[0])]
+		else:
+			e1 = []
+			acc = []
+			i = 0
+			while i < len(e):
+				if isinstance(e[i], str) and e[i][0] == '"':
+					j = i
+					while j < len(e):
+						acc.append(e[j])
+						if not isinstance(e[j], str):
+							e1 += acc
+							acc = []
+							j += 1
+							break
+						elif e[j][-1] == '"':
+							e1.append(' '.join(acc))
+							acc = []
+							j += 1
+							break
+						else:
+							j += 1
+					i = j
+				else:
+					e1.append(e[i])
+					i += 1
+			return [compress_quotes_rec(x) for x in e1]
+	return compress_quotes_rec(s_expr)
 
 
 def parse_s_expr(s_expr):
@@ -137,7 +175,7 @@ def parse_s_expr(s_expr):
 
 		return items
 
-	return convert_quotes(standardize_symbols(parse_s_expr_rec(s_expr)))
+	return convert_quotes(standardize_symbols(compress_quotes(parse_s_expr_rec(s_expr))))
 
 
 def list_to_s_expr(lst):

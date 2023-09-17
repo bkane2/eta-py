@@ -35,6 +35,18 @@ def main():
   s_expr = parse_s_expr(test)
   print(s_expr)
 
+  test = '(ds date-time "June 18th 2017")'
+  s_expr = parse_s_expr(test)
+  print(s_expr)
+
+  test = '(test.v (ds date-time "June 18th 2017" test-str1 (a b) test-str2 "Another date" (c d)))'
+  s_expr = parse_s_expr(test)
+  print(s_expr)
+
+  test = '(^you say-to.v ^me "this is a test quoted string.")'
+  s_expr = parse_s_expr(test)
+  print(s_expr)
+
 
 if __name__ == "__main__":
   main()
