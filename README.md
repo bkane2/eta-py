@@ -20,13 +20,13 @@ E.g., `"John went to the store ."`
 
 For more complex reasoning-intensive tasks, events may be represented using formulas in [Episodic Logic](https://www.cs.rochester.edu/research/epilog/) (EL), an expressive first-order intensional logic where events (or episodes) are explicit constants, and can be *characterized* by formulas using a `**` operator.
 
-E.g., `((|John| go-to.v |Store3|) ** E2) (E2 during.p Now7)`
+E.g., `((|John| go.v |Store3|) ** E2) (E2 during.p Now7)`
 
 ##### Unscoped Logical Form (ULF)
 
 Finally, as a middle-ground between these two levels of formality, events may be represented using [Unscoped Logical Form](https://cs.rochester.edu/u/gkim21/ulf/) (ULF), a variant of EL that preserves the semantic types of EL while leaving certain phenomena (operator scopes, tense, word senses, and anaphora) unresolved in order to closer mirror natural language.
 
-E.g., `(|John| ((past go.v) (to.p (the.d store.n))))`
+E.g., `(|John| ((past go.v) (to.p-arg (the.d store.n))))`
 
 
 
