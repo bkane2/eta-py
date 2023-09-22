@@ -1,5 +1,7 @@
 # Eta Dialogue Manager
 
+![Eta Architecture](docs/figures/architecture.pdf)
+
 This is the official Python implementation of the Eta Dialogue Manager, a general-purpose and extensible framework for creating intelligent conversational agents from **dialogue schemas** that represent expected dialogue events within a particular domain. The dialogue manager interleaves four parallel processes, each of which operate on a shared dialogue state:
 * perception
 * reasoning
