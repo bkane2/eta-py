@@ -10,19 +10,19 @@ The specific functionality of each process can be modified through the use of mo
 
 Eta is also representationally flexible, allowing for multiple levels of knowledge representation for events in schemas and memory. All of these three levels are encapsulated by the notion of an **eventuality**, which represents an abstract fact or event with an associated representation.
 
-#### Natural Language
+##### Natural Language
 
 At the most basic level, events may be described by natural language strings, which is often sufficient for more casual or open-ended domains, and can be easily integrated with data-driven NLP techniques.
 
 E.g., `"John went to the store ."`
 
-#### Episodic Logic (EL)
+##### Episodic Logic (EL)
 
 For more complex reasoning-intensive tasks, events may be represented using formulas in [Episodic Logic](https://www.cs.rochester.edu/research/epilog/) (EL), an expressive first-order intensional logic where events (or episodes) are explicit constants, and can be *characterized* by formulas using a `**` operator.
 
 E.g., `((|John| go-to.v |Store3|) ** E2) (E2 during.p Now7)`
 
-### Unscoped Logical Form (ULF)
+##### Unscoped Logical Form (ULF)
 
 Finally, as a middle-ground between these two levels of formality, events may be represented using [Unscoped Logical Form](https://cs.rochester.edu/u/gkim21/ulf/) (ULF), a variant of EL that preserves the semantic types of EL while leaving certain phenomena (operator scopes, tense, word senses, and anaphora) unresolved in order to closer mirror natural language.
 
