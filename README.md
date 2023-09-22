@@ -1,10 +1,32 @@
 # Eta Dialogue Manager
 
-This is the official Python implementation of the Eta Dialogue Manager, a general-purpose and extensible framework for creating intelligent conversational agents from **dialogue schemas** that represent expected dialogue events within a particular domain. The dialogue manager interleaves four parallel processes -- perception, reasoning, planning, and execution -- each of which operates on a shared dialogue state.
+This is the official Python implementation of the Eta Dialogue Manager, a general-purpose and extensible framework for creating intelligent conversational agents from **dialogue schemas** that represent expected dialogue events within a particular domain. The dialogue manager interleaves four parallel processes, each of which operate on a shared dialogue state:
+* perception
+* reasoning
+* planning
+* execution
 
 The specific functionality of each process can be modified through the use of modular **transducers** that perform a specific type of data mapping (e.g., mapping input utterances to semantic representations, or mapping a dialogue plan to a new expanded dialogue plan). Each type of transducer is implementation-agnostic, allowing for the substitution of many possible models for each type of mapping function -- whether symbolic rules, a neural network, a large language model API, or some combination thereof. The modified data is processed using a set of buffers (priority queues) in order to ensure consistency between processes.
 
-Eta is also representationally flexible, allowing for multiple levels of knowledge representation for events in schemas and memory. At the most basic level, events may be described by natural language strings (e.g., `"John went to the store ."`), which is often sufficient for more casual or open-ended domains. For more complex tasks, events may be represented using formulas in [Episodic Logic](https://www.cs.rochester.edu/research/epilog/) (EL), an expressive first-order intensional logic (e.g., `((|John| go-to.v |Store3|) ** E2) (E2 during.p Now7)`). Finally, as a middle-ground between these two levels of formality, events may be represented using [Unscoped Logical Form](https://cs.rochester.edu/u/gkim21/ulf/) (ULF), a variant of EL that preserves the semantic types of EL while leaving certain phenomena (operator scopes, tense, word senses, and anaphora) unresolved in order to closer mirror natural language (e.g., `(|John| ((past go.v) (to.p (the.d store.n))))`). All of these three levels are encapsulated by the notion of an **eventuality**, which represents an abstract fact or event with an associated representation.
+Eta is also representationally flexible, allowing for multiple levels of knowledge representation for events in schemas and memory. All of these three levels are encapsulated by the notion of an **eventuality**, which represents an abstract fact or event with an associated representation.
+
+#### Natural Language
+
+At the most basic level, events may be described by natural language strings, which is often sufficient for more casual or open-ended domains, and can be easily integrated with data-driven NLP techniques.
+
+E.g., `"John went to the store ."`
+
+#### Episodic Logic (EL)
+
+For more complex reasoning-intensive tasks, events may be represented using formulas in [Episodic Logic](https://www.cs.rochester.edu/research/epilog/) (EL), an expressive first-order intensional logic where events (or episodes) are explicit constants, and can be *characterized* by formulas using a `**` operator.
+
+E.g., `((|John| go-to.v |Store3|) ** E2) (E2 during.p Now7)`
+
+### Unscoped Logical Form (ULF)
+
+Finally, as a middle-ground between these two levels of formality, events may be represented using [Unscoped Logical Form](https://cs.rochester.edu/u/gkim21/ulf/) (ULF), a variant of EL that preserves the semantic types of EL while leaving certain phenomena (operator scopes, tense, word senses, and anaphora) unresolved in order to closer mirror natural language.
+
+E.g., `(|John| ((past go.v) (to.p (the.d store.n))))`
 
 
 
