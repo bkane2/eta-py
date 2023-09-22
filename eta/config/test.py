@@ -22,8 +22,8 @@ def config():
         'pragmatic' : TTPragmaticTransducer('agents/test/rules'),
         'reaction' : TTReactionTransducer('agents/test/rules'),
         'subplan' : TTSubplanTransducer('agents/test/rules'),
-        'affect' : GPTAffectTransducer()
+        'affect' : TTAffectTransducer()
     },
-    'embedder': STEmbedder(),
+    'embedder': DummyEmbedder(),
     'session_number': 1
   }
