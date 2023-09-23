@@ -187,7 +187,7 @@ def read_preds_file(fname):
   preds : dict
     A dict mapping predicate names to functions.
   """
-  mod_name = fname.split('.py')[0].replace("/", ".")
+  mod_name = fname.split('.py')[0].replace("/", ".").replace('\\', '.')
   mod = importlib.import_module(mod_name)
   funcs = [f for f in dir(mod) if callable(getattr(mod, f)) and f[0] != '_']
   return { f.replace('_', '-') : getattr(mod, f) for f in funcs }
