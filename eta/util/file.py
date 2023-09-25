@@ -168,7 +168,7 @@ def ensure_dir_exists(dirname, in_module=False):
   dirname : str
   in_module : bool, default=False
   """
-  fname = get_path(fname, in_module)
+  dirname = get_path(dirname, in_module)
   Path(dirname).mkdir(parents=True, exist_ok=True)
 
 
