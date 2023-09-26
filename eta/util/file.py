@@ -7,7 +7,8 @@ from pathlib import Path
 def get_path(fname, in_module):
   """Get the absolute file path for files within this module if `in_module` is given as True."""
   if in_module:
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), fname)
+    modpath = os.path.dirname(os.path.abspath(__file__)).strip('util/')
+    return '/'+os.path.join(modpath, fname)
   else:
     return fname
 

@@ -10,13 +10,13 @@ from eta.util.general import atom
 
 STEMMER = SnowballStemmer("english")
 
-NAMES = file.load_json('eta/resources/lexical/ulf/names.json', in_module=True)
-NOUNS = file.load_json('eta/resources/lexical/ulf/nouns.json', in_module=True)
-VERBS = file.load_json('eta/resources/lexical/ulf/verbs.json', in_module=True)
-VERBS_PASV = file.load_json('eta/resources/lexical/ulf/verbs_passive.json', in_module=True)
-WH_PREDS = file.load_json('eta/resources/lexical/ulf/wh_preds.json', in_module=True)
-SUP_ADJS = file.load_json('eta/resources/lexical/ulf/sup_adjs.json', in_module=True)
-ADV_ADJS = file.load_json('eta/resources/lexical/ulf/adv_adjs.json', in_module=True)
+NAMES = file.load_json('resources/lexical/ulf/names.json', in_module=True)
+NOUNS = file.load_json('resources/lexical/ulf/nouns.json', in_module=True)
+VERBS = file.load_json('resources/lexical/ulf/verbs.json', in_module=True)
+VERBS_PASV = file.load_json('resources/lexical/ulf/verbs_passive.json', in_module=True)
+WH_PREDS = file.load_json('resources/lexical/ulf/wh_preds.json', in_module=True)
+SUP_ADJS = file.load_json('resources/lexical/ulf/sup_adjs.json', in_module=True)
+ADV_ADJS = file.load_json('resources/lexical/ulf/adv_adjs.json', in_module=True)
 
 
 def to_ulf(cat, word):

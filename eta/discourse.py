@@ -4,9 +4,9 @@ import eta.util.file as file
 from eta.constants import EMOTIONS_LIST
 from eta.util.general import cons, replaceall
 
-CONTRACTIONS = file.load_json('eta/resources/lexical/contractions.json', in_module=True)
-NEGPAIRS = file.load_json('eta/resources/lexical/negpairs.json', in_module=True)
-DUALS = file.load_json('eta/resources/lexical/duals.json', in_module=True)
+CONTRACTIONS = file.load_json('resources/lexical/contractions.json', in_module=True)
+NEGPAIRS = file.load_json('resources/lexical/negpairs.json', in_module=True)
+DUALS = file.load_json('resources/lexical/duals.json', in_module=True)
 
 
 class Utterance:
