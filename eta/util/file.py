@@ -7,8 +7,8 @@ from pathlib import Path
 def get_path(fname, in_module):
   """Get the absolute file path for files within this module if `in_module` is given as True."""
   if in_module:
-    modpath = os.path.dirname(os.path.abspath(__file__)).strip('util/')
-    return os.path.abspath(os.path.join(modpath, fname))
+    modpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(modpath, fname)
   else:
     return fname
 
@@ -182,5 +182,5 @@ def ensure_file_exists(fname, in_module=False):
   in_module : bool, default=False
   """
   fname = get_path(fname, in_module)
-  ensure_dir_exists('/'.join(fname.split('/')[:-1]))
+  ensure_dir_exists(os.path.dirname(fname))
   clear(fname)
