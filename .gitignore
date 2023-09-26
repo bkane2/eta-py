@@ -7,3 +7,6 @@ io/*
 logs/*
 
 .vscode
+
+env
+/**/__pycache__
