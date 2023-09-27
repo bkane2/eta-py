@@ -220,16 +220,19 @@ class GPTSubplanTransducer(GPTTransducer, SubplanTransducer):
 
 
 class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
-  def __init__(self, examples=[]):
+  def __init__(self, examples=[], history_window_size=4):
     for e in examples:
       e['agents-gen'] = self._to_generic_agents(e['agents'])
     super().__init__(PROMPTS['paraphrase'], VALIDATORS['paraphrase'], examples=examples)
+    self.window_size = history_window_size
 
   def __call__(self, gist, conversation_log, facts_bg, facts_fg):
     self._validate(gist, conversation_log, facts_bg, facts_fg)
     # do not use conversation log if only single Eta utterance so far
     if len(conversation_log) == 1 and conversation_log[0].agent == ME:
       conversation_log = []
+    if self.window_size >= 1:
+      conversation_log = conversation_log[-self.window_size:]
     history = [turn.utterance.words for turn in conversation_log]
     agents = [f'{turn.agent}: ' for turn in conversation_log]
     agents_gen = self._to_generic_agents(agents)
