@@ -607,7 +607,7 @@ class DialogueState():
   def _write_turn(self, turn):
     text = turn.utterance.words
     affect = turn.utterance.affect
-    gist = " ".join([list_to_s_expr(t) for t in turn.gists]) if turn.gists else 'NIL'
+    gist = " ".join(['"'+list_to_s_expr(t)+'"' for t in turn.gists]) if turn.gists else 'NIL'
     semantics = " ".join([list_to_s_expr(t) for t in turn.semantics]) if turn.semantics else 'NIL'
     pragmatics = " ".join([list_to_s_expr(t) for t in turn.pragmatics]) if turn.pragmatics else 'NIL'
     obligations = " ".join([list_to_s_expr(t) for t in turn.obligations]) if turn.obligations else 'NIL'
