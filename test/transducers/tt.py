@@ -52,6 +52,15 @@ def test3():
   utt = Utterance('^you', 'how frequently do you drink beer ?')
   print(test(utt, clog))
 
+  clog = [
+    DialogueTurn(Utterance('^me', "i don't see how you could possibly know that prediction for sure ! can you provide any more information or insights into my prognosis ?"),
+                 gists=["can you provide more information or insights into my prognosis ?",
+                        "i don't see how you could possibly know that prediction for sure !",
+                        "nil question ?"])
+  ]
+  utt = Utterance('^you', "yes , it's very important to prepare for the future accordingly and i'm really sorry to have to give you this news .")
+  print(test(utt, clog))
+
 
 def test4():
   test = TTParaphraseTransducer('agents/sophie/rules')
@@ -71,11 +80,19 @@ def test4():
   print(test(gist, clog, [], []))
 
 
+def test5():
+  test = TTPragmaticTransducer('agents/sophie-gpt/rules')
+
+  gist = "there is some chance i could outlive my prognosis ."
+  print(test(gist))
+
+
 def main():
-  test1()
-  test2()
+  # test1()
+  # test2()
   test3()
-  test4()
+  # test4()
+  # test5()
 
 
 if __name__ == '__main__':

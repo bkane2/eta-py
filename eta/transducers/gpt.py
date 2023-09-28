@@ -155,7 +155,8 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
     self._validate(utt, conversation_log)
     agent = utt.agent
     utt = utt.words
-    prev_utt = get_prior_words(conversation_log, ME)
+    prior_agent = ME if agent == YOU else YOU
+    prev_utt = get_prior_words(conversation_log, prior_agent)
     if agent == ME:
       prev_utt = swap_duals(prev_utt)
 

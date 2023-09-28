@@ -1724,7 +1724,7 @@
   ; Things may/may not get better.
   1 (0 .NEG 2 .MAKE-BETTER 0)
     2 ((It is unlikely that I outlive my prognosis \.)) (0 :gist)
-  1 (0 .MAKE-BETTER 0)
+  1 (0 .MAKE-BETTER 5)
     2 ((There is some chance I could outlive my prognosis \.)) (0 :gist)
 
   ; You don't have much long left to live.
@@ -1754,12 +1754,13 @@
     2 ((It is unlikely that I outlive my prognosis \.)) (0 :gist)
 
   ; Yes / No
-  1 (:subtree *match-affirm*)
-    2 ((There is some chance I could outlive my prognosis \.)) (0 :gist)
-  1 (:subtree *match-unsure*)
-    2 ((My prognosis is hard to predict \.)) (0 :gist)
-  1 (:subtree *match-deny*)
-    2 ((It is unlikely that I outlive my prognosis \.)) (0 :gist)
+  1 (5)
+    2 (:subtree *match-affirm*)
+      3 ((There is some chance I could outlive my prognosis \.)) (0 :gist)
+    2 (:subtree *match-unsure*)
+      3 ((My prognosis is hard to predict \.)) (0 :gist)
+    2 (:subtree *match-deny*)
+      3 ((It is unlikely that I outlive my prognosis \.)) (0 :gist)
 )) ; END *prognosis-bargaining-input*
 
 

@@ -152,9 +152,11 @@ class TTGistTransducer(TTTransducer, GistTransducer):
 
   def __call__(self, utt, conversation_log):
     self._validate(utt, conversation_log)
+    agent = utt.agent
     utt = utt.words
     prev_gists = []
-    prior_turn = get_prior_turn(conversation_log, ME)
+    prior_agent = ME if agent == YOU else YOU
+    prior_turn = get_prior_turn(conversation_log, prior_agent)
     if prior_turn:
       prev_gists = prior_turn.gists
 
