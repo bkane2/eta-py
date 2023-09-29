@@ -1,4 +1,11 @@
-(READRULES '*reaction-to-input*
+(READRULES '*reaction*
+'(
+  1 (^you paraphrase-to.v ^me !expr)
+    2 (*reaction-gist* (quote-to-list! 4)) (0 :subtree+clause)
+))
+
+
+(READRULES '*reaction-gist*
 ; Currently we only branch to a question in the case
 ; of a question related to the getting-to-know you
 ; question(s). We want to be very cautious here since
@@ -8,7 +15,7 @@
 '(
   ; Goodbye responses
   1 (0 goodbye \. 0)
-    2 exchange-goodbyes.v (0 :schema)
+    2 say-bye.v (0 :schema)
   ; Question responses
   1 (0 ?) ; anything ending with ?
     2 *reaction-to-question* (0 :subtree)

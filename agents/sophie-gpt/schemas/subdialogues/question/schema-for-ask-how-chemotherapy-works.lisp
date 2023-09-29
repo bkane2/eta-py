@@ -48,7 +48,7 @@
 )
 
 :obligations (
-  !o1 (?e1 obligates ((^you be.v explicit.a) and (^you tell.v ^me (about.p-arg (k chemotherapy.n)))))
+  !o1 (?e1 obligates ((^you be.v empowering.a) and (^you be.v explicit.a) and (^you tell.v ^me (about.p-arg (k chemotherapy.n)))))
 )
 
 )) ; END ask-how-chemotherapy-works.v

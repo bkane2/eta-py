@@ -61,12 +61,12 @@
 
     (:if (^you tell.v ^me (that (((^me 's) cancer.n) be.v worse.a)))
 
-      ?e2 (^me paraphrase-to.v ^you '(I don\'t believe you \. There\'s no way that\'s true \.))
+      ?e2 (^me paraphrase-to.v ^you '(I don\'t see how you could know that for sure \. There\'s no way that\'s true \.))
       ?e3 (^you reply-to.v ?e2))
 
     (:if (^you tell.v ^me (that (((^me 's) cancer.n) be.v (not worse.a))))
 
-      ?e2 (^me paraphrase-to.v ^you '(I don\'t believe you \. There\'s no way that\'s true \.))
+      ?e2 (^me paraphrase-to.v ^you '(I don\'t see how you could know that for sure \. There\'s no way that\'s true \.))
       ?e3 (^you reply-to.v ?e2))
 
     (:else

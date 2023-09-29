@@ -27,6 +27,8 @@
   ?s1 (^me ((pres have.v) (k (lung.n cancer.n))))
   ; Sophie wants to be able to watch her grandson graduate
   ?s2 (^me ((pres want.v) (to (be.v able.a (to (watch.v ((^me 's) grandson.n) (ke graduate.v)))))))
+  ; Sophie is not ready to talk about treatment options yet
+  ?s3 (^me ((pres be.v) not ready.a (to (talk.v (about.p-arg (k (plur (treatment.n option.n)))) yet.adv-e))))
 )
 
 :preconds (
@@ -65,7 +67,7 @@
           ?e10 (^me paraphrase-to.v ^you '(I\'m not sure I can trust your prognosis \. I need to find another
                                           doctor who can be honest with me \.))
           ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-          ?e12 (^me say-bye.v))))
+          ?e12 (^me say-bye-to.v ^you))))
 
 
     ?e13 (:try-in-sequence
@@ -86,7 +88,7 @@
 
         ?e17 (^me paraphrase-to.v ^you '(I\'m pretty anxious about my future\, but your honesty means a lot to me \.))
         ?e18 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-        ?e19 (^me say-bye.v)))
+        ?e19 (^me say-bye-to.v ^you)))
 
 )
 

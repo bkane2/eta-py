@@ -1,4 +1,4 @@
-;; *ETA-SCHEMA*: development version 6
+;; *have-eta-dialog*: development version 6
 ;;
 ;; TODO
 ;; 
@@ -42,7 +42,3 @@
 )
 
 )) ; END have-eta-dialog.v
-
-
-; TODO REFACTOR : store following topic keys:
-;; (?e2 (Pain))

@@ -91,10 +91,15 @@ class GPTTransducer(Transducer):
     An accumulator variable for the total cost of applying a transducer instance within a session.
   """
 
-  def __init__(self, prompt, validators, examples=[]):
+  def __init__(self, prompt, validators, examples=[], debug=True):
     self.prompt = subst_examples(prompt, examples)
     self.validators = validators
     self._cost = 0.
+    self.debug = debug
+    if self.debug:
+      file.ensure_file_exists(GPT_DEBUG_FILE)
+      file.clear(GPT_DEBUG_FILE)
+    self.idx = 1
 
   def __call__(self, kwargs, stop=None):
     """Generate a result for some input using GPT.
@@ -114,6 +119,10 @@ class GPTTransducer(Transducer):
     """
     prompt = subst_kwargs(self.prompt, kwargs)
     result, cost = generate_gpt(prompt, postprocessors=self.validators, stop=stop)
+    if self.debug:
+      file.append_file(GPT_DEBUG_FILE, str(self.idx)+':\n\n'+prompt+'\n\n')
+      file.append_file(GPT_DEBUG_FILE, 'result: '+str(result)+'\n\n-------------------\n\n')
+      self.idx += 1
     self._cost += cost
     return result
   

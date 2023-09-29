@@ -3,57 +3,64 @@
 ; Transduction tree for inferring additional facts from the
 ; gist-clause interpretations of user input.
 ;
-; TODO: make gist clause patterns more general so that
-; language model generated gist clauses can be matched.
-;
 '(
   ; Empathetic
   1 (:or
-    (0 You 2 sorry 0)
-    ;;; Reason for cancer
-    ;; (0 You 1 wish 1 I 1 .NEG have cancer 0) ; You wish that I didn't have cancer
-    (0 You wish that I do not have cancer 0)
-    (0 You are sorry that I have cancer 0)
-    (0 Cancer is a bad illness 0)
-    (0 Cancer can affect anyone 0)
-    (0 There is nothing you could have done to change your cancer diagnosis 0)
-    (0 There\'s nothing you could have done to change your cancer diagnosis 0)
-    (0 Cancer can affect the human body suddenly 0)
-    (0 It is expected to feel badly after learning your cancer is terminal 0)
-    (0 You empathize with how hard it is to learn my cancer is terminal 0)
-    (0 How have I been feeling since the cancer metastasized 0)
-    (0 You are going to help me cope with learning my cancer is terminal 0)
+    (0 you 2 sorry 0)
+    ;;; Cancer
+    (0 you 1 wish 1 .SELF 1 .NEG have 2 .CANCER-ILLNESS 0)
+    (0 you 1 wish 2 things 2 .BE 2 different 0)
+    (0 you 2 .BE 3 sorry 1 .SELF have 2 .CANCER-ILLNESS 0)
+    (0 cancer .BE 2 .BAD 1 .CANCER-ILLNESS 0)
+    (0 .CANCER-ILLNESS can affect .ANYONE 0)
+    (0 nothing 2 could have done 3 .CHANGE 2 .CANCER-ILLNESS 0)
+    (0 nothing 2 could have done 3 .CHANGE 2 diagnosis 0)
+    (0 .CANCER-ILLNESS can affect 3 body suddenly 0)
+    (0 .NORMAL to 3 after .LEARN-GEN 1 .CANCER-ILLNESS 1 terminal 0)
+    (0 .NORMAL to 3 after .LEARN-GEN 1 .NEG 1 .OUTLIVE 0)
+    (0 you .EMPATHIZE 2 .DIFFICULT 3 .LEARN-GEN 0)
+    (0 how 1 .SELF 1 .FEELING since 1 .CANCER-ILLNESS 0)
+    (0 how 3 .FEELING 1 about 3 .CANCER_ILLNESS 0)
+    (0 you 3 help 1 .COPE 1 .LEARN-GEN 0)
     ;;; Test results
-    (0 You recognize how hard receiving the test results is for me 0)
-    (0 How do I feel about my test results 0)
+    (0 you 1 .UNDERSTAND-GEN 3 how .DIFFICULT 0)
+    (0 you 1 .UNDERSTAND-GEN 4 .DIFFICULT to 0)
+    (0 you 1 .UNDERSTAND-GEN 8 .BE .DIFFICULT 0)
+    (0 .WH_ 3 .FEELING 1 about 3 .DIAGNOSIS-TESTS 0)
+    ;;; Treatment Options
+    (0 empathize 2 how overwhelming .LEARN-GEN 3 .TREATMENT-OPTION .BE 0)
     ;;; Tell family
-    (0 My family is important to me 0)
-    (0 You empathize with how hard it is for me to tell my family 0)
-    (0 You empathize with how difficult my condition is for my family 0)
-    (0 You will be available to help me and my family during cancer treatment 0)
+    (3 my .FAMILY 1 .BE 1 .IMPORTANT 0)
+    (0 you .EMPATHIZE 2 .DIFFICULT 8 .TELL 1 .FAMILY 0)
+    (0 you .EMPATHIZE 2 .DIFFICULT 5 for 1 .FAMILY 0)
+    (0 you 2 .BE .AVAILABLE 5 .FAMILY 0)
     ;;; Prognosis bargaining (current health)
-    (0 You are glad to hear that I am still feeling healthy after my prognosis 0)
+    (0 you 2 .HAPPY-WORDS 5 .SELF 4 .GOOD-HEALTH 0)
+    (0 you 2 .HAPPY-WORDS 5 .SELF 4 .FEELING 1 .OKAY 0)
     ;;; Prognosis
-    (0 You are sorry to inform me of a poor prognosis 0)
-    (0 My family is important to understanding what I want to do with my prognosis 0)
-    (0 What scares me about my prognosis 0)
-    (0 What do I feel about my prognosis 0)
+    (0 you 2 .BE 3 sorry 8 .PROGNOSIS-WORD 0)
+    (0 my .FAMILY 1 .BE 1 .IMPORTANT 2 .UNDERSTAND-GEN 8 .PROGNOSIS-WORD 0)
+    (0 .WH_ 5 .ANXIETY-WORD 5 .PROGNOSIS-WORD 0)
+    (0 .WH_ 3 .FEELING 1 about 3 .PROGNOSIS-WORD 0)
+    (0 .AUX 2 .WANT-GEN .DOCTOR-PRON 1 .CONCENTRATE 2 .PROGNOSIS-WORD 2 or 2 .EMOTION ?)
     ;;; Pain
-    (0 You are sorry that I am in pain 0)
+    (0 you 2 .BE 3 sorry 8 .PAIN 0)
+    (0 you 2 .UNDERSTAND-GEN 8 .PAIN 0)
+    (0 you 2 imagine 8 .PAIN 0)
     ;;; Energy
-    (0 You are sorry that I have been feeling down recently 0)
-    (0 What parts of my future feel out of my control 0)
-    (0 How is my mental health 0)
+    (0 you 2 .BE 3 sorry 8 .MENT-HEALTH 0)
+    (0 .WH_ 5 .PROGNOSIS-WORD 4 out of 1 control 0)
+    (0 how .BE 4 .MENT-HEALTH 0)
     ;;; Appointment
-    (0 You are sorry that my daughter could not come today 0)
-    (0 How am I doing today 0)
+    (0 you 2 .BE 3 sorry 5 .FAMILY 2 .NEG 0)
+    (0 how .BE 2 .FEELING 2 .NOW 0)
+    (0 we 3 .RELATIONSHIP-DEVELOP 5 .RELATIONSHIP 0)
     ;;; Open-ended
-    (0 How am I feeling about my condition 0)
-    (0 How have I been feeling 0)
-    (0 You are glad to hear that I am feeling well 0)
-    (0 Was I nervous for this appointment 0)
-    (0 You will be available to help me 0)
-    (0 You empathize with 0)
+    (0 how .HAVE 2 been .FEELING 5)
+    (0 .BE 2 .FRIGHTENED 5 .APPOINTMENT 0)
+    (0 you 2 .BE 3 .AVAILABLE 3 .HELP 0)
+    (0 you .EMPATHIZE 1 with 0)
+    (0 .DOCTOR-PRON 1 .ADMIRE 2 .HAVE 1 .PROGNOSIS-DEALING with 1 .CANCER-ILLNESS 0)
   )
     2 (^you be.v empathetic.a) (0 :ulf)
 
@@ -69,59 +76,79 @@
 
   ;;; Cancer worse
   1 (:or
-    (0 The test results show that I cannot be cured 0)
-    (0 My cancer is terminal 0)
+    (0 .CANCER-ILLNESS 3 .BE .NEG 1 .CANCER-WORSE 0)
+    (0 .CANCER-ILLNESS 3 .HAVE .NEG 1 .CANCER-WORSE 0)
+  )
+    2 ((^you be.v explicit.a) and
+       (^you tell.v ^me (about.p-arg ((^me 's) condition.n))) and
+       (^you tell.v ^me (that (((^me 's) cancer.n) be.v (not worse.a))))) (0 :ulf)
+  1 (:or
+    (0 .CANCER-ILLNESS 0 .NEG 1 .BE .CURE 0)
+    (0 .CANCER-ILLNESS 0 .NEG 1 .CURE 0)
+    (0 .CANCER-ILLNESS 3 never 1 .CURE 0)
+    (0 .CANCER-ILLNESS 0 .BE 2 .NEG 1 .CURE 0)
+    (0 .CANCER-ILLNESS 0 .NEG 2 make it 0)
+    (0 .CANCER-ILLNESS 3 .BE 2 terminal 0)
   )
     2 ((^you be.v explicit.a) and
        (^you tell.v ^me (about.p-arg ((^me 's) condition.n))) and
        (^you tell.v ^me (that (((^me 's) cancer.n) be.v terminal.a)))) (0 :ulf)
   1 (:or
-    (0 The test results show that my cancer has spread 0)
-    (0 My cancer has gotten worse 0)
-    (0 radiation is not working 0)
+    (0 .CANCER-ILLNESS 3 .BE 2 .CANCER-INCREASE 0)
+    (0 .CANCER-ILLNESS 3 .HAVE 2 .CANCER-INCREASE 0)
+    (0 .CANCER-ILLNESS 3 .BE 2 .CANCER-WORSE 0)
+    (0 .CANCER-ILLNESS 3 .HAVE 2 .CANCER-WORSE 0)
+    (0 .RADIATION-TREATMENT 3 .NEG 1 .WORK 0)
   )
     2 ((^you be.v explicit.a) and
        (^you tell.v ^me (about.p-arg ((^me 's) condition.n))) and
        (^you tell.v ^me (that (((^me 's) cancer.n) be.v worse.a)))) (0 :ulf)
-  1 (:or
-    (0 My cancer has not gotten worse 0)
-  )
-    2 ((^you be.v explicit.a) and
-       (^you tell.v ^me (about.p-arg ((^me 's) condition.n))) and
-       (^you tell.v ^me (that (((^me 's) cancer.n) be.v (not worse.a))))) (0 :ulf)
 
   ;;; Prognosis (level 1)
   1 (:or
     ;;; Prognosis bargaining (current health)
-    (0 My health right now may improve my prognosis 0)
-    (0 My health right now does not change my prognosis 0)
-    (0 My health right now improves my prognosis 0)
+    (0 .HEALTHY 2 .NOW 3 .CHANGE-IMPROVE 2 .PROGNOSIS-WORD 0)
+    (0 .HEALTHY 2 .NOW 3 make 2 .PROGNOSIS-WORD better 0)
+    (0 .HEALTHY 2 .NOW 3 make 2 .PROGNOSIS-WORD better 0)
+    (0 .HEALTHY 2 .NOW 3 .MAKE-BETTER 2 .PROGNOSIS-WORD 0)
+    (0 .HEALTHY 2 .NOW 4 .OUTLIVE 2 .PROGNOSIS-WORD 0)
     ;;; Prognosis bargaining (quitting smoking)
-    (0 Quitting smoking will not make my prognosis better 0)
-    (0 Quitting smoking might make my prognosis better 0)
-    (0 Quitting smooking will make my prognosis better 0)
+    (0 .QUIT 1 .SMOKE 3 .CHANGE-IMPROVE 2 .PROGNOSIS-WORD 0)
+    (0 .QUIT 1 .SMOKE 3 make 2 .PROGNOSIS-WORD better 0)
+    (0 .QUIT 1 .SMOKE 3 make 2 .PROGNOSIS-WORD better 0)
+    (0 .QUIT 1 .SMOKE 3 .MAKE-BETTER 2 .PROGNOSIS-WORD 0)
+    (0 .QUIT 1 .SMOKE 4 .OUTLIVE 2 .PROGNOSIS-WORD 0)
     ;;; Prognosis bargaining (habits)
-    (0 Healthy habits will not help me outlive my prognosis 0)
-    (0 Healthy habits will help me outlive my prognosis 0)
-    (0 Healthy habits may help me outlive my prognosis 0)
+    (0 .HEALTHY 2 .HABIT 3 .CHANGE-IMPROVE 2 .PROGNOSIS-WORD 0)
+    (0 .HEALTHY 2 .HABIT 3 make 2 .PROGNOSIS-WORD better 0)
+    (0 .HEALTHY 2 .HABIT 3 make 2 .PROGNOSIS-WORD better 0)
+    (0 .HEALTHY 2 .HABIT 3 .MAKE-BETTER 2 .PROGNOSIS-WORD 0)
+    (0 .HEALTHY 2 .HABIT 4 .OUTLIVE 2 .PROGNOSIS-WORD 0)
     ;;; Prognosis denial
-    (0 My understanding of my prognosis is correct 0)
-    (0 My understanding of my prognosis may be correct 0)
-    (0 My understanding of my prognosis is incorrect 0)
-    (0 The majority of people have an accurate prognosis 0)
-    (0 The majority of people do not have an accurate prognosis 0)
-    (0 Many people do not have an accurate prognosis 0)
-    (0 It is unlikely that I outlive my prognosis 0)
-    (0 There is some chance I could outlive my prognosis 0)
+    (0 my 1 understanding 3 .PROGNOSIS-WORD 2 .BE 1 .TRUTH-WORD 0)
+    (0 .SELF 1 .BE 2 .TRUTH-WORD 3 about 2 .PROGNOSIS-WORD 0)
+    (0 .MOST 1 .PERSON-PL 4 .TRUTH-WORD 2 .PROGNOSIS-WORD 0)
+    (0 .MUCH 1 .PERSON-PL 4 .TRUTH-WORD 2 .PROGNOSIS-WORD 0)
+    (0 .FEW 1 .PERSON-PL 4 .TRUTH-WORD 2 .PROGNOSIS-WORD 0)
+    (0 .MOST 1 .PERSON-PL 4 .OUTLIVE 4 .PROGNOSIS-WORD 0)
+    (0 .MUCH 1 .PERSON-PL 4 .OUTLIVE 4 .PROGNOSIS-WORD 0)
+    (0 .FEW 1 .PERSON-PL 4 .OUTLIVE 4 .PROGNOSIS-WORD 0)
+    (0 .FREQ-WORD 3 .OUTLIVE 4 .PROGNOSIS-WORD 0)
   )
     2 ((^you be.v explicit.a) and
        (^you tell.v ^me (about.p-arg ((^me 's) prognosis.n)))) (0 :ulf)
 
   ;;; Prognosis (level 2)
   1 (:or
-    (0 prognosis is that I cannot be cured 0)
-    (0 prognosis .BE 3 terminal 0)
-    (0 prognosis .BE 3 .DIE 0)
+    (0 .NEG 1 .BE .CURE 0)
+    (0 .NEG 1 .CURE 0)
+    (0 never 1 .CURE 0)
+    (0 .BE 2 .NEG 1 .CURE 0)
+    (0 .NEG 2 make it 0)
+    (0 .PROGNOSIS-WORD 3 .BE 3 .NEG)
+    (0 .PROGNOSIS-WORD 3 .BE 2 terminal 0)
+    (0 .PROGNOSIS-WORD 3 .BE 3 .DIE 0)
+    (0 .PROGNOSIS-WORD 3 .BE 3 unfavorable 0)
   )
     2 ((^you be.v explicit.a) and
        (^you tell.v ^me (about.p-arg ((^me 's) prognosis.n))) and
@@ -130,14 +157,11 @@
   ;;; Prognosis (level 3)
   1 (:or
     ;;; Prognosis bargaining (graduation)
-    (0 My prognosis is that I will not live to attend the graduation of my grandson 0)
-    (0 My prognosis is that I might live to attend the graduation of my grandson 0)
-    (0 My prognosis is that I will live to attend the graduation of my grandson 0)
-    (0 My prognosis might allow me to attend the graduation of my grandson 0)
-    (0 My prognosis will not allow me to attend the graduation of my grandson 0)
-    (0 My prognosis is that I likely won\'t live to see my grandson\'s graduation 0)
+    (0 .CANCER-LIVE 3 .ATTEND 4 .GRAD-WORDS 0)
+    (0 .PROGNOSIS-WORD 6 .ATTEND 4 .GRAD-WORDS 0)
     ;;; Prognosis
-    (0 The prognosis is that I do not have long left to live 0)
+    (0 .NEG 3 .PROGNOSIS-MORE 3 .CANCER-LIVE 0)
+    (0 .NEG 3 .CANCER-LIVE 3 .PROGNOSIS-MORE 0)
   )
     2 ((^you be.v explicit.a) and
        (^you tell.v ^me (about.p-arg ((^me 's) prognosis.n))) and
@@ -146,9 +170,10 @@
 
   ;;; Prognosis (level 4)
   1 (:or
-    (0 The prognosis is that I may live for .NUMBER-TOTAL .ELAPSED-TIME 0)
-    (0 The prognosis is that I may live for several .ELAPSED-TIME 0)
-    (0 The prognosis is that I may live for a .ELAPSED-TIME 0)
+    (0 .PROGNOSIS-LIVE 2 .NUMBER-TOTAL 3 .ELAPSED-TIME 0)
+    (0 .PROGNOSIS-LIVE 2 several 1 .ELAPSED-TIME 0)
+    (0 .PROGNOSIS-LIVE 2 a 1 .ELAPSED-TIME 0)
+    (0 .PROGNOSIS-LIVE 2 some 1 .ELAPSED-TIME 0)
   )
     2 ((^you be.v explicit.a) and
        (^you tell.v ^me (about.p-arg ((^me 's) prognosis.n))) and
@@ -158,54 +183,64 @@
 
   1 (:or
     ;;; Treatment options
-    (0 Comfort Care is a treatment option 0)
+    (0 .COMFORT-CARE-WORD 5 .BE 3 .TREATMENT-OPTION 0)
+    (0 .TREATMENT-OPTION 2 .BE 3 .COMFORT-CARE-WORD 0)
+    (0 .MODAL 2 .TRY 5 .COMFORT-CARE-WORD 0)
+    (0 .WANT-GEN 2 .PROVIDE 2 advice 3 .TREATMENT-OPTION 0)
     ;;; Comfort care
-    (0 You do not think I need comfort care 0)
-    (0 You think I need comfort care 0)
-    (0 Receiving comfort care from a nurse is an option 0)
-    (0 Receiving comfort care in my own home is an option 0)
-    (0 Receiving comfort care from a specialized service is an option 0)
-    (0 Receiving comfort care in a dedicated facility is an option 0)
-    (0 Comfort care allows me to spend time with my family 0)
-    (0 Comfort care should alleviate my pain 0)
+    (0 need 2 .COMFORT-CARE-WORD 0)
+    (0 .COMFORT-CARE-WORD 5 .TIME-WORDS with 2 .FAMILY 0)
+    (0 .COMFORT-CARE-WORD 5 .BE with 2 .FAMILY 0)
+    (0 .COMFORT-CARE-WORD 5 .PAIN-ALLEVIATE 2 .PAIN 0)
   )
     2 ((^you be.v explicit.a) and (^you tell.v ^me (about.p-arg ((^me 's) (plur option.n)))) and
        (^you tell.v ^me (about.p-arg (k (comfort.n care.n))))) (0 :ulf)
 
   1 (:or
     ;;; Treatment options
-    (0 Chemotherapy is a treatment option 0)
+    (0 .CHEMOTHERAPY 5 .BE 3 .TREATMENT-OPTION 0)
+    (0 .TREATMENT-OPTION 2 .BE 3 .CHEMOTHERAPY 0)
+    (0 .MODAL 2 .TRY 5 .CHEMOTHERAPY 0)
     ;;; Chemotherapy
-    (0 You do not think I need chemotherapy 0)
-    (0 You think I need chemotherapy 0)
-    (0 You think we should talk to my oncologist about chemotherapy 0)
-    (0 You do not think I need chemotherapy because I should get comfort care instead 0)
-    (0 A side effect of chemotherapy is 0)
+    (0 need 2 .CHEMOTHERAPY 0)
+    (0 .DISCUSS 3 oncologist 3 .CHEMOTHERAPY 0)
+    (0 .DISCUSS 3 .CHEMOTHERAPY 3 oncologist 0)
+    (0 side effect 2 .CHEMOTHERAPY 2 .BE 0)
+    (0 .FUTURE-POSS 2 accept 2 .PAINFUL 2 .CHEMOTHERAPY 1 live longer 0)
+    (0 .BE 3 side effect 2 .CHEMOTHERAPY 0)
     (0 One way to get chemotherapy is 0)
+    (0 way 3 .MED-TAKE 2 .CHEMOTHERAPY 2 .BE 0)
   )
     2 ((^you be.v explicit.a) and (^you tell.v ^me (about.p-arg ((^me 's) (plur option.n)))) and
        (^you tell.v ^me (about.p-arg (k chemotherapy.n)))) (0 :ulf)
   
   1 (:or
     ;;; Treatment options
-    (0 Radiation is a treatment option 0)
+    (0 radiation 5 .BE 3 .TREATMENT-OPTION 0)
+    (0 .TREATMENT-OPTION 2 .BE 3 radiation 0)
+    (0 .MODAL 2 .TRY 5 radiation 0)
+    (0 need 2 radiation 0)
+    (0 .WANT-GEN 2 .BE .RESUSCITATE 0)
     ;;; Experimental therapy
-    (0 Experimental treatments might make my prognosis better 0)
-    (0 Experimental treatments will make my prognosis better 0)
-    (0 Experimental treatments will not make my prognosis better 0)
+    (0 .EXPERIMENTAL .TREATMENT 5 .BE 3 .TREATMENT-OPTION 0)
+    (0 .TREATMENT-OPTION 2 .BE 3 .EXPERIMENTAL .TREATMENT 0)
+    (0 .MODAL 2 .TRY 5 .EXPERIMENTAL .TREATMENT 0)
+    (0 .EXPERIMENTAL .TREATMENT 4 .PROGNOSIS-WORD 2 .CHANGE-IMPROVE 0)
+    (0 .EXPERIMENTAL .TREATMENT 4 .CHANGE-IMPROVE 2 .PROGNOSIS-WORD 0)
+    (0 .FUTURE-POSS 2 you .WANT-GEN 2 review 2 condition 0)
   )
     2 ((^you be.v explicit.a) and (^you tell.v ^me (about.p-arg ((^me 's) (plur option.n))))) (0 :ulf)
 
   1 (:or
     ;;; Tell family
-    (0 I should reassure my family about the cancer 0)
-    (0 I should tell my family the full truth about my cancer 0)
-    ;;; Radiation
-    (0 You think I need radiation 0)
-    (0 You do not think I need radiation 0)
+    (0 .MODAL 2 .REASSURE 2 .FAMILY 0)
+    (0 .MODAL 2 .TELL 2 .FAMILY 3 .HONESTY-WORD 0)
+    (0 .MODAL 2 .BE 3 .HONESTY-WORD 5 .FAMILY 0)
+    ;; Open-ended
+    (0 .THINK-GEN 2 .MODAL .REVISIT 2 conversation 1 .LATER-TIME 0)
+    (0 may .DOCTOR-PRON .SHARE .WH_ .DOCTOR-PRON .THINK-GEN 0)
     ;;; Energy
-    (0 I should take an antidepressant 0)
-    (0 I should see a therapist 0)
+    (0 .MODAL 3 .MENT-TREATMENT 0)
   )
     2 (^you be.v explicit.a) (0 :ulf)
 
@@ -214,55 +249,65 @@
   ; Empowering
   1 (:or
     ;;; Treatment options
-    (0 What are my treatment goals 0)
-    (0 What are my priorities 0)
-    (0 Do I have 1 .QUESTION about my treatment options 0)
-    (0 What do I understand about my treatment options 0)
+    (0 .AUX-BASE 2 .SELF 3 .QUESTION 5 .TREATMENT-OPTION 0 ?)
+    (0 .WH_ 1 .SELF 1 .KNOW 5 .TREATMENT-OPTION 0 ?)
     ;;; Treatment goals
-    (0 Do I want to try 1 fight the cancer 0)
+    (0 .WH_ 1 .BE 4 .CANCER-GOALS 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 4 .CANCER-FIGHT 0 ?)
+    (0 .WH_ 1 .BE 2 most 1 .IMPORTANT 0 ?)
+    (0 who 1 .BE .YOUR-REF 2 .SUPPORT 0 ?)
+    (0 .WH_ feelings .AUX you .HAVE about .DEATH 0 ?)
+    (0 .WH_ .BE 1 feelings 1 about .RELIGION 0 ?)
+    (0 .WH_ .AUX 1 .WANT-GEN 1 .AVOID 3 .TREATMENT-OPTION 0 ?)
+    (0 .DOCTOR-PRON .WANT-GEN 1 give 1 .RECOMMENDATION 2 .YOUR-REF .TREATMENT-OPTION 0)
     ;;; Test results
-    (0 Do I want my family to be .AVAILABLE when you tell me about the test results 0)
-    (0 Do I want anyone to be .AVAILABLE when you tell me about the test results 0)
-    (0 Do I know what the tests say 0)
-    (0 Do I have 1 .QUESTION about my test results 0)
-    (0 How much information do I want about my test results 0)
+    (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 3 .FAMILY 3 .AVAILABLE 8 .DIAGNOSIS-TESTS 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 3 .SOMEONE 3 .AVAILABLE 8 .DIAGNOSIS-TESTS 0 ?)
+    (0 .AUX-BASE 2 .SELF 1 .KNOW 3 .DIAGNOSIS-TESTS 2 .DIAGNOSIS-INDICATE 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .KNOW-GEN 4 .DIAGNOSIS-TESTS 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .QUESTION 5 .DIAGNOSIS-TESTS 0 ?)
+    (0 .WH_ 2 .INFORMATION-GEN 3 .WANT-GEN 6 .DIAGNOSIS-TESTS 0 ?)
     ;;; Tell family
-    (0 Do I want you to contact a family member now 0)
-    (0 What can you do to help me break the news to my family 0)
-    (0 Do I want you to be .AVAILABLE when I tell my family about the prognosis 0)
-    (0 How much do I want my family to know about the prognosis 0)
-    (0 Who in my family do I want to tell about the prognosis 0)
+    (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 5 .CONTACT 3 .FAMILY 0 ?)
+    (0 .WH_ 3 you do 5 .HELP 6 .FAMILY 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 3 you 3 .AVAILABLE 8 .TELL 3 .FAMILY 0 ?)
+    (0 .WH_ 3 .SELF 3 .WANT-GEN 3 .FAMILY 5 .KNOW-GEN 0 ?)
+    (0 .FAMILY-WHO 3 .FAMILY 2 .SELF 3 .WANT-GEN 3 .TELL 0 ?)
     ;;; Prognosis
-    (0 Do I want anyone to be .AVAILABLE when you tell me about the prognosis 0)
-    (0 Do I want my family to be .AVAILABLE when you tell me about the prognosis 0)
-    (0 How specific do I want you to be about my prognosis 0)
-    (0 How much information do I want about my prognosis 0)
-    (0 Do I understand my prognosis 0)
+    (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 3 .FAMILY 3 .AVAILABLE 8 .PROGNOSIS-WORD 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 3 .SOMEONE 3 .AVAILABLE 8 .PROGNOSIS-WORD 0 ?)
+    (0 how .SPECIFIC 3 .WANT-GEN 6 .PROGNOSIS-WORD 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .KNOW-GEN 4 .PROGNOSIS-WORD 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .QUESTION 5 .PROGNOSIS-WORD 0 ?)
+    (0 .WH_ 2 .INFORMATION-GEN 3 .WANT-GEN 6 .PROGNOSIS-WORD 0 ?)
     ;;; Question about prognosis
-    (0 Am I ready to discuss my treatment goals 0)
-    (0 Am I ready to start discussing my treatment options 0)
-    (0 Do I have 1 .QUESTION about my prognosis 0)
+    (0 .BE .SELF 2 .READY 3 .DISCUSS 5 .TREATMENT-OPTION 0 ?)
+    (0 .BE .SELF 2 .READY 3 .DISCUSS 5 .CANCER-GOALS 0 ?)
     ;;; Treatment goals (comfort care)
-    (0 What do I think about comfort care 0)
-    (0 Have I considered comfort care 0)
-    (0 Do I understand how comfort care works 0)
-    (0 Do I have 1 .QUESTION about comfort care 0)
+    (0 .WH_ 3 .SELF 3 .THINK-GEN 4 .COMFORT-CARE-WORD 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .THOUGHT 3 .COMFORT-CARE-WORD 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .KNOW-GEN 4 .COMFORT-CARE-WORD 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .QUESTION 5 .COMFORT-CARE-WORD 0 ?)
     ;;; Chemotherapy
-    (0 Do I have 1 .QUESTION about chemotherapy 0)
-    (0 What are my feelings about chemotherapy 0)
-    (0 Do I understand how chemotherapy works 0)
+    (0 .WH_ 3 .SELF 3 .THINK-GEN 4 .CHEMOTHERAPY 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .THOUGHT 3 .CHEMOTHERAPY 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .KNOW-GEN 4 .CHEMOTHERAPY 0 ?)
+    (0 .AUX-BASE 2 .SELF 3 .QUESTION 5 .CHEMOTHERAPY 0 ?)
     ;;; Energy
-    (0 How is my energy 0)
-    (0 Is something harming my mental health 0)
-    (0 What scares me about my condition 0)
+    (0 how 2 .BE 3 .SELF 2 .ENERGY 0 ?)
+    (0 .BE 3 .ANYTHING 3 .MAKE-WORSE 3 .MENT-HEALTH 0 ?)
+    (0 .WH_ 3 .ANXIETY-WORD 3 .SELF 0 ?)
     ;;; Open-ended
-    (0 Do I have 1 .QUESTION 0)
-    (0 How do I think this conversation is going 0) 
-    (0 How does that sound 0)
-    (0 What do I understand 0)
-    (0 How much information do I want 0)
-    (0 What is the most important thing for my future 0)
-    (0 What would help me manage my condition 0)
+    (0 .AUX-BASE 2 .SELF 3 .QUESTION 0 ?)
+    (0 .WH_ 3 .SELF 2 .THINK-GEN 3 .CONVERSATION 0 ?)
+    (0 how .DO 3 .SOUND 4 ?)
+    (0 .WH_ 1 .AUX-BASE 2 .SELF 3 .KNOW-GEN 0 ?)
+    (0 .WH_ 2 .INFORMATION-GEN 3 .WANT-GEN 0 ?)
+    (0 .WH_ 2 .BE 5 .IMPORTANT 5 future 0 ?)
+    (0 .WH_ 8 .BE 5 .IMPORTANT 2 .MY-REF 0 ?)
+    (0 .WH_ 8 .BE 5 .MEANS 1 most 2 .MY-REF 0 ?)
+    (0 .WH_ 3 .HELP .SELF 8 ?)
+    (0 .BE 2 following 1 WH_ .DOCTOR-PRON say 0)
   )
     2 (^you be.v empowering.a) (0 :ulf)
 

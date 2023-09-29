@@ -421,11 +421,15 @@ def say_to_step_from_utts(utts):
 
 def schema_step(wff, ds):
   """Check whether a given step wff corresponds to a dialogue schema in Eta's schema library."""
-  return listp(wff) and ((len(wff) == 1 and ds.is_schema(wff[0], type='dial')) or ds.is_schema(wff[1], type='dial'))
+  return ((listp(wff) and ((len(wff) == 1 and ds.is_schema(wff[0], type='dial')) or ds.is_schema(wff[1], type='dial')))
+          or (isinstance(wff, str) and ds.is_schema(wff, type='dial')))
 
 
 def split_schema_step(wff):
   """Split a schema step wff into the schema predicate and the arguments list for the schema."""
+  if not listp(wff):
+    return wff, []
+  
   if len(wff) == 1:
     return wff[0], []
   predicate = wff[1]

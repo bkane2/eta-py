@@ -36,7 +36,7 @@
 
 :goals (
   ; Sophie wants the user to know her understanding of her condition
-  ?g1 (^me ((pres want.v) ^you (to (know.v (their.d (n+preds understanding.n (of.p ((^me 's) condition.n))))))))
+  ?g1 (^me ((pres want.v) ^you (to (know.v ((^me 's) (n+preds understanding.n (of.p ((^me 's) condition.n))))))))
 )
 
 :episodes (

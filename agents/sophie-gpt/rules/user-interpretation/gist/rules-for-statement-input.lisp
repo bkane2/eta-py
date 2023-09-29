@@ -297,6 +297,8 @@
       3 ((The prognosis is that I may live for several 4 \.) (Prognosis)) (0 :gist)
     2 (0 .ANTICIPATE 8 .ELAPSED-TIME 0)
       3 ((The prognosis is that I may live for a 4 \.) (Prognosis)) (0 :gist)
+    2 (0 .PROGNOSIS-DEALING 3 .ELAPSED-TIME 0)
+      3 ((The prognosis is that I may live for several 4 \.) (Prognosis)) (0 :gist)
   ; Your cancer has gotten worse so you may live for x amount of time.
   1 (0 .CANCER-ILLNESS 2 .CANCER-WORSE 0)
     2 (0 .NUMBER-TOTAL 2 .ELAPSED-TIME 0)
@@ -315,6 +317,8 @@
       3 ((The prognosis is that I may live for several 4 \.) (Prognosis)) (0 :gist)
     2 (0 .ANTICIPATE 8 .ELAPSED-TIME 0)
       3 ((The prognosis is that I may live for a 4 \.) (Prognosis)) (0 :gist)
+    2 (0 .PROGNOSIS-DEALING 3 .ELAPSED-TIME 0)
+      3 ((The prognosis is that I may live for several 4 \.) (Prognosis)) (0 :gist)
   ; You don't have long left to live.
   1 (0 you 1 .NEG 2 .HAVE 3 .LONG 2 .CANCER-LIVE 0)
     2 ((The prognosis is that I do not have long left to live \.)) (0 :gist)
@@ -559,6 +563,9 @@
     2 ((The test results show that I have cancer \.) (Test-results)) (0 :gist)
   1 (0 you 1 diagnosed 2 cancer 0)
     2 ((The test results show that I have cancer \.) (Test-results)) (0 :gist)
+  ; Let's discuss your test results
+  1 (5 .DISCUSS 6 .DIAGNOSIS-TESTS 5)
+    2 ((You intend to explain my test results to me \.) (Test-results)) (0 :gist)
 
 ; ````````````````````   treatment-option    ```````````````````````
 ; ``````````````````````````````````````````````````````````````````
@@ -621,6 +628,15 @@
     2 ((You wish that I do not have cancer \.) (Reason-for-cancer)) (0 :gist)
   1 (0 .DOCTOR-PRON 4 wish 2 you 4 not 2 .SICK 0)
     2 ((You wish that I do not have cancer \.) (Reason-for-cancer)) (0 :gist)
+  1 (0 .DOCTOR-PRON 4 wish 3 .HAVE 2 cure 0)
+    2 ((You wish that I do not have cancer \.) (Reason-for-cancer)) (0 :gist)
+  1 (0 .DOCTOR-PRON 4 wish 3 .BE 2 cure 0)
+    2 ((You wish that I do not have cancer \.) (Reason-for-cancer)) (0 :gist)
+  1 (0 .DOCTOR-PRON 4 wish 3 .HAVE 1 .TREATMENT-OPTION 2 .WORK 0)
+    2 ((You wish that I do not have cancer \.) (Reason-for-cancer)) (0 :gist)
+  1 (0 .DOCTOR-PRON 4 wish 3 .BE 1 .TREATMENT-OPTION 2 .WORK 0)
+    2 ((You wish that I do not have cancer \.) (Reason-for-cancer)) (0 :gist)
+
   ; You are sorry that I have cancer.
   1 (0 sorry 3 you 2 .CANCER-ILLNESS 0)
     2 ((You are sorry that I have cancer \.) (Reason-for-cancer)) (0 :gist)
@@ -686,6 +702,12 @@
     2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
   1 (0 .SHOULD 2 .BE 4 .FRIGHTENING 0)
     2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
+  1 (0 .IMAGINE 2 .BE 4 .FRIGHTENING 0)
+    2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
+   1 (0 .IMAGINE 2 .BE 4 .DIFFICULT 0)
+    2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
+   1 (0 .IMAGINE 2 how 2 .FRIGHTENING 0)
+    2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
   ; You will help me and my family through the treatment process.
   1 (0 .DOCTOR-PRON 4 .BE 2 .AVAILABLE 2 you 4 .CARE 0)
     2 ((You will help me and my family through the treatment process \.)) (0 :gist)
@@ -744,6 +766,13 @@
       3 ((You empathize with how hard it is to learn my cancer is terminal \.) (Reason-for-cancer)) (0 :gist)
     2 (0 .BE 2 .STARTLE-WORDS 0)
       3 ((You empathize with how hard it is to learn my cancer is terminal \.) (Reason-for-cancer)) (0 :gist)
+
+    ;; Empathy
+  ;; 1 (0 .BE 1 .ACCURATE 0) ; "You're right..." ?
+  ;;   2 ((You empathize with how hard it is to learn my cancer is terminal \.) (Reason-for-cancer)) (0 :gist)
+  1 (0 .SUCKS 0)
+    2 ((You empathize with how hard it is to learn my cancer is terminal \.) (Reason-for-cancer)) (0 :gist)
+
   ; I will be there for you
   1 (0 .DOCTOR-PRON 6 .BE 6 .AVAILABLE 0)
     2 ((You will be available to help me and my family during my cancer treatment \.) (Treatment-option)) (0 :gist)
@@ -795,11 +824,65 @@
       3 ((You will be available to help me and my family during my cancer treatment \.) (Treatment-option)) (0 :gist)
     2 (0 free 4 get 2 .AHOLD 3 .DOCTOR-PRON 0)
       3 ((You will be available to help me and my family during my cancer treatment \.) (Treatment-option)) (0 :gist)
+
+  ; You admire how I have been dealing with my cancer.
+  1 (0 .CANCER-GOALS 2 .REFLECT 4 .LOVE 3 .FAMILY-PRON 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 .FAMILY-PRON 2 .BE 2 .LUCKY 2 .HAVE 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 you 2 .PROGNOSIS-DEALING 5 .OKAY 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 you 2 .PROGNOSIS-DEALING 5 .HANDLING-WELL 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 you 2 .PROGNOSIS-DEALING 5 .HANDLING-WELL-ADV 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 you 3 .HANDLING-WELL-ADV 2 .PROGNOSIS-DEALING 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 honor 2 to 2 KNOW-GEN 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 honor 2 to 2 work 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 .DOCTOR-PRON 2 .ADMIRE 1 how 3 .PROGNOSIS-DEALING 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 .DOCTOR-PRON 2 .ADMIRE 2 way 3 .PROGNOSIS-DEALING 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 .DOCTOR-PRON 2 .ADMIRE 2 you 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 .DOCTOR-PRON 2 .BE 1 .IMPRESSED 3 you 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+  1 (0 you 3 .AMAZE 2 .DOCTOR-PRON 0)
+    2 ((You admire how I have been dealing with my cancer \.)) (0 :gist)
+
+
   ; You are going to help me cope with learning my cancer is terminal.
   1 (0 .NEG 2 .GIVE 2 up 0)
     2 ((You are going to help me cope with learning my cancer is terminal \.) (Reason-for-cancer)) (0 :gist)
   1 (0 .BE 2 here 2 with 2 you 0)
     2 ((You are going to help me cope with learning my cancer is terminal \.) (Reason-for-cancer)) (0 :gist)
+  1 (0 .BE 2 with 2 you 0)
+    2 ((You are going to help me cope with learning my cancer is terminal \.) (Reason-for-cancer)) (0 :gist)
+
+  ; I think we should continue this conversation later.
+  1 (0 take 2 break 0)
+    2 ((I think we should continue this conversation later \.)) (0 :gist)
+  1 (0 enough 2 .NOW 0)
+    2 ((I think we should continue this conversation later \.)) (0 :gist)
+  1 (0 .REVISIT 4 .LATER-TIME 0)
+    2 (0 this 3 .LATER-TIME 0)
+      3 ((I think we should continue this conversation later \.)) (0 :gist)
+    2 (0 conversation 3 .LATER-TIME 0)
+      3 ((I think we should continue this conversation later \.)) (0 :gist)
+  1 (0 pick up 4 .LATER-TIME 0)
+    2 (0 this 3 .LATER-TIME 0)
+      3 ((I think we should continue this conversation later \.)) (0 :gist)
+    2 (0 conversation 3 .LATER-TIME 0)
+      3 ((I think we should continue this conversation later \.)) (0 :gist)
+  1 (0 return to 4 .LATER-TIME 0)
+    2 (0 this 3 .LATER-TIME 0)
+      3 ((I think we should continue this conversation later \.)) (0 :gist)
+    2 (0 conversation 3 .LATER-TIME 0)
+      3 ((I think we should continue this conversation later \.)) (0 :gist)
+
 
   ; Generic remarks
   1 (0 .NICE to .MEET you 0)
@@ -810,6 +893,8 @@
     2 ((You are glad that I came to this appointment \.)) (0 :gist)
   1 (0 .HAPPY-WORDS 3 you 2 here 0)
     2 ((You are glad that I came to this appointment \.)) (0 :gist)
+  1 (0 we 3 .RELATIONSHIP-DEVELOP 5 .RELATIONSHIP 0)
+    2 ((You feel that we have developed a good doctor patient relationship \.)) (0 :gist)
   1 (0 sorry 0)
     2 ((You are sorry that I have cancer \.)) (0 :gist)
 
@@ -821,14 +906,14 @@
 
   ; Goodbye
   1 (3 .BYE 3)
-    2 ((Goodbye \.) (Exchange-goodbyes)) (0 :gist)
+    2 ((Goodbye \.) (Say-bye)) (0 :gist)
   1 (1 talk 2 again 2 soon 2)
-    2 ((Goodbye \.) (Exchange-goodbyes)) (0 :gist)
+    2 ((Goodbye \.) (Say-bye)) (0 :gist)
   1 (1 talk to you 1 soon 2)
-    2 ((Goodbye \.) (Exchange-goodbyes)) (0 :gist)
+    2 ((Goodbye \.) (Say-bye)) (0 :gist)
   1 (1 talk 2 again 2 next 2 .APPOINTMENT 2)
-    2 ((Goodbye \.) (Exchange-goodbyes)) (0 :gist)
+    2 ((Goodbye \.) (Say-bye)) (0 :gist)
   1 (1 until next time 2)
-    2 ((Goodbye \.) (Exchange-goodbyes)) (0 :gist)
+    2 ((Goodbye \.) (Say-bye)) (0 :gist)
 
 )) ; END *statement-input*

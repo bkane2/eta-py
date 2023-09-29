@@ -48,4 +48,8 @@
 
 )
 
+:obligations (
+  !o1 (?e1 obligates (^you be.v empowering.a))
+)
+
 )) ; END ask-about-will-chemotherapy-help.v

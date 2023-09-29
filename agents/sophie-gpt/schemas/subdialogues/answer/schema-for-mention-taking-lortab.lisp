@@ -33,7 +33,7 @@
 
 :preconds (
   ; Sophie is only taking Lortab to treat her pain
-  ?p1 (^me ((pres prog) (take.v only.adv-s |Lortab| (adv-a ({for}.p (to (treat.v (their.d pain.n))))))))
+  ?p1 (^me ((pres prog) (take.v only.adv-s |Lortab| (adv-a ({for}.p (to (treat.v ((^me 's) pain.n))))))))
 )
 
 :goals (
@@ -45,6 +45,10 @@
  
 ?e2 (^you reply-to.v ?e1)
 
+)
+
+:obligations (
+  !o1 (?e1 obligates (^you be.v empathetic.a))
 )
 
 )) ; END mention-taking-lortab.v

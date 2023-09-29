@@ -27,6 +27,8 @@
   ?s1 (^me ((pres have.v) (k (lung.n cancer.n))))
   ; Sophie wants to be able to watch her grandson graduate
   ?s2 (^me ((pres want.v) (to (be.v able.a (to (watch.v ((^me 's) grandson.n) (ke graduate.v)))))))
+  ; Sophie is not ready to talk about treatment options yet
+  ?s3 (^me ((pres be.v) not ready.a (to (talk.v (about.p-arg (k (plur (treatment.n option.n)))) yet.adv-e))))
 )
 
 :preconds (
@@ -64,7 +66,7 @@
       
         ?e10 (^me paraphrase-to.v ^you '([ANGRY] I\'m going to find a different doctor \.))
         ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-        ?e12 (^me say-bye.v))))
+        ?e12 (^me say-bye-to.v ^you))))
 
 
   ; Once the user is explicit, proceed
@@ -72,7 +74,7 @@
   ?e14 (^you reply-to.v ?e13)
   
   ?e15 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-  ?e16 (^me say-bye.v)
+  ?e16 (^me say-bye-to.v ^you)
 
 )
 

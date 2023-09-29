@@ -64,11 +64,14 @@ IO_OUT_DIR = 'out/'
 IO_CLOG_DIR = 'conversation-log/'
 """str: The directory within the IO path to use for writing conversation logs for a session."""
 
-CLOG_FILES = ['text', 'affect', 'gist', 'semantic', 'pragmatic', 'obligations']
+CLOG_FILES = ['text', 'affect', 'gist', 'semantic', 'pragmatic', 'obligations', 'step']
 """list[str]: The list of all supported conversation log files."""
 
 LOG_PATH = 'logs/'
 """str: The path for archived conversation logs to be written to."""
+
+GPT_DEBUG_FILE = 'debug/prompts.txt'
+"""str: A filepath to write GPT prompt debugging info to."""
 
 DEFAULT_START = 'have-eta-dialog.v'
 """int: The default start schema if none is provided in agent-config."""

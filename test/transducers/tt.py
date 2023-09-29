@@ -87,12 +87,20 @@ def test5():
   print(test(gist))
 
 
+def test6():
+  test = TTReactionTransducer('agents/sophie-gpt/rules')
+
+  observation = parse_eventuality(['^you', 'paraphrase-to.v', '^me', '"when does my grandson graduate ?"'])
+  print(test(observation))
+
+
 def main():
   # test1()
   # test2()
-  test3()
+  # test3()
   # test4()
   # test5()
+  test6()
 
 
 if __name__ == '__main__':

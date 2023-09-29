@@ -1,4 +1,4 @@
-;; *ETA-SCHEMA*: development version 6
+;; *have-eta-dialog*: development version 6
 ;;
 ;; TODO
 ;; 
@@ -53,16 +53,9 @@
 ?e4 ((set-of ^me ^you) ask-about-options.v)
 
 
-;; (exchange-goodbyes)
-?e5 ((set-of ^me ^you) exchange-goodbyes.v)
+;; (say-bye)
+?e5 ((set-of ^me ^you) say-bye.v)
 
 )
 
 )) ; END have-eta-dialog.v
-
-
-; TODO REFACTOR : store following topic keys:
-;; (?e2 (Pain))
-;; (?e3 (Prognosis))
-;; (?e4 (Options))
-;; (?e5 (Exchange-goodbyes))

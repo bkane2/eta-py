@@ -26,7 +26,7 @@
   ; Sophie has lung cancer
   ?s1 (^me ((pres have.v) (k (lung.n cancer.n))))
   ; Sophie wants to be able to watch her grandson graduate
-  ?s2 (^me ((pres want.v) (to (be.v able.a (to (watch.v ((^me 's) grandson.n) (ke graduate.v)))))))
+  ;; ?s2 (^me ((pres want.v) (to (be.v able.a (to (watch.v ((^me 's) grandson.n) (ke graduate.v)))))))
 )
 
 :preconds (
@@ -55,8 +55,7 @@
     ; If not empowering again, escalate emotions
     ?e6 (:if (not (^you be.v empowering.a))
     
-      ?e7 (^me paraphrase-to.v ^you '(I really need to know how these treatments help with my own goals \.
-                                      I don\'t want to let my family down \.))
+      ?e7 (^me paraphrase-to.v ^you '(I really need to know how these treatments help with my own goals \.))
       ?e8 (^you reply-to.v ?e7)
 
       ; If not empowering a third time, escalate emotions further
@@ -66,7 +65,7 @@
         ?e10 (^me paraphrase-to.v ^you '(You\'re giving me too much information at once \.
                                          I need to take a break to process this information \.))
         ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-        ?e12 (^me say-bye.v))))
+        ?e12 (^me say-bye-to.v ^you))))
 
   ; Once the user is empowering, proceed (but make sure that the user has actually answered Sophie's question adequately)
   ?e13 (:try-in-sequence

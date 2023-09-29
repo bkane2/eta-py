@@ -611,13 +611,16 @@ class DialogueState():
     semantics = " ".join([list_to_s_expr(t) for t in turn.semantics]) if turn.semantics else 'NIL'
     pragmatics = " ".join([list_to_s_expr(t) for t in turn.pragmatics]) if turn.pragmatics else 'NIL'
     obligations = " ".join([list_to_s_expr(t) for t in turn.obligations]) if turn.obligations else 'NIL'
+    plan_step = self.plan.step
+    step = self.plan.step.format(schemas=True)
     outputs = {
       'text' : f'{turn.agent} : {text}\n',
       'affect' : f'{turn.agent} : {affect}\n',
       'gist' : f'{turn.agent} : {gist}\n',
       'semantic' : f'{turn.agent} : {semantics}\n',
       'pragmatic' : f'{pragmatics}\n',
-      'obligations' : f'{obligations}\n'
+      'obligations' : f'{obligations}\n',
+      'step' : f'{step}\n'
     }
     for fname in CLOG_FILES:
       file.append_file(self.get_io_path(f'{IO_CLOG_DIR}{fname}.txt'), outputs[fname])

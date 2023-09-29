@@ -1,13 +1,13 @@
-;; *exchange-goodbyes*: development version 6
+;; *say-bye*: development version 6
 ;;
 ;; 
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(store-schema 'exchange-goodbyes.v
+(store-schema 'say-bye.v
 
-'(dial-schema :header (((set-of ^me ^you) exchange-goodbyes.v) ** ?e)
+'(dial-schema :header (((set-of ^me ^you) say-bye.v) ** ?e)
 ;````````````````````````````````````````````````````````````````````````````````
 
 :types (
@@ -56,8 +56,8 @@
   )
 
   ?e3 (^me paraphrase-to.v ^you '(Thank you for meeting with me today \. Bye \.))
-  ?e4 (^me say-bye.v)
+  ?e4 (^me say-bye-to.v ^you)
 
 )
 
-)) ; END exchange-goodbyes.v
+)) ; END say-bye.v

@@ -25,6 +25,8 @@
 :static-conds (
   ; Sophie has lung cancer
   ?s1 (^me ((pres have.v) (k (lung.n cancer.n))))
+  ; Sophie is not ready to talk about treatment options yet
+  ?s2 (^me ((pres be.v) not ready.a (to (talk.v (about.p-arg (k (plur (treatment.n option.n)))) yet.adv-e))))
 )
 
 :preconds (
@@ -64,7 +66,7 @@
           ?e10 (^me paraphrase-to.v ^you '(I\'m not sure I can trust your prognosis \. I need to find another
                                           doctor who can be honest with me \.))
           ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-          ?e12 (^me say-bye.v))))
+          ?e12 (^me say-bye-to.v ^you))))
 
 
   ?e13 (:try-in-sequence

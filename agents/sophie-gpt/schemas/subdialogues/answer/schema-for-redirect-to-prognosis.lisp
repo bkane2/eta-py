@@ -30,6 +30,9 @@
 :preconds (
   ; The user is not currently talking about Sophie's prognosis
   ?p1 (^you ((pres prog) not currently.adv-e (talk.v (adv-a (about.p ((^me 's) prognosis.n))))))
+  ; Sophie is not ready to talk about her options until she understands her prognosis
+  ?p2 (^me ((pres be.v) not ready.a (to (talk.v (about.p-arg ((^me 's) (plur option.n)))))
+        (until.ps (^me ((pres understand.v) ((^me 's) prognosis.n))))))
 )
 
 :goals (
