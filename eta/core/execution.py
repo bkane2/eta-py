@@ -345,7 +345,7 @@ def say_to_step(wff):
   return listp(wff) and len(wff) >= 4 and wff[:3] == [ME, SAY_TO, YOU]
 
 def say_bye_step(wff):
-  return listp(wff) and len(wff) == 2 and wff[:2] == [ME, SAY_BYE]
+  return listp(wff) and len(wff) >= 2 and wff[:2] == [ME, SAY_BYE]
 
 def get_action(wff):
   if say_to_step(wff):

@@ -39,6 +39,9 @@ def _affect_validator(prompt, resp):
     return EMOTIONS_LIST[0]
   return resp
 
+def _standardize_gpt(str):
+  return standardize(str, remove_parentheticals=True)
+
 PROMPTS = {
   'reason-bottom-up' : file.read_file('resources/prompts/reason-bottom-up.txt', in_module=True),
   'gist' : file.read_file('resources/prompts/gist.txt', in_module=True),
@@ -152,7 +155,7 @@ class GPTReasonBottomUpTransducer(GPTTransducer, ReasonBottomUpTransducer):
     new_facts = []
     if facts:
       new_facts_str = super().__call__({'facts': [fact.get_nl() for fact in facts]})
-      new_facts = [parse_eventuality(standardize(fact)) for fact in new_facts_str]
+      new_facts = [parse_eventuality(_standardize_gpt(fact)) for fact in new_facts_str]
     return new_facts
   
 
@@ -172,7 +175,7 @@ class GPTGistTransducer(GPTTransducer, GistTransducer):
     gist = super().__call__({'prev-utt': prev_utt, 'utt': utt})
     if gist == 'NONE':
       return []
-    gist = standardize(gist)
+    gist = _standardize_gpt(gist)
     if agent == YOU:
       gist = swap_duals(gist)
     
@@ -255,7 +258,7 @@ class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
       'gist' : gist
     },
     stop=['^you:', '^me:', '^me [REWRITTEN]'])
-    return [standardize(utt)]
+    return [_standardize_gpt(utt)]
   
   def _to_generic_agents(self, agents):
     return ['Person A: ' if 'you' in a else 'Person B: ' for a in agents]
@@ -276,7 +279,7 @@ class GPTResponseTransducer(GPTTransducer, ResponseTransducer):
       'history' : history
     },
     stop=['^you:', '^me:'])
-    return [standardize(utt)]
+    return [_standardize_gpt(utt)]
   
 
 class GPTAnswerTransducer(GPTTransducer, AnswerTransducer):
@@ -293,7 +296,7 @@ class GPTAnswerTransducer(GPTTransducer, AnswerTransducer):
       'agents' : agents,
       'history' : history
     })
-    return [standardize(utt)]
+    return [_standardize_gpt(utt)]
   
 
 class GPTAskTransducer(GPTTransducer, AskTransducer):
@@ -310,7 +313,7 @@ class GPTAskTransducer(GPTTransducer, AskTransducer):
       'agents' : agents,
       'history' : history
     })
-    return [standardize(utt)]
+    return [_standardize_gpt(utt)]
   
 
 class GPTAffectTransducer(GPTTransducer, AffectTransducer):

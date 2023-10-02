@@ -128,7 +128,7 @@ ASK = 'ask.v'
 REACT_TO = 'react-to.v'
 """str: Predicate for a react event."""
 
-SAY_BYE = 'say-bye.v'
+SAY_BYE = 'say-bye-to.v'
 """str: Predicate for a saying goodbye event."""
 
 SPEECH_ACTS = [SAY_TO, PARAPHRASE_TO, RESPOND_TO, REPLY_TO, ANSWER, ASK, REACT_TO, ARTICULATE_TO, SAY_BYE]

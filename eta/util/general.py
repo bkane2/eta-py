@@ -133,19 +133,21 @@ def indent(n):
 	return "  "*(n-1)
 
 
-def standardize(str):
+def standardize(str, remove_parentheticals=False):
 	"""Standardize a string by applying a series of transformations.
 	
 	Specifically:
+
 		1. Replace -- with -, and _ with whitespace.
-		2. Remove parenthetical content (i.e., [...] or *...*).
+		2. Remove parenthetical content (i.e., [...] or *...*), if `remove_parentheticals` is True.
 		3. Add whitespace around all punctuation.
 		4. Collapse all whitespace to a single space.
 		5. Convert to lowercase.
 	"""
 	str = str.replace('--', '-').replace('_', ' ')
-	str = re.sub(r'\[[a-zA-Z0-9\s]*\]', '', str)
-	str = re.sub(r'\*[a-zA-Z0-9\s]*\*', '', str)
+	if remove_parentheticals:
+		str = re.sub(r'\[[a-zA-Z0-9\s]*\]', '', str)
+		str = re.sub(r'\*[a-zA-Z0-9\s]*\*', '', str)
 	str = re.sub(r'([.|,|!|?|:|;|-])', r' \1 ', str)
 	str = re.sub(r'[\s]+', ' ', str)
 	return str.lower().strip()
