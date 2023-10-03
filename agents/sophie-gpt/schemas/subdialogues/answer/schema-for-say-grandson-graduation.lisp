@@ -15,6 +15,8 @@
 )
 
 :rigid-conds (
+  ; Sophie's name is Sophie
+  !r0 (((^me 's) name.n) ((pres be.v) (= |Sophie|)))
   ; Sophie is a woman
   !r1 (^me ((pres be.v) (= (a.d woman.n))))
   ; Sophie is 65 years old
