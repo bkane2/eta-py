@@ -118,7 +118,7 @@ class HFEmbedder(Embedder):
     self.host = host
     self.model = model
     self.url = host+model
-    self.header = { "Authorization" : f"Bearer {file.read_file(f'{KEY_PATH}hf.txt')}" }
+    self.header = { "Authorization" : f"Bearer {file.read_file(f'{KEY_PATH}hf.txt').strip()}" }
     self.embed_api('init')
 
   def embed(self, texts):

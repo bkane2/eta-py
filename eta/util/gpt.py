@@ -21,7 +21,7 @@ from transformers import GPT2Tokenizer
 from eta.constants import *
 import eta.util.file as file
 
-openai.api_key = file.read_file(f'{KEY_PATH}openai.txt')
+openai.api_key = file.read_file(f'{KEY_PATH}openai.txt').strip()
 
 TOKENIZER = GPT2Tokenizer.from_pretrained("gpt2")
 
