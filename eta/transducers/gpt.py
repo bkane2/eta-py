@@ -233,7 +233,7 @@ class GPTSubplanTransducer(GPTTransducer, SubplanTransducer):
 
 
 class GPTParaphraseTransducer(GPTTransducer, ParaphraseTransducer):
-  def __init__(self, examples=[], history_window_size=4):
+  def __init__(self, examples=[], history_window_size=3):
     for e in examples:
       e['agents-gen'] = self._to_generic_agents(e['agents'])
     super().__init__(PROMPTS['paraphrase'], VALIDATORS['paraphrase'], examples=examples)
