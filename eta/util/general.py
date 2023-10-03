@@ -15,6 +15,7 @@ import eta.util.file as file
 
 def clear_symtab():
 	"""Clear the symbol table used for creating new symbols."""
+	file.ensure_file_exists(SYMTAB_PATH)
 	file.write_json(SYMTAB_PATH, {})
 
 
