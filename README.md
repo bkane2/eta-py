@@ -46,6 +46,17 @@ Next, install the required dependencies using `pip install -r requirements.txt`.
 
 If using an agent configuration that relies on an external API (see the below agent examples, as well as the documentation), a text file containing a valid API key should be provided in the `_keys` directory (i.e., `_keys/openai.txt` for the OpenAI API, required for agents that use GPT-based transducers, and `_keys/hf.txt` for the HuggingFace API.)
 
+#### Troubleshooting
+
+##### Exception: Can not find valid pkg-config name. Specify MYSQLCLIENT_CFLAGS and MYSQLCLIENT_LDFLAGS env vars manually
+
+If you run into this error when installing the required dependencies, it is likely because you do not have a MySQL client installed, which is a dependency for mysqlclient, which in turn is a dependency of one of the packages that Eta relies on. You can try following the installation instructions on the [mysqlclient page](https://pypi.org/project/mysqlclient/).
+
+However, there is also a way to bypass the MySQL dependency by running the following command prior to installing the rest of the dependencies:
+
+`pip install git+https://github.com/uob-vil/pattern.git`
+
+
 
 ### Running Eta
 
