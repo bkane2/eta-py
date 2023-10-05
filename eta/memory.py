@@ -42,7 +42,7 @@ class Memory:
     self.event = event
     self.start_time = TimePoint()
     self.end_time = None
-    self.last_access = TimePoint(self.start_time.time)
+    self.last_access = self.start_time.copy()
     self.importance = importance
 
   def update_last_access(self):

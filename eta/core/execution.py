@@ -4,8 +4,7 @@ from time import sleep
 
 import eta.util.time as time
 from eta.constants import *
-from eta.util.general import listp, variablep
-from eta.util.time import has_elapsed_certainty_period
+from eta.util.general import listp, variablep, has_elapsed_certainty_period
 from eta.discourse import DialogueTurn, Utterance, parse_utt_str
 from eta.lf import Condition, Repetition, parse_eventuality
 

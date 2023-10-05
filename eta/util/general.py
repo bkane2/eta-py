@@ -1,12 +1,13 @@
 """Generic utility functions for various basic data types."""
 
 import re
+import math
 import numpy as np
 import random
 import string
 from copy import copy
 
-from eta.constants import SYMTAB_PATH
+from eta.constants import *
 import eta.util.file as file
 
 # ``````````````````````````````````````
@@ -482,3 +483,46 @@ def argmax(lst, scores, n):
 	objs = np.array(lst, dtype=object)
 	scores_top = np.argsort(scores)[:-(min(n, len(scores))+1):-1]
 	return objs[scores_top].tolist()
+
+
+def certainty_to_period(certainty):
+  """Map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.
+
+  The proportion between the period and the quantity ``-log(1 - certainty)`` is determined by the global
+  constant EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT, defined in ``eta.constants``.
+
+  Parameters
+  ----------
+  certainty : float
+    A certainty value in [0,1]
+  
+  Returns
+  -------
+  float or np.inf
+    The period (in seconds), or infinity if the certainty is 1.
+  """
+  if certainty >= 1 or certainty < 0:
+    return np.inf
+  else:
+    return -EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT * math.log(1-certainty)
+  
+
+def has_elapsed_certainty_period(time, certainty):
+  """Check whether a given time delta has elapsed the period corresponding to a given certainty.
+
+  Parameters
+  ----------
+  time : float
+    The difference between two times (POSIX timestamps).
+  certainty : float
+    A certainty value in [0,1]
+
+  Returns
+  -------
+  bool
+  """
+  if certainty >= 1 or certainty < 0:
+    return False
+  else:
+    period = certainty_to_period(certainty)
+    return time >= period
