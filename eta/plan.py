@@ -13,6 +13,10 @@ held the abstract step).
 
 Similarly, executing a plan consists of advancing the pointer to the currently due plan node within
 the linked list of plan nodes.
+
+TODO: short writeup explaining figure
+
+.. image:: ../_static/figures/plan.png
 """
 
 import graphviz

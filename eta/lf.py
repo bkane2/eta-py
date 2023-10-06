@@ -1,4 +1,9 @@
-"""Classes for representing and modifying logical forms and eventualities."""
+"""Classes for representing and modifying logical forms and eventualities.
+
+TODO: short writeup
+
+.. image:: ../_static/figures/eventuality.png
+"""
 
 import glob
 from ulf2english import ulf2english
