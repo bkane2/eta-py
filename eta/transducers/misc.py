@@ -8,7 +8,19 @@ out once this is deployed as a package that developers can extend with their own
 transducers and configurations.
 """
 
+import eta.util.file as file
+from eta.constants import *
 from eta.transducers.base import *
+from eta.transducers.gpt import GPTResponseTransducer
+from eta.util.gpt import generate_gpt, subst_kwargs
+
+def _sophie_check_validator(prompt, resp):
+  if 'yes' in resp.lower():
+    return True
+  elif 'no' in resp.lower():
+    return False
+  return None
+
 
 class SkillTransducer(PragmaticTransducer):
   """A special type of pragmatic transducer used for inferring "skills" in the SOPHIE domain.
@@ -55,3 +67,40 @@ class SkillTransducer(PragmaticTransducer):
     skills = sorted(skills, key=lambda x: x['label'])
     skills = [skill[1] for skill in zip(skills, self.skill_enum) if skill[0]['score'] > self.threshold]
     return skills
+  
+
+class SOPHIEGPTResponseTransducer(GPTResponseTransducer):
+  """This is a SOPHIE-specific version of the GPTResponseTransducer that uses a hack to avoid role-switching hallucinations."""
+
+  def __call__(self, conversation_log, facts_bg, facts_fg):
+    utt = super().__call__(conversation_log, facts_bg, facts_fg)
+
+    prompt_check = f'Could the following utterance plausibly have come from a lung cancer patient? Answer "yes" or "no".\n\n{utt}'
+    result_check, cost_check = generate_gpt(prompt_check, postprocessors=[_sophie_check_validator], model='gpt-4')
+    if self.debug:
+      file.append_file(GPT_DEBUG_FILE, str(self.idx)+':\n\n'+prompt_check+'\n\n')
+      file.append_file(GPT_DEBUG_FILE, 'result: '+str(result_check)+'\n\n-------------------\n\n')
+      self.idx += 1
+    self._cost += cost_check
+
+    if result_check:
+      return utt
+    
+    else:
+      history = [turn.utterance.words for turn in conversation_log]
+      agents = [f'{turn.agent}: ' for turn in conversation_log]
+      kwargs = {
+        'facts-bg' : [fact.get_nl() for fact in facts_bg],
+        'facts-fg' : [fact.get_nl() for fact in facts_fg],
+        'agents' : agents,
+        'history' : history
+      }
+      stop = ['^you:', '^me:']
+      prompt = subst_kwargs(self.prompt, kwargs)
+      result, cost = generate_gpt(prompt, postprocessors=self.validators, stop=stop, model='gpt-4')
+      if self.debug:
+        file.append_file(GPT_DEBUG_FILE, str(self.idx)+':\n\n'+prompt+'\n\n')
+        file.append_file(GPT_DEBUG_FILE, 'result: '+str(result)+'\n\n-------------------\n\n')
+        self.idx += 1
+      self._cost += cost
+      return [self._standardize_gpt(result)]

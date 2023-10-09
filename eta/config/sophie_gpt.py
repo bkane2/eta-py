@@ -29,7 +29,8 @@ def config():
         'reaction' : TTReactionTransducer(DIRS_RULES),
         # 'subplan' : TTSubplanTransducer(DIRS_RULES),
         'paraphrase' : GPTParaphraseTransducer(PARAPHRASE_EXAMPLES),
-        'response' : GPTResponseTransducer(),
+        # 'response' : GPTResponseTransducer(),
+        'response' : SOPHIEGPTResponseTransducer(),
         'answer' : GPTAnswerTransducer(),
         'ask' : GPTAskTransducer(),
         'affect' : GPTAffectTransducer()
