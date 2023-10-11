@@ -1,0 +1,6 @@
+eta.util.time.time\_record\_p
+=============================
+
+.. currentmodule:: eta.util.time
+
+.. autofunction:: time_record_p

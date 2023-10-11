@@ -1,0 +1,6 @@
+eta.util.sexpr.compress\_quotes
+===============================
+
+.. currentmodule:: eta.util.sexpr
+
+.. autofunction:: compress_quotes

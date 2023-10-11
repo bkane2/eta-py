@@ -1,0 +1,6 @@
+eta.util.tt.parse.read\_preds\_file
+===================================
+
+.. currentmodule:: eta.util.tt.parse
+
+.. autofunction:: read_preds_file

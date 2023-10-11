@@ -1,0 +1,6 @@
+eta.constants.GPT\_DEBUG\_FILE
+==============================
+
+.. currentmodule:: eta.constants
+
+.. autodata:: GPT_DEBUG_FILE

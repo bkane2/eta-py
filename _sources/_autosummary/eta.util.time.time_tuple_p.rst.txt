@@ -1,0 +1,6 @@
+eta.util.time.time\_tuple\_p
+============================
+
+.. currentmodule:: eta.util.time
+
+.. autofunction:: time_tuple_p

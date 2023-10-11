@@ -1,0 +1,6 @@
+eta.util.general.extract\_category
+==================================
+
+.. currentmodule:: eta.util.general
+
+.. autofunction:: extract_category

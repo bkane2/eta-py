@@ -1,0 +1,25 @@
+eta.transducers.misc.SOPHIEGPTResponseTransducer
+================================================
+
+.. currentmodule:: eta.transducers.misc
+
+.. autoclass:: SOPHIEGPTResponseTransducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __str__, __hash__, __eq__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SOPHIEGPTResponseTransducer.cost
+   
+   
+
+   
+   
+   

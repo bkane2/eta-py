@@ -1,0 +1,6 @@
+eta.util.time.get\_elapsed
+==========================
+
+.. currentmodule:: eta.util.time
+
+.. autofunction:: get_elapsed

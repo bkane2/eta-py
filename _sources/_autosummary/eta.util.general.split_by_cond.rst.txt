@@ -1,0 +1,6 @@
+eta.util.general.split\_by\_cond
+================================
+
+.. currentmodule:: eta.util.general
+
+.. autofunction:: split_by_cond

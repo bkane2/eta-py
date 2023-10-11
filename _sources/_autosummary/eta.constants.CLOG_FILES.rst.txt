@@ -1,0 +1,6 @@
+eta.constants.CLOG\_FILES
+=========================
+
+.. currentmodule:: eta.constants
+
+.. autodata:: CLOG_FILES
