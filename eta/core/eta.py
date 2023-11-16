@@ -441,8 +441,7 @@ class DialogueState():
           return wff[0] == wff[2]
         # (not wff1)
         elif not_prop_p(wff):
-          blarf = not eval_truth_value_recur(wff[1])
-          return blarf
+          return not eval_truth_value_recur(wff[1])
         # (wff1 and wff2)
         elif and_prop_p(wff):
           return eval_truth_value_recur(wff[0]) and eval_truth_value_recur(wff[2])
