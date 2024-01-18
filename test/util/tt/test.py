@@ -56,6 +56,12 @@ def david_test():
                           trees,
                           feats,
                           preds))
+  
+  print(choose_result_for(['spatial-question', 'which', 'blocks', 'were', 'near', 'the', 'mercedes', 'block', '1', 'moves', 'ago', '?'],
+                          'semantic',
+                          trees,
+                          feats,
+                          preds))
 
 
 def sophie_test():
@@ -113,12 +119,12 @@ def sophie_test():
 
 def main():
   sep = '\n----------------------------\n'
-  latency_test()
-  print(sep)
+  # latency_test()
+  # print(sep)
   david_test()
   print(sep)
-  sophie_test()
-  print(sep)
+  # sophie_test()
+  # print(sep)
 
 
 if __name__ == '__main__':

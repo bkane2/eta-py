@@ -475,6 +475,8 @@
     2 (*asr-fix-tree* (1 mercedes 4)) (0 :subtree+clause)
   1 (0 messages 0)
     2 (*asr-fix-tree* (1 mercedes 3)) (0 :subtree+clause)
+  1 (0 merces 0)
+    2 (*asr-fix-tree* (1 mercedes 3)) (0 :subtree+clause)
   1 (0 merciless 0)
     2 (*asr-fix-tree* (1 mercedes 3)) (0 :subtree+clause)
   1 (0 varsity sports 0)

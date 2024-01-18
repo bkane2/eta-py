@@ -316,7 +316,11 @@ def choose_result_for(clause, root, trees, feats, preds):
       ulfs = []
       for phrase in newclause:
         if is_tree_root_clause(phrase):
-          ulf = choose_result_for(phrase[1:], phrase[0], trees, feats, preds)[1]
+          result = choose_result_for(phrase[1:], phrase[0], trees, feats, preds)
+          if result:
+            ulf = result[1]
+          else:
+            ulf = []
         else:
           ulf = phrase
         # Failure case
