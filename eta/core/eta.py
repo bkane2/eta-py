@@ -417,6 +417,11 @@ class DialogueState():
     with self._lock:
       self.memory.instantiate(fact, importance=importance)
 
+  def remove_from_context(self, fact):
+    """Remove a fact from the context."""
+    with self._lock:
+      self.memory.remove_matching_from_context(fact)
+
   def access_from_context(self, pred_patt):
     """Access facts from context matching a given predicate pattern."""
     with self._lock:

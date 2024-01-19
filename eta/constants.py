@@ -131,6 +131,12 @@ REACT_TO = 'react-to.v'
 SAY_BYE = 'say-bye-to.v'
 """str: Predicate for a saying goodbye event."""
 
+STORE_IN_STM = 'store-in-stm.v'
+"""str: Predicate for storing a fact in short-term memory."""
+
+FORGET_FROM_STM = 'forget-from-stm.v'
+"""str: Predicate for forgetting a fact from short-term memory."""
+
 SPEECH_ACTS = [SAY_TO, PARAPHRASE_TO, RESPOND_TO, REPLY_TO, ANSWER, ASK, REACT_TO, ARTICULATE_TO, SAY_BYE]
 """list[str]: A list of all supported speech acts."""
 

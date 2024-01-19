@@ -329,6 +329,56 @@ def execute_say_bye(step, ds):
   return {}
 
 
+def execute_store_in_STM(step, ds):
+  """Execute a store-in-STM step.
+  
+  This will store a given fact in short-term memory (i.e., context).
+
+  Parameters
+  ----------
+  step : PlanStep
+    The say-to step to execute.
+  ds : DialogueState
+
+  Returns
+  -------
+  dict
+    Dict of variable bindings obtained in the course of execution.
+  """
+  ep = step.event.get_ep()
+  wff = step.event.get_wff()
+  expr = wff[2]
+  if listp(expr) and expr[0] == 'that':
+    expr = expr[1]
+  ds.add_to_context(expr)
+  return {}
+
+
+def execute_forget_from_STM(step, ds):
+  """Execute a store-in-STM step.
+  
+  This will remove a given fact in short-term memory (i.e., context).
+
+  Parameters
+  ----------
+  step : PlanStep
+    The say-to step to execute.
+  ds : DialogueState
+
+  Returns
+  -------
+  dict
+    Dict of variable bindings obtained in the course of execution.
+  """
+  ep = step.event.get_ep()
+  wff = step.event.get_wff()
+  expr = wff[2]
+  if listp(expr) and expr[0] == 'that':
+    expr = expr[1]
+  ds.remove_from_context(expr)
+  return {}
+
+
 def you_pred(wff):
   return (isinstance(wff, list) and wff[0] == YOU) or (isinstance(wff, str) and wff.split()[0] == YOU)
 
@@ -337,7 +387,9 @@ def me_pred(wff):
 
 ACTION_DICT = {
   SAY_TO : execute_say_to,
-  SAY_BYE : execute_say_bye
+  SAY_BYE : execute_say_bye,
+  STORE_IN_STM : execute_store_in_STM,
+  FORGET_FROM_STM : execute_forget_from_STM
 }
 
 def say_to_step(wff):
@@ -346,10 +398,20 @@ def say_to_step(wff):
 def say_bye_step(wff):
   return listp(wff) and len(wff) >= 2 and wff[:2] == [ME, SAY_BYE]
 
+def store_in_stm_step(wff):
+  return listp(wff) and len(wff) == 3 and wff[:2] == [ME, STORE_IN_STM]
+
+def forget_from_stm_step(wff):
+  return listp(wff) and len(wff) == 3 and wff[:2] == [ME, FORGET_FROM_STM]
+
 def get_action(wff):
   if say_to_step(wff):
     return SAY_TO
   elif say_bye_step(wff):
     return SAY_BYE
+  elif store_in_stm_step(wff):
+    return STORE_IN_STM
+  elif forget_from_stm_step(wff):
+    return FORGET_FROM_STM
   else:
     return None
