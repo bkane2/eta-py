@@ -116,15 +116,27 @@ def sophie_test():
                            feats,
                            preds))
   
+  print(choose_result_for(['where', 'is', 'your', 'pain', '?'],
+                          'pain-input',
+                          trees,
+                          feats,
+                          preds))
+  
+  print(choose_result_for([['why', 'has', 'my', 'pain', 'been', 'getting', 'worse', 'recently', '?'], ['where', 'is', 'your', 'pain', '?']],
+                          '*gist*',
+                          trees,
+                          feats,
+                          preds))
+  
 
 def main():
   sep = '\n----------------------------\n'
   # latency_test()
   # print(sep)
-  david_test()
-  print(sep)
-  # sophie_test()
+  # david_test()
   # print(sep)
+  sophie_test()
+  print(sep)
 
 
 if __name__ == '__main__':

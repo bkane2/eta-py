@@ -33,6 +33,23 @@
 ; Define any useful predicates here:
 
 
+(READRULES '*reaction-to-cancer-worse-statement*
+;``````````````````````````````````````````````````
+; Reactions to chemotherapy will differ between modules, so this rule tree
+; will be overridden by the rule files defined within each session subdirectory.
+;
+'(
+  1 (0 my cancer has gotten worse 0)
+    2 react-emotionally.v (10 :schema)
+  1 (0 my cancer has not gotten worse 0)
+    2 verify-cancer-status.v (100 :schema)
+  1 (0 you are not sure whether my cancer has gotten worse 0)
+    2 mention-anxiety.v (100 :schema)
+  
+)) ; END *reaction-to-cancer-worse-statement*
+
+
+
 (READRULES '*reaction-to-chemotherapy-statement*
 ;``````````````````````````````````````````````````
 ; Reactions to chemotherapy will differ between modules, so this rule tree
@@ -90,6 +107,42 @@
     2 ask-about-comfort-care.v (100 :schema)
 
 )) ; END *reaction-to-comfort-care-statement*
+
+
+
+(READRULES '*reaction-to-test-results-statement*
+;``````````````````````````````````````````````````
+; Reactions to chemotherapy will differ between modules, so this rule tree
+; will be overridden by the rule files defined within each session subdirectory.
+;
+'(
+  1 (:or
+    ;; (0 the test results .DO not appear conclusive 0)
+    (0 we performed the ct scan to see how .MUCH further my cancer has progressed 0)
+    ;; (0 the test results show that I .HAVE cancer 0)
+    )
+    2 ask-about-test-results.v (100 :schema)
+  1 (:or
+    (0 you intend to .EXPLAIN my test results to me 0)
+    (0 you recognize how hard receiving the test results is for me 0)
+    )
+    2 thank-for-explain-test-results.v (100 :schema)
+  1 (0 you are not sure what my test results mean 0)
+    2 state-understanding-test-results.v (100 :schema)
+  1 (0 the test results are unfavorable to me 0)
+    2 react-emotionally.v (10 :schema)
+  1 (0 the test results show that I cannot .BE cured 0)
+    2 react-emotionally.v (10 :schema)
+  1 (0 the test results show that my cancer has .SPREAD 0)
+    2 react-emotionally.v (10 :schema)
+  1 (0 the test results show that the radiation is not working 0)
+    2 react-emotionally.v (10 :schema)
+
+  ;; TODO:
+  ;; 1 (0 the test results show that the cancer hasn\'t .SPREAD 0)
+  ;;   2 ask-about-prognosis.v (100 :schema)
+  
+)) ; END *reaction-to-test-results-statement*
 
 
 
@@ -238,12 +291,8 @@
 ; ````````````````````     cancer-worse      ```````````````````````
 ; ``````````````````````````````````````````````````````````````````
 
-  1 (0 my cancer has gotten worse 0)
-    2 react-emotionally.v (3 :schema)
-  1 (0 my cancer has not gotten worse 0)
-    2 verify-cancer-status.v (100 :schema)
-  1 (0 you are not sure whether my cancer has gotten worse 0)
-    2 mention-anxiety.v (100 :schema)
+  1 (0 .CANCER-WORSE 0)
+    2 *reaction-to-cancer-worse-statement* (0 :subtree)
 
 ; ````````````````````    medical-history    ```````````````````````
 ; ``````````````````````````````````````````````````````````````````
@@ -389,7 +438,7 @@
   1 (0 I am sleeping poorly .BECAUSE of my .PAIN 0)
     2 ask-if-stronger-medication-will-help-sleep.v (100 :schema)
   1 (0 I am sleeping poorly .BECAUSE the cancer has .SPREAD 0)
-    2 react-emotionally.v (3 :schema)
+    2 react-emotionally.v (10 :schema)
   1 (0 I am sleeping poorly .BECAUSE of my mental health 0)
     2 discuss-depression.v (100 :schema)
   1 (0 you are sorry that I am sleeping poorly 0)
@@ -424,31 +473,10 @@
 ; ````````````````````     test-results      ```````````````````````
 ; ``````````````````````````````````````````````````````````````````
 
-  1 (:or
-    ;; (0 the test results .DO not appear conclusive 0)
-    (0 we performed the ct scan to see how .MUCH further my cancer has progressed 0)
-    ;; (0 the test results show that I .HAVE cancer 0)
-    )
-    2 ask-about-test-results.v (100 :schema)
-  1 (:or
-    (0 you intend to .EXPLAIN my test results to me 0)
-    (0 you recognize how hard receiving the test results is for me 0)
-    )
-    2 thank-for-explain-test-results.v (100 :schema)
-  1 (0 you are not sure what my test results mean 0)
-    2 state-understanding-test-results.v (100 :schema)
-  1 (0 the test results are unfavorable to me 0)
-    2 react-emotionally.v (3 :schema)
-  1 (0 the test results show that I cannot .BE cured 0)
-    2 react-emotionally.v (3 :schema)
-  1 (0 the test results show that my cancer has .SPREAD 0)
-    2 react-emotionally.v (3 :schema)
-  1 (0 the test results show that the radiation is not working 0)
-    2 react-emotionally.v (3 :schema)
-
-  ;; TODO:
-  ;; 1 (0 the test results show that the cancer hasn\'t .SPREAD 0)
-  ;;   2 ask-about-prognosis.v (100 :schema)
+  1 (0 .DIAGNOSIS-TESTS 0)
+    2 *reaction-to-test-results-statement* (0 :subtree)
+  1 (0 ct scan 0)
+    2 *reaction-to-test-results-statement* (0 :subtree)
 
 ; ````````````````````   treatment-option    ```````````````````````
 ; ``````````````````````````````````````````````````````````````````

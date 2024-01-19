@@ -692,6 +692,10 @@
 ; ``````````````````````````````````````````````````````````````````
 
   ; You empathize with how hard my condition is for me.
+  1 (0 .BE 2 lot 2 .CHANGE 2 for 2 you 0)
+    2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
+  1 (0 .BE 2 hard 2 to 2 .HEAR 0)
+    2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
   1 (0 .KNOW-GEN 4 .BE 3 .DIFFICULT 0)
     2 ((You empathize with how hard it is to learn my cancer is terminal \.)) (0 :gist)
   1 (0 .KNOW-GEN 4 how 2 .DIFFICULT 0)
@@ -895,7 +899,7 @@
     2 ((You are glad that I came to this appointment \.)) (0 :gist)
   1 (0 we 3 .RELATIONSHIP-DEVELOP 5 .RELATIONSHIP 0)
     2 ((You feel that we have developed a good doctor patient relationship \.)) (0 :gist)
-  1 (0 sorry 0)
+  1 (0 sorry 8)
     2 ((You are sorry that I have cancer \.)) (0 :gist)
 
   ; Continue (for when conversation is paused)

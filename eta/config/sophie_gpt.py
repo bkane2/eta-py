@@ -5,7 +5,7 @@ from eta.transducers.gpt import *
 from eta.transducers.misc import *
 from eta.embedding import *
 
-SESSION_NUMBER = 4
+SESSION_NUMBER = 1
 DIR_SOPHIE = 'agents/sophie-gpt/'
 DIRS_SCHEMA = [DIR_SOPHIE+'schemas', DIR_SOPHIE+f'day{SESSION_NUMBER}/schemas']
 DIRS_RULES = [DIR_SOPHIE+'rules', DIR_SOPHIE+f'day{SESSION_NUMBER}/rules']
@@ -36,5 +36,5 @@ def config():
         'affect' : GPTAffectTransducer()
     },
     'embedder': DummyEmbedder(),
-    'session_number': 1
+    'session_number': SESSION_NUMBER
   }

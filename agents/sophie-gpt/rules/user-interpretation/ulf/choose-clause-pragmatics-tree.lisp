@@ -99,6 +99,8 @@
     (0 .CANCER-ILLNESS 3 .BE 2 .CANCER-WORSE 0)
     (0 .CANCER-ILLNESS 3 .HAVE 2 .CANCER-WORSE 0)
     (0 .RADIATION-TREATMENT 3 .NEG 1 .WORK 0)
+    (0 .CANCER-INCREASE 3 .SELF 2 .CANCER-ILLNESS 0)
+    (0 .SELF 2 .CANCER-ILLNESS 2 .CANCER-INCREASE 0)
   )
     2 ((^you be.v explicit.a) and
        (^you tell.v ^me (about.p-arg ((^me 's) condition.n))) and

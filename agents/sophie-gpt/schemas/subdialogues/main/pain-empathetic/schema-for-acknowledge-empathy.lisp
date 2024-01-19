@@ -49,24 +49,27 @@
 
 :episodes (
 
-?e1 (:try-in-sequence
+;; ?e1 (:try-in-sequence
 
-  (:if (^you tell.v ^me (that (((^me 's) cancer.n) be.v terminal.a)))
+;;   (:if (^you tell.v ^me (that (((^me 's) cancer.n) be.v terminal.a)))
 
-    ?e2 (^me paraphrase-to.v ^you '([SAD] It\'s really difficult to hear that my cancer is likely terminal \.
-                                    But your help means a lot to me \.))
-    ?e3 (^you reply-to.v ?e2))
+;;     ?e2 (^me paraphrase-to.v ^you '([SAD] It\'s really difficult to hear that my cancer is likely terminal \.
+;;                                     But your help means a lot to me \.))
+;;     ?e3 (^you reply-to.v ?e2))
 
-  (:if (^you tell.v ^me (that (((^me 's) cancer.n) be.v worse.a)))
+;;   (:if (^you tell.v ^me (that (((^me 's) cancer.n) be.v worse.a)))
 
-    ?e2 (^me paraphrase-to.v ^you '([SAD] It\'s really difficult to hear that my cancer is worse \. But thank
-                                    you for being so honest and supportive \.))
-    ?e3 (^you reply-to.v ?e2))
+;;     ?e2 (^me paraphrase-to.v ^you '([SAD] It\'s really difficult to hear that my cancer is worse \. But thank
+;;                                     you for being so honest and supportive \.))
+;;     ?e3 (^you reply-to.v ?e2))
 
-  (:else
+;;   (:else
   
-    ?e2 (^me say-to.v ^you ?words)
-    ?e3 (^you reply-to.v ?e1)))
+;;     ?e2 (^me say-to.v ^you ?words)
+;;     ?e3 (^you reply-to.v ?e1)))
+
+?e1 (^me say-to.v ^you ?words)
+?e2 (^you reply-to.v ?e1)
 
 )
 

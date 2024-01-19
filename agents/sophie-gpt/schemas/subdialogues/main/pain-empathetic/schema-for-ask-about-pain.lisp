@@ -55,41 +55,50 @@
   ?e1 (^me paraphrase-to.v ^you '(Why has my pain been getting worse recently ?))
   ?e2 (^you reply-to.v ?e1)
 
-  ; If not empathetic, express fear about condition
-  ?e3 (:if (not (^you be.v empathetic.a))
+
+  ; Make sure that the user has actually answered Sophie's question
+  ?e3 (:if (not (^you tell.v ^me (about.p-arg ((^me 's) condition.n))))
   
-    ?e4 ((set-of ^me ^you) react-mildly-to-non-empathy.v)
+    ?e4 (^me paraphrase-to.v ^you '(Could you tell me what this means for my condition ?))
+    ?e5 (^you reply-to.v ?e4)
+    
+    ?e6 (:if (not (^you tell.v ^me (about.p-arg ((^me 's) condition.n))))
+  
+      ?e7 (^me paraphrase-to.v ^you '(Please be honest with me\, what do you know about my condition ?))
+      ?e8 (^you reply-to.v ?e7)
+
+      ?e9 (:if (not (^you tell.v ^me (about.p-arg ((^me 's) condition.n))))
+
+        ?e10 (^me paraphrase-to.v ^you '(I am really worried about my test results \. Can you tell me what they mean ?))
+        ?e11 (^you reply-to.v ?e10))))
+
+  
+  ; "Forget" previous empathy from the user upon hearing bad news for the first time
+  ; TODO: I'm not sure about this approach in general; requires further thought.
+  ?e12 (^me forget-from-stm.v (that (^you be.v empathetic.a)))
+
+  
+  ; React negatively to news about condition
+  ?e13 ((set-of ^me ^you) react-to-condition.v)
+
+
+  ; If not empathetic, express fear about condition
+  ?e14 (:if (not (^you be.v empathetic.a))
+  
+    ?e15 ((set-of ^me ^you) react-mildly-to-non-empathy.v)
 
     ; If not empathetic again, escalate emotions
-    ?e6 (:if (not (^you be.v empathetic.a))
+    ?e16 (:if (not (^you be.v empathetic.a))
     
-      ?e7 ((set-of ^me ^you) react-moderately-to-non-empathy.v)
+      ?e17 ((set-of ^me ^you) react-moderately-to-non-empathy.v)
 
       ; If not empathetic a third time, escalate emotions further
       ; (presumably, the conversation would be paused here and rewound)
-      ?e9 (:if (not (^you be.v empathetic.a))
+      ?e18 (:if (not (^you be.v empathetic.a))
       
-        ?e10 (^me paraphrase-to.v ^you '(I don\'t think I can handle this right now \. I need a break \.))
-        ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-        ?e12 (^me say-bye-to.v ^you))))
-
-
-  ; Once the user is empathetic, proceed (but make sure that the user has actually answered Sophie's question)
-  ?e13 (:if (not (^you tell.v ^me (about.p-arg ((^me 's) condition.n))))
-  
-    ?e14 (^me paraphrase-to.v ^you '(I appreciate your support \, but I think I\'m ready to hear about my condition now \.))
-    ?e15 (^you reply-to.v ?e14)
-    
-    ?e16 (:if (not (^you tell.v ^me (about.p-arg ((^me 's) condition.n))))
-  
-      ?e17 (^me paraphrase-to.v ^you '(What do you know about my condition ?))
-      ?e18 (^you reply-to.v ?e17)
-
-      ?e19 (:if (not (^you tell.v ^me (about.p-arg ((^me 's) condition.n))))
-
-        ?e20 (^me paraphrase-to.v ^you '(Actually \, I think we should come back to my condition in a later appointment \. This
-                                         has been a lot to take in \.))
-        ?e21 (^you reply-to.v ?e20))))
+        ?e19 (^me paraphrase-to.v ^you '(I don\'t think I can handle this right now \. I need a break \.))
+        ?e20 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
+        ?e21 (^me say-bye-to.v ^you))))
 
 
   ; If the user was empathetic, acknowledge their empathy and close the conversation
@@ -101,9 +110,9 @@
 
 :obligations (
   !o1 (?e1 obligates (^you be.v empathetic.a))
-  ;; !o2 (?e4 obligates (^you be.v empathetic.a))
-  ;; !o3 (?e7 obligates (^you be.v empathetic.a))
-  !o4 (?e10 obligates (^you be.v empathetic.a))
+  ;; !o2 (?e14 obligates (^you be.v empathetic.a))
+  ;; !o3 (?e16 obligates (^you be.v empathetic.a))
+  !o4 (?e19 obligates (^you be.v empathetic.a))
 )
 
 )) ; END ask-about-pain.v
