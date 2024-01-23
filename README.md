@@ -8,7 +8,7 @@ This is the official Python implementation of the Eta Dialogue Manager, a genera
 * planning
 * execution
 
-The specific functionality of each process can be modified through the use of modular **transducers** that perform a specific type of data mapping (e.g., mapping input utterances to semantic representations, or mapping a dialogue plan to a new expanded dialogue plan). Each type of transducer is implementation-agnostic, allowing for the substitution of many possible models for each type of mapping function -- whether symbolic rules, a neural network, a large language model API, or some combination thereof. The modified data is processed using a set of buffers (priority queues) in order to ensure consistency between processes.
+The specific functionality of each process can be modified through the use of modular **transducers** that perform a specific type of data mapping (e.g., mapping input utterances to semantic representations, or mapping a dialogue plan to a new expanded dialogue plan). Each type of transducer is implementation-agnostic, allowing for the substitution of many possible models for each type of mapping function -- whether symbolic rules, a neural network, a large language model API, or some combination thereof. The modified data is processed using a set of task buffers (priority queues) in order to ensure consistency between processes.
 
 Eta is also representationally flexible, allowing for multiple levels of knowledge representation for events in schemas and memory. All of these three levels are encapsulated by the notion of an **eventuality**, which represents an abstract fact or event with an associated representation.
 
@@ -20,7 +20,7 @@ E.g., `"John went to the store ."`
 
 ##### Episodic Logic (EL)
 
-For more complex reasoning-intensive tasks, events may be represented using formulas in [Episodic Logic](https://www.cs.rochester.edu/research/epilog/) (EL), an expressive first-order intensional logic where events (or episodes) are explicit constants, and can be *characterized* by formulas using a `**` operator.
+For more complex reasoning-intensive tasks, events may be represented using formulas in [Episodic Logic](https://www.cs.rochester.edu/research/epilog/) (EL), an expressive first-order intensional logic where events (or episodes) are explicit terms, and can be *characterized* by formulas using a `**` operator.
 
 E.g., `((|John| go.v |Store3|) ** E2) (E2 during.p Now7)`
 
@@ -119,6 +119,8 @@ This agent allows for four sub-modules; the first three are intended to target a
 
 To determine which module is used, change the `SESSION_NUMBER` constant in `eta/config/sophie_gpt.py` to the corresponding number from the above list.
 
+NOTE: see the `sophie` GitHub branch for an experimental version that uses a GPT4-based validator to avoid "role-switching" hallucinations in output, as well as other fine-tuning adjustments for experiments and demos.
+
 Required API keys:
 * `_keys/openai.txt`
 
@@ -135,7 +137,7 @@ This is the older version of the SOPHIE virtual standardized patient evaluated i
 
 ### lissa_gpt
 
-TODO: still need to test and write up.
+TODO: test and write up documentation.
 
 Required API keys:
 * `_keys/openai.txt`
@@ -145,19 +147,19 @@ Required API keys:
 
 [[8]](#references)
 
-TODO: still need to test and write up.
+TODO: test and write up documentation.
 
 
 ### david_qa
 
 [[5,6,7]](#references)
 
-TODO: still need to transfer.
+TODO: transfer avatar from previous Common Lisp dialogue manager implementation.
 
 
 ### david_tutoring
 
-TODO: still need to transfer.
+TODO: transfer avatar from previous Common Lisp dialogue manager implementation.
 
 
 ## References
