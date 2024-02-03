@@ -28,7 +28,7 @@ def config():
         'pragmatic' : [TTPragmaticTransducer(DIRS_RULES), SkillTransducer()],
         'reaction' : TTReactionTransducer(DIRS_RULES),
         # 'subplan' : TTSubplanTransducer(DIRS_RULES),
-        'paraphrase' : SOPHIEGPTParaphraseTransducer(PARAPHRASE_EXAMPLES),
+        'paraphrase' : SOPHIEGPTParaphraseTransducer(PARAPHRASE_EXAMPLES, history_window_size=1),
         # 'response' : GPTResponseTransducer(),
         'response' : SOPHIEGPTResponseTransducer(),
         'answer' : GPTAnswerTransducer(),
