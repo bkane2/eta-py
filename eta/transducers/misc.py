@@ -112,7 +112,7 @@ class SOPHIEGPTParaphraseTransducer(GPTParaphraseTransducer):
   def __call__(self, gist, conversation_log, facts_bg, facts_fg):
     utt = super().__call__(gist, conversation_log, facts_bg, facts_fg)
 
-    prompt_check = f'Could the following utterance plausibly have come from a lung cancer patient? Answer "yes" or "no".\n\n{utt}'
+    prompt_check = f'A lung cancier patient is having a conversation with a doctor. Could the following utterance have been said by the patient? Answer "yes" or "no".\n\n{utt}'
     result_check, cost_check = generate_gpt(prompt_check, postprocessors=[_sophie_check_validator], model='gpt-4')
     if self.debug:
       file.append_file(GPT_DEBUG_FILE, str(self.idx)+':\n\n'+prompt_check+'\n\n')
@@ -138,7 +138,7 @@ class SOPHIEGPTParaphraseTransducer(GPTParaphraseTransducer):
         'agents' : agents,
         'history' : history,
         'gist' : gist
-      },
+      }
       stop=['^you:', '^me:', '^me [REWRITTEN]']
       prompt = subst_kwargs(self.prompt, kwargs)
       result, cost = generate_gpt(prompt, postprocessors=self.validators, stop=stop, model='gpt-4')
