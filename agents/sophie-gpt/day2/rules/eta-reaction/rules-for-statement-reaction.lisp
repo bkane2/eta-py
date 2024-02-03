@@ -5,6 +5,22 @@
 ; Define any useful predicates here:
 
 
+(READRULES '*reaction-to-cancer-worse-statement*
+;``````````````````````````````````````````````````
+; Emotional reactions are encoded directly in the modules, so avoid reaction.
+;
+'(
+  ;; 1 (0 my cancer has gotten worse 0)
+  ;;   2 react-emotionally.v (10 :schema)
+  1 (0 my cancer has not gotten worse 0)
+    2 verify-cancer-status.v (100 :schema)
+  1 (0 you are not sure whether my cancer has gotten worse 0)
+    2 mention-anxiety.v (100 :schema)
+  
+)) ; END *reaction-to-cancer-worse-statement*
+
+
+
 (READRULES '*reaction-to-chemotherapy-statement*
 ;``````````````````````````````````````````````````
 ; Shouldn't get to treatment options in this module; redirect to prognosis.

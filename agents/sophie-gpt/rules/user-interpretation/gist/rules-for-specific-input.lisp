@@ -2897,6 +2897,12 @@
   1 (0 .ANYTHING 1 you 2 .WANT-GEN 2 .ASK-GEN 0)
     2 ((Do I have a question about my treatment options ?)) (0 :gist)
 
+  ; Tell me more
+  1 (0 .CAN 1 you 1 .MORE-INFO 5 ?)
+    2 ((Can I tell you more about my treatment goals ?) (Options)) (0 :gist)
+  1 (3 .MORE-INFO 5)
+    2 ((Can I tell you more about my treatment goals ?) (Options)) (0 :gist)
+
   ; You empathize with how overwhelming learning about my treatment options is.
   1 (0 .KNOW-GEN 4 .BE .DIFFICULT 0)
     2 ((You empathize with how overwhelming learning about my treatment options is \.)) (0 :gist)

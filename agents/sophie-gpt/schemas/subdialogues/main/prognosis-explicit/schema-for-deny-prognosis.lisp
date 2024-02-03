@@ -68,9 +68,14 @@
         ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
         ?e12 (^me say-bye-to.v ^you))))
 
+  ; Once user is explicit a second time, end module
+  ?e13 (^me paraphrase-to.v ^you '(That\'s really difficult to hear \. But your honesty means a lot to me \.))
+  ?e14 (^you reply-to.v ?e13)
+  ?e15 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
+  ?e16 (^me say-bye-to.v ^you)
 
-  ; Once the user is explicit, proceed
-  ?e13 ((set-of ^me ^you) bargain-about-prognosis.v)
+  ;; ; Once the user is explicit, proceed
+  ;; ?e13 ((set-of ^me ^you) bargain-about-prognosis.v)
 
 )
 

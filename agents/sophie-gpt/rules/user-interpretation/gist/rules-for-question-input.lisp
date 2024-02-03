@@ -1188,6 +1188,11 @@
     2 ((What scares me about my condition ?)) (0 :gist)
   1 (0 .WH_ 2 your future 3 .ANXIETY-WORD 0)
     2 ((What scares me about my condition ?)) (0 :gist)
+  ; Tell me more
+  1 (3 .TELL 2 .MORE-INFO 5)
+    2 ((Can I tell you more about my concerns ?)) (0 :gist)
+  1 (3 .ELABORATE 5)
+    2 ((Can I tell you more about my concerns ?)) (0 :gist)
   ; Are you nervous about this appointment?
   1 (0 .BE 1 you 1 .ANXIETY-WORD 5 .APPOINTMENT 0)
     2 ((Was I nervous for this appointment ?)) (0 :gist)

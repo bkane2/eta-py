@@ -7,8 +7,7 @@
 
 (READRULES '*reaction-to-cancer-worse-statement*
 ;``````````````````````````````````````````````````
-; Reactions to chemotherapy will differ between modules, so this rule tree
-; will be overridden by the rule files defined within each session subdirectory.
+; Emotional reactions are encoded directly in the modules, so avoid reaction.
 ;
 '(
   ;; 1 (0 my cancer has gotten worse 0)
@@ -64,8 +63,7 @@
 
 (READRULES '*reaction-to-test-results-statement*
 ;``````````````````````````````````````````````````
-; Reactions to chemotherapy will differ between modules, so this rule tree
-; will be overridden by the rule files defined within each session subdirectory.
+; Emotional reactions are encoded directly in the modules, so avoid reaction.
 ;
 '(
   1 (:or

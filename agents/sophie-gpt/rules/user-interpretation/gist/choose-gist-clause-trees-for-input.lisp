@@ -52,7 +52,9 @@
     (4 .SELF 2 .WANT-GEN 3 .UNDERSTAND-GEN 5 .TREATMENT-OPTION 1 .HELP 6 .CANCER-GOALS 0)
     (0 .NEG 1 .ADDRESS 4 .CANCER-GOALS 0)
     (0 .WH_ 2 .TREATMENT-OPTION 5 .BE 3 .BENEFICIAL 0)
-    (0 .WH_ 2 .TREATMENT-OPTION 5 .SOUND 3 .BENEFICIAL 0))
+    (0 .WH_ 2 .TREATMENT-OPTION 5 .SOUND 3 .BENEFICIAL 0)
+    (0 .SELF 2 .NEG 1 .UNDERSTAND-GEN 3 .WH_ 2 do 3)
+    (0 .SELF 2 feel lost \. 3 so much to handle 0))
     2 (*treatment-option-input*
        *general-input*) (0 :raw)
 

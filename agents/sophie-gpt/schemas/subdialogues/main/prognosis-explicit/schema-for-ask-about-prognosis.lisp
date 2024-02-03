@@ -72,25 +72,31 @@
           ?e12 (^me say-bye-to.v ^you))))
 
 
-    ?e13 (:try-in-sequence
+    ; Once user is explicit a second time, end module
+    ?e13 (^me paraphrase-to.v ^you '(That\'s really difficult to hear \. But your honesty means a lot to me \.))
+    ?e14 (^you reply-to.v ?e13)
+    ?e15 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
+    ?e16 (^me say-bye-to.v ^you)
+    
+    ;; ?e13 (:try-in-sequence
 
-      ; If too explicit about Sophie's prognosis (i.e., actual timeframe), enter bargaining behavior
-      (:if (^you tell.v ^me (a.d (specific.a (prognosis.n timeframe.n))))
+    ;;   ; If too explicit about Sophie's prognosis (i.e., actual timeframe), enter bargaining behavior
+    ;;   (:if (^you tell.v ^me (a.d (specific.a (prognosis.n timeframe.n))))
 
-        ?e14 ((set-of ^me ^you) bargain-about-prognosis.v))
+    ;;     ?e14 ((set-of ^me ^you) bargain-about-prognosis.v))
 
       
-      ; If user gave a vague timeframe, finish conversation
-      (:else
+    ;;   ; If user gave a vague timeframe, finish conversation
+    ;;   (:else
       
-        ?e15 (^me paraphrase-to.v ^you '([SAD] What does that mean for me ?
-                                        Is there a chance I\'ll be able to watch my grandson graduate ?))
+    ;;     ?e15 (^me paraphrase-to.v ^you '([SAD] What does that mean for me ?
+    ;;                                     Is there a chance I\'ll be able to watch my grandson graduate ?))
         
-        ?e16 (^you reply-to.v ?e15)
+    ;;     ?e16 (^you reply-to.v ?e15)
 
-        ?e17 (^me paraphrase-to.v ^you '(I\'m pretty anxious about my future\, but your honesty means a lot to me \.))
-        ?e18 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
-        ?e19 (^me say-bye-to.v ^you)))
+    ;;     ?e17 (^me paraphrase-to.v ^you '(I\'m pretty anxious about my future\, but your honesty means a lot to me \.))
+    ;;     ?e18 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
+    ;;     ?e19 (^me say-bye-to.v ^you)))
 
 )
 

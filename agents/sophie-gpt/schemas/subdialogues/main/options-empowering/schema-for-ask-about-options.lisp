@@ -45,19 +45,20 @@
 
 :episodes (
 
-  ?e1 (^me paraphrase-to.v ^you '(What are my options for treatment ?))
+  ;; ?e1 (^me paraphrase-to.v ^you '(What are my options for treatment ?))
+  ?e1 (^me paraphrase-to.v ^you '(I just don\'t know what to do !))
   ?e2 (^you reply-to.v ?e1)
   
   ; If not empowering, express doubts
   ?e3 (:if (not (^you be.v empowering.a))
   
-    ?e4 (^me paraphrase-to.v ^you '(There\'s too much information \. I don\'t know what to do \.))
+    ?e4 (^me paraphrase-to.v ^you '(There\'s too much information \. I don\'t know what to do anymore \.))
     ?e5 (^you reply-to.v ?e4)
 
     ; If not empowering again, escalate emotions
     ?e6 (:if (not (^you be.v empowering.a))
     
-      ?e7 (^me paraphrase-to.v ^you '(I really need to know how these treatments help with my own goals \.))
+      ?e7 (^me paraphrase-to.v ^you '(I just feel lost \. This is so much to handle \.))
       ?e8 (^you reply-to.v ?e7)
 
       ; If not empowering a third time, escalate emotions further
@@ -69,28 +70,35 @@
         ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
         ?e12 (^me say-bye-to.v ^you))))
 
-  ; Once the user is empowering, proceed (but make sure that the user has actually answered Sophie's question adequately)
-  ?e13 (:try-in-sequence
+  ; Once the user is empowering, end module
+  ?e13 (^me paraphrase-to.v ^you '(Knowing that you have my values in mind helps make me more confident about my options \.
+                                   I appreciate that \.))
+  ?e14 (^you reply-to.v ?e13)
+  ?e15 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
+  ?e16 (^me say-bye-to.v ^you)
 
-    (:if (not (^you tell.v ^me (about.p-arg ((^me 's) (plur option.n)))))
+  ;; ; Once the user is empowering, proceed (but make sure that the user has actually answered Sophie's question adequately)
+  ;; ?e13 (:try-in-sequence
+
+  ;;   (:if (not (^you tell.v ^me (about.p-arg ((^me 's) (plur option.n)))))
     
-      ?e14 (^me paraphrase-to.v ^you '(Given the goals that we discussed \, what option do you think is the best ?))
-      ?e15 (^you reply-to.v ?e14))
+  ;;     ?e14 (^me paraphrase-to.v ^you '(Given the goals that we discussed \, what option do you think is the best ?))
+  ;;     ?e15 (^you reply-to.v ?e14))
 
-    (:if (not (^you tell.v ^me (about.p-arg (k chemotherapy.n))))
+  ;;   (:if (not (^you tell.v ^me (about.p-arg (k chemotherapy.n))))
     
-      ?e14 (^me paraphrase-to.v ^you '(Do you think I need chemotherapy ?))
-      ?e15 (^you reply-to.v ?e14))
+  ;;     ?e14 (^me paraphrase-to.v ^you '(Do you think I need chemotherapy ?))
+  ;;     ?e15 (^you reply-to.v ?e14))
 
-    (:if (not (^you tell.v ^me (about.p-arg (k (comfort.n care.n)))))
+  ;;   (:if (not (^you tell.v ^me (about.p-arg (k (comfort.n care.n)))))
     
-      ?e14 (^me paraphrase-to.v ^you '(I\'ve heard about something called comfort care \. Do you think that\'s an option ?))
-      ?e15 (^you reply-to.v ?e14)))
+  ;;     ?e14 (^me paraphrase-to.v ^you '(I\'ve heard about something called comfort care \. Do you think that\'s an option ?))
+  ;;     ?e15 (^you reply-to.v ?e14)))
 
-  ?e16 (^me paraphrase-to.v ^you '(Thank you for telling me about my options \.
-                                   I need to think about them more and discuss them with my family \.))
+  ;; ?e16 (^me paraphrase-to.v ^you '(Thank you for telling me about my options \.
+  ;;                                  I need to think about them more and discuss them with my family \.))
 
-  ?e17 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
+  ;; ?e17 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
 
 )
 
