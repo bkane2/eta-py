@@ -1,0 +1,6 @@
+eta.core.execution.store\_in\_stm\_step
+=======================================
+
+.. currentmodule:: eta.core.execution
+
+.. autofunction:: store_in_stm_step

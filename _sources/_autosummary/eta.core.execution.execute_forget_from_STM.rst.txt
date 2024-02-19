@@ -1,0 +1,6 @@
+eta.core.execution.execute\_forget\_from\_STM
+=============================================
+
+.. currentmodule:: eta.core.execution
+
+.. autofunction:: execute_forget_from_STM

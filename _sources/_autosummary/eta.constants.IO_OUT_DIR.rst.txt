@@ -1,0 +1,6 @@
+eta.constants.IO\_OUT\_DIR
+==========================
+
+.. currentmodule:: eta.constants
+
+.. autodata:: IO_OUT_DIR

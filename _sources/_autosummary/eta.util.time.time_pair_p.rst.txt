@@ -1,0 +1,6 @@
+eta.util.time.time\_pair\_p
+===========================
+
+.. currentmodule:: eta.util.time
+
+.. autofunction:: time_pair_p

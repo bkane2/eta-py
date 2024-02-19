@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.constants &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.constants.SLEEPTIME" href="eta.constants.SLEEPTIME.html" />
+    <link rel="prev" title="eta.config.sophie_offline.config" href="eta.config.sophie_offline.config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eta.constants</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SLEEPTIME.html">eta.constants.SLEEPTIME</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.REASONING_DEPTH_LIMIT.html">eta.constants.REASONING_DEPTH_LIMIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EMBEDDING_DEFAULT_API.html">eta.constants.EMBEDDING_DEFAULT_API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EMBEDDING_DEFAULT_MODEL.html">eta.constants.EMBEDDING_DEFAULT_MODEL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.KEY_PATH.html">eta.constants.KEY_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SYMTAB_PATH.html">eta.constants.SYMTAB_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.COREFERENCE_MODE.html">eta.constants.COREFERENCE_MODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.RECENCY_CUTOFF.html">eta.constants.RECENCY_CUTOFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT.html">eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.CERTAINTY_THRESHOLD.html">eta.constants.CERTAINTY_THRESHOLD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EMOTIONS_LIST.html">eta.constants.EMOTIONS_LIST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_PATH.html">eta.constants.IO_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_IN_DIR.html">eta.constants.IO_IN_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_OUT_DIR.html">eta.constants.IO_OUT_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_CLOG_DIR.html">eta.constants.IO_CLOG_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.CLOG_FILES.html">eta.constants.CLOG_FILES</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.LOG_PATH.html">eta.constants.LOG_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.GPT_DEBUG_FILE.html">eta.constants.GPT_DEBUG_FILE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.DEFAULT_START.html">eta.constants.DEFAULT_START</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.DEFAULT_IMPORTANCE.html">eta.constants.DEFAULT_IMPORTANCE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.DEFAULT_IMPORTANCE_THRESHOLD.html">eta.constants.DEFAULT_IMPORTANCE_THRESHOLD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ME.html">eta.constants.ME</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.YOU.html">eta.constants.YOU</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOW.html">eta.constants.NOW</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.HERE.html">eta.constants.HERE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SAY_TO.html">eta.constants.SAY_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.PARAPHRASE_TO.html">eta.constants.PARAPHRASE_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ARTICULATE_TO.html">eta.constants.ARTICULATE_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.RESPOND_TO.html">eta.constants.RESPOND_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.REPLY_TO.html">eta.constants.REPLY_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ANSWER.html">eta.constants.ANSWER</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ASK.html">eta.constants.ASK</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.REACT_TO.html">eta.constants.REACT_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SAY_BYE.html">eta.constants.SAY_BYE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.STORE_IN_STM.html">eta.constants.STORE_IN_STM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.FORGET_FROM_STM.html">eta.constants.FORGET_FROM_STM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SPEECH_ACTS.html">eta.constants.SPEECH_ACTS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.TELIC_VERBS.html">eta.constants.TELIC_VERBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOOP_YOU.html">eta.constants.NOOP_YOU</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOOP_GEN.html">eta.constants.NOOP_GEN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOOP.html">eta.constants.NOOP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.SLEEPTIME"><code class="docutils literal notranslate"><span class="pre">SLEEPTIME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.REASONING_DEPTH_LIMIT"><code class="docutils literal notranslate"><span class="pre">REASONING_DEPTH_LIMIT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.EMBEDDING_DEFAULT_API"><code class="docutils literal notranslate"><span class="pre">EMBEDDING_DEFAULT_API</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.EMBEDDING_DEFAULT_MODEL"><code class="docutils literal notranslate"><span class="pre">EMBEDDING_DEFAULT_MODEL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.KEY_PATH"><code class="docutils literal notranslate"><span class="pre">KEY_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.SYMTAB_PATH"><code class="docutils literal notranslate"><span class="pre">SYMTAB_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.COREFERENCE_MODE"><code class="docutils literal notranslate"><span class="pre">COREFERENCE_MODE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.RECENCY_CUTOFF"><code class="docutils literal notranslate"><span class="pre">RECENCY_CUTOFF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT"><code class="docutils literal notranslate"><span class="pre">EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.CERTAINTY_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">CERTAINTY_THRESHOLD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.EMOTIONS_LIST"><code class="docutils literal notranslate"><span class="pre">EMOTIONS_LIST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.IO_PATH"><code class="docutils literal notranslate"><span class="pre">IO_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.IO_IN_DIR"><code class="docutils literal notranslate"><span class="pre">IO_IN_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.IO_OUT_DIR"><code class="docutils literal notranslate"><span class="pre">IO_OUT_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.IO_CLOG_DIR"><code class="docutils literal notranslate"><span class="pre">IO_CLOG_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.CLOG_FILES"><code class="docutils literal notranslate"><span class="pre">CLOG_FILES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.LOG_PATH"><code class="docutils literal notranslate"><span class="pre">LOG_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.GPT_DEBUG_FILE"><code class="docutils literal notranslate"><span class="pre">GPT_DEBUG_FILE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.DEFAULT_START"><code class="docutils literal notranslate"><span class="pre">DEFAULT_START</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.DEFAULT_IMPORTANCE"><code class="docutils literal notranslate"><span class="pre">DEFAULT_IMPORTANCE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.DEFAULT_IMPORTANCE_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">DEFAULT_IMPORTANCE_THRESHOLD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.ME"><code class="docutils literal notranslate"><span class="pre">ME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.YOU"><code class="docutils literal notranslate"><span class="pre">YOU</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.NOW"><code class="docutils literal notranslate"><span class="pre">NOW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.HERE"><code class="docutils literal notranslate"><span class="pre">HERE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.SAY_TO"><code class="docutils literal notranslate"><span class="pre">SAY_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.PARAPHRASE_TO"><code class="docutils literal notranslate"><span class="pre">PARAPHRASE_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.ARTICULATE_TO"><code class="docutils literal notranslate"><span class="pre">ARTICULATE_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.RESPOND_TO"><code class="docutils literal notranslate"><span class="pre">RESPOND_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.REPLY_TO"><code class="docutils literal notranslate"><span class="pre">REPLY_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.ANSWER"><code class="docutils literal notranslate"><span class="pre">ANSWER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.ASK"><code class="docutils literal notranslate"><span class="pre">ASK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.REACT_TO"><code class="docutils literal notranslate"><span class="pre">REACT_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.SAY_BYE"><code class="docutils literal notranslate"><span class="pre">SAY_BYE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.STORE_IN_STM"><code class="docutils literal notranslate"><span class="pre">STORE_IN_STM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.FORGET_FROM_STM"><code class="docutils literal notranslate"><span class="pre">FORGET_FROM_STM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.SPEECH_ACTS"><code class="docutils literal notranslate"><span class="pre">SPEECH_ACTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.TELIC_VERBS"><code class="docutils literal notranslate"><span class="pre">TELIC_VERBS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.NOOP_YOU"><code class="docutils literal notranslate"><span class="pre">NOOP_YOU</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.NOOP_GEN"><code class="docutils literal notranslate"><span class="pre">NOOP_GEN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eta.constants.NOOP"><code class="docutils literal notranslate"><span class="pre">NOOP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+      <li class="breadcrumb-item active">eta.constants</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.constants">
+<span id="eta-constants"></span><h1>eta.constants<a class="headerlink" href="#module-eta.constants" title="Link to this heading"></a></h1>
+<p>Global constants used by other Eta modules.</p>
+<p>This module contains definitions for a variety of global constants that are used by
+other Eta modules. Generally, it can be imported using <cite>from eta.constants import *</cite>.</p>
+<p class="rubric">Module attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.SLEEPTIME.html#eta.constants.SLEEPTIME" title="eta.constants.SLEEPTIME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SLEEPTIME</span></code></a></p></td>
+<td><p>The time used to sleep between each iteration of Eta's core processes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.REASONING_DEPTH_LIMIT.html#eta.constants.REASONING_DEPTH_LIMIT" title="eta.constants.REASONING_DEPTH_LIMIT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REASONING_DEPTH_LIMIT</span></code></a></p></td>
+<td><p>How many 'inference steps' from a direct observation to take during the reasoning process.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.EMBEDDING_DEFAULT_API.html#eta.constants.EMBEDDING_DEFAULT_API" title="eta.constants.EMBEDDING_DEFAULT_API"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EMBEDDING_DEFAULT_API</span></code></a></p></td>
+<td><p>Default embedding API URL, used if no other URL is specified in an embedder API.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.EMBEDDING_DEFAULT_MODEL.html#eta.constants.EMBEDDING_DEFAULT_MODEL" title="eta.constants.EMBEDDING_DEFAULT_MODEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EMBEDDING_DEFAULT_MODEL</span></code></a></p></td>
+<td><p>Default embedding model, used if no other model is specified in an embedder.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.KEY_PATH.html#eta.constants.KEY_PATH" title="eta.constants.KEY_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KEY_PATH</span></code></a></p></td>
+<td><p>Directory to check for API keys.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.SYMTAB_PATH.html#eta.constants.SYMTAB_PATH" title="eta.constants.SYMTAB_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SYMTAB_PATH</span></code></a></p></td>
+<td><p>Path used to create the symbol table (a dict structure maintaining indices for each unique symbol).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.COREFERENCE_MODE.html#eta.constants.COREFERENCE_MODE" title="eta.constants.COREFERENCE_MODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">COREFERENCE_MODE</span></code></a></p></td>
+<td><p>The level of coreference to use.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.RECENCY_CUTOFF.html#eta.constants.RECENCY_CUTOFF" title="eta.constants.RECENCY_CUTOFF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RECENCY_CUTOFF</span></code></a></p></td>
+<td><p>The coreference module will only look this many turns back in the discourse history to find possible referents.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT.html#eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT" title="eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT</span></code></a></p></td>
+<td><p>The coefficient to use in the function mapping certainty scores to the period for expected step failures.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.CERTAINTY_THRESHOLD.html#eta.constants.CERTAINTY_THRESHOLD" title="eta.constants.CERTAINTY_THRESHOLD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CERTAINTY_THRESHOLD</span></code></a></p></td>
+<td><p>A ULF must have a certainty greater than or equal to this score to be used in a response.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.EMOTIONS_LIST.html#eta.constants.EMOTIONS_LIST" title="eta.constants.EMOTIONS_LIST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EMOTIONS_LIST</span></code></a></p></td>
+<td><p>A list of emotions supported by Eta, where the first element is assumed to be the default.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.IO_PATH.html#eta.constants.IO_PATH" title="eta.constants.IO_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IO_PATH</span></code></a></p></td>
+<td><p>The path for input/outputs to be written to and read from.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.IO_IN_DIR.html#eta.constants.IO_IN_DIR" title="eta.constants.IO_IN_DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IO_IN_DIR</span></code></a></p></td>
+<td><p>The directory within the IO path to use for inputs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.IO_OUT_DIR.html#eta.constants.IO_OUT_DIR" title="eta.constants.IO_OUT_DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IO_OUT_DIR</span></code></a></p></td>
+<td><p>The directory within the IO path to use for outputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.IO_CLOG_DIR.html#eta.constants.IO_CLOG_DIR" title="eta.constants.IO_CLOG_DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IO_CLOG_DIR</span></code></a></p></td>
+<td><p>The directory within the IO path to use for writing conversation logs for a session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.CLOG_FILES.html#eta.constants.CLOG_FILES" title="eta.constants.CLOG_FILES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CLOG_FILES</span></code></a></p></td>
+<td><p>The list of all supported conversation log files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.LOG_PATH.html#eta.constants.LOG_PATH" title="eta.constants.LOG_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG_PATH</span></code></a></p></td>
+<td><p>The path for archived conversation logs to be written to.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.GPT_DEBUG_FILE.html#eta.constants.GPT_DEBUG_FILE" title="eta.constants.GPT_DEBUG_FILE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPT_DEBUG_FILE</span></code></a></p></td>
+<td><p>A filepath to write GPT prompt debugging info to.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.DEFAULT_START.html#eta.constants.DEFAULT_START" title="eta.constants.DEFAULT_START"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_START</span></code></a></p></td>
+<td><p>The default start schema if none is provided in agent-config.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.DEFAULT_IMPORTANCE.html#eta.constants.DEFAULT_IMPORTANCE" title="eta.constants.DEFAULT_IMPORTANCE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_IMPORTANCE</span></code></a></p></td>
+<td><p>The default importance value for new facts stored in memory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.DEFAULT_IMPORTANCE_THRESHOLD.html#eta.constants.DEFAULT_IMPORTANCE_THRESHOLD" title="eta.constants.DEFAULT_IMPORTANCE_THRESHOLD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_IMPORTANCE_THRESHOLD</span></code></a></p></td>
+<td><p>The default threshold to place on importance when retrieving facts from memory.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.ME.html#eta.constants.ME" title="eta.constants.ME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ME</span></code></a></p></td>
+<td><p>Indexical variable to be used for Eta.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.YOU.html#eta.constants.YOU" title="eta.constants.YOU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">YOU</span></code></a></p></td>
+<td><p>Indexical variable to be used for the user.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.NOW.html#eta.constants.NOW" title="eta.constants.NOW"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NOW</span></code></a></p></td>
+<td><p>Indexical variable to be used for the current time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.HERE.html#eta.constants.HERE" title="eta.constants.HERE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HERE</span></code></a></p></td>
+<td><p>Indexical variable to be used for the current location.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.SAY_TO.html#eta.constants.SAY_TO" title="eta.constants.SAY_TO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAY_TO</span></code></a></p></td>
+<td><p>Predicate for a saying event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.PARAPHRASE_TO.html#eta.constants.PARAPHRASE_TO" title="eta.constants.PARAPHRASE_TO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PARAPHRASE_TO</span></code></a></p></td>
+<td><p>Predicate for a paraphrasing event (i.e., a gist clause attribution).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.ARTICULATE_TO.html#eta.constants.ARTICULATE_TO" title="eta.constants.ARTICULATE_TO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ARTICULATE_TO</span></code></a></p></td>
+<td><p>Predicate for an articulation event (i.e., a ULF attribution).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.RESPOND_TO.html#eta.constants.RESPOND_TO" title="eta.constants.RESPOND_TO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RESPOND_TO</span></code></a></p></td>
+<td><p>Predicate for a response event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.REPLY_TO.html#eta.constants.REPLY_TO" title="eta.constants.REPLY_TO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REPLY_TO</span></code></a></p></td>
+<td><p>Predicate for a reply event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.ANSWER.html#eta.constants.ANSWER" title="eta.constants.ANSWER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANSWER</span></code></a></p></td>
+<td><p>Predicate for an answer event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.ASK.html#eta.constants.ASK" title="eta.constants.ASK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASK</span></code></a></p></td>
+<td><p>Predicate for an ask event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.REACT_TO.html#eta.constants.REACT_TO" title="eta.constants.REACT_TO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REACT_TO</span></code></a></p></td>
+<td><p>Predicate for a react event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.SAY_BYE.html#eta.constants.SAY_BYE" title="eta.constants.SAY_BYE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAY_BYE</span></code></a></p></td>
+<td><p>Predicate for a saying goodbye event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.STORE_IN_STM.html#eta.constants.STORE_IN_STM" title="eta.constants.STORE_IN_STM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STORE_IN_STM</span></code></a></p></td>
+<td><p>Predicate for storing a fact in short-term memory.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.FORGET_FROM_STM.html#eta.constants.FORGET_FROM_STM" title="eta.constants.FORGET_FROM_STM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FORGET_FROM_STM</span></code></a></p></td>
+<td><p>Predicate for forgetting a fact from short-term memory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.SPEECH_ACTS.html#eta.constants.SPEECH_ACTS" title="eta.constants.SPEECH_ACTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SPEECH_ACTS</span></code></a></p></td>
+<td><p>A list of all supported speech acts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.TELIC_VERBS.html#eta.constants.TELIC_VERBS" title="eta.constants.TELIC_VERBS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TELIC_VERBS</span></code></a></p></td>
+<td><p>A list of all predicates considered &quot;telic&quot;, i.e., that denote events that are assumed to be nearly instantaneous.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.NOOP_YOU.html#eta.constants.NOOP_YOU" title="eta.constants.NOOP_YOU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NOOP_YOU</span></code></a></p></td>
+<td><p>A formula used to denote a &quot;failed&quot; expectation of a user event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.constants.NOOP_GEN.html#eta.constants.NOOP_GEN" title="eta.constants.NOOP_GEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NOOP_GEN</span></code></a></p></td>
+<td><p>A formula used to denote a &quot;failed&quot; expectation of an external event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.constants.NOOP.html#eta.constants.NOOP" title="eta.constants.NOOP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NOOP</span></code></a></p></td>
+<td><p>A list of all formulas that are considered to be &quot;no-op&quot; events.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.SLEEPTIME">
+<span class="sig-name descname"><span class="pre">SLEEPTIME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#eta.constants.SLEEPTIME" title="Link to this definition"></a></dt>
+<dd><p>The time used to sleep between each iteration of Eta’s core processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.REASONING_DEPTH_LIMIT">
+<span class="sig-name descname"><span class="pre">REASONING_DEPTH_LIMIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#eta.constants.REASONING_DEPTH_LIMIT" title="Link to this definition"></a></dt>
+<dd><p>How many ‘inference steps’ from a direct observation to take during the reasoning process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.EMBEDDING_DEFAULT_API">
+<span class="sig-name descname"><span class="pre">EMBEDDING_DEFAULT_API</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://api-inference.huggingface.co/pipeline/feature-extraction/'</span></em><a class="headerlink" href="#eta.constants.EMBEDDING_DEFAULT_API" title="Link to this definition"></a></dt>
+<dd><p>Default embedding API URL, used if no other URL is specified in an embedder API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.EMBEDDING_DEFAULT_MODEL">
+<span class="sig-name descname"><span class="pre">EMBEDDING_DEFAULT_MODEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sentence-transformers/all-distilroberta-v1'</span></em><a class="headerlink" href="#eta.constants.EMBEDDING_DEFAULT_MODEL" title="Link to this definition"></a></dt>
+<dd><p>Default embedding model, used if no other model is specified in an embedder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.KEY_PATH">
+<span class="sig-name descname"><span class="pre">KEY_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_keys/'</span></em><a class="headerlink" href="#eta.constants.KEY_PATH" title="Link to this definition"></a></dt>
+<dd><p>Directory to check for API keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.SYMTAB_PATH">
+<span class="sig-name descname"><span class="pre">SYMTAB_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'io/symtab.json'</span></em><a class="headerlink" href="#eta.constants.SYMTAB_PATH" title="Link to this definition"></a></dt>
+<dd><p>Path used to create the symbol table (a dict structure maintaining indices for each unique symbol).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.COREFERENCE_MODE">
+<span class="sig-name descname"><span class="pre">COREFERENCE_MODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#eta.constants.COREFERENCE_MODE" title="Link to this definition"></a></dt>
+<dd><p>The level of coreference to use.</p>
+<dl class="simple">
+<dt>Supported values:</dt><dd><p>0: simply reconstruct the original ULF.
+1: the same as level 2, but excluding “I” and “you” from references to resolve.
+2: substitute canonical names only for anaphora and indexical NP’s (e.g., “it” or “that block”).
+3: substitute canonical names for all references.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.RECENCY_CUTOFF">
+<span class="sig-name descname"><span class="pre">RECENCY_CUTOFF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#eta.constants.RECENCY_CUTOFF" title="Link to this definition"></a></dt>
+<dd><p>The coreference module will only look this many turns back in the discourse history to find possible referents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT">
+<span class="sig-name descname"><span class="pre">EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">30</span></em><a class="headerlink" href="#eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT" title="Link to this definition"></a></dt>
+<dd><p>The coefficient to use in the function mapping certainty scores to the period for expected step failures.</p>
+<p>The certainty of an episode determines the timer period (in seconds) that must be passed for Eta to consider
+an expected episode failed and move on in the plan. This is a function on the certainty of the episode, with
+a certainty of 1 having an infinite period, and a certainty of 0 having a period of 0. This constant determines
+the coefficient on the certainty-to-period function.</p>
+<p>A value of “30” makes a certainty of ~0.632 correspond to 30 seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.CERTAINTY_THRESHOLD">
+<span class="sig-name descname"><span class="pre">CERTAINTY_THRESHOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.7</span></em><a class="headerlink" href="#eta.constants.CERTAINTY_THRESHOLD" title="Link to this definition"></a></dt>
+<dd><p>A ULF must have a certainty greater than or equal to this score to be used in a response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.EMOTIONS_LIST">
+<span class="sig-name descname"><span class="pre">EMOTIONS_LIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['neutral',</span> <span class="pre">'sad',</span> <span class="pre">'happy',</span> <span class="pre">'worried',</span> <span class="pre">'angry']</span></em><a class="headerlink" href="#eta.constants.EMOTIONS_LIST" title="Link to this definition"></a></dt>
+<dd><p>A list of emotions supported by Eta, where the first element is assumed to be the default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.IO_PATH">
+<span class="sig-name descname"><span class="pre">IO_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'io/'</span></em><a class="headerlink" href="#eta.constants.IO_PATH" title="Link to this definition"></a></dt>
+<dd><p>The path for input/outputs to be written to and read from.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.IO_IN_DIR">
+<span class="sig-name descname"><span class="pre">IO_IN_DIR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'in/'</span></em><a class="headerlink" href="#eta.constants.IO_IN_DIR" title="Link to this definition"></a></dt>
+<dd><p>The directory within the IO path to use for inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.IO_OUT_DIR">
+<span class="sig-name descname"><span class="pre">IO_OUT_DIR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'out/'</span></em><a class="headerlink" href="#eta.constants.IO_OUT_DIR" title="Link to this definition"></a></dt>
+<dd><p>The directory within the IO path to use for outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.IO_CLOG_DIR">
+<span class="sig-name descname"><span class="pre">IO_CLOG_DIR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'conversation-log/'</span></em><a class="headerlink" href="#eta.constants.IO_CLOG_DIR" title="Link to this definition"></a></dt>
+<dd><p>The directory within the IO path to use for writing conversation logs for a session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.CLOG_FILES">
+<span class="sig-name descname"><span class="pre">CLOG_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['text',</span> <span class="pre">'affect',</span> <span class="pre">'gist',</span> <span class="pre">'semantic',</span> <span class="pre">'pragmatic',</span> <span class="pre">'obligations',</span> <span class="pre">'step']</span></em><a class="headerlink" href="#eta.constants.CLOG_FILES" title="Link to this definition"></a></dt>
+<dd><p>The list of all supported conversation log files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.LOG_PATH">
+<span class="sig-name descname"><span class="pre">LOG_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'logs/'</span></em><a class="headerlink" href="#eta.constants.LOG_PATH" title="Link to this definition"></a></dt>
+<dd><p>The path for archived conversation logs to be written to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.GPT_DEBUG_FILE">
+<span class="sig-name descname"><span class="pre">GPT_DEBUG_FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'debug/prompts.txt'</span></em><a class="headerlink" href="#eta.constants.GPT_DEBUG_FILE" title="Link to this definition"></a></dt>
+<dd><p>A filepath to write GPT prompt debugging info to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.DEFAULT_START">
+<span class="sig-name descname"><span class="pre">DEFAULT_START</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'have-eta-dialog.v'</span></em><a class="headerlink" href="#eta.constants.DEFAULT_START" title="Link to this definition"></a></dt>
+<dd><p>The default start schema if none is provided in agent-config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.DEFAULT_IMPORTANCE">
+<span class="sig-name descname"><span class="pre">DEFAULT_IMPORTANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.25</span></em><a class="headerlink" href="#eta.constants.DEFAULT_IMPORTANCE" title="Link to this definition"></a></dt>
+<dd><p>The default importance value for new facts stored in memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.DEFAULT_IMPORTANCE_THRESHOLD">
+<span class="sig-name descname"><span class="pre">DEFAULT_IMPORTANCE_THRESHOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.5</span></em><a class="headerlink" href="#eta.constants.DEFAULT_IMPORTANCE_THRESHOLD" title="Link to this definition"></a></dt>
+<dd><p>The default threshold to place on importance when retrieving facts from memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.ME">
+<span class="sig-name descname"><span class="pre">ME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'^me'</span></em><a class="headerlink" href="#eta.constants.ME" title="Link to this definition"></a></dt>
+<dd><p>Indexical variable to be used for Eta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.YOU">
+<span class="sig-name descname"><span class="pre">YOU</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'^you'</span></em><a class="headerlink" href="#eta.constants.YOU" title="Link to this definition"></a></dt>
+<dd><p>Indexical variable to be used for the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.NOW">
+<span class="sig-name descname"><span class="pre">NOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'^now'</span></em><a class="headerlink" href="#eta.constants.NOW" title="Link to this definition"></a></dt>
+<dd><p>Indexical variable to be used for the current time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.HERE">
+<span class="sig-name descname"><span class="pre">HERE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'^here'</span></em><a class="headerlink" href="#eta.constants.HERE" title="Link to this definition"></a></dt>
+<dd><p>Indexical variable to be used for the current location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.SAY_TO">
+<span class="sig-name descname"><span class="pre">SAY_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'say-to.v'</span></em><a class="headerlink" href="#eta.constants.SAY_TO" title="Link to this definition"></a></dt>
+<dd><p>Predicate for a saying event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.PARAPHRASE_TO">
+<span class="sig-name descname"><span class="pre">PARAPHRASE_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'paraphrase-to.v'</span></em><a class="headerlink" href="#eta.constants.PARAPHRASE_TO" title="Link to this definition"></a></dt>
+<dd><p>Predicate for a paraphrasing event (i.e., a gist clause attribution).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.ARTICULATE_TO">
+<span class="sig-name descname"><span class="pre">ARTICULATE_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'articulate-to.v'</span></em><a class="headerlink" href="#eta.constants.ARTICULATE_TO" title="Link to this definition"></a></dt>
+<dd><p>Predicate for an articulation event (i.e., a ULF attribution).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.RESPOND_TO">
+<span class="sig-name descname"><span class="pre">RESPOND_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'respond-to.v'</span></em><a class="headerlink" href="#eta.constants.RESPOND_TO" title="Link to this definition"></a></dt>
+<dd><p>Predicate for a response event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.REPLY_TO">
+<span class="sig-name descname"><span class="pre">REPLY_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reply-to.v'</span></em><a class="headerlink" href="#eta.constants.REPLY_TO" title="Link to this definition"></a></dt>
+<dd><p>Predicate for a reply event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.ANSWER">
+<span class="sig-name descname"><span class="pre">ANSWER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'answer.v'</span></em><a class="headerlink" href="#eta.constants.ANSWER" title="Link to this definition"></a></dt>
+<dd><p>Predicate for an answer event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.ASK">
+<span class="sig-name descname"><span class="pre">ASK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ask.v'</span></em><a class="headerlink" href="#eta.constants.ASK" title="Link to this definition"></a></dt>
+<dd><p>Predicate for an ask event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.REACT_TO">
+<span class="sig-name descname"><span class="pre">REACT_TO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'react-to.v'</span></em><a class="headerlink" href="#eta.constants.REACT_TO" title="Link to this definition"></a></dt>
+<dd><p>Predicate for a react event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.SAY_BYE">
+<span class="sig-name descname"><span class="pre">SAY_BYE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'say-bye-to.v'</span></em><a class="headerlink" href="#eta.constants.SAY_BYE" title="Link to this definition"></a></dt>
+<dd><p>Predicate for a saying goodbye event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.STORE_IN_STM">
+<span class="sig-name descname"><span class="pre">STORE_IN_STM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'store-in-stm.v'</span></em><a class="headerlink" href="#eta.constants.STORE_IN_STM" title="Link to this definition"></a></dt>
+<dd><p>Predicate for storing a fact in short-term memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.FORGET_FROM_STM">
+<span class="sig-name descname"><span class="pre">FORGET_FROM_STM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'forget-from-stm.v'</span></em><a class="headerlink" href="#eta.constants.FORGET_FROM_STM" title="Link to this definition"></a></dt>
+<dd><p>Predicate for forgetting a fact from short-term memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.SPEECH_ACTS">
+<span class="sig-name descname"><span class="pre">SPEECH_ACTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['say-to.v',</span> <span class="pre">'paraphrase-to.v',</span> <span class="pre">'respond-to.v',</span> <span class="pre">'reply-to.v',</span> <span class="pre">'answer.v',</span> <span class="pre">'ask.v',</span> <span class="pre">'react-to.v',</span> <span class="pre">'articulate-to.v',</span> <span class="pre">'say-bye-to.v']</span></em><a class="headerlink" href="#eta.constants.SPEECH_ACTS" title="Link to this definition"></a></dt>
+<dd><p>A list of all supported speech acts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.TELIC_VERBS">
+<span class="sig-name descname"><span class="pre">TELIC_VERBS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['say-to.v',</span> <span class="pre">'paraphrase-to.v',</span> <span class="pre">'respond-to.v',</span> <span class="pre">'reply-to.v',</span> <span class="pre">'answer.v',</span> <span class="pre">'ask.v',</span> <span class="pre">'react-to.v',</span> <span class="pre">'articulate-to.v',</span> <span class="pre">'say-bye-to.v',</span> <span class="pre">'move.v']</span></em><a class="headerlink" href="#eta.constants.TELIC_VERBS" title="Link to this definition"></a></dt>
+<dd><p>A list of all predicates considered “telic”, i.e., that denote events that are assumed to be nearly instantaneous.</p>
+<p>TODO: ultimately we need to create a more systemic classification, and provide this as an external resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.NOOP_YOU">
+<span class="sig-name descname"><span class="pre">NOOP_YOU</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['^you',</span> <span class="pre">'do.v',</span> <span class="pre">['no.d',</span> <span class="pre">'thing.n']]</span></em><a class="headerlink" href="#eta.constants.NOOP_YOU" title="Link to this definition"></a></dt>
+<dd><p>A formula used to denote a “failed” expectation of a user event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>s-expr</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.NOOP_GEN">
+<span class="sig-name descname"><span class="pre">NOOP_GEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['no.d',</span> <span class="pre">'thing.n'],</span> <span class="pre">'happen.v']</span></em><a class="headerlink" href="#eta.constants.NOOP_GEN" title="Link to this definition"></a></dt>
+<dd><p>A formula used to denote a “failed” expectation of an external event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>s-expr</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.NOOP">
+<span class="sig-name descname"><span class="pre">NOOP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['^you',</span> <span class="pre">'do.v',</span> <span class="pre">['no.d',</span> <span class="pre">'thing.n']],</span> <span class="pre">[['no.d',</span> <span class="pre">'thing.n'],</span> <span class="pre">'happen.v']]</span></em><a class="headerlink" href="#eta.constants.NOOP" title="Link to this definition"></a></dt>
+<dd><p>A list of all formulas that are considered to be “no-op” events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[s-expr]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.config.sophie_offline.config.html" class="btn btn-neutral float-left" title="eta.config.sophie_offline.config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.constants.SLEEPTIME.html" class="btn btn-neutral float-right" title="eta.constants.SLEEPTIME" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

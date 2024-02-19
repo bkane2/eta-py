@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.util.buffer" href="eta.util.buffer.html" />
+    <link rel="prev" title="eta.transducers.tt.TTTransducer" href="eta.transducers.tt.TTTransducer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eta.util</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.buffer.html">eta.util.buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.file.html">eta.util.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.general.html">eta.util.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.sexpr.html">eta.util.sexpr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.time.html">eta.util.time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.tt.html">eta.util.tt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.ulf.html">eta.util.ulf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+      <li class="breadcrumb-item active">eta.util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.util">
+<span id="eta-util"></span><h1>eta.util<a class="headerlink" href="#module-eta.util" title="Link to this heading"></a></h1>
+<p>Utilities that Eta relies on.</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.buffer.html#module-eta.util.buffer" title="eta.util.buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta.util.buffer</span></code></a></p></td>
+<td><p>Utilities for manipulating priority queues, termed &quot;buffers&quot; in Eta's architecture.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.file.html#module-eta.util.file" title="eta.util.file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta.util.file</span></code></a></p></td>
+<td><p>Utilities for reading from and writing to external files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.html#module-eta.util.general" title="eta.util.general"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta.util.general</span></code></a></p></td>
+<td><p>Generic utility functions for various basic data types.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.sexpr.html#module-eta.util.sexpr" title="eta.util.sexpr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta.util.sexpr</span></code></a></p></td>
+<td><p>Utilities for handling S-expression lists.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.time.html#module-eta.util.time" title="eta.util.time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta.util.time</span></code></a></p></td>
+<td><p>Utilities for recording and modifying times.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.html#module-eta.util.tt" title="eta.util.tt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta.util.tt</span></code></a></p></td>
+<td><p>Utilities for tree transduction and choice trees.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.ulf.html#module-eta.util.ulf" title="eta.util.ulf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eta.util.ulf</span></code></a></p></td>
+<td><p>Utilities for manipulating Unscoped Logical Form (ULF) formulas.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.transducers.tt.TTTransducer.html" class="btn btn-neutral float-left" title="eta.transducers.tt.TTTransducer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.util.buffer.html" class="btn btn-neutral float-right" title="eta.util.buffer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

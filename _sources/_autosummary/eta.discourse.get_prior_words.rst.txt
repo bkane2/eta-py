@@ -1,0 +1,6 @@
+eta.discourse.get\_prior\_words
+===============================
+
+.. currentmodule:: eta.discourse
+
+.. autofunction:: get_prior_words

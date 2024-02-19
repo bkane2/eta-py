@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.transducers.base &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.transducers.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.transducers.base</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains abstract base transducer classes for each supported transducer.</span>
+
+<span class="sd">A transducer is an object that maps some set of arguments to some value; multiple</span>
+<span class="sd">abstract transducers are supported for various types of mappings with different</span>
+<span class="sd">function signatures.</span>
+
+<span class="sd">The abstract transducers defined in this module do not actually implement any</span>
+<span class="sd">behavior; it is expected that they will be extended with transducers that use</span>
+<span class="sd">various techniques to perform a mapping (e.g., rule-based tree transduction,</span>
+<span class="sd">statistical models, large language models, etc.).</span>
+
+<span class="sd">Note that each transducer type should return a list; this allows multiple</span>
+<span class="sd">transducer implementations to be &quot;stacked&quot; in practice, e.g., using both a</span>
+<span class="sd">tree transduction and an LLM transducer and collating the results.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">eta.lf</span> <span class="kn">import</span> <span class="n">Eventuality</span>
+<span class="kn">from</span> <span class="nn">eta.discourse</span> <span class="kn">import</span> <span class="n">Utterance</span><span class="p">,</span> <span class="n">DialogueTurn</span>
+
+<div class="viewcode-block" id="Transducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.Transducer.html#eta.transducers.base.Transducer">[docs]</a>
+<span class="k">class</span> <span class="nc">Transducer</span><span class="p">():</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;The base transducer class.&quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="Transducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.Transducer.html#eta.transducers.base.Transducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map from input(s) to output.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">pass</span></div>
+
+
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the arguments passed to the transducer.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Transducer.cost">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.Transducer.html#eta.transducers.base.Transducer.cost">[docs]</a>
+  <span class="k">def</span> <span class="nf">cost</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Report cumulative costs of applying this transducer.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">0.</span></div>
+</div>
+
+  
+
+<div class="viewcode-block" id="ReasonTopDownTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ReasonTopDownTransducer.html#eta.transducers.base.ReasonTopDownTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">ReasonTopDownTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps from a plan step event and a list of facts to a list of new facts inferred from those.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  step : Eventuality</span>
+<span class="sd">    The event corresponding to the plan step to use as context for inference.</span>
+<span class="sd">  facts : list[Eventuality]</span>
+<span class="sd">    The list of facts to make inferences from.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[Eventuality]</span>
+<span class="sd">    A list of new facts inferred from the plan step and given facts.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="ReasonTopDownTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ReasonTopDownTransducer.html#eta.transducers.base.ReasonTopDownTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">facts</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">facts</span><span class="p">)</span>
+    <span class="n">new_facts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">new_facts</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">facts</span><span class="p">):</span>
+    <span class="n">pred1</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span>
+    <span class="n">pred2</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred1</span> <span class="ow">and</span> <span class="n">pred2</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for ReasonTopDownTransducer.&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="ReasonBottomUpTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ReasonBottomUpTransducer.html#eta.transducers.base.ReasonBottomUpTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">ReasonBottomUpTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps from a list of facts to a list of new facts inferred from those.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  facts : list[Eventuality]</span>
+<span class="sd">    The list of facts to make inferences from.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[Eventuality]</span>
+<span class="sd">    A list of new facts inferred from the given facts.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="ReasonBottomUpTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ReasonBottomUpTransducer.html#eta.transducers.base.ReasonBottomUpTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">facts</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">facts</span><span class="p">)</span>
+    <span class="n">new_facts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">new_facts</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">facts</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for ReasonBottomUpTransducer.&#39;</span></div>
+
+  
+
+<div class="viewcode-block" id="GistTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.GistTransducer.html#eta.transducers.base.GistTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">GistTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps an utterance to a list of gist clauses, given a conversation history.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  utt : Utterance</span>
+<span class="sd">    The utterance to interpret as a gist clause.</span>
+<span class="sd">  conversation_log : list[DialogueTurn]</span>
+<span class="sd">    The conversation history to use as context for interpretation.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[str]</span>
+<span class="sd">    A list of gist clauses.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="GistTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.GistTransducer.html#eta.transducers.base.GistTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utt</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">utt</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">)</span>
+    <span class="n">gists</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">gists</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utt</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">):</span>
+    <span class="n">pred1</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">utt</span><span class="p">,</span> <span class="n">Utterance</span><span class="p">)</span>
+    <span class="n">pred2</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">DialogueTurn</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conversation_log</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred1</span> <span class="ow">and</span> <span class="n">pred2</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument types for GistTransducer.&#39;</span></div>
+
+  
+
+<div class="viewcode-block" id="SemanticTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.SemanticTransducer.html#eta.transducers.base.SemanticTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">SemanticTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps a gist clause to a list of ULF formulas capturing its semantic meaning.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  gist : str</span>
+<span class="sd">    The gist clause to parse to a logical form.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[s-expr]</span>
+<span class="sd">    A list of ULF S-expressions.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="SemanticTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.SemanticTransducer.html#eta.transducers.base.SemanticTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gist</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">gist</span><span class="p">)</span>
+    <span class="n">ulf</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">ulf</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gist</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gist</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pred</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for SemanticTransducer.&#39;</span></div>
+
+  
+
+<div class="viewcode-block" id="PragmaticTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.PragmaticTransducer.html#eta.transducers.base.PragmaticTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">PragmaticTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps a gist clause to a list of ULF formulas capturing its pragmatic meaning.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  gist : str</span>
+<span class="sd">    The gist clause to parse to a logical form.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[s-expr]</span>
+<span class="sd">    A list of ULF S-expressions.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="PragmaticTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.PragmaticTransducer.html#eta.transducers.base.PragmaticTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gist</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">gist</span><span class="p">)</span>
+    <span class="n">ulf</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">ulf</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gist</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gist</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pred</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for PragmaticTransducer.&#39;</span></div>
+
+  
+
+<div class="viewcode-block" id="ReactionTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ReactionTransducer.html#eta.transducers.base.ReactionTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">ReactionTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps an observed event to a formula for an action that an agent can take.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  observation : Eventuality</span>
+<span class="sd">    The observed event for the agent to react to.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[s-expr]</span>
+<span class="sd">    A list of action formulas that the agent can take in reaction to the observation.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: this should likely be expanded to support a list of observed events rather than a single event,</span>
+<span class="sd">  since in general a reaction may be contingent on multiple combined observations.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="ReactionTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ReactionTransducer.html#eta.transducers.base.ReactionTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">action</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pred</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for ReactionTransducer.&#39;</span></div>
+
+  
+
+<div class="viewcode-block" id="SubplanTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.SubplanTransducer.html#eta.transducers.base.SubplanTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">SubplanTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps a plan step event to a list of subplans, i.e., sequences of events that are substeps of the given step.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  step : Eventuality</span>
+<span class="sd">    The event corresponding to a plan step to expand.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[list[Eventuality]]</span>
+<span class="sd">    A list of subplans, where each subplan is a sequence of substep events.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="SubplanTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.SubplanTransducer.html#eta.transducers.base.SubplanTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+    <span class="n">substeps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">substeps</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pred</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for SubplanTransducer.&#39;</span> </div>
+
+  
+
+<div class="viewcode-block" id="ParaphraseTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ParaphraseTransducer.html#eta.transducers.base.ParaphraseTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">ParaphraseTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps a gist clause, given a conversation history and relevant knowledge, to a paraphrased response.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  gist : str</span>
+<span class="sd">    The gist clause to paraphrase.</span>
+<span class="sd">  conversation_log : list[DialogueTurn]</span>
+<span class="sd">    The conversation history to use as context for paraphrasing.</span>
+<span class="sd">  facts_bg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;background&quot; knowledge to use for paraphrasing, i.e., knowledge that may impact the</span>
+<span class="sd">    resulting paraphrase, but may not be directly included in the paraphrased response.</span>
+<span class="sd">  facts_fg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;foreground&quot; knowledge to use for paraphrasing, i.e., knowledge that should be</span>
+<span class="sd">    directly included in the paraphrased response.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[str]</span>
+<span class="sd">    A list of paraphrased responses.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="ParaphraseTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ParaphraseTransducer.html#eta.transducers.base.ParaphraseTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gist</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">gist</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+    <span class="n">utts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">utts</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gist</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="n">pred1</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gist</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">pred2</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">DialogueTurn</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conversation_log</span><span class="p">])</span>
+    <span class="n">pred3</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_bg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_bg</span><span class="p">])</span>
+    <span class="n">pred4</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_fg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_fg</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred1</span> <span class="ow">and</span> <span class="n">pred2</span> <span class="ow">and</span> <span class="n">pred3</span> <span class="ow">and</span> <span class="n">pred4</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for ParaphraseTransducer.&#39;</span> </div>
+
+  
+
+<div class="viewcode-block" id="ResponseTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ResponseTransducer.html#eta.transducers.base.ResponseTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">ResponseTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps a conversation history and relevant knowledge to a response utterance.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  conversation_log : list[DialogueTurn]</span>
+<span class="sd">    The conversation history to use as context for the response.</span>
+<span class="sd">  facts_bg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;background&quot; knowledge to use for the response, i.e., knowledge that may impact the</span>
+<span class="sd">    resulting response, but may not be directly included in the response.</span>
+<span class="sd">  facts_fg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;foreground&quot; knowledge to use for the response, i.e., knowledge that should be</span>
+<span class="sd">    directly included in the response.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[str]</span>
+<span class="sd">    A list of responses.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="ResponseTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.ResponseTransducer.html#eta.transducers.base.ResponseTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+    <span class="n">utts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">utts</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="n">pred1</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">DialogueTurn</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conversation_log</span><span class="p">])</span>
+    <span class="n">pred2</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_bg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_bg</span><span class="p">])</span>
+    <span class="n">pred3</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_fg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_fg</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred1</span> <span class="ow">and</span> <span class="n">pred2</span> <span class="ow">and</span> <span class="n">pred3</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for ResponseTransducer.&#39;</span>  </div>
+
+  
+
+<div class="viewcode-block" id="AnswerTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.AnswerTransducer.html#eta.transducers.base.AnswerTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">AnswerTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps a conversation history and relevant knowledge to an answer utterance.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  conversation_log : list[DialogueTurn]</span>
+<span class="sd">    The conversation history to use as context for the answer.</span>
+<span class="sd">  facts_bg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;background&quot; knowledge to use for the answer, i.e., knowledge that may impact the</span>
+<span class="sd">    resulting answer, but may not be directly included in the answer.</span>
+<span class="sd">  facts_fg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;foreground&quot; knowledge to use for the answer, i.e., knowledge that should be</span>
+<span class="sd">    directly included in the answer.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[str]</span>
+<span class="sd">    A list of answers.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="AnswerTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.AnswerTransducer.html#eta.transducers.base.AnswerTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+    <span class="n">utts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">utts</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="n">pred1</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">DialogueTurn</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conversation_log</span><span class="p">])</span>
+    <span class="n">pred2</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_bg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_bg</span><span class="p">])</span>
+    <span class="n">pred3</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_fg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_fg</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred1</span> <span class="ow">and</span> <span class="n">pred2</span> <span class="ow">and</span> <span class="n">pred3</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for AnswerTransducer.&#39;</span>  </div>
+
+  
+
+<div class="viewcode-block" id="AskTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.AskTransducer.html#eta.transducers.base.AskTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">AskTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps a conversation history and relevant knowledge to a question utterance.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  conversation_log : list[DialogueTurn]</span>
+<span class="sd">    The conversation history to use as context for the question.</span>
+<span class="sd">  facts_bg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;background&quot; knowledge to use for the question, i.e., knowledge that may impact the</span>
+<span class="sd">    resulting question, but may not be directly included in the question.</span>
+<span class="sd">  facts_fg : list[Eventuality]</span>
+<span class="sd">    A list of &quot;foreground&quot; knowledge to use for the question, i.e., knowledge that should be</span>
+<span class="sd">    directly included in the question.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[str]</span>
+<span class="sd">    A list of questions.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="AskTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.AskTransducer.html#eta.transducers.base.AskTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+    <span class="n">utts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">utts</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">):</span>
+    <span class="n">pred1</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">DialogueTurn</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conversation_log</span><span class="p">])</span>
+    <span class="n">pred2</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_bg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_bg</span><span class="p">])</span>
+    <span class="n">pred3</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">facts_fg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Eventuality</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">facts_fg</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred1</span> <span class="ow">and</span> <span class="n">pred2</span> <span class="ow">and</span> <span class="n">pred3</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for AskTransducer.&#39;</span>  </div>
+
+  
+
+<div class="viewcode-block" id="AffectTransducer">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.AffectTransducer.html#eta.transducers.base.AffectTransducer">[docs]</a>
+<span class="k">class</span> <span class="nc">AffectTransducer</span><span class="p">(</span><span class="n">Transducer</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Maps the word content of an utterance to an appropriate affect, given a conversation history.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  words : str</span>
+<span class="sd">    The words to match to an appropriate affect.</span>
+<span class="sd">  conversation_log : list[DialogueTurn]</span>
+<span class="sd">    The conversation history to use as context for affect detection.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[str]</span>
+<span class="sd">    A list of affects.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="AffectTransducer.__call__">
+<a class="viewcode-back" href="../../../_autosummary/eta.transducers.base.AffectTransducer.html#eta.transducers.base.AffectTransducer.__call__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">)</span>
+    <span class="n">affects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">affects</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">):</span>
+    <span class="n">pred1</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">pred2</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">DialogueTurn</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conversation_log</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pred1</span> <span class="ow">and</span> <span class="n">pred2</span><span class="p">,</span> <span class="s1">&#39;Incorrect argument type for AffectTransducer.&#39;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

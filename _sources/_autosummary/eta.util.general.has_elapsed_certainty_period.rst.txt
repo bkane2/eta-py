@@ -1,0 +1,6 @@
+eta.util.general.has\_elapsed\_certainty\_period
+================================================
+
+.. currentmodule:: eta.util.general
+
+.. autofunction:: has_elapsed_certainty_period

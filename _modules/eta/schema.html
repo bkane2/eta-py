@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.schema &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.schema</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.schema</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Classes and methods for representing and modifying different types of schemas.</span>
+
+<span class="sd">A schema is, in general, a collection of sections. Each section is a sequence of eventualities (natural language</span>
+<span class="sd">expressions or ULF/ELF formulas with associated episode symbols) under a section label, e.g., ``types`` or ``preconditions``.</span>
+
+<span class="sd">A schema is denoted by a specific predicate string (e.g., ``dog.n`` or ``eat.v``), and also has a unique header, which is a</span>
+<span class="sd">formula characterizing the schema episode potentially containing participant variables, e.g., ``((^me eat.v ?x) ** ?e1)``.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">eta.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">eta.util.general</span> <span class="kn">import</span> <span class="p">(</span><span class="n">gentemp</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="p">,</span> <span class="n">get_keyword_contents</span><span class="p">,</span> <span class="n">append</span><span class="p">,</span> 
+                              <span class="n">cons</span><span class="p">,</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">substall</span><span class="p">,</span> <span class="n">dict_substall_keys</span><span class="p">,</span> <span class="n">variablep</span><span class="p">,</span> <span class="n">dual_var</span><span class="p">,</span> <span class="n">duplicate_var</span><span class="p">,</span>
+                              <span class="n">argmax</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">eta.util.sexpr</span> <span class="kn">import</span> <span class="n">read_lisp</span><span class="p">,</span> <span class="n">list_to_s_expr</span>
+<span class="kn">from</span> <span class="nn">eta.lf</span> <span class="kn">import</span> <span class="n">ULF</span><span class="p">,</span> <span class="n">ELF</span><span class="p">,</span> <span class="n">parse_eventuality_list</span>
+
+<div class="viewcode-block" id="Schema">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema">[docs]</a>
+<span class="k">class</span> <span class="nc">Schema</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;An abstract schema class.</span>
+<span class="sd">  </span>
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  id : str</span>
+<span class="sd">    A unique ID for this schema.</span>
+<span class="sd">  predicate : str</span>
+<span class="sd">    The main predicate of the schema (e.g., ``dog.n`` or ``eat.v``).</span>
+<span class="sd">  participants : list[s-expr]</span>
+<span class="sd">    All participant roles of a schema, i.e., variables and constants present as arguments in the header.</span>
+<span class="sd">  vars : list[str]</span>
+<span class="sd">    All variables scoped within a schema.</span>
+<span class="sd">  bindings : dict</span>
+<span class="sd">    A mapping from variables to bound values.</span>
+<span class="sd">  header : ELF</span>
+<span class="sd">    The ELF formula for the header of the schema.</span>
+<span class="sd">  contents : ELF</span>
+<span class="sd">    The ELF formula for the contents of the schema.</span>
+<span class="sd">  sections : dict[str, list[Eventuality]]</span>
+<span class="sd">    A dict mapping each section label (e.g., ``types``) to a list of eventualities created from the schema contents.</span>
+<span class="sd">  embedding : list[float]</span>
+<span class="sd">    A vector embedding of this schema.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">gentemp</span><span class="p">(</span><span class="s1">&#39;SCHEMA&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">predicate</span> <span class="o">=</span> <span class="n">predicate</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">participants</span> <span class="o">=</span> <span class="n">participants</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="nb">vars</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span> <span class="o">=</span> <span class="n">bindings</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Schema.read_param_dict">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.read_param_dict">[docs]</a>
+  <span class="k">def</span> <span class="nf">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">schema_contents</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read an S-expression containing schema contents (for a given predicate) into a dict of schema parameters.&quot;&quot;&quot;</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;predicate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicate</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">get_keyword_contents</span><span class="p">(</span><span class="n">schema_contents</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;:header&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;participants&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">header</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;set-of&#39;</span><span class="p">,</span> <span class="n">predicate</span><span class="p">]]</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;vars&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">remove_duplicates</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">schema_contents</span><span class="p">)</span> <span class="k">if</span> <span class="n">variablep</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema_contents</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span>
+    <span class="k">return</span> <span class="n">kwargs</span></div>
+
+  
+<div class="viewcode-block" id="Schema.to_probability_dict">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.to_probability_dict">[docs]</a>
+  <span class="k">def</span> <span class="nf">to_probability_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eventualities</span><span class="p">,</span> <span class="n">swap_duals</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of certainty or necessity eventualities, create a probability dict with entries of form ``{&lt;ep&gt;:&lt;prob&gt;}``.</span>
+<span class="sd">    </span>
+<span class="sd">    If `swap_duals` is True, swap episode constants in the resulting probability dict with the dual var (e.g., ?e1 for !e1).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eventualities</span><span class="p">:</span>
+      <span class="n">pair</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">swap_duals</span><span class="p">:</span>
+          <span class="n">var</span> <span class="o">=</span> <span class="n">dual_var</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">var</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">probabilities</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">probabilities</span></div>
+
+  
+<div class="viewcode-block" id="Schema.subst_mappings">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.subst_mappings">[docs]</a>
+  <span class="k">def</span> <span class="nf">subst_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mappings</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of variable replacement mappings, apply the mappings to each part of the schema.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">participants</span> <span class="o">=</span> <span class="n">substall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="p">,</span> <span class="n">mappings</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mappings</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span> <span class="o">=</span> <span class="n">dict_substall_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="p">,</span> <span class="n">mappings</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">substall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_formula</span><span class="p">(),</span> <span class="n">mappings</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">substall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">get_formula</span><span class="p">(),</span> <span class="n">mappings</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">mappings</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">replacevar</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">sec</span><span class="p">]</span></div>
+
+  
+<div class="viewcode-block" id="Schema.duplicate_variables">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.duplicate_variables">[docs]</a>
+  <span class="k">def</span> <span class="nf">duplicate_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Duplicate all variables across a schema, mapping the original variables to the duplicated ones.</span>
+<span class="sd">    </span>
+<span class="sd">    Note that this needs to be done in two steps to avoid mapping conflicts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mappings</span> <span class="o">=</span> <span class="p">[(</span><span class="n">var</span><span class="p">,</span> <span class="n">duplicate_var</span><span class="p">(</span><span class="n">var</span><span class="p">))</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">]</span>
+    <span class="n">m1</span> <span class="o">=</span> <span class="p">[(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="sa">f</span><span class="s1">&#39;?</span><span class="si">{</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mappings</span><span class="p">]</span>
+    <span class="n">m2</span> <span class="o">=</span> <span class="p">[(</span><span class="sa">f</span><span class="s1">&#39;?</span><span class="si">{</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mappings</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">subst_mappings</span><span class="p">(</span><span class="n">m1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">subst_mappings</span><span class="p">(</span><span class="n">m2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Schema.instantiate">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.instantiate">[docs]</a>
+  <span class="k">def</span> <span class="nf">instantiate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiate a specific instance of a schema given a list of argument values for each variable in the header.</span>
+
+<span class="sd">    This creates a deep copy of the schema, with duplicate variables to ensure that no collisions occur if</span>
+<span class="sd">    the events in the schema are added to a plan.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args : list[s-expr]</span>
+<span class="sd">      A list of expressions to bind to each respective header variable.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Schema</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema_instance</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="n">schema_instance</span><span class="o">.</span><span class="n">duplicate_variables</span><span class="p">()</span>
+    <span class="n">schema_instance</span><span class="o">.</span><span class="n">bind_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema_instance</span></div>
+
+
+<div class="viewcode-block" id="Schema.bind">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.bind">[docs]</a>
+  <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bind the given variable symbol to the given value.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="k">for</span> <span class="n">eventuality</span> <span class="ow">in</span> <span class="n">sec</span><span class="p">:</span>
+        <span class="n">eventuality</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+  
+<div class="viewcode-block" id="Schema.unbind">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.unbind">[docs]</a>
+  <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unbind the given variable symbol.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span>
+    <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="k">for</span> <span class="n">eventuality</span> <span class="ow">in</span> <span class="n">sec</span><span class="p">:</span>
+        <span class="n">eventuality</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+  
+<div class="viewcode-block" id="Schema.bind_args">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.bind_args">[docs]</a>
+  <span class="k">def</span> <span class="nf">bind_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bind variables in the schema header with a list of respective argument values.</span>
+<span class="sd">    </span>
+<span class="sd">    Generally, we assume that `args` should correspond to the variables in the participants list of</span>
+<span class="sd">    the schema, but we allow for the possibility of ^me and ^you as implicit arguments if fewer arguments</span>
+<span class="sd">    than variables are given - in which case, they&#39;re added to the arguments list in that order.</span>
+
+<span class="sd">    On the other hand, if more arguments than variables are given, we assume that</span>
+<span class="sd">    ^me and ^you might be provided as redundant arguments, and remove those from</span>
+<span class="sd">    the front of the list if present. Otherwise, we remove superfluous arguments</span>
+<span class="sd">    starting from the end of the list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args : list[s-expr]</span>
+<span class="sd">      A list of expressions to bind to each respective header variable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">participants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">participants</span>
+    <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">participants</span> <span class="k">if</span> <span class="n">variablep</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+
+    <span class="c1"># Return with warning if no variables in participants list</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">vars</span><span class="p">:</span>
+      <span class="c1"># print(f&#39;@@@ Warning: Attempt to substitute values \n    {args}\n    in participants {participants}, which has no variables.&#39;)</span>
+      <span class="k">return</span> <span class="bp">self</span>
+    
+    <span class="c1"># Case 1: More args than variables</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">):</span>
+      <span class="c1"># print(f&#39;@@@ Warning: More values supplied, vis.,\n    {args},\n    than participants {participants} has variables.&#39;)</span>
+
+      <span class="c1"># If ^me or ^you are already in participants of the schema, remove them from the args list</span>
+      <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">ME</span><span class="p">]</span> <span class="k">if</span> <span class="n">ME</span> <span class="ow">in</span> <span class="n">participants</span> <span class="k">else</span> <span class="n">args</span>
+      <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">YOU</span><span class="p">]</span> <span class="k">if</span> <span class="n">YOU</span> <span class="ow">in</span> <span class="n">participants</span> <span class="k">else</span> <span class="n">args</span>
+      <span class="c1"># Otherwise remove superfluous arguments from end of list</span>
+      <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[:(</span><span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))]</span>
+
+      <span class="c1"># print(f&#39;@@@ Now using args: {args}&#39;)</span>
+
+    <span class="c1"># Case 2: Fewer args than variables</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">):</span>
+      <span class="c1"># print(f&#39;@@@ Warning: Fewer values supplied, vis.,\n    {args},\n    than participants {participants} has variables.&#39;)</span>
+
+      <span class="c1"># Assume first two missing args are ^me and ^you if they don&#39;t appear in the header</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">YOU</span> <span class="ow">in</span> <span class="n">participants</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">cons</span><span class="p">(</span><span class="n">YOU</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">ME</span> <span class="ow">in</span> <span class="n">participants</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">cons</span><span class="p">(</span><span class="n">ME</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">):</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">[:(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">))]</span>
+
+      <span class="c1"># print(f&#39;@@@ Now using args: {args}, for vars: {vars}&#39;)</span>
+
+    <span class="c1"># Length of &#39;args&#39; and &#39;vars&#39; are equal (or have just been equalized)</span>
+    <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Schema.embed">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.embed">[docs]</a>
+  <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embed the schema based on the natural language representation of its contents, given an embedder object.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">to_nl</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="k">for</span> <span class="n">eventuality</span> <span class="ow">in</span> <span class="n">sec</span><span class="p">:</span>
+        <span class="n">eventuality</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">embedder</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Schema.retrieve">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.retrieve">[docs]</a>
+  <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedder</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve some number of facts from the schema according to similarity with a query string, given an embedder object.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    embedder : Embedder</span>
+<span class="sd">      An Embedder object.</span>
+<span class="sd">    query : str</span>
+<span class="sd">      A query string to use to compute similarity.</span>
+<span class="sd">    n : int, default=5</span>
+<span class="sd">      The number of facts to retrieve.</span>
+<span class="sd">    header : bool, default=True</span>
+<span class="sd">      Whether to prefix the retrieved facts with the schema header.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[s-expr]</span>
+<span class="sd">      The retrieved schema facts as S-expressions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">eventualities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_section</span><span class="p">(</span><span class="s1">&#39;:all&#39;</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">eventualities</span><span class="p">,</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">embedding</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eventualities</span><span class="p">])</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="n">argmax</span><span class="p">(</span><span class="n">eventualities</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">cons</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_formula</span><span class="p">(),</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">top</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">top</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Schema.get_participants">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.get_participants">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_participants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_bind</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the schema participants.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[s-expr]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">no_bind</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">participants</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">substall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="Schema.get_contents">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.get_contents">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_bind</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the schema contents as an S-expression.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    s-expr</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">no_bind</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">get_formula</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">substall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">get_formula</span><span class="p">(),</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span></div>
+
+  
+<div class="viewcode-block" id="Schema.get_section">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.get_section">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the eventualities within a given schema section or list of sections.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sec : str or list[str]</span>
+<span class="sd">      A section label or list of section labels, or the keyword ``:all`` to return all sections.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Eventuality]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sec</span> <span class="o">==</span> <span class="s1">&#39;:all&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">append</span><span class="p">([</span><span class="n">eventualities</span> <span class="k">for</span> <span class="n">eventualities</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sec</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+      <span class="n">sec</span> <span class="o">=</span> <span class="p">[</span><span class="n">sec</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="k">else</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sec</span><span class="p">])</span></div>
+
+  
+<div class="viewcode-block" id="Schema.get_section_eps">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.get_section_eps">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_section_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">no_bind</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all episode symbols within a schema section or list of sections.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sec : str or list[str]</span>
+<span class="sd">      A section label or list of section labels, or the keyword ``:all`` to return all sections.</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[str]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_section</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_bind</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">ep</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">section</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">section</span><span class="p">]</span></div>
+
+  
+<div class="viewcode-block" id="Schema.get_section_wffs">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.get_section_wffs">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_section_wffs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">no_bind</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all wffs within a schema section or list of sections.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sec : str or list[str]</span>
+<span class="sd">      A section label or list of section labels, or the keyword ``:all`` to return all sections.</span>
+<span class="sd">    no_bind : bool, default=False</span>
+<span class="sd">      Do not make variable substitutions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[s-expr]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_section</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">get_wff</span><span class="p">(</span><span class="n">no_bind</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">section</span><span class="p">]</span></div>
+
+  
+<div class="viewcode-block" id="Schema.format">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.format">[docs]</a>
+  <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_bind</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format the contents of this schema as an S-expression string.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">list_to_s_expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_contents</span><span class="p">(</span><span class="n">no_bind</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Schema.__str__">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.Schema.html#eta.schema.Schema.__str__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EpiSchema">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.EpiSchema.html#eta.schema.EpiSchema">[docs]</a>
+<span class="k">class</span> <span class="nc">EpiSchema</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A schema representing a prototypical episode.</span>
+<span class="sd">  </span>
+<span class="sd">  Sections</span>
+<span class="sd">  --------</span>
+<span class="sd">  - **types** : the nominal types of each participant/variable.</span>
+<span class="sd">  - **rigid-conds** : non-fluent conditions relevant to episode.</span>
+<span class="sd">  - **static-conds** : fluent conditions that are not expected to change during episode.</span>
+<span class="sd">  - **preconds** : fluent conditions that are expected to hold at the beginning of episode.</span>
+<span class="sd">  - **postconds** : fluent conditions that are expected to hold at end of episode.</span>
+<span class="sd">  - **goals** : goals of participants in schema (e.g., ``(^me want.v (that ...))``).</span>
+<span class="sd">  - **episodes** : the expected/intended sub-episodes of the schema episode.</span>
+<span class="sd">  - **episode-relations** : the temporal/causal relations between episodes of schema.</span>
+<span class="sd">  - **necessities** : probabilities associated with schema formulas.</span>
+<span class="sd">  - **certainties** : probabilities associated with schema episodes.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">types</span><span class="o">=</span><span class="p">[],</span> <span class="n">rigid_conds</span><span class="o">=</span><span class="p">[],</span> <span class="n">static_conds</span><span class="o">=</span><span class="p">[],</span> <span class="n">preconds</span><span class="o">=</span><span class="p">[],</span> <span class="n">postconds</span><span class="o">=</span><span class="p">[],</span> <span class="n">goals</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">episodes</span><span class="o">=</span><span class="p">[],</span> <span class="n">episode_relations</span><span class="o">=</span><span class="p">[],</span> <span class="n">necessities</span><span class="o">=</span><span class="p">[],</span> <span class="n">certainties</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">participants</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">bindings</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;necessities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">necessities</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;certainties&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">certainties</span><span class="p">)</span>
+    <span class="n">prob_dict</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">to_probability_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;necessities&#39;</span><span class="p">]),</span>
+                 <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">to_probability_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;certainties&#39;</span><span class="p">],</span> <span class="n">swap_duals</span><span class="o">=</span><span class="kc">True</span><span class="p">)}</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;types&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;rigid-conds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">rigid_conds</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;static-conds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">static_conds</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;preconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">preconds</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;postconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">postconds</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">goals</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;episodes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">episodes</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;episode-relations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">episode_relations</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EpiSchema.read_param_dict">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.EpiSchema.html#eta.schema.EpiSchema.read_param_dict">[docs]</a>
+  <span class="k">def</span> <span class="nf">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">schema_contents</span><span class="p">):</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">Schema</span><span class="o">.</span><span class="n">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">schema_contents</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;:types&#39;</span><span class="p">,</span> <span class="s1">&#39;:rigid-conds&#39;</span><span class="p">,</span> <span class="s1">&#39;:static-conds&#39;</span><span class="p">,</span> <span class="s1">&#39;:preconds&#39;</span><span class="p">,</span> <span class="s1">&#39;:postconds&#39;</span><span class="p">,</span> <span class="s1">&#39;:goals&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;:episodes&#39;</span><span class="p">,</span> <span class="s1">&#39;:episode-relations&#39;</span><span class="p">,</span> <span class="s1">&#39;:necessities&#39;</span><span class="p">,</span> <span class="s1">&#39;:certainties&#39;</span><span class="p">]:</span>
+      <span class="n">section_contents</span> <span class="o">=</span> <span class="n">get_keyword_contents</span><span class="p">(</span><span class="n">schema_contents</span><span class="p">,</span> <span class="p">[</span><span class="n">section</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">section_contents</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="n">section</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">section_contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">kwargs</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DialSchema">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.DialSchema.html#eta.schema.DialSchema">[docs]</a>
+<span class="k">class</span> <span class="nc">DialSchema</span><span class="p">(</span><span class="n">EpiSchema</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A schema representing a prototypical episode.</span>
+<span class="sd">  </span>
+<span class="sd">  Sections</span>
+<span class="sd">  --------</span>
+<span class="sd">  - **types** : the nominal types of each participant/variable.</span>
+<span class="sd">  - **rigid-conds** : non-fluent conditions relevant to episode.</span>
+<span class="sd">  - **static-conds** : fluent conditions that are not expected to change during episode.</span>
+<span class="sd">  - **preconds** : fluent conditions that are expected to hold at the beginning of episode.</span>
+<span class="sd">  - **postconds** : fluent conditions that are expected to hold at end of episode.</span>
+<span class="sd">  - **goals** : goals of participants in schema (e.g., (^me want.v (that ...))).</span>
+<span class="sd">  - **episodes** : the expected/intended sub-episodes of the schema episode.</span>
+<span class="sd">  - **episode-relations** : the temporal/causal relations between episodes of schema.</span>
+<span class="sd">  - **obligations** : the dialogue obligations associated with episodes within the schema.</span>
+<span class="sd">  - **necessities** : probabilities associated with schema formulas.</span>
+<span class="sd">  - **certainties** : probabilities associated with schema episodes.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">types</span><span class="o">=</span><span class="p">[],</span> <span class="n">rigid_conds</span><span class="o">=</span><span class="p">[],</span> <span class="n">static_conds</span><span class="o">=</span><span class="p">[],</span> <span class="n">preconds</span><span class="o">=</span><span class="p">[],</span> <span class="n">postconds</span><span class="o">=</span><span class="p">[],</span> <span class="n">goals</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">episodes</span><span class="o">=</span><span class="p">[],</span> <span class="n">episode_relations</span><span class="o">=</span><span class="p">[],</span> <span class="n">obligations</span><span class="o">=</span><span class="p">[],</span> <span class="n">necessities</span><span class="o">=</span><span class="p">[],</span> <span class="n">certainties</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">participants</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">bindings</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span>
+                     <span class="n">types</span><span class="p">,</span> <span class="n">rigid_conds</span><span class="p">,</span> <span class="n">static_conds</span><span class="p">,</span> <span class="n">preconds</span><span class="p">,</span> <span class="n">postconds</span><span class="p">,</span> <span class="n">goals</span><span class="p">,</span>
+                     <span class="n">episodes</span><span class="p">,</span> <span class="n">episode_relations</span><span class="p">,</span> <span class="n">necessities</span><span class="p">,</span> <span class="n">certainties</span><span class="p">)</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;obligations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">obligations</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="DialSchema.read_param_dict">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.DialSchema.html#eta.schema.DialSchema.read_param_dict">[docs]</a>
+  <span class="k">def</span> <span class="nf">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">schema_contents</span><span class="p">):</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">EpiSchema</span><span class="o">.</span><span class="n">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">schema_contents</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;:obligations&#39;</span><span class="p">]:</span>
+      <span class="n">section_contents</span> <span class="o">=</span> <span class="n">get_keyword_contents</span><span class="p">(</span><span class="n">schema_contents</span><span class="p">,</span> <span class="p">[</span><span class="n">section</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">section_contents</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="n">section</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">section_contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">kwargs</span></div>
+
+  
+<div class="viewcode-block" id="DialSchema.get_obligations_of_ep">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.DialSchema.html#eta.schema.DialSchema.get_obligations_of_ep">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_obligations_of_ep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all obligations attached to a given episode symbol.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ep : str</span>
+<span class="sd">      An episode symbol.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Eventuality]</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    TODO: it may be better to create a generalized accessor function for other types of schema</span>
+<span class="sd">    annotations/episode relations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">obligations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">wff</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_section_wffs</span><span class="p">(</span><span class="s1">&#39;obligations&#39;</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ep</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;obligates&#39;</span><span class="p">:</span>
+        <span class="n">obligations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ULF</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">obligations</span></div>
+</div>
+
+  
+      
+<div class="viewcode-block" id="ObjSchema">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.ObjSchema.html#eta.schema.ObjSchema">[docs]</a>
+<span class="k">class</span> <span class="nc">ObjSchema</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A schema representing a prototypical object.</span>
+<span class="sd">  </span>
+<span class="sd">  Sections</span>
+<span class="sd">  --------</span>
+<span class="sd">  - **types** : the nominal types of each participant/variable.</span>
+<span class="sd">  - **rigid-conds** : non-fluent conditions relevant to object.</span>
+<span class="sd">  - **skeletal-prototype** : 3D mesh decomposition of object (.obj filenames).</span>
+<span class="sd">  - **purposes** : telic purpose associated with object.</span>
+<span class="sd">  - **necessities** : probabilities associated with schema formulas.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="p">[],</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[],</span> <span class="n">bindings</span><span class="o">=</span><span class="p">{},</span> <span class="n">header</span><span class="o">=</span><span class="p">[],</span> <span class="n">contents</span><span class="o">=</span><span class="p">[],</span>
+               <span class="n">types</span><span class="o">=</span><span class="p">[],</span> <span class="n">rigid_conds</span><span class="o">=</span><span class="p">[],</span> <span class="n">skeletal_prototype</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">purposes</span><span class="o">=</span><span class="p">[],</span> <span class="n">necessities</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">participants</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">bindings</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;necessities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">necessities</span><span class="p">)</span>
+    <span class="n">prob_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_probability_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;necessities&#39;</span><span class="p">])</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;types&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;rigid-conds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">rigid_conds</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;skeletal-prototype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">skeletal_prototype</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;purposes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_eventuality_list</span><span class="p">(</span><span class="n">purposes</span><span class="p">,</span> <span class="n">prob_dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ObjSchema.read_param_dict">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.ObjSchema.html#eta.schema.ObjSchema.read_param_dict">[docs]</a>
+  <span class="k">def</span> <span class="nf">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">schema_contents</span><span class="p">):</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">Schema</span><span class="o">.</span><span class="n">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">schema_contents</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;:types&#39;</span><span class="p">,</span> <span class="s1">&#39;:rigid-conds&#39;</span><span class="p">,</span> <span class="s1">&#39;:skeletal-prototype&#39;</span><span class="p">,</span> <span class="s1">&#39;:purposes&#39;</span><span class="p">,</span> <span class="s1">&#39;:necessities&#39;</span><span class="p">]:</span>
+      <span class="n">section_contents</span> <span class="o">=</span> <span class="n">get_keyword_contents</span><span class="p">(</span><span class="n">schema_contents</span><span class="p">,</span> <span class="p">[</span><span class="n">section</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">section_contents</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="n">section</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">section_contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">kwargs</span></div>
+</div>
+
+  
+
+<div class="viewcode-block" id="SchemaLibrary">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary">[docs]</a>
+<span class="k">class</span> <span class="nc">SchemaLibrary</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A library of all generic episode, dialogue, and object schemas.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  embedder : Embedder, optional</span>
+<span class="sd">    If provided, an embedder to embed all schemas that are added.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  dial : dict[str, DialSchema]</span>
+<span class="sd">    A dict mapping dialogue schema predicates to dialogue schemas.</span>
+<span class="sd">  epi : dict[str, EpiSchema]</span>
+<span class="sd">    A dict mapping episode schema predicates to episode schemas.</span>
+<span class="sd">  obj : dict[str, ObjSchema]</span>
+<span class="sd">    A dict mapping object schema predicates to object schemas.</span>
+<span class="sd">  embedder : Embedder</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dial</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">epi</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">embedder</span> <span class="o">=</span> <span class="n">embedder</span>
+
+<div class="viewcode-block" id="SchemaLibrary.add">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.add">[docs]</a>
+  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a schema object to the library.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">DialSchema</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">dial</span><span class="p">[</span><span class="n">schema</span><span class="o">.</span><span class="n">predicate</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">EpiSchema</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="p">[</span><span class="n">schema</span><span class="o">.</span><span class="n">predicate</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">ObjSchema</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">[</span><span class="n">schema</span><span class="o">.</span><span class="n">predicate</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported schema type for </span><span class="si">{</span><span class="n">schema</span><span class="o">.</span><span class="n">predicate</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="SchemaLibrary.create">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.create">[docs]</a>
+  <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a schema object from the given predicate and contents (an S-expression) and add it to the library.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dialogue-schema&#39;</span><span class="p">,</span> <span class="s1">&#39;dial-schema&#39;</span><span class="p">]:</span>
+      <span class="n">typ</span> <span class="o">=</span> <span class="n">DialSchema</span>
+    <span class="k">elif</span> <span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;event-schema&#39;</span><span class="p">,</span> <span class="s1">&#39;episode-schema&#39;</span><span class="p">,</span> <span class="s1">&#39;epi-schema&#39;</span><span class="p">]:</span>
+      <span class="n">typ</span> <span class="o">=</span> <span class="n">EpiSchema</span>
+    <span class="k">elif</span> <span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;object-schema&#39;</span><span class="p">,</span> <span class="s1">&#39;obj-schema&#39;</span><span class="p">]:</span>
+      <span class="n">typ</span> <span class="o">=</span> <span class="n">ObjSchema</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Schema for </span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s1"> must begin with either dial-schema, epi-schema or obj-schema&#39;</span><span class="p">)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">typ</span><span class="p">(</span><span class="o">**</span><span class="n">typ</span><span class="o">.</span><span class="n">read_param_dict</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">contents</span><span class="p">))</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedder</span><span class="p">:</span>
+      <span class="n">schema</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedder</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SchemaLibrary.get_schemas">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.get_schemas">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_schemas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all schemas of a particular type or list of types.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type : str or list[str]</span>
+<span class="sd">      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Schema]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">get_schemas</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;dial&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dial</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;epi&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;obj&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+    
+<div class="viewcode-block" id="SchemaLibrary.is_schema">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.is_schema">[docs]</a>
+  <span class="k">def</span> <span class="nf">is_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether a given predicate exists in the schema library.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    predicate : str</span>
+<span class="sd">      The predicate to check.</span>
+<span class="sd">    type : str, optional</span>
+<span class="sd">      If a type is given, only check that type of schema.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;dial&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dial</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;epi&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;obj&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dial</span> <span class="ow">or</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span> <span class="ow">or</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span></div>
+
+
+<div class="viewcode-block" id="SchemaLibrary.retrieve">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.retrieve">[docs]</a>
+  <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve some number of schemas of a particular type (or list of types).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type : str or list[str]</span>
+<span class="sd">      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.</span>
+<span class="sd">    query : str, optional</span>
+<span class="sd">      A query string to use to compute similarity. If not given, or if no embedder is</span>
+<span class="sd">      defined, an arbitrary schema is retrieved.</span>
+<span class="sd">    m : int, default=1</span>
+<span class="sd">      The number of schemas to retrieve.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Schema]</span>
+<span class="sd">      The retrieved schemas.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schemas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_schemas</span><span class="p">(</span><span class="nb">type</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">schemas</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">query</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedder</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">schemas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedder</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">schemas</span><span class="p">,</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">embedding</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">schemas</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">argmax</span><span class="p">(</span><span class="n">schemas</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span></div>
+
+  
+<div class="viewcode-block" id="SchemaLibrary.retrieve_knowledge">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.retrieve_knowledge">[docs]</a>
+  <span class="k">def</span> <span class="nf">retrieve_knowledge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve some number of facts from some number of retrieved schemas of a particular type (or list of types).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    type : str or list[str]</span>
+<span class="sd">      A schema type (``dial``, ``epi``, or ``obj``), or a list of types.</span>
+<span class="sd">    query : str, optional</span>
+<span class="sd">      A query string to use to compute similarity. If not given, or if no embedder is</span>
+<span class="sd">      defined, an arbitrary schema is retrieved.</span>
+<span class="sd">    m : int, default=1</span>
+<span class="sd">      The number of schemas to retrieve.</span>
+<span class="sd">    n : int, default=5</span>
+<span class="sd">      The number of facts to retrieve from each retrieved schema.</span>
+<span class="sd">    header : bool, default=True</span>
+<span class="sd">      Whether to prefix the retrieved facts with the schema header.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[s-expr]</span>
+<span class="sd">      The facts retrieved from each retrieved schema, as S-expressions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schemas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">schemas</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">append</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedder</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">schemas</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SchemaLibrary.from_lisp_file">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.from_lisp_file">[docs]</a>
+  <span class="k">def</span> <span class="nf">from_lisp_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a set of schemas from a LISP file, storing them in the library.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fname : str</span>
+<span class="sd">      The LISP file to read.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">read_lisp</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">expr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;store-schema&#39;</span><span class="p">:</span>
+        <span class="n">predicate</span> <span class="o">=</span> <span class="n">expr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">expr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">predicate</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="SchemaLibrary.from_lisp_dirs">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.from_lisp_dirs">[docs]</a>
+  <span class="k">def</span> <span class="nf">from_lisp_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursively read schemas from all LISP files in a given directory or list of directories.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dirs : str or list[str]</span>
+<span class="sd">      Either a directory name or a list of directory names to read.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dirs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+      <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">dirs</span><span class="p">]</span>
+    <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+      <span class="n">fnames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s1">&#39;/**/*.lisp&#39;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_lisp_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="SchemaLibrary.__str__">
+<a class="viewcode-back" href="../../_autosummary/eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary.__str__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;dialogue:&#39;</span><span class="p">,</span> <span class="s1">&#39;episode:&#39;</span><span class="p">,</span> <span class="s1">&#39;object:&#39;</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dial</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">]):</span>
+      <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">predicate</span> <span class="k">for</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.time &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.util.time</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.util.time</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utilities for recording and modifying times.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span><span class="n">datetime</span><span class="p">,</span><span class="n">timezone</span>
+
+<span class="n">DATETIME_ARGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;hour&#39;</span><span class="p">,</span> <span class="s1">&#39;minute&#39;</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="p">]</span>
+<span class="n">DATETIME_VARS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;?y&#39;</span><span class="p">,</span> <span class="s1">&#39;?mo&#39;</span><span class="p">,</span> <span class="s1">&#39;?d&#39;</span><span class="p">,</span> <span class="s1">&#39;?h&#39;</span><span class="p">,</span> <span class="s1">&#39;?mi&#39;</span><span class="p">,</span> <span class="s1">&#39;?s&#39;</span><span class="p">]</span>
+<span class="n">DATETIME_LOWER</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;year&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s1">&#39;month&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s1">&#39;day&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s1">&#39;hour&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="s1">&#39;minute&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="s1">&#39;second&#39;</span> <span class="p">:</span> <span class="mi">0</span>
+<span class="p">}</span>
+<span class="n">DATETIME_UPPER</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;year&#39;</span> <span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+  <span class="s1">&#39;month&#39;</span> <span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+  <span class="s1">&#39;day&#39;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+  <span class="s1">&#39;hour&#39;</span> <span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
+  <span class="s1">&#39;minute&#39;</span> <span class="p">:</span> <span class="mi">59</span><span class="p">,</span>
+  <span class="s1">&#39;second&#39;</span> <span class="p">:</span> <span class="mi">59</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="TimePoint">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint">[docs]</a>
+<span class="k">class</span> <span class="nc">TimePoint</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A specific point in time.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  time : datetime, tuple[datetime, datetime], list[str], or None</span>
+<span class="sd">    Initialize with a given datetime, or otherwise use the current time. The following formats are supported:</span>
+
+<span class="sd">      - datetime : a single instantaneous timestamp.</span>
+<span class="sd">      - (datetime, datetime) : lower and upper bound timestamps for this time point.</span>
+<span class="sd">      - [$, date+time, &lt;year&gt;, &lt;month&gt;, &lt;day&gt;, &lt;hour&gt;, &lt;minute&gt;, &lt;second&gt;] : a date+time record structure, where</span>
+<span class="sd">        each slot may be either a number string or a variable string.</span>
+<span class="sd">      - None : the time point will be initialized to the current time.</span>
+
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  lower : datetime</span>
+<span class="sd">    A timestamp for the lower bound on this timepoint.</span>
+<span class="sd">  upper : datetime</span>
+<span class="sd">    A timestamp for the upper bound on this timepoint.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimePoint.update">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint.update">[docs]</a>
+  <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update this TimePoint to the given time (or current if none is given).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">time</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">time</span>
+    <span class="k">elif</span> <span class="n">time_pair_p</span><span class="p">(</span><span class="n">time</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">time</span>
+    <span class="k">elif</span> <span class="n">time_tuple_p</span><span class="p">(</span><span class="n">time</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">time_pair_from_tuple</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">time_record_p</span><span class="p">(</span><span class="n">time</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">time_pair_from_record</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">now</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">now</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid format given for &#39;time&#39;.&quot;</span><span class="p">)</span></div>
+
+  
+<div class="viewcode-block" id="TimePoint.to_num">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint.to_num">[docs]</a>
+  <span class="k">def</span> <span class="nf">to_num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert this TimePoint to a numerical POSIX representation (using the upper bound by default).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">bound</span> <span class="o">==</span> <span class="s1">&#39;upper&#39;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span></div>
+
+    
+  <span class="k">def</span> <span class="nf">get_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_num</span><span class="p">(</span><span class="n">bound</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_num</span><span class="p">(</span><span class="n">bound</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+  
+<div class="viewcode-block" id="TimePoint.format">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint.format">[docs]</a>
+  <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format this TimePoint as a year/month/day/hour/minute/second representation.&quot;&quot;&quot;</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">mi</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">tuple_from_time_pair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;:year/</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">/:month/</span><span class="si">{</span><span class="n">mo</span><span class="si">}</span><span class="s2">/:day/</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">/:hour/</span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">/:minute/</span><span class="si">{</span><span class="n">mi</span><span class="si">}</span><span class="s2">/:sec/</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+  
+<div class="viewcode-block" id="TimePoint.format_date">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint.format_date">[docs]</a>
+  <span class="k">def</span> <span class="nf">format_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format this TimePoint as a human-readable year/month/day/hour/minute/second representation.&quot;&quot;&quot;</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">mi</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">tuple_from_time_pair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">mo</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">mi</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+  
+<div class="viewcode-block" id="TimePoint.to_ulf">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint.to_ulf">[docs]</a>
+  <span class="k">def</span> <span class="nf">to_ulf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert this TimePoint to a ULF record structure.&quot;&quot;&quot;</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="s1">&#39;date+time&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">time</span></div>
+
+  
+  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+  
+<div class="viewcode-block" id="TimePoint.__str__">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.TimePoint.html#eta.util.time.TimePoint.__str__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span></div>
+</div>
+
+  
+
+<div class="viewcode-block" id="get_elapsed">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.get_elapsed.html#eta.util.time.get_elapsed">[docs]</a>
+<span class="k">def</span> <span class="nf">get_elapsed</span><span class="p">(</span><span class="n">tp1</span><span class="p">,</span> <span class="n">tp2</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get lower and upper bounds on the elapsed time between two timepoints.&quot;&quot;&quot;</span>
+  <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">tp2</span><span class="o">.</span><span class="n">lower</span><span class="o">-</span><span class="n">tp1</span><span class="o">.</span><span class="n">upper</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tp2</span><span class="o">.</span><span class="n">lower</span><span class="o">-</span><span class="n">tp1</span><span class="o">.</span><span class="n">lower</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tp2</span><span class="o">.</span><span class="n">upper</span><span class="o">-</span><span class="n">tp1</span><span class="o">.</span><span class="n">upper</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tp2</span><span class="o">.</span><span class="n">upper</span><span class="o">-</span><span class="n">tp1</span><span class="o">.</span><span class="n">lower</span><span class="p">)]</span>
+  <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">vals</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span></div>
+
+  
+
+<div class="viewcode-block" id="time_pair_p">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.time_pair_p.html#eta.util.time.time_pair_p">[docs]</a>
+<span class="k">def</span> <span class="nf">time_pair_p</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">datetime</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="time_tuple_p">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.time_tuple_p.html#eta.util.time.time_tuple_p">[docs]</a>
+<span class="k">def</span> <span class="nf">time_tuple_p</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="time_record_p">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.time_record_p.html#eta.util.time.time_record_p">[docs]</a>
+<span class="k">def</span> <span class="nf">time_record_p</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">14</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;$&#39;</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;date+time&#39;</span>
+          <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">:]])</span>
+          <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;:&#39;</span><span class="o">+</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">DATETIME_ARGS</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">]]))</span></div>
+
+  
+
+<div class="viewcode-block" id="time_pair_from_tuple">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.time_pair_from_tuple.html#eta.util.time.time_pair_from_tuple">[docs]</a>
+<span class="k">def</span> <span class="nf">time_pair_from_tuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Given a year/month/day/hour/minute/second tuple, possibly containing &quot;variables&quot;, return the lower and upper bound datetimes.&quot;&quot;&quot;</span>
+  <span class="n">args_lower</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">DATETIME_ARGS</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">args_upper</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">DATETIME_ARGS</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_lower</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+      <span class="n">args_lower</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">args_lower</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">DATETIME_LOWER</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+  <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_upper</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+      <span class="n">args_upper</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">args_upper</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">DATETIME_UPPER</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">datetime</span><span class="p">(</span><span class="o">**</span><span class="n">args_lower</span><span class="p">),</span> <span class="n">datetime</span><span class="p">(</span><span class="o">**</span><span class="n">args_upper</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="time_pair_from_record">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.time_pair_from_record.html#eta.util.time.time_pair_from_record">[docs]</a>
+<span class="k">def</span> <span class="nf">time_pair_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Given a ULF date+time record structure, possibly containing &quot;variables&quot;, return the lower and upper bound datetimes.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">time_pair_from_tuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">3</span><span class="p">::</span><span class="mi">2</span><span class="p">]))</span></div>
+
+  
+
+<div class="viewcode-block" id="tuple_from_time_pair">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.tuple_from_time_pair.html#eta.util.time.tuple_from_time_pair">[docs]</a>
+<span class="k">def</span> <span class="nf">tuple_from_time_pair</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Given a lower and upper bound datetime objects, create a year/month/day/hour/minute/second tuple.&quot;&quot;&quot;</span>
+  <span class="n">tup</span> <span class="o">=</span> <span class="p">[</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">DATETIME_ARGS</span><span class="p">))]</span>
+  <span class="n">args_lower</span> <span class="o">=</span> <span class="n">lower</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%H-%M-%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+  <span class="n">args_upper</span> <span class="o">=</span> <span class="n">upper</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%H-%M-%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">arg_l</span><span class="p">,</span> <span class="n">arg_u</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">args_lower</span><span class="p">,</span> <span class="n">args_upper</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">arg_l</span> <span class="o">!=</span> <span class="n">arg_u</span><span class="p">:</span>
+      <span class="n">tup</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">DATETIME_VARS</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">tup</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">arg_u</span>
+  <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="record_from_time_pair">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.record_from_time_pair.html#eta.util.time.record_from_time_pair">[docs]</a>
+<span class="k">def</span> <span class="nf">record_from_time_pair</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Given a lower and upper bound datetime objects, create a ULF date+time record structure.&quot;&quot;&quot;</span>
+  <span class="n">tup</span> <span class="o">=</span> <span class="n">tuple_from_time_pair</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span>
+  <span class="n">record</span> <span class="o">=</span> <span class="p">[</span><span class="n">sub</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">))</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="p">[[</span><span class="s1">&#39;:&#39;</span><span class="o">+</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">DATETIME_ARGS</span><span class="p">],</span> <span class="n">tup</span><span class="p">]]</span>
+  <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="s1">&#39;date+time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">record</span></div>
+
+  
+
+<div class="viewcode-block" id="now">
+<a class="viewcode-back" href="../../../_autosummary/eta.util.time.now.html#eta.util.time.now">[docs]</a>
+<span class="k">def</span> <span class="nf">now</span><span class="p">():</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Return a POSIX timestamp corresponding to the time of the function call.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

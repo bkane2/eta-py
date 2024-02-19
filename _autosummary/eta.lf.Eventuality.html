@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.lf.Eventuality &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.lf.Individual" href="eta.lf.Individual.html" />
+    <link rel="prev" title="eta.lf.ELF" href="eta.lf.ELF.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.lf.html">eta.lf</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.KEYWORDS.html">eta.lf.KEYWORDS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.KEYWORDS_R.html">eta.lf.KEYWORDS_R</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.and_prop_p.html">eta.lf.and_prop_p</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.characterizes_prop_p.html">eta.lf.characterizes_prop_p</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.equal_prop_p.html">eta.lf.equal_prop_p</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.expectation_p.html">eta.lf.expectation_p</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.extract_set.html">eta.lf.extract_set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.from_lisp_dirs.html">eta.lf.from_lisp_dirs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.from_lisp_file.html">eta.lf.from_lisp_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.is_set.html">eta.lf.is_set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.make_set.html">eta.lf.make_set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.not_prop_p.html">eta.lf.not_prop_p</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.or_prop_p.html">eta.lf.or_prop_p</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.parse_condition.html">eta.lf.parse_condition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.parse_eventuality.html">eta.lf.parse_eventuality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.parse_eventuality_list.html">eta.lf.parse_eventuality_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.parse_repetition.html">eta.lf.parse_repetition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.remove_type.html">eta.lf.remove_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.set_union.html">eta.lf.set_union</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.Condition.html">eta.lf.Condition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.Domain.html">eta.lf.Domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.ELF.html">eta.lf.ELF</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.lf.Eventuality</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.lf.Eventuality"><code class="docutils literal notranslate"><span class="pre">Eventuality</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.Individual.html">eta.lf.Individual</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.LF.html">eta.lf.LF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.Repetition.html">eta.lf.Repetition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.ULF.html">eta.lf.ULF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.Var.html">eta.lf.Var</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.KEYWORDS"><code class="docutils literal notranslate"><span class="pre">KEYWORDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.KEYWORDS_R"><code class="docutils literal notranslate"><span class="pre">KEYWORDS_R</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.remove_type"><code class="docutils literal notranslate"><span class="pre">remove_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.Domain"><code class="docutils literal notranslate"><span class="pre">Domain</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.Individual"><code class="docutils literal notranslate"><span class="pre">Individual</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.Var"><code class="docutils literal notranslate"><span class="pre">Var</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.LF"><code class="docutils literal notranslate"><span class="pre">LF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.ULF"><code class="docutils literal notranslate"><span class="pre">ULF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.ELF"><code class="docutils literal notranslate"><span class="pre">ELF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.Eventuality"><code class="docutils literal notranslate"><span class="pre">Eventuality</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.Condition"><code class="docutils literal notranslate"><span class="pre">Condition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.Repetition"><code class="docutils literal notranslate"><span class="pre">Repetition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.parse_eventuality"><code class="docutils literal notranslate"><span class="pre">parse_eventuality()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.parse_condition"><code class="docutils literal notranslate"><span class="pre">parse_condition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.parse_repetition"><code class="docutils literal notranslate"><span class="pre">parse_repetition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.parse_eventuality_list"><code class="docutils literal notranslate"><span class="pre">parse_eventuality_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.from_lisp_file"><code class="docutils literal notranslate"><span class="pre">from_lisp_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.from_lisp_dirs"><code class="docutils literal notranslate"><span class="pre">from_lisp_dirs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.expectation_p"><code class="docutils literal notranslate"><span class="pre">expectation_p()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.extract_set"><code class="docutils literal notranslate"><span class="pre">extract_set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.make_set"><code class="docutils literal notranslate"><span class="pre">make_set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.is_set"><code class="docutils literal notranslate"><span class="pre">is_set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.set_union"><code class="docutils literal notranslate"><span class="pre">set_union()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.equal_prop_p"><code class="docutils literal notranslate"><span class="pre">equal_prop_p()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.not_prop_p"><code class="docutils literal notranslate"><span class="pre">not_prop_p()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.and_prop_p"><code class="docutils literal notranslate"><span class="pre">and_prop_p()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.or_prop_p"><code class="docutils literal notranslate"><span class="pre">or_prop_p()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.lf.html#eta.lf.characterizes_prop_p"><code class="docutils literal notranslate"><span class="pre">characterizes_prop_p()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.lf.html">eta.lf</a></li>
+      <li class="breadcrumb-item active">eta.lf.Eventuality</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-lf-eventuality">
+<h1>eta.lf.Eventuality<a class="headerlink" href="#eta-lf-eventuality" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.lf.Eventuality">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Eventuality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ulf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Defines an “eventuality”, which represents an event or fact at several levels (natural language, ULF, and ELF).</p>
+<p>An Eventuality subsumes logical forms as well as their natural language expression, encapsulating them in one object.
+Minimally, an Eventuality has an episode variable/constant and a natural language string expressing the formula characterizing
+that event. On top of that, a ULF representation of that formula may be provided. At the highest level, a fully deindexed ELF
+representation may be provided.</p>
+<p>We assume that the level of representation builds upward, i.e., a natural language string may be easily derived from the ULF,
+and likewise, a ULF may be easily derived from the full ELF. On the other hand, mapping from natural language to ULF requires
+semantic parsing, and mapping from ULF to ELF requires disambiguation, scoping, and deindexing. Hence, we want to regard those
+upper levels of representation as “optional”, since they may not be needed in simpler dialogue applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – A symbol denoting the episode variable or constant.</p></li>
+<li><p><strong>nl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The natural language representation of the formula characterizing the event.</p></li>
+<li><p><strong>ulf</strong> (<a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF"><em>ULF</em></a><em>, </em><em>optional</em>) – The ULF formula characterizing the event.</p></li>
+<li><p><strong>elf</strong> (<a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF"><em>ELF</em></a><em>, </em><em>optional</em>) – The ELF formula characterizing the event.</p></li>
+<li><p><strong>prob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=1.</em>) – The probability associated with this event.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.ep">
+<span class="sig-name descname"><span class="pre">ep</span></span><a class="headerlink" href="#eta.lf.Eventuality.ep" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.nl">
+<span class="sig-name descname"><span class="pre">nl</span></span><a class="headerlink" href="#eta.lf.Eventuality.nl" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.ulf">
+<span class="sig-name descname"><span class="pre">ulf</span></span><a class="headerlink" href="#eta.lf.Eventuality.ulf" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ULF.html#eta.lf.ULF" title="eta.lf.ULF">ULF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.elf">
+<span class="sig-name descname"><span class="pre">elf</span></span><a class="headerlink" href="#eta.lf.Eventuality.elf" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.lf.ELF.html#eta.lf.ELF" title="eta.lf.ELF">ELF</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.prob">
+<span class="sig-name descname"><span class="pre">prob</span></span><a class="headerlink" href="#eta.lf.Eventuality.prob" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.bindings">
+<span class="sig-name descname"><span class="pre">bindings</span></span><a class="headerlink" href="#eta.lf.Eventuality.bindings" title="Link to this definition"></a></dt>
+<dd><p>A mapping from variables to bound values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.embedding">
+<span class="sig-name descname"><span class="pre">embedding</span></span><a class="headerlink" href="#eta.lf.Eventuality.embedding" title="Link to this definition"></a></dt>
+<dd><p>A vector embedding of this eventuality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.lf.Eventuality.bind" title="eta.lf.Eventuality.bind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bind</span></code></a></p></td>
+<td><p>Bind the given variable symbol to the given value.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.lf.Eventuality.embed" title="eta.lf.Eventuality.embed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">embed</span></code></a></p></td>
+<td><p>Embed the eventuality based on the natural language representation, given an embedder object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.lf.Eventuality.format" title="eta.lf.Eventuality.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a></p></td>
+<td><p>Format an eventuality as ((&lt;ep&gt; &lt;wff&gt;) &lt;prob&gt;), where &lt;wff&gt; is the highest level of representation for this eventuality.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.lf.Eventuality.get_elf" title="eta.lf.Eventuality.get_elf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_elf</span></code></a></p></td>
+<td><p>Get the ELF representation for this eventuality, applying any variable assignments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.lf.Eventuality.get_ep" title="eta.lf.Eventuality.get_ep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_ep</span></code></a></p></td>
+<td><p>Get the episode symbol for this eventuality, applying any variable assignments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.lf.Eventuality.get_nl" title="eta.lf.Eventuality.get_nl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_nl</span></code></a></p></td>
+<td><p>Get the natural language representation for this eventuality, applying any variable assignments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.lf.Eventuality.get_ulf" title="eta.lf.Eventuality.get_ulf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_ulf</span></code></a></p></td>
+<td><p>Get the ULF representation for this eventuality, applying any variable assignments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.lf.Eventuality.get_wff" title="eta.lf.Eventuality.get_wff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wff</span></code></a></p></td>
+<td><p>Get the highest level of representation available for this eventuality (if no_bind is given as True, do not apply bindings).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.lf.Eventuality.replacevar" title="eta.lf.Eventuality.replacevar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replacevar</span></code></a></p></td>
+<td><p>Replace the first variable symbol with the second variable symbol throughout the eventuality.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.lf.Eventuality.set_elf" title="eta.lf.Eventuality.set_elf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_elf</span></code></a></p></td>
+<td><p>Set the ULF formula.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.lf.Eventuality.set_ep" title="eta.lf.Eventuality.set_ep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_ep</span></code></a></p></td>
+<td><p>Set the episode symbol.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.lf.Eventuality.set_prob" title="eta.lf.Eventuality.set_prob"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_prob</span></code></a></p></td>
+<td><p>Set the probability of this event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.lf.Eventuality.set_ulf" title="eta.lf.Eventuality.set_ulf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_ulf</span></code></a></p></td>
+<td><p>Set the ULF formula.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.lf.Eventuality.unbind" title="eta.lf.Eventuality.unbind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unbind</span></code></a></p></td>
+<td><p>Unbind the given variable symbol.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.set_ep">
+<span class="sig-name descname"><span class="pre">set_ep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.set_ep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.set_ep" title="Link to this definition"></a></dt>
+<dd><p>Set the episode symbol.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.set_ulf">
+<span class="sig-name descname"><span class="pre">set_ulf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ulf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.set_ulf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.set_ulf" title="Link to this definition"></a></dt>
+<dd><p>Set the ULF formula.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.set_elf">
+<span class="sig-name descname"><span class="pre">set_elf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.set_elf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.set_elf" title="Link to this definition"></a></dt>
+<dd><p>Set the ULF formula.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.set_prob">
+<span class="sig-name descname"><span class="pre">set_prob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prob</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.set_prob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.set_prob" title="Link to this definition"></a></dt>
+<dd><p>Set the probability of this event.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.bind" title="Link to this definition"></a></dt>
+<dd><p>Bind the given variable symbol to the given value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.unbind" title="Link to this definition"></a></dt>
+<dd><p>Unbind the given variable symbol.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.replacevar">
+<span class="sig-name descname"><span class="pre">replacevar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.replacevar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.replacevar" title="Link to this definition"></a></dt>
+<dd><p>Replace the first variable symbol with the second variable symbol throughout the eventuality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.embed">
+<span class="sig-name descname"><span class="pre">embed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.embed" title="Link to this definition"></a></dt>
+<dd><p>Embed the eventuality based on the natural language representation, given an embedder object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.get_ep">
+<span class="sig-name descname"><span class="pre">get_ep</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.get_ep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.get_ep" title="Link to this definition"></a></dt>
+<dd><p>Get the episode symbol for this eventuality, applying any variable assignments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.get_nl">
+<span class="sig-name descname"><span class="pre">get_nl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.get_nl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.get_nl" title="Link to this definition"></a></dt>
+<dd><p>Get the natural language representation for this eventuality, applying any variable assignments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.get_ulf">
+<span class="sig-name descname"><span class="pre">get_ulf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.get_ulf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.get_ulf" title="Link to this definition"></a></dt>
+<dd><p>Get the ULF representation for this eventuality, applying any variable assignments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.get_elf">
+<span class="sig-name descname"><span class="pre">get_elf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.get_elf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.get_elf" title="Link to this definition"></a></dt>
+<dd><p>Get the ELF representation for this eventuality, applying any variable assignments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.get_wff">
+<span class="sig-name descname"><span class="pre">get_wff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.get_wff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.get_wff" title="Link to this definition"></a></dt>
+<dd><p>Get the highest level of representation available for this eventuality (if no_bind is given as True, do not apply bindings).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.format" title="Link to this definition"></a></dt>
+<dd><p>Format an eventuality as ((&lt;ep&gt; &lt;wff&gt;) &lt;prob&gt;), where &lt;wff&gt; is the highest level of representation for this eventuality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.__eq__" title="Link to this definition"></a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.lf.Eventuality.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/lf.html#Eventuality.__hash__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.lf.Eventuality.__hash__" title="Link to this definition"></a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.lf.ELF.html" class="btn btn-neutral float-left" title="eta.lf.ELF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.lf.Individual.html" class="btn btn-neutral float-right" title="eta.lf.Individual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

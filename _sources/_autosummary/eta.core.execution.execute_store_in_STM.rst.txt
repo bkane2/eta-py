@@ -1,0 +1,6 @@
+eta.core.execution.execute\_store\_in\_STM
+==========================================
+
+.. currentmodule:: eta.core.execution
+
+.. autofunction:: execute_store_in_STM

@@ -1,0 +1,31 @@
+eta.util.time.TimePoint
+=======================
+
+.. currentmodule:: eta.util.time
+
+.. autoclass:: TimePoint
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __str__, __hash__, __eq__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TimePoint.copy
+      ~TimePoint.format
+      ~TimePoint.format_date
+      ~TimePoint.get_duration
+      ~TimePoint.to_num
+      ~TimePoint.to_ulf
+      ~TimePoint.update
+   
+   
+
+   
+   
+   

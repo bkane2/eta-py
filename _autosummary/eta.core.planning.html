@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.core.planning &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.core.planning.add_possible_actions_to_plan" href="eta.core.planning.add_possible_actions_to_plan.html" />
+    <link rel="prev" title="eta.core.perception.process_utterances" href="eta.core.perception.process_utterances.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.core.html">eta.core</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.core.eta.html">eta.core.eta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.core.execution.html">eta.core.execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.core.perception.html">eta.core.perception</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.core.planning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.add_possible_actions_to_plan.html">eta.core.planning.add_possible_actions_to_plan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.answer_step.html">eta.core.planning.answer_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.ask_step.html">eta.core.planning.ask_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.equivalent_speech_acts.html">eta.core.planning.equivalent_speech_acts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.expand_condition_step.html">eta.core.planning.expand_condition_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.expand_plan_steps.html">eta.core.planning.expand_plan_steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.expand_primitive_step.html">eta.core.planning.expand_primitive_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.expand_repetition_step.html">eta.core.planning.expand_repetition_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.merge_plan_steps.html">eta.core.planning.merge_plan_steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.paraphrase_step.html">eta.core.planning.paraphrase_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.plan_answer.html">eta.core.planning.plan_answer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.plan_ask.html">eta.core.planning.plan_ask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.plan_paraphrase.html">eta.core.planning.plan_paraphrase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.plan_react.html">eta.core.planning.plan_react</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.plan_respond.html">eta.core.planning.plan_respond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.planning_loop.html">eta.core.planning.planning_loop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.react_step.html">eta.core.planning.react_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.relative_speech_act_step.html">eta.core.planning.relative_speech_act_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.reorder_plan_steps.html">eta.core.planning.reorder_plan_steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.reply_step.html">eta.core.planning.reply_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.respond_step.html">eta.core.planning.respond_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.say_to_step_from_utt.html">eta.core.planning.say_to_step_from_utt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.say_to_step_from_utts.html">eta.core.planning.say_to_step_from_utts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.schema_step.html">eta.core.planning.schema_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.planning.split_schema_step.html">eta.core.planning.split_schema_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.planning_loop"><code class="docutils literal notranslate"><span class="pre">planning_loop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.add_possible_actions_to_plan"><code class="docutils literal notranslate"><span class="pre">add_possible_actions_to_plan()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.expand_plan_steps"><code class="docutils literal notranslate"><span class="pre">expand_plan_steps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.merge_plan_steps"><code class="docutils literal notranslate"><span class="pre">merge_plan_steps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.reorder_plan_steps"><code class="docutils literal notranslate"><span class="pre">reorder_plan_steps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.expand_condition_step"><code class="docutils literal notranslate"><span class="pre">expand_condition_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.expand_repetition_step"><code class="docutils literal notranslate"><span class="pre">expand_repetition_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.expand_primitive_step"><code class="docutils literal notranslate"><span class="pre">expand_primitive_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.plan_paraphrase"><code class="docutils literal notranslate"><span class="pre">plan_paraphrase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.plan_respond"><code class="docutils literal notranslate"><span class="pre">plan_respond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.plan_answer"><code class="docutils literal notranslate"><span class="pre">plan_answer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.plan_ask"><code class="docutils literal notranslate"><span class="pre">plan_ask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.plan_react"><code class="docutils literal notranslate"><span class="pre">plan_react()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.say_to_step_from_utt"><code class="docutils literal notranslate"><span class="pre">say_to_step_from_utt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.say_to_step_from_utts"><code class="docutils literal notranslate"><span class="pre">say_to_step_from_utts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.schema_step"><code class="docutils literal notranslate"><span class="pre">schema_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.core.planning.split_schema_step"><code class="docutils literal notranslate"><span class="pre">split_schema_step()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.core.reasoning.html">eta.core.reasoning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.core.html">eta.core</a></li>
+      <li class="breadcrumb-item active">eta.core.planning</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.core.planning">
+<span id="eta-core-planning"></span><h1>eta.core.planning<a class="headerlink" href="#module-eta.core.planning" title="Link to this heading"></a></h1>
+<p>The core process responsible for using schemas and memory to modify the plan.</p>
+<p>Modifying the plan includes adding possible actions to the plan, expanding plan steps,
+merging plan steps, and reordering plan steps.</p>
+<p class="rubric">Notes</p>
+<p>Currently, the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer is handled differently from the other buffers, in that we
+assume it only holds one element at a time, and this element is simply replaced whenever
+the plan is modified in some way.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.add_possible_actions_to_plan.html#eta.core.planning.add_possible_actions_to_plan" title="eta.core.planning.add_possible_actions_to_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_possible_actions_to_plan</span></code></a></p></td>
+<td><p>Given a list of possible actions, attempt to add actions into the current plan.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.answer_step.html#eta.core.planning.answer_step" title="eta.core.planning.answer_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">answer_step</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.ask_step.html#eta.core.planning.ask_step" title="eta.core.planning.ask_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ask_step</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.equivalent_speech_acts.html#eta.core.planning.equivalent_speech_acts" title="eta.core.planning.equivalent_speech_acts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equivalent_speech_acts</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.expand_condition_step.html#eta.core.planning.expand_condition_step" title="eta.core.planning.expand_condition_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_condition_step</span></code></a></p></td>
+<td><p>Expand a step containing a condition eventuality depending on the truth value of its condition.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.expand_plan_steps.html#eta.core.planning.expand_plan_steps" title="eta.core.planning.expand_plan_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_plan_steps</span></code></a></p></td>
+<td><p>Attempt to expand the surface steps in the plan using one of:</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.expand_primitive_step.html#eta.core.planning.expand_primitive_step" title="eta.core.planning.expand_primitive_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_primitive_step</span></code></a></p></td>
+<td><p>Expand a primitive step, i.e., one whose expansion method is supported directly.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.expand_repetition_step.html#eta.core.planning.expand_repetition_step" title="eta.core.planning.expand_repetition_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_repetition_step</span></code></a></p></td>
+<td><p>Expand a step containing a repetition eventuality depending on the truth value of its condition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.merge_plan_steps.html#eta.core.planning.merge_plan_steps" title="eta.core.planning.merge_plan_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_plan_steps</span></code></a></p></td>
+<td><p>Merge steps in the plan that are equivalent or unifiable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.paraphrase_step.html#eta.core.planning.paraphrase_step" title="eta.core.planning.paraphrase_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">paraphrase_step</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.plan_answer.html#eta.core.planning.plan_answer" title="eta.core.planning.plan_answer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plan_answer</span></code></a></p></td>
+<td><p>Generate a subplan for an answer step using the answer transducer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.plan_ask.html#eta.core.planning.plan_ask" title="eta.core.planning.plan_ask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plan_ask</span></code></a></p></td>
+<td><p>Generate a subplan for an ask step using the ask transducer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.plan_paraphrase.html#eta.core.planning.plan_paraphrase" title="eta.core.planning.plan_paraphrase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plan_paraphrase</span></code></a></p></td>
+<td><p>Generate a subplan for a paraphrase step using the paraphrase transducer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.plan_react.html#eta.core.planning.plan_react" title="eta.core.planning.plan_react"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plan_react</span></code></a></p></td>
+<td><p>Generate a subplan for a react-to step using the reaction transducer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.plan_respond.html#eta.core.planning.plan_respond" title="eta.core.planning.plan_respond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plan_respond</span></code></a></p></td>
+<td><p>Generate a subplan for a respond-to step using the response transducer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.planning_loop.html#eta.core.planning.planning_loop" title="eta.core.planning.planning_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">planning_loop</span></code></a></p></td>
+<td><p>Make modifications to the dialogue plan.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.react_step.html#eta.core.planning.react_step" title="eta.core.planning.react_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">react_step</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.relative_speech_act_step.html#eta.core.planning.relative_speech_act_step" title="eta.core.planning.relative_speech_act_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relative_speech_act_step</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.reorder_plan_steps.html#eta.core.planning.reorder_plan_steps" title="eta.core.planning.reorder_plan_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_plan_steps</span></code></a></p></td>
+<td><p>Reorder steps in the plan according to imposed constraints.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.reply_step.html#eta.core.planning.reply_step" title="eta.core.planning.reply_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply_step</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.respond_step.html#eta.core.planning.respond_step" title="eta.core.planning.respond_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">respond_step</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.say_to_step_from_utt.html#eta.core.planning.say_to_step_from_utt" title="eta.core.planning.say_to_step_from_utt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">say_to_step_from_utt</span></code></a></p></td>
+<td><p>Generate a say-to subplan from an utterance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.say_to_step_from_utts.html#eta.core.planning.say_to_step_from_utts" title="eta.core.planning.say_to_step_from_utts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">say_to_step_from_utts</span></code></a></p></td>
+<td><p>Generate a say-to subplan from a list of utterances.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.core.planning.schema_step.html#eta.core.planning.schema_step" title="eta.core.planning.schema_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">schema_step</span></code></a></p></td>
+<td><p>Check whether a given step wff corresponds to a dialogue schema in Eta's schema library.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.core.planning.split_schema_step.html#eta.core.planning.split_schema_step" title="eta.core.planning.split_schema_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_schema_step</span></code></a></p></td>
+<td><p>Split a schema step wff into the schema predicate and the arguments list for the schema.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.planning_loop">
+<span class="sig-name descname"><span class="pre">planning_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#planning_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.planning_loop" title="Link to this definition"></a></dt>
+<dd><p>Make modifications to the dialogue plan.</p>
+<p>First, all suggested actions are popped from the <code class="docutils literal notranslate"><span class="pre">actions</span></code> buffer, and used to create a new
+plan. The plan of the current dialogue state is updated, and the contents of the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer
+is replaced with the updated plan.</p>
+<dl class="simple">
+<dt>Second, this attempts to modify the plan in the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer. This consists of the following substeps:</dt><dd><ol class="arabic simple">
+<li><p>Attempt to expand top-level steps in the plan into substeps.</p></li>
+<li><p>Merge equivalent steps in the plan.</p></li>
+<li><p>Reorder plan steps according to constraints.</p></li>
+</ol>
+</dd>
+</dl>
+<p>If the plan was modified by the previous step, it is used to update the plan of the current dialogue state,
+and is re-added to the <code class="docutils literal notranslate"><span class="pre">plans</span></code> buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.add_possible_actions_to_plan">
+<span class="sig-name descname"><span class="pre">add_possible_actions_to_plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#add_possible_actions_to_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.add_possible_actions_to_plan" title="Link to this definition"></a></dt>
+<dd><p>Given a list of possible actions, attempt to add actions into the current plan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – A list of possible actions (as natural language strings or LISP-formatted S-expression strings).</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: some possible future improvements:</dt><dd><ol class="arabic simple">
+<li><p>For now, we assume that only the first action in a set of possible actions is used.
+In the future, this might be extended with a policy for attempting to add the top K possible actions.</p></li>
+<li><p>This currently adds the action unconditionally; ultimately, the system should verify that the action
+can be added to the plan. This may be done by way of a pattern transducer.</p></li>
+<li><p>The action is currently inserted as the current step, but ultimately we should be able to insert actions
+elsewhere in the plan as well.</p></li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.expand_plan_steps">
+<span class="sig-name descname"><span class="pre">expand_plan_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_plan_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_plan_steps" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Attempt to expand the surface steps in the plan using one of:</dt><dd><ol class="arabic simple">
+<li><p>A keyword step, which have special expansion behavior</p></li>
+<li><p>A schema whose header matches the step WFF (unifying any schema args)</p></li>
+<li><p>A “primitive” type of plan step whose expansion is directly supported</p></li>
+<li><p>A pattern transduction tree mapping the step WFF to substep WFF(s)</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plan</strong> (<a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode"><em>PlanNode</em></a><em> or </em><em>None</em>) – The plan to expand (if one exists).</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>TODO: some possible future improvements:</dt><dd><ol class="arabic simple">
+<li><p>currently, this only attempts to expand the currently due step; however,
+it may be possible to expand certain other steps in the plan as well.</p></li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.merge_plan_steps">
+<span class="sig-name descname"><span class="pre">merge_plan_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#merge_plan_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.merge_plan_steps" title="Link to this definition"></a></dt>
+<dd><p>Merge steps in the plan that are equivalent or unifiable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plan</strong> (<a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode"><em>PlanNode</em></a><em> or </em><em>None</em>) – The plan to expand (if one exists).</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>TODO: the behavior of this function is currently hard-coded to merge directly
+adjacent reply-to steps in the plan. It should be generalized using a transducer
+that maps a plan to a new plan with merged steps, possibly making use of retrieved
+equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially
+perform this step instead).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.reorder_plan_steps">
+<span class="sig-name descname"><span class="pre">reorder_plan_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#reorder_plan_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.reorder_plan_steps" title="Link to this definition"></a></dt>
+<dd><p>Reorder steps in the plan according to imposed constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plan</strong> (<a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode"><em>PlanNode</em></a><em> or </em><em>None</em>) – The plan to expand (if one exists).</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>TODO: this is a stub that needs implementation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.expand_condition_step">
+<span class="sig-name descname"><span class="pre">expand_condition_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_condition_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_condition_step" title="Link to this definition"></a></dt>
+<dd><p>Expand a step containing a condition eventuality depending on the truth value of its condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<a class="reference internal" href="eta.lf.Condition.html#eta.lf.Condition" title="eta.lf.Condition"><em>Condition</em></a>) – The condition eventuality to expand.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+<li><p><strong>schema</strong> (<a class="reference internal" href="eta.schema.Schema.html#eta.schema.Schema" title="eta.schema.Schema"><em>Schema</em></a><em>, </em><em>optional</em>) – The schema (if any) to inherit from when instantiating the sub-eventualities.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.expand_repetition_step">
+<span class="sig-name descname"><span class="pre">expand_repetition_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_repetition_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_repetition_step" title="Link to this definition"></a></dt>
+<dd><p>Expand a step containing a repetition eventuality depending on the truth value of its condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<a class="reference internal" href="eta.lf.Repetition.html#eta.lf.Repetition" title="eta.lf.Repetition"><em>Repetition</em></a>) – The repetition eventuality to expand.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+<li><p><strong>schema</strong> (<a class="reference internal" href="eta.schema.Schema.html#eta.schema.Schema" title="eta.schema.Schema"><em>Schema</em></a><em>, </em><em>optional</em>) – The schema (if any) to inherit from when instantiating the sub-eventualities.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>TODO: some modifications still need to be made to the method of unbinding local variables, since it
+may be possible that a variable within a :repeat-until section of a schema first appeared within an
+episode outside of the :repeat-until section, yet not within the participants list of the schema.
+This means that these variables will be unbound in memory following execution of the repeating episode,
+although typically the repetition itself still executes as intended.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.expand_primitive_step">
+<span class="sig-name descname"><span class="pre">expand_primitive_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#expand_primitive_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.expand_primitive_step" title="Link to this definition"></a></dt>
+<dd><p>Expand a primitive step, i.e., one whose expansion method is supported directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality"><em>Eventuality</em></a>) – The condition eventuality to expand.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.plan_paraphrase">
+<span class="sig-name descname"><span class="pre">plan_paraphrase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#plan_paraphrase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.plan_paraphrase" title="Link to this definition"></a></dt>
+<dd><p>Generate a subplan for a paraphrase step using the paraphrase transducer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<em>s-expr</em>) – The wff for the paraphrase step.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.plan_respond">
+<span class="sig-name descname"><span class="pre">plan_respond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#plan_respond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.plan_respond" title="Link to this definition"></a></dt>
+<dd><p>Generate a subplan for a respond-to step using the response transducer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<em>s-expr</em>) – The wff for the response step.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.plan_answer">
+<span class="sig-name descname"><span class="pre">plan_answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#plan_answer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.plan_answer" title="Link to this definition"></a></dt>
+<dd><p>Generate a subplan for an answer step using the answer transducer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<em>s-expr</em>) – The wff for the answer step.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.plan_ask">
+<span class="sig-name descname"><span class="pre">plan_ask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#plan_ask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.plan_ask" title="Link to this definition"></a></dt>
+<dd><p>Generate a subplan for an ask step using the ask transducer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<em>s-expr</em>) – The wff for the ask step.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.plan_react">
+<span class="sig-name descname"><span class="pre">plan_react</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#plan_react"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.plan_react" title="Link to this definition"></a></dt>
+<dd><p>Generate a subplan for a react-to step using the reaction transducer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<em>s-expr</em>) – The wff for the react-to step.</p></li>
+<li><p><strong>ds</strong> (<a class="reference internal" href="eta.core.eta.DialogueState.html#eta.core.eta.DialogueState" title="eta.core.eta.DialogueState"><em>DialogueState</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated plan, if successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.say_to_step_from_utt">
+<span class="sig-name descname"><span class="pre">say_to_step_from_utt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#say_to_step_from_utt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.say_to_step_from_utt" title="Link to this definition"></a></dt>
+<dd><p>Generate a say-to subplan from an utterance.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.say_to_step_from_utts">
+<span class="sig-name descname"><span class="pre">say_to_step_from_utts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#say_to_step_from_utts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.say_to_step_from_utts" title="Link to this definition"></a></dt>
+<dd><p>Generate a say-to subplan from a list of utterances.</p>
+<p>NOTE: currently this just splits off the first utterance in the list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.schema_step">
+<span class="sig-name descname"><span class="pre">schema_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#schema_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.schema_step" title="Link to this definition"></a></dt>
+<dd><p>Check whether a given step wff corresponds to a dialogue schema in Eta’s schema library.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.core.planning.split_schema_step">
+<span class="sig-name descname"><span class="pre">split_schema_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/planning.html#split_schema_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.planning.split_schema_step" title="Link to this definition"></a></dt>
+<dd><p>Split a schema step wff into the schema predicate and the arguments list for the schema.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.core.perception.process_utterances.html" class="btn btn-neutral float-left" title="eta.core.perception.process_utterances" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.core.planning.add_possible_actions_to_plan.html" class="btn btn-neutral float-right" title="eta.core.planning.add_possible_actions_to_plan" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

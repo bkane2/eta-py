@@ -1,0 +1,6 @@
+eta.constants.STORE\_IN\_STM
+============================
+
+.. currentmodule:: eta.constants
+
+.. autodata:: STORE_IN_STM

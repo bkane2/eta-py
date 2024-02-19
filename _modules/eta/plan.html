@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.plan &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.plan</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.plan</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Classes and methods for creating and modifying dialogue plan structures.</span>
+
+<span class="sd">A plan structure consists of a doubly linked list of plan nodes, interpreted as sequentially ordered</span>
+<span class="sd">steps in the system&#39;s plan. Each step contains the expected or intended event corresponding to that node.</span>
+
+<span class="sd">Additionally, plan steps may be related to other plan steps in a tree structure, such that each plan</span>
+<span class="sd">step has a list of substeps (more concrete steps that together constitute an abstract step), as well</span>
+<span class="sd">as a list of supersteps (more abstract steps that a step partially constitutes).</span>
+
+<span class="sd">The process of planning dialogue, then, consists of iteratively expanding abstract steps to create a</span>
+<span class="sd">&quot;frontier&quot; of concrete plan steps, which become plan nodes (replacing the plan node that previously</span>
+<span class="sd">held the abstract step).</span>
+
+<span class="sd">Similarly, executing a plan consists of advancing the pointer to the currently due plan node within</span>
+<span class="sd">the linked list of plan nodes.</span>
+
+<span class="sd">TODO: short writeup explaining figure</span>
+
+<span class="sd">.. image:: ../_static/figures/plan.png</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">graphviz</span>
+
+<span class="kn">from</span> <span class="nn">eta.util.general</span> <span class="kn">import</span> <span class="n">gentemp</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="p">,</span> <span class="n">indent</span><span class="p">,</span> <span class="n">cons</span>
+
+<div class="viewcode-block" id="PlanNode">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode">[docs]</a>
+<span class="k">class</span> <span class="nc">PlanNode</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A node in the doubly linked list that represents the system&#39;s plan.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  step : PlanStep</span>
+<span class="sd">    The plan step contained within this node.</span>
+<span class="sd">  </span>
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  step : PlanStep</span>
+<span class="sd">    The plan step contained within this node.</span>
+<span class="sd">  prev : PlanNode</span>
+<span class="sd">    The next plan node in the linked list.</span>
+<span class="sd">  next : PlanNode</span>
+<span class="sd">    The previous plan node in the linked list.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PlanNode.add_superstep_to_subplan">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.add_superstep_to_subplan">[docs]</a>
+  <span class="k">def</span> <span class="nf">add_superstep_to_subplan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the step of a given plan node as a superstep of each node within the subplan headed by this node.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    node : PlanNode</span>
+<span class="sd">      The node whose step should be added as a superstep.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span>
+    <span class="k">while</span> <span class="n">start</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+      <span class="n">start</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">add_superstep</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+      <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">next</span>
+    <span class="n">start</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">add_superstep</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">step</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanNode.add_supersteps">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.add_supersteps">[docs]</a>
+  <span class="k">def</span> <span class="nf">add_supersteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a subplan bounded between a given start and end node, add each as a superstep of this node.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    start_node : PlanNode</span>
+<span class="sd">      The beginning of the subplan whose steps should be added as a superstep.</span>
+<span class="sd">    end_node : PlanNode</span>
+<span class="sd">      The end of the subplan whose steps should be added as a superstep.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start_node</span>
+    <span class="k">while</span> <span class="n">start</span><span class="o">.</span><span class="n">next</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">start</span> <span class="o">==</span> <span class="n">end_node</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">add_superstep</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+      <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">next</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">add_superstep</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="n">step</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanNode.add_schema_to_subplan">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.add_schema_to_subplan">[docs]</a>
+  <span class="k">def</span> <span class="nf">add_schema_to_subplan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the given schema to each plan step in the subplan headed by this node.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    schema : Schema</span>
+<span class="sd">      The schema object to add to the schema lists for each plan step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span>
+    <span class="k">while</span> <span class="n">start</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+      <span class="n">start</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+      <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">next</span>
+    <span class="n">start</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanNode.get_schemas">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.get_schemas">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_schemas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all schemas of this plan.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">schemas</span></div>
+
+
+<div class="viewcode-block" id="PlanNode.get_all_roots">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.get_all_roots">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_all_roots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all root plan steps (i.e., the most abstract steps) reachable from the current plan.&quot;&quot;&quot;</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">recur1</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+      <span class="n">recur2</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">prev</span> <span class="ow">and</span> <span class="n">left</span><span class="p">:</span>
+        <span class="n">recur1</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">next</span> <span class="ow">and</span> <span class="n">right</span><span class="p">:</span>
+        <span class="n">recur1</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">recur2</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+      <span class="k">nonlocal</span> <span class="n">ret</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">cons</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">superstep</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">:</span>
+        <span class="n">recur2</span><span class="p">(</span><span class="n">superstep</span><span class="p">)</span>
+    <span class="n">recur1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">remove_duplicates</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+  
+<div class="viewcode-block" id="PlanNode.bind">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.bind">[docs]</a>
+  <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bind the given variable symbol to the given value throughout the entire plan structure.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">bind_rec</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+      <span class="n">node</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">prev</span> <span class="ow">and</span> <span class="n">left</span><span class="p">:</span>
+        <span class="n">bind_rec</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">next</span> <span class="ow">and</span> <span class="n">right</span><span class="p">:</span>
+        <span class="n">bind_rec</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">bind_rec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+  
+<div class="viewcode-block" id="PlanNode.unbind">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.unbind">[docs]</a>
+  <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unbind the given variable symbol throughout the entire plan structure.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">unbind_rec</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+      <span class="n">node</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">prev</span> <span class="ow">and</span> <span class="n">left</span><span class="p">:</span>
+        <span class="n">unbind_rec</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">prev</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">next</span> <span class="ow">and</span> <span class="n">right</span><span class="p">:</span>
+        <span class="n">unbind_rec</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">unbind_rec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+  
+<div class="viewcode-block" id="PlanNode.status">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.status">[docs]</a>
+  <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format the plan structure as a status string showing the current, past, and future surface steps.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    before : int, default=3</span>
+<span class="sd">      The number of past surface steps to show.</span>
+<span class="sd">    after : int, default=5</span>
+<span class="sd">      The number of future surface steps to show.</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev</span>
+    <span class="nb">next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span>
+
+    <span class="n">steps_prev</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">step_curr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">steps_next</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="n">prev</span> <span class="ow">and</span> <span class="p">(</span><span class="n">before</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">before</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+      <span class="n">steps_prev</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prev</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">))</span>
+      <span class="n">prev</span> <span class="o">=</span> <span class="n">prev</span><span class="o">.</span><span class="n">prev</span>
+      <span class="n">before</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">step_curr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">)</span>
+    <span class="k">while</span> <span class="nb">next</span> <span class="ow">and</span> <span class="p">(</span><span class="n">after</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">after</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+      <span class="n">steps_next</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">next</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">))</span>
+      <span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span><span class="o">.</span><span class="n">next</span>
+      <span class="n">after</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">prev</span><span class="p">:</span>
+      <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;   ...</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">for</span> <span class="n">step_prev</span> <span class="ow">in</span> <span class="n">steps_prev</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+      <span class="n">ret</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;   </span><span class="si">{</span><span class="n">step_prev</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&gt;&gt; </span><span class="si">{</span><span class="n">step_curr</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">for</span> <span class="n">step_next</span> <span class="ow">in</span> <span class="n">steps_next</span><span class="p">:</span>
+      <span class="n">ret</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;   </span><span class="si">{</span><span class="n">step_next</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="nb">next</span><span class="p">:</span>
+      <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;   ...</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+  
+<div class="viewcode-block" id="PlanNode.serialize_subtree">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.serialize_subtree">[docs]</a>
+  <span class="k">def</span> <span class="nf">serialize_subtree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a string representing the subtree of the plan structure reachable from this node.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">schemas</span><span class="o">=</span><span class="n">schemas</span><span class="p">)</span></div>
+
+  
+<div class="viewcode-block" id="PlanNode.serialize_from_roots">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.serialize_from_roots">[docs]</a>
+  <span class="k">def</span> <span class="nf">serialize_from_roots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a string representing the subtrees of the plan structure reachable from each root step.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">root</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="n">schemas</span><span class="p">)</span> <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_roots</span><span class="p">()]</span></div>
+
+  
+<div class="viewcode-block" id="PlanNode.to_graph">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.to_graph">[docs]</a>
+  <span class="k">def</span> <span class="nf">to_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a plan structure to a standard graph object, i.e., a list of vertices and edges.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    before : int, default=3</span>
+<span class="sd">      The number of past surface steps to include in the graph.</span>
+<span class="sd">    after : int, default=5</span>
+<span class="sd">      The number of future surface steps to include in the graph.</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates in the labels for each step.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nodes : list[tuple[str, str]]</span>
+<span class="sd">      A list of vertices/nodes in the resulting graph, where each node is an ``(&lt;id&gt;, &lt;label&gt;)`` tuple.</span>
+<span class="sd">    edges : list[tuple[str, str]]</span>
+<span class="sd">      A list of edges in the resulting graph, where each edge is an ``(&lt;id1&gt;, &lt;id2&gt;)`` tuple.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">subtree_rec</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+      <span class="k">nonlocal</span> <span class="n">k</span>
+      <span class="k">if</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">parent</span><span class="p">,</span> <span class="n">visited</span><span class="p">[</span><span class="n">step</span><span class="p">]))</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;S</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">label</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">)))</span>
+        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">parent</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+        <span class="n">visited</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="p">[</span><span class="n">subtree_rec</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+      
+    <span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">while</span> <span class="n">prev</span> <span class="ow">and</span> <span class="p">(</span><span class="n">before</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">before</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+      <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">prev</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">)))</span>
+      <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+      <span class="p">[</span><span class="n">subtree_rec</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">prev</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+      <span class="n">prev</span> <span class="o">=</span> <span class="n">prev</span><span class="o">.</span><span class="n">prev</span>
+      <span class="n">before</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">prev</span><span class="p">:</span>
+      <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;N-inf&#39;</span><span class="p">,</span> <span class="s1">&#39;...&#39;</span><span class="p">))</span>
+      <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;N-inf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+      
+    <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;N0&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">)))</span>
+    <span class="p">[</span><span class="n">subtree_rec</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;N0&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+
+    <span class="nb">next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="nb">next</span> <span class="ow">and</span> <span class="p">(</span><span class="n">after</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">after</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+      <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">next</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">)))</span>
+      <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+      <span class="p">[</span><span class="n">subtree_rec</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">next</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+      <span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span><span class="o">.</span><span class="n">next</span>
+      <span class="n">after</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="nb">next</span><span class="p">:</span>
+      <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;Ninf&#39;</span><span class="p">,</span> <span class="s1">&#39;...&#39;</span><span class="p">))</span>
+      <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;N</span><span class="si">{</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;Ninf&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span></div>
+
+  
+<div class="viewcode-block" id="PlanNode.__str__">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanNode.html#eta.plan.PlanNode.__str__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span></div>
+</div>
+
+  
+
+<div class="viewcode-block" id="PlanStep">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep">[docs]</a>
+<span class="k">class</span> <span class="nc">PlanStep</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;A plan step containing an eventuality, related to other plan steps through a tree structure.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The eventuality corresponding to this step.</span>
+<span class="sd">  </span>
+<span class="sd">  Attributes</span>
+<span class="sd">  ----------</span>
+<span class="sd">  id : str</span>
+<span class="sd">    A unique ID for this step.</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The eventuality corresponding to this step.</span>
+<span class="sd">  substeps : list[PlanStep]</span>
+<span class="sd">    A list of more concrete plan steps that together realize this step.</span>
+<span class="sd">  supersteps : list[PlanStep]</span>
+<span class="sd">    A list of more abstract plan steps which this step (partially) realizes.</span>
+<span class="sd">  obligations : list[Eventuality]</span>
+<span class="sd">    A list of dialogue obligations associated with this plan step.</span>
+<span class="sd">  schemas : list[Schema]</span>
+<span class="sd">    A list of schemas that this expected/intended step arises from (if any).</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">gentemp</span><span class="p">(</span><span class="s1">&#39;STEP&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">event</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">substeps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">supersteps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">obligations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PlanStep.get_obligations">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.get_obligations">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_obligations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get any dialogue obligations associated with a particular step in the plan.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    TODO: this is currently a bit of a hack, in that it involves looking at the superstep</span>
+<span class="sd">    as well if no obligations are found. This is because say-to.v actions may need to access</span>
+<span class="sd">    the parent paraphrase-to.v actions in order to inherit relevant obligations of the latter.</span>
+<span class="sd">    It may be possible to instead modify the plan expansion method so that obligations are</span>
+<span class="sd">    inherited upon expansion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">obligations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obligations</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">supersteps</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">obligations</span><span class="p">:</span>
+      <span class="n">obligations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">supersteps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">obligations</span>
+    <span class="k">return</span> <span class="n">obligations</span></div>
+
+
+<div class="viewcode-block" id="PlanStep.add_superstep">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.add_superstep">[docs]</a>
+  <span class="k">def</span> <span class="nf">add_superstep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">superstep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add bidirectional subplan/superplan links between this step and a given superstep.</span>
+
+<span class="sd">    The schemas of the superstep also become the schemas associated with this step, but</span>
+<span class="sd">    only in the case where this step doesn&#39;t already have associated schemas (e.g.,</span>
+<span class="sd">    if it was created from an episode list in expanding an action).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    superstep : PlanStep</span>
+<span class="sd">      The superstep to add to this step.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    TODO: it&#39;s not clear whether the above is the sensible behavior, or if instead we</span>
+<span class="sd">    should always append the schemas of the superstep to this step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">supersteps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">superstep</span><span class="p">)</span>
+    <span class="n">superstep</span><span class="o">.</span><span class="n">substeps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span> <span class="o">=</span> <span class="n">superstep</span><span class="o">.</span><span class="n">schemas</span></div>
+
+    <span class="c1"># self.schemas = remove_duplicates(superstep.schemas + self.schemas, order=True)</span>
+    
+<div class="viewcode-block" id="PlanStep.bind">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.bind">[docs]</a>
+  <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bind the given variable symbol to the given value throughout the entire plan step tree (and associated schemas).&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">bind_rec</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+      <span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+      <span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">obligations</span><span class="p">]</span>
+      <span class="p">[</span><span class="n">schema</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="p">]</span>
+      <span class="p">[</span><span class="n">superstep</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">superstep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+    <span class="n">bind_rec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+  
+<div class="viewcode-block" id="PlanStep.unbind">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.unbind">[docs]</a>
+  <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unbind the given variable symbol throughout the entire plan step tree (and associated schemas).&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">unbind_rec</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+      <span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+      <span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">obligations</span><span class="p">]</span>
+      <span class="p">[</span><span class="n">schema</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="p">]</span>
+      <span class="p">[</span><span class="n">superstep</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">superstep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+    <span class="n">unbind_rec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="PlanStep.serialize">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.serialize">[docs]</a>
+  <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a string representing a serialized version of the subtree rooted at this step.</span>
+
+<span class="sd">    This is generated using a DFS, maintaining a record of recurring plan steps so that numerical</span>
+<span class="sd">    references can be inserted in place of nodes that appear more than once in the tree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    reverse : bool, default=False</span>
+<span class="sd">      If given as True, print the subtree &quot;above&quot; this step rather than below.</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">serialize_recur</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+      <span class="k">nonlocal</span> <span class="n">c</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">step</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+      <span class="k">elif</span> <span class="n">step</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">indent</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="si">}{</span><span class="n">i</span><span class="si">}</span><span class="s1"> [</span><span class="si">{</span><span class="n">visited</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="si">}</span><span class="s1">]</span><span class="se">\n</span><span class="s1">&#39;</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">indent</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="si">}{</span><span class="n">i</span><span class="si">}</span><span class="s1"> [</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemas</span><span class="p">)</span><span class="si">}</span><span class="s1">]</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">visited</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+          <span class="n">rec</span> <span class="o">=</span> <span class="p">[</span><span class="n">serialize_recur</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">substeps</span><span class="p">]</span>
+          <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rec</span> <span class="k">if</span> <span class="n">r</span><span class="p">])</span> <span class="o">+</span> <span class="n">ret</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">rec</span> <span class="o">=</span> <span class="p">[</span><span class="n">serialize_recur</span><span class="p">(</span><span class="n">sup</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">sup</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">supersteps</span><span class="p">]</span>
+          <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rec</span> <span class="k">if</span> <span class="n">r</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">ret</span>
+    <span class="k">return</span> <span class="n">serialize_recur</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanStep.format">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.format">[docs]</a>
+  <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a string representing this plan step as an S-expression.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    schemas : bool, default=False</span>
+<span class="sd">      Whether to also display schema predicates for each step.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">      The step formatted as one of the following S-expression string representations:</span>
+<span class="sd">      - ``((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;)``</span>
+<span class="sd">      - ``((&lt;ep-name&gt; &lt;wff&gt;) &lt;certainty&gt;) (:schemas &lt;schema-preds&gt;)``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">schemas</span><span class="p">:</span>
+      <span class="n">schema_instances</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">predicate</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemas</span><span class="p">]</span>
+      <span class="n">schemas_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">schema_instances</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+      <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">format</span><span class="p">()</span><span class="si">}</span><span class="s1"> (:schemas </span><span class="si">{</span><span class="n">schemas_str</span><span class="si">}</span><span class="s1">)&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PlanStep.__str__">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.PlanStep.html#eta.plan.PlanStep.__str__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span></div>
+</div>
+
+  
+
+<div class="viewcode-block" id="get_first_plan_node">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.get_first_plan_node.html#eta.plan.get_first_plan_node">[docs]</a>
+<span class="k">def</span> <span class="nf">get_first_plan_node</span><span class="p">(</span><span class="n">plan_node</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get the first plan node in a linked list of plan nodes.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan_node : PlanNode</span>
+<span class="sd">    An arbitrary node within the linked list of plan nodes.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode</span>
+<span class="sd">    The first node in the linked list.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">node</span> <span class="o">=</span> <span class="n">plan_node</span>
+  <span class="k">while</span> <span class="n">node</span><span class="o">.</span><span class="n">prev</span><span class="p">:</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">prev</span>
+  <span class="k">return</span> <span class="n">node</span></div>
+
+
+
+<div class="viewcode-block" id="get_last_plan_node">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.get_last_plan_node.html#eta.plan.get_last_plan_node">[docs]</a>
+<span class="k">def</span> <span class="nf">get_last_plan_node</span><span class="p">(</span><span class="n">plan_node</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get the last plan node in a linked list of plan nodes.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan_node : PlanNode</span>
+<span class="sd">    An arbitrary node within the linked list of plan nodes.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode</span>
+<span class="sd">    The last node in the linked list.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">node</span> <span class="o">=</span> <span class="n">plan_node</span>
+  <span class="k">while</span> <span class="n">node</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">next</span>
+  <span class="k">return</span> <span class="n">node</span></div>
+
+
+
+<div class="viewcode-block" id="expand_plan_node">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.expand_plan_node.html#eta.plan.expand_plan_node">[docs]</a>
+<span class="k">def</span> <span class="nf">expand_plan_node</span><span class="p">(</span><span class="n">plan_node</span><span class="p">,</span> <span class="n">subplan_node_start</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Expand a plan node using the subplan headed by another node.</span>
+
+<span class="sd">  The subplan is inserted into the plan in place of the given plan node, which</span>
+<span class="sd">  is done by adding the plan node as a superstep of each step in the subplan,</span>
+<span class="sd">  and then modifying the pointers of the linked list so that the step before</span>
+<span class="sd">  the plan node points to the first node in the subplan, and the step after</span>
+<span class="sd">  the plan node points to the last node in the subplan.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan_node : PlanNode</span>
+<span class="sd">    The node to expand.</span>
+<span class="sd">  subplan_node_start : PlanNode</span>
+<span class="sd">    The first node in the subplan to replace `plan_node` with.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode</span>
+<span class="sd">    The first node in the given subplan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">subplan_node_end</span> <span class="o">=</span> <span class="n">get_last_plan_node</span><span class="p">(</span><span class="n">subplan_node_start</span><span class="p">)</span>
+  <span class="n">subplan_node_start</span><span class="o">.</span><span class="n">add_superstep_to_subplan</span><span class="p">(</span><span class="n">plan_node</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">prev</span><span class="p">:</span>
+    <span class="n">plan_node</span><span class="o">.</span><span class="n">prev</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">subplan_node_start</span>
+    <span class="n">subplan_node_start</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">prev</span>
+  <span class="k">if</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+    <span class="n">plan_node</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">subplan_node_end</span>
+    <span class="n">subplan_node_end</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">next</span>
+  <span class="k">return</span> <span class="n">subplan_node_start</span></div>
+
+
+
+<div class="viewcode-block" id="insert_before_plan_node">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.insert_before_plan_node.html#eta.plan.insert_before_plan_node">[docs]</a>
+<span class="k">def</span> <span class="nf">insert_before_plan_node</span><span class="p">(</span><span class="n">plan_node</span><span class="p">,</span> <span class="n">new_plan_node_start</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Insert a new plan directly before a given plan node in the linked list.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan_node : PlanNode</span>
+<span class="sd">    The node that the new plan should precede.</span>
+<span class="sd">  new_plan_node_start : PlanNode</span>
+<span class="sd">    The first node in the new plan to insert before `plan_node`.</span>
+<span class="sd">    </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode</span>
+<span class="sd">    The first node in the new plan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">new_plan_node_end</span> <span class="o">=</span> <span class="n">get_last_plan_node</span><span class="p">(</span><span class="n">new_plan_node_start</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">prev</span><span class="p">:</span>
+    <span class="n">plan_node</span><span class="o">.</span><span class="n">prev</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_plan_node_start</span>
+    <span class="n">new_plan_node_start</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">prev</span>
+  <span class="n">plan_node</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">new_plan_node_end</span>
+  <span class="n">new_plan_node_end</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">plan_node</span>
+  <span class="k">return</span> <span class="n">new_plan_node_start</span></div>
+
+
+
+<div class="viewcode-block" id="merge_plan_nodes">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.merge_plan_nodes.html#eta.plan.merge_plan_nodes">[docs]</a>
+<span class="k">def</span> <span class="nf">merge_plan_nodes</span><span class="p">(</span><span class="n">plan_node_start</span><span class="p">,</span> <span class="n">plan_node_end</span><span class="p">,</span> <span class="n">new_plan_node</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Merge a sequence of plan nodes (bounded between a given start and end node) into a given subplan node.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan_node_start : PlanNode</span>
+<span class="sd">    The first node in the plan sequence to merge.</span>
+<span class="sd">  plan_node_end : PlanNode</span>
+<span class="sd">    The last node in the plan sequence to merge.</span>
+<span class="sd">  new_plan_node : PlanNode</span>
+<span class="sd">    The new subplan node that should replace the merged sequence.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode</span>
+<span class="sd">    The new subplan node that replaced the merged sequence.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: this may need to be extended to deal with cases where the plan nodes to merge are discontiguous in the plan.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">new_plan_node</span><span class="o">.</span><span class="n">add_supersteps</span><span class="p">(</span><span class="n">plan_node_start</span><span class="p">,</span> <span class="n">plan_node_end</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">plan_node_start</span><span class="o">.</span><span class="n">prev</span><span class="p">:</span>
+    <span class="n">plan_node_start</span><span class="o">.</span><span class="n">prev</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_plan_node</span>
+    <span class="n">new_plan_node</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">plan_node_start</span><span class="o">.</span><span class="n">prev</span>
+  <span class="k">if</span> <span class="n">plan_node_end</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+    <span class="n">plan_node_end</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">new_plan_node</span>
+    <span class="n">new_plan_node</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">plan_node_end</span><span class="o">.</span><span class="n">next</span>
+  <span class="k">return</span> <span class="n">new_plan_node</span></div>
+
+
+
+<div class="viewcode-block" id="init_plan_from_eventualities">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.init_plan_from_eventualities.html#eta.plan.init_plan_from_eventualities">[docs]</a>
+<span class="k">def</span> <span class="nf">init_plan_from_eventualities</span><span class="p">(</span><span class="n">eventualities</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Create a plan structure from a list of eventualities, assumed to occur sequentially.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  eventualities : list[Eventualities]</span>
+<span class="sd">    The list of eventualities to use to create a plan.</span>
+<span class="sd">  schema : Schema, optional</span>
+<span class="sd">    If a schema is provided, it will be added to the created plan steps and used to</span>
+<span class="sd">    inherit obligations, etc.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode</span>
+<span class="sd">    The first node in the created plan structure.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: we might, in the future, allow for episode-relations in the schema to provide initial</span>
+<span class="sd">  constraints over plan construction here.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">first_node</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="n">prev_node</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="n">curr_node</span> <span class="o">=</span> <span class="kc">None</span>
+
+  <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eventualities</span><span class="p">:</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">PlanStep</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">step</span><span class="o">.</span><span class="n">schemas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+      <span class="n">step</span><span class="o">.</span><span class="n">obligations</span> <span class="o">+=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get_obligations_of_ep</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">get_ep</span><span class="p">())</span>
+
+    <span class="c1"># Make plan-node and set pointers when a previous step exists</span>
+    <span class="n">curr_node</span> <span class="o">=</span> <span class="n">PlanNode</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">first_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">first_node</span> <span class="o">=</span> <span class="n">curr_node</span>
+    <span class="k">if</span> <span class="n">prev_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">curr_node</span><span class="o">.</span><span class="n">prev</span> <span class="o">=</span> <span class="n">prev_node</span>
+      <span class="n">prev_node</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">curr_node</span>
+    <span class="n">prev_node</span> <span class="o">=</span> <span class="n">curr_node</span>
+
+  <span class="k">return</span> <span class="n">first_node</span></div>
+
+
+
+<div class="viewcode-block" id="visualize_plan">
+<a class="viewcode-back" href="../../_autosummary/eta.plan.visualize_plan.html#eta.plan.visualize_plan">[docs]</a>
+<span class="k">def</span> <span class="nf">visualize_plan</span><span class="p">(</span><span class="n">plan_node</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">vert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;io/&#39;</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Visualize a plan as a graph using graphviz dot.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  before : int, default=3</span>
+<span class="sd">    The number of past surface steps to include in the graph.</span>
+<span class="sd">  after : int, default=5</span>
+<span class="sd">    The number of future surface steps to include in the graph.</span>
+<span class="sd">  schemas : bool, default=False</span>
+<span class="sd">    Whether to also display schema predicates in the labels for each step.</span>
+<span class="sd">  vert : bool, default=False</span>
+<span class="sd">    Whether to rotate the direction of the graph to left-right.</span>
+<span class="sd">  dir : str, default=&#39;io/&#39;</span>
+<span class="sd">    The directory to store the generated graph image.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: it may be better to move this function elsewhere in order to have a cleaner dependency structure.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">plan_node</span><span class="o">.</span><span class="n">to_graph</span><span class="p">(</span><span class="n">before</span><span class="o">=</span><span class="n">before</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="n">after</span><span class="p">,</span> <span class="n">schemas</span><span class="o">=</span><span class="n">schemas</span><span class="p">)</span>
+  <span class="n">dot</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">vert</span><span class="p">:</span>
+    <span class="n">dot</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;LR&#39;</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">node_key</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+      <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">elif</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;N-inf&#39;</span><span class="p">:</span>
+     <span class="k">return</span> <span class="o">-</span><span class="mi">100000</span>
+    <span class="k">elif</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Ninf&#39;</span><span class="p">:</span>
+     <span class="k">return</span> <span class="mi">100000</span>
+  <span class="n">nodes_top</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span> <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;N&#39;</span><span class="p">]</span>
+  <span class="n">nodes_top</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">node_key</span><span class="p">)</span>
+
+  <span class="k">with</span> <span class="n">dot</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;nodes&#39;</span><span class="p">,</span> <span class="n">node_attr</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="s1">&#39;box&#39;</span><span class="p">})</span> <span class="k">as</span> <span class="n">dot1</span><span class="p">:</span>
+    <span class="n">dot1</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes_top</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;N0&#39;</span><span class="p">:</span>
+        <span class="n">dot1</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;filled&#39;</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">dot1</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;N&#39;</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;N&#39;</span><span class="p">]:</span>
+      <span class="n">dot1</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">constraint</span><span class="o">=</span><span class="s1">&#39;false&#39;</span><span class="p">)</span>
+
+  <span class="k">with</span> <span class="n">dot</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dot1</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span> <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;S&#39;</span><span class="p">]:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+      <span class="n">dot1</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;N&#39;</span> <span class="ow">or</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;N&#39;</span><span class="p">]:</span>
+      <span class="n">dot1</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+
+  <span class="n">dot</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">dir</span><span class="si">}</span><span class="s1">plan.gv&#39;</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

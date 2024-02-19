@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.transducers.base.AffectTransducer &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.transducers.base.AnswerTransducer" href="eta.transducers.base.AnswerTransducer.html" />
+    <link rel="prev" title="eta.transducers.base" href="eta.transducers.base.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.transducers.html">eta.transducers</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="eta.transducers.base.html">eta.transducers.base</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">eta.transducers.base.AffectTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AnswerTransducer.html">eta.transducers.base.AnswerTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.AskTransducer.html">eta.transducers.base.AskTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.GistTransducer.html">eta.transducers.base.GistTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.ParaphraseTransducer.html">eta.transducers.base.ParaphraseTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.PragmaticTransducer.html">eta.transducers.base.PragmaticTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.ReactionTransducer.html">eta.transducers.base.ReactionTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.ReasonBottomUpTransducer.html">eta.transducers.base.ReasonBottomUpTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.ReasonTopDownTransducer.html">eta.transducers.base.ReasonTopDownTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.ResponseTransducer.html">eta.transducers.base.ResponseTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.SemanticTransducer.html">eta.transducers.base.SemanticTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.SubplanTransducer.html">eta.transducers.base.SubplanTransducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.Transducer.html">eta.transducers.base.Transducer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.Transducer"><code class="docutils literal notranslate"><span class="pre">Transducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.ReasonTopDownTransducer"><code class="docutils literal notranslate"><span class="pre">ReasonTopDownTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.ReasonBottomUpTransducer"><code class="docutils literal notranslate"><span class="pre">ReasonBottomUpTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.GistTransducer"><code class="docutils literal notranslate"><span class="pre">GistTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.SemanticTransducer"><code class="docutils literal notranslate"><span class="pre">SemanticTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.PragmaticTransducer"><code class="docutils literal notranslate"><span class="pre">PragmaticTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.ReactionTransducer"><code class="docutils literal notranslate"><span class="pre">ReactionTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.SubplanTransducer"><code class="docutils literal notranslate"><span class="pre">SubplanTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.ParaphraseTransducer"><code class="docutils literal notranslate"><span class="pre">ParaphraseTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.ResponseTransducer"><code class="docutils literal notranslate"><span class="pre">ResponseTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.AnswerTransducer"><code class="docutils literal notranslate"><span class="pre">AnswerTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.AskTransducer"><code class="docutils literal notranslate"><span class="pre">AskTransducer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.transducers.base.html#eta.transducers.base.AffectTransducer"><code class="docutils literal notranslate"><span class="pre">AffectTransducer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.transducers.tt.html">eta.transducers.tt</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.transducers.html">eta.transducers</a></li>
+          <li class="breadcrumb-item"><a href="eta.transducers.base.html">eta.transducers.base</a></li>
+      <li class="breadcrumb-item active">eta.transducers.base.AffectTransducer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-transducers-base-affecttransducer">
+<h1>eta.transducers.base.AffectTransducer<a class="headerlink" href="#eta-transducers-base-affecttransducer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.transducers.base.AffectTransducer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AffectTransducer</span></span><a class="reference internal" href="../_modules/eta/transducers/base.html#AffectTransducer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.transducers.base.AffectTransducer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="eta.transducers.base.Transducer.html#eta.transducers.base.Transducer" title="eta.transducers.base.Transducer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transducer</span></code></a></p>
+<p>Maps the word content of an utterance to an appropriate affect, given a conversation history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>words</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The words to match to an appropriate affect.</p></li>
+<li><p><strong>conversation_log</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference internal" href="eta.discourse.DialogueTurn.html#eta.discourse.DialogueTurn" title="eta.discourse.DialogueTurn"><em>DialogueTurn</em></a><em>]</em>) – The conversation history to use as context for affect detection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of affects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>]</p>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.transducers.base.AffectTransducer.cost" title="eta.transducers.base.AffectTransducer.cost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cost</span></code></a></p></td>
+<td><p>Report cumulative costs of applying this transducer.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.transducers.base.AffectTransducer.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversation_log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/transducers/base.html#AffectTransducer.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.transducers.base.AffectTransducer.__call__" title="Link to this definition"></a></dt>
+<dd><p>Map from input(s) to output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.transducers.base.AffectTransducer.cost">
+<span class="sig-name descname"><span class="pre">cost</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eta.transducers.base.AffectTransducer.cost" title="Link to this definition"></a></dt>
+<dd><p>Report cumulative costs of applying this transducer.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.transducers.base.html" class="btn btn-neutral float-left" title="eta.transducers.base" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.transducers.base.AnswerTransducer.html" class="btn btn-neutral float-right" title="eta.transducers.base.AnswerTransducer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

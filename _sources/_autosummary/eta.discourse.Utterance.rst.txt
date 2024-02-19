@@ -1,0 +1,24 @@
+eta.discourse.Utterance
+=======================
+
+.. currentmodule:: eta.discourse
+
+.. autoclass:: Utterance
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __str__, __hash__, __eq__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+   
+   
+
+   
+   
+   

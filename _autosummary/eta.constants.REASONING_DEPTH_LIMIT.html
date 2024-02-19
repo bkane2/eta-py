@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.constants.REASONING_DEPTH_LIMIT &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.constants.EMBEDDING_DEFAULT_API" href="eta.constants.EMBEDDING_DEFAULT_API.html" />
+    <link rel="prev" title="eta.constants.SLEEPTIME" href="eta.constants.SLEEPTIME.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.constants.html">eta.constants</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SLEEPTIME.html">eta.constants.SLEEPTIME</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.constants.REASONING_DEPTH_LIMIT</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.constants.REASONING_DEPTH_LIMIT"><code class="docutils literal notranslate"><span class="pre">REASONING_DEPTH_LIMIT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EMBEDDING_DEFAULT_API.html">eta.constants.EMBEDDING_DEFAULT_API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EMBEDDING_DEFAULT_MODEL.html">eta.constants.EMBEDDING_DEFAULT_MODEL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.KEY_PATH.html">eta.constants.KEY_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SYMTAB_PATH.html">eta.constants.SYMTAB_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.COREFERENCE_MODE.html">eta.constants.COREFERENCE_MODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.RECENCY_CUTOFF.html">eta.constants.RECENCY_CUTOFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT.html">eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.CERTAINTY_THRESHOLD.html">eta.constants.CERTAINTY_THRESHOLD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.EMOTIONS_LIST.html">eta.constants.EMOTIONS_LIST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_PATH.html">eta.constants.IO_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_IN_DIR.html">eta.constants.IO_IN_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_OUT_DIR.html">eta.constants.IO_OUT_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.IO_CLOG_DIR.html">eta.constants.IO_CLOG_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.CLOG_FILES.html">eta.constants.CLOG_FILES</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.LOG_PATH.html">eta.constants.LOG_PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.GPT_DEBUG_FILE.html">eta.constants.GPT_DEBUG_FILE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.DEFAULT_START.html">eta.constants.DEFAULT_START</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.DEFAULT_IMPORTANCE.html">eta.constants.DEFAULT_IMPORTANCE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.DEFAULT_IMPORTANCE_THRESHOLD.html">eta.constants.DEFAULT_IMPORTANCE_THRESHOLD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ME.html">eta.constants.ME</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.YOU.html">eta.constants.YOU</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOW.html">eta.constants.NOW</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.HERE.html">eta.constants.HERE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SAY_TO.html">eta.constants.SAY_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.PARAPHRASE_TO.html">eta.constants.PARAPHRASE_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ARTICULATE_TO.html">eta.constants.ARTICULATE_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.RESPOND_TO.html">eta.constants.RESPOND_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.REPLY_TO.html">eta.constants.REPLY_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ANSWER.html">eta.constants.ANSWER</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.ASK.html">eta.constants.ASK</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.REACT_TO.html">eta.constants.REACT_TO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SAY_BYE.html">eta.constants.SAY_BYE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.STORE_IN_STM.html">eta.constants.STORE_IN_STM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.FORGET_FROM_STM.html">eta.constants.FORGET_FROM_STM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.SPEECH_ACTS.html">eta.constants.SPEECH_ACTS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.TELIC_VERBS.html">eta.constants.TELIC_VERBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOOP_YOU.html">eta.constants.NOOP_YOU</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOOP_GEN.html">eta.constants.NOOP_GEN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.NOOP.html">eta.constants.NOOP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.SLEEPTIME"><code class="docutils literal notranslate"><span class="pre">SLEEPTIME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.REASONING_DEPTH_LIMIT"><code class="docutils literal notranslate"><span class="pre">REASONING_DEPTH_LIMIT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.EMBEDDING_DEFAULT_API"><code class="docutils literal notranslate"><span class="pre">EMBEDDING_DEFAULT_API</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.EMBEDDING_DEFAULT_MODEL"><code class="docutils literal notranslate"><span class="pre">EMBEDDING_DEFAULT_MODEL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.KEY_PATH"><code class="docutils literal notranslate"><span class="pre">KEY_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.SYMTAB_PATH"><code class="docutils literal notranslate"><span class="pre">SYMTAB_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.COREFERENCE_MODE"><code class="docutils literal notranslate"><span class="pre">COREFERENCE_MODE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.RECENCY_CUTOFF"><code class="docutils literal notranslate"><span class="pre">RECENCY_CUTOFF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT"><code class="docutils literal notranslate"><span class="pre">EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.CERTAINTY_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">CERTAINTY_THRESHOLD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.EMOTIONS_LIST"><code class="docutils literal notranslate"><span class="pre">EMOTIONS_LIST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.IO_PATH"><code class="docutils literal notranslate"><span class="pre">IO_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.IO_IN_DIR"><code class="docutils literal notranslate"><span class="pre">IO_IN_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.IO_OUT_DIR"><code class="docutils literal notranslate"><span class="pre">IO_OUT_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.IO_CLOG_DIR"><code class="docutils literal notranslate"><span class="pre">IO_CLOG_DIR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.CLOG_FILES"><code class="docutils literal notranslate"><span class="pre">CLOG_FILES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.LOG_PATH"><code class="docutils literal notranslate"><span class="pre">LOG_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.GPT_DEBUG_FILE"><code class="docutils literal notranslate"><span class="pre">GPT_DEBUG_FILE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.DEFAULT_START"><code class="docutils literal notranslate"><span class="pre">DEFAULT_START</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.DEFAULT_IMPORTANCE"><code class="docutils literal notranslate"><span class="pre">DEFAULT_IMPORTANCE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.DEFAULT_IMPORTANCE_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">DEFAULT_IMPORTANCE_THRESHOLD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.ME"><code class="docutils literal notranslate"><span class="pre">ME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.YOU"><code class="docutils literal notranslate"><span class="pre">YOU</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.NOW"><code class="docutils literal notranslate"><span class="pre">NOW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.HERE"><code class="docutils literal notranslate"><span class="pre">HERE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.SAY_TO"><code class="docutils literal notranslate"><span class="pre">SAY_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.PARAPHRASE_TO"><code class="docutils literal notranslate"><span class="pre">PARAPHRASE_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.ARTICULATE_TO"><code class="docutils literal notranslate"><span class="pre">ARTICULATE_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.RESPOND_TO"><code class="docutils literal notranslate"><span class="pre">RESPOND_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.REPLY_TO"><code class="docutils literal notranslate"><span class="pre">REPLY_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.ANSWER"><code class="docutils literal notranslate"><span class="pre">ANSWER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.ASK"><code class="docutils literal notranslate"><span class="pre">ASK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.REACT_TO"><code class="docutils literal notranslate"><span class="pre">REACT_TO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.SAY_BYE"><code class="docutils literal notranslate"><span class="pre">SAY_BYE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.STORE_IN_STM"><code class="docutils literal notranslate"><span class="pre">STORE_IN_STM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.FORGET_FROM_STM"><code class="docutils literal notranslate"><span class="pre">FORGET_FROM_STM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.SPEECH_ACTS"><code class="docutils literal notranslate"><span class="pre">SPEECH_ACTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.TELIC_VERBS"><code class="docutils literal notranslate"><span class="pre">TELIC_VERBS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.NOOP_YOU"><code class="docutils literal notranslate"><span class="pre">NOOP_YOU</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.NOOP_GEN"><code class="docutils literal notranslate"><span class="pre">NOOP_GEN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.constants.html#eta.constants.NOOP"><code class="docutils literal notranslate"><span class="pre">NOOP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.constants.html">eta.constants</a></li>
+      <li class="breadcrumb-item active">eta.constants.REASONING_DEPTH_LIMIT</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-constants-reasoning-depth-limit">
+<h1>eta.constants.REASONING_DEPTH_LIMIT<a class="headerlink" href="#eta-constants-reasoning-depth-limit" title="Link to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="eta.constants.REASONING_DEPTH_LIMIT">
+<span class="sig-name descname"><span class="pre">REASONING_DEPTH_LIMIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#eta.constants.REASONING_DEPTH_LIMIT" title="Link to this definition"></a></dt>
+<dd><p>How many ‘inference steps’ from a direct observation to take during the reasoning process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.constants.SLEEPTIME.html" class="btn btn-neutral float-left" title="eta.constants.SLEEPTIME" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.constants.EMBEDDING_DEFAULT_API.html" class="btn btn-neutral float-right" title="eta.constants.EMBEDDING_DEFAULT_API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

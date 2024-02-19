@@ -1,0 +1,6 @@
+eta.util.file.get\_path
+=======================
+
+.. currentmodule:: eta.util.file
+
+.. autofunction:: get_path

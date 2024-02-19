@@ -1,0 +1,6 @@
+eta.constants.IO\_CLOG\_DIR
+===========================
+
+.. currentmodule:: eta.constants
+
+.. autodata:: IO_CLOG_DIR

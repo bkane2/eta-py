@@ -1,0 +1,48 @@
+eta.util.time
+=============
+
+.. automodule:: eta.util.time
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_elapsed
+      now
+      record_from_time_pair
+      time_pair_from_record
+      time_pair_from_tuple
+      time_pair_p
+      time_record_p
+      time_tuple_p
+      tuple_from_time_pair
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      TimePoint
+   
+   
+
+   
+   
+   
+
+
+

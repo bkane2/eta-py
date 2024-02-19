@@ -1,0 +1,6 @@
+eta.util.time.tuple\_from\_time\_pair
+=====================================
+
+.. currentmodule:: eta.util.time
+
+.. autofunction:: tuple_from_time_pair

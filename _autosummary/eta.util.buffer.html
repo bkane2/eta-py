@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.buffer &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.util.buffer.clear" href="eta.util.buffer.clear.html" />
+    <link rel="prev" title="eta.util" href="eta.util.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.util.html">eta.util</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.util.buffer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.clear.html">eta.util.buffer.clear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.enqueue.html">eta.util.buffer.enqueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.enqueue_ordered.html">eta.util.buffer.enqueue_ordered</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.get_item.html">eta.util.buffer.get_item</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.is_empty.html">eta.util.buffer.is_empty</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.iterate.html">eta.util.buffer.iterate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.max_importance.html">eta.util.buffer.max_importance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.pop_all.html">eta.util.buffer.pop_all</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.buffer.pop_item.html">eta.util.buffer.pop_item</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.enqueue"><code class="docutils literal notranslate"><span class="pre">enqueue()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.enqueue_ordered"><code class="docutils literal notranslate"><span class="pre">enqueue_ordered()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.is_empty"><code class="docutils literal notranslate"><span class="pre">is_empty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.pop_item"><code class="docutils literal notranslate"><span class="pre">pop_item()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.pop_all"><code class="docutils literal notranslate"><span class="pre">pop_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.get_item"><code class="docutils literal notranslate"><span class="pre">get_item()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.max_importance"><code class="docutils literal notranslate"><span class="pre">max_importance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.clear"><code class="docutils literal notranslate"><span class="pre">clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.buffer.iterate"><code class="docutils literal notranslate"><span class="pre">iterate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.file.html">eta.util.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.general.html">eta.util.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.sexpr.html">eta.util.sexpr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.time.html">eta.util.time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.tt.html">eta.util.tt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.ulf.html">eta.util.ulf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.html">eta.util</a></li>
+      <li class="breadcrumb-item active">eta.util.buffer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.util.buffer">
+<span id="eta-util-buffer"></span><h1>eta.util.buffer<a class="headerlink" href="#module-eta.util.buffer" title="Link to this heading"></a></h1>
+<p>Utilities for manipulating priority queues, termed “buffers” in Eta’s architecture.</p>
+<p>NOTE: although importance values are positive, the values stored in the underlying priority queues are
+negated, since heapq implements a min heap.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.buffer.clear.html#eta.util.buffer.clear" title="eta.util.buffer.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a></p></td>
+<td><p>Empty a buffer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.buffer.enqueue.html#eta.util.buffer.enqueue" title="eta.util.buffer.enqueue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enqueue</span></code></a></p></td>
+<td><p>Enqueue an item (either an object or an (importance, object) tuple) in a buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.buffer.enqueue_ordered.html#eta.util.buffer.enqueue_ordered" title="eta.util.buffer.enqueue_ordered"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enqueue_ordered</span></code></a></p></td>
+<td><p>Enqueue a list of items, preserving original order unless an importance value is explicitly specified.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.buffer.get_item.html#eta.util.buffer.get_item" title="eta.util.buffer.get_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_item</span></code></a></p></td>
+<td><p>Get the top item from a buffer without popping it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.buffer.is_empty.html#eta.util.buffer.is_empty" title="eta.util.buffer.is_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_empty</span></code></a></p></td>
+<td><p>Check whether a buffer is empty.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.buffer.iterate.html#eta.util.buffer.iterate" title="eta.util.buffer.iterate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterate</span></code></a></p></td>
+<td><p>Return a buffer as a list (optionally applying some function to each value).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.buffer.max_importance.html#eta.util.buffer.max_importance" title="eta.util.buffer.max_importance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_importance</span></code></a></p></td>
+<td><p>Get the maximum importance value from a buffer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.buffer.pop_all.html#eta.util.buffer.pop_all" title="eta.util.buffer.pop_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_all</span></code></a></p></td>
+<td><p>Pop all items from a buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.buffer.pop_item.html#eta.util.buffer.pop_item" title="eta.util.buffer.pop_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_item</span></code></a></p></td>
+<td><p>Pop the top item from a buffer.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.enqueue">
+<span class="sig-name descname"><span class="pre">enqueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#enqueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.enqueue" title="Link to this definition"></a></dt>
+<dd><p>Enqueue an item (either an object or an (importance, object) tuple) in a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em>) – If item is an object, enqueue using a default importance value. Otherwise, item is
+an (importance, object) tuple, and the object is enqueued with the given importance.</p></li>
+<li><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.enqueue_ordered">
+<span class="sig-name descname"><span class="pre">enqueue_ordered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inc_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#enqueue_ordered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.enqueue_ordered" title="Link to this definition"></a></dt>
+<dd><p>Enqueue a list of items, preserving original order unless an importance value is explicitly specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – A list where each item is either an object or (importance, object) tuple. For each item where an importance
+is not specified, a default importance value is generated using an increment so as to preserve the original order.</p></li>
+<li><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>inc_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>default=0.0001</em>) – The increment to use for generated importance values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.is_empty">
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#is_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.is_empty" title="Link to this definition"></a></dt>
+<dd><p>Check whether a buffer is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.pop_item">
+<span class="sig-name descname"><span class="pre">pop_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#pop_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.pop_item" title="Link to this definition"></a></dt>
+<dd><p>Pop the top item from a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>importance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – If True is given, return the importance as well as the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.pop_all">
+<span class="sig-name descname"><span class="pre">pop_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#pop_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.pop_all" title="Link to this definition"></a></dt>
+<dd><p>Pop all items from a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>importance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – If True is given, return the importances as well as the objects.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>] or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#get_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.get_item" title="Link to this definition"></a></dt>
+<dd><p>Get the top item from a buffer without popping it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>importance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – If True is given, return the importance as well as the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.max_importance">
+<span class="sig-name descname"><span class="pre">max_importance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#max_importance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.max_importance" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum importance value from a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.clear" title="Link to this definition"></a></dt>
+<dd><p>Empty a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.buffer.iterate">
+<span class="sig-name descname"><span class="pre">iterate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/buffer.html#iterate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.buffer.iterate" title="Link to this definition"></a></dt>
+<dd><p>Return a buffer as a list (optionally applying some function to each value).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>func</strong> (<em>function</em><em>, </em><em>optional</em>) – A function to apply to each value in the buffer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.util.html" class="btn btn-neutral float-left" title="eta.util" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.util.buffer.clear.html" class="btn btn-neutral float-right" title="eta.util.buffer.clear" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

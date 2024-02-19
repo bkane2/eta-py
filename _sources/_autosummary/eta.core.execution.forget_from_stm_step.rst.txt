@@ -1,0 +1,6 @@
+eta.core.execution.forget\_from\_stm\_step
+==========================================
+
+.. currentmodule:: eta.core.execution
+
+.. autofunction:: forget_from_stm_step

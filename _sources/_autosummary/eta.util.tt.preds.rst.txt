@@ -1,0 +1,40 @@
+eta.util.tt.preds
+=================
+
+.. automodule:: eta.util.tt.preds
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      affirm_adv
+      comma
+      lex_ulf
+      modal
+      non_neg
+      non_neg_mod
+      prefix_each
+      quote_to_list
+      split_sentences
+      zero
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

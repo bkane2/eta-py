@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.general &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.util.general.append" href="eta.util.general.append.html" />
+    <link rel="prev" title="eta.util.file.write_json" href="eta.util.file.write_json.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.util.html">eta.util</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.util.buffer.html">eta.util.buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.file.html">eta.util.file</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.util.general</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.append.html">eta.util.general.append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.argmax.html">eta.util.general.argmax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.atom.html">eta.util.general.atom</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.certainty_to_period.html">eta.util.general.certainty_to_period</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.clear_symtab.html">eta.util.general.clear_symtab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.cons.html">eta.util.general.cons</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.cons_dict.html">eta.util.general.cons_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.dict_get.html">eta.util.general.dict_get</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.dict_rem.html">eta.util.general.dict_rem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.dict_rem_val.html">eta.util.general.dict_rem_val</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.dict_substall_keys.html">eta.util.general.dict_substall_keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.dual_var.html">eta.util.general.dual_var</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.duplicate_var.html">eta.util.general.duplicate_var</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.episode_name.html">eta.util.general.episode_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.episode_var.html">eta.util.general.episode_var</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.escaped_symbol_p.html">eta.util.general.escaped_symbol_p</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.extract_category.html">eta.util.general.extract_category</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.flatten.html">eta.util.general.flatten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.gentemp.html">eta.util.general.gentemp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.get_keyword_contents.html">eta.util.general.get_keyword_contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.has_elapsed_certainty_period.html">eta.util.general.has_elapsed_certainty_period</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.indent.html">eta.util.general.indent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.isquote.html">eta.util.general.isquote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.linsum.html">eta.util.general.linsum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.listp.html">eta.util.general.listp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.normalize.html">eta.util.general.normalize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.push.html">eta.util.general.push</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.random_element.html">eta.util.general.random_element</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.rec_find.html">eta.util.general.rec_find</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.rec_find_if.html">eta.util.general.rec_find_if</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.rec_remove.html">eta.util.general.rec_remove</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.rec_replace.html">eta.util.general.rec_replace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.remove_duplicates.html">eta.util.general.remove_duplicates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.remove_nil.html">eta.util.general.remove_nil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.replaceall.html">eta.util.general.replaceall</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.split_by_cond.html">eta.util.general.split_by_cond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.squash.html">eta.util.general.squash</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.standardize.html">eta.util.general.standardize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.subst.html">eta.util.general.subst</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.substall.html">eta.util.general.substall</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.symbolp.html">eta.util.general.symbolp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.to_key.html">eta.util.general.to_key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.general.variablep.html">eta.util.general.variablep</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.clear_symtab"><code class="docutils literal notranslate"><span class="pre">clear_symtab()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.gentemp"><code class="docutils literal notranslate"><span class="pre">gentemp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.episode_name"><code class="docutils literal notranslate"><span class="pre">episode_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.episode_var"><code class="docutils literal notranslate"><span class="pre">episode_var()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.escaped_symbol_p"><code class="docutils literal notranslate"><span class="pre">escaped_symbol_p()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.symbolp"><code class="docutils literal notranslate"><span class="pre">symbolp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.variablep"><code class="docutils literal notranslate"><span class="pre">variablep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.dual_var"><code class="docutils literal notranslate"><span class="pre">dual_var()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.duplicate_var"><code class="docutils literal notranslate"><span class="pre">duplicate_var()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.replaceall"><code class="docutils literal notranslate"><span class="pre">replaceall()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.indent"><code class="docutils literal notranslate"><span class="pre">indent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.standardize"><code class="docutils literal notranslate"><span class="pre">standardize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.isquote"><code class="docutils literal notranslate"><span class="pre">isquote()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.rec_replace"><code class="docutils literal notranslate"><span class="pre">rec_replace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.rec_remove"><code class="docutils literal notranslate"><span class="pre">rec_remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.listp"><code class="docutils literal notranslate"><span class="pre">listp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.cons"><code class="docutils literal notranslate"><span class="pre">cons()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.push"><code class="docutils literal notranslate"><span class="pre">push()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.atom"><code class="docutils literal notranslate"><span class="pre">atom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.append"><code class="docutils literal notranslate"><span class="pre">append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.flatten"><code class="docutils literal notranslate"><span class="pre">flatten()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.remove_duplicates"><code class="docutils literal notranslate"><span class="pre">remove_duplicates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.remove_nil"><code class="docutils literal notranslate"><span class="pre">remove_nil()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.subst"><code class="docutils literal notranslate"><span class="pre">subst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.substall"><code class="docutils literal notranslate"><span class="pre">substall()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.random_element"><code class="docutils literal notranslate"><span class="pre">random_element()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.get_keyword_contents"><code class="docutils literal notranslate"><span class="pre">get_keyword_contents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.to_key"><code class="docutils literal notranslate"><span class="pre">to_key()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.split_by_cond"><code class="docutils literal notranslate"><span class="pre">split_by_cond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.extract_category"><code class="docutils literal notranslate"><span class="pre">extract_category()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.rec_find"><code class="docutils literal notranslate"><span class="pre">rec_find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.rec_find_if"><code class="docutils literal notranslate"><span class="pre">rec_find_if()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.dict_substall_keys"><code class="docutils literal notranslate"><span class="pre">dict_substall_keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.cons_dict"><code class="docutils literal notranslate"><span class="pre">cons_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.dict_get"><code class="docutils literal notranslate"><span class="pre">dict_get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.dict_rem_val"><code class="docutils literal notranslate"><span class="pre">dict_rem_val()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.dict_rem"><code class="docutils literal notranslate"><span class="pre">dict_rem()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.squash"><code class="docutils literal notranslate"><span class="pre">squash()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.linsum"><code class="docutils literal notranslate"><span class="pre">linsum()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.argmax"><code class="docutils literal notranslate"><span class="pre">argmax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.certainty_to_period"><code class="docutils literal notranslate"><span class="pre">certainty_to_period()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta.util.general.has_elapsed_certainty_period"><code class="docutils literal notranslate"><span class="pre">has_elapsed_certainty_period()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.sexpr.html">eta.util.sexpr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.time.html">eta.util.time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.tt.html">eta.util.tt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.ulf.html">eta.util.ulf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.html">eta.util</a></li>
+      <li class="breadcrumb-item active">eta.util.general</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.util.general">
+<span id="eta-util-general"></span><h1>eta.util.general<a class="headerlink" href="#module-eta.util.general" title="Link to this heading"></a></h1>
+<p>Generic utility functions for various basic data types.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.append.html#eta.util.general.append" title="eta.util.general.append"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></a></p></td>
+<td><p>Append each sublist within lst together, creating a single combined list.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.argmax.html#eta.util.general.argmax" title="eta.util.general.argmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">argmax</span></code></a></p></td>
+<td><p>Select the n top values in a given list, according to a list of scores for each list element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.atom.html#eta.util.general.atom" title="eta.util.general.atom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atom</span></code></a></p></td>
+<td><p>Check whether an input is an atom (either empty list or a non-list).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.certainty_to_period.html#eta.util.general.certainty_to_period" title="eta.util.general.certainty_to_period"><code class="xref py py-obj docutils literal notranslate"><span class="pre">certainty_to_period</span></code></a></p></td>
+<td><p>Map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.clear_symtab.html#eta.util.general.clear_symtab" title="eta.util.general.clear_symtab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_symtab</span></code></a></p></td>
+<td><p>Clear the symbol table used for creating new symbols.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.cons.html#eta.util.general.cons" title="eta.util.general.cons"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cons</span></code></a></p></td>
+<td><p>Insert a value to the front of a list or set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.cons_dict.html#eta.util.general.cons_dict" title="eta.util.general.cons_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cons_dict</span></code></a></p></td>
+<td><p>Add <cite>v</cite> to the list at key <cite>k</cite> in <cite>dct</cite>, creating a new list if none exists.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.dict_get.html#eta.util.general.dict_get" title="eta.util.general.dict_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_get</span></code></a></p></td>
+<td><p>Safe version of dict accessor that returns an empty list if key is not found.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.dict_rem.html#eta.util.general.dict_rem" title="eta.util.general.dict_rem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_rem</span></code></a></p></td>
+<td><p>Safe version of dict pop that removes a key from the dict.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.dict_rem_val.html#eta.util.general.dict_rem_val" title="eta.util.general.dict_rem_val"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_rem_val</span></code></a></p></td>
+<td><p>Safe version of dict remove that removes val from the list stored at key (or pops the key if it stores an atom).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.dict_substall_keys.html#eta.util.general.dict_substall_keys" title="eta.util.general.dict_substall_keys"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_substall_keys</span></code></a></p></td>
+<td><p>Given a set of replacements, make a substitution to the keys in a dict for each replacement.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.dual_var.html#eta.util.general.dual_var" title="eta.util.general.dual_var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual_var</span></code></a></p></td>
+<td><p>Given an episode variable like ?e1, return the non-fluent dual of that variable, e.g., !e1 (and vice-versa).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.duplicate_var.html#eta.util.general.duplicate_var" title="eta.util.general.duplicate_var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_var</span></code></a></p></td>
+<td><p>Duplicate a variable by generating a new variable symbol with the initial variable (excluding trailing numbers) as a prefix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.episode_name.html#eta.util.general.episode_name" title="eta.util.general.episode_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">episode_name</span></code></a></p></td>
+<td><p>Generate a new episode name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.episode_var.html#eta.util.general.episode_var" title="eta.util.general.episode_var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">episode_var</span></code></a></p></td>
+<td><p>Generate a new episode variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.escaped_symbol_p.html#eta.util.general.escaped_symbol_p" title="eta.util.general.escaped_symbol_p"><code class="xref py py-obj docutils literal notranslate"><span class="pre">escaped_symbol_p</span></code></a></p></td>
+<td><p>Check if a given symbol is an &quot;escaped&quot; symbol, equivalent to vertical bars in LISP.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.extract_category.html#eta.util.general.extract_category" title="eta.util.general.extract_category"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_category</span></code></a></p></td>
+<td><p>Recurse through a (possibly nested) list and extract categories that satisfy a given function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.flatten.html#eta.util.general.flatten" title="eta.util.general.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a></p></td>
+<td><p>Recursively flatten a list, creating a single list with no sub-lists.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.gentemp.html#eta.util.general.gentemp" title="eta.util.general.gentemp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gentemp</span></code></a></p></td>
+<td><p>Generate a unique symbol that hasn't been used before by appending an integer suffix i and then incrementing i.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.get_keyword_contents.html#eta.util.general.get_keyword_contents" title="eta.util.general.get_keyword_contents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_keyword_contents</span></code></a></p></td>
+<td><p>Get the contents immediately following each keyword in <cite>keys</cite> from a list.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.has_elapsed_certainty_period.html#eta.util.general.has_elapsed_certainty_period" title="eta.util.general.has_elapsed_certainty_period"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_elapsed_certainty_period</span></code></a></p></td>
+<td><p>Check whether a given time delta has elapsed the period corresponding to a given certainty.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.indent.html#eta.util.general.indent" title="eta.util.general.indent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">indent</span></code></a></p></td>
+<td><p>Indent a string some number of levels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.isquote.html#eta.util.general.isquote" title="eta.util.general.isquote"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isquote</span></code></a></p></td>
+<td><p>Check if a given input is a quoted expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.linsum.html#eta.util.general.linsum" title="eta.util.general.linsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linsum</span></code></a></p></td>
+<td><p>Compute a linear sum of a list of vectors, scaling each vector by the corresponding coefficient.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.listp.html#eta.util.general.listp" title="eta.util.general.listp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">listp</span></code></a></p></td>
+<td><p>Check whether an input is a list (including the empty list).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.normalize.html#eta.util.general.normalize" title="eta.util.general.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a></p></td>
+<td><p>Normalize a vector to sum to 1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.push.html#eta.util.general.push" title="eta.util.general.push"><code class="xref py py-obj docutils literal notranslate"><span class="pre">push</span></code></a></p></td>
+<td><p>Insert a value to the end of a list or set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.random_element.html#eta.util.general.random_element" title="eta.util.general.random_element"><code class="xref py py-obj docutils literal notranslate"><span class="pre">random_element</span></code></a></p></td>
+<td><p>Select a random element from a list.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.rec_find.html#eta.util.general.rec_find" title="eta.util.general.rec_find"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rec_find</span></code></a></p></td>
+<td><p>Return subexpressions in a tree that are the same as the given symbol.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.rec_find_if.html#eta.util.general.rec_find_if" title="eta.util.general.rec_find_if"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rec_find_if</span></code></a></p></td>
+<td><p>Return subexpressions in a tree that satisfy <cite>cndfn</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.rec_remove.html#eta.util.general.rec_remove" title="eta.util.general.rec_remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rec_remove</span></code></a></p></td>
+<td><p>Recursively remove a given target from a list.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.rec_replace.html#eta.util.general.rec_replace" title="eta.util.general.rec_replace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rec_replace</span></code></a></p></td>
+<td><p>Recursively replace some old value with a new value throughout a list.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.remove_duplicates.html#eta.util.general.remove_duplicates" title="eta.util.general.remove_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicates</span></code></a></p></td>
+<td><p>Remove duplicate items in a list, preserving the initial order of <cite>order</cite> is given as True.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.remove_nil.html#eta.util.general.remove_nil" title="eta.util.general.remove_nil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_nil</span></code></a></p></td>
+<td><p>Remove any null values from a list.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.replaceall.html#eta.util.general.replaceall" title="eta.util.general.replaceall"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replaceall</span></code></a></p></td>
+<td><p>Make a list of replacements to a given string in sequence.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.split_by_cond.html#eta.util.general.split_by_cond" title="eta.util.general.split_by_cond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_by_cond</span></code></a></p></td>
+<td><p>Split a list by a given condition function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.squash.html#eta.util.general.squash" title="eta.util.general.squash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squash</span></code></a></p></td>
+<td><p>Squash each number within a vector to be within the given range.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.standardize.html#eta.util.general.standardize" title="eta.util.general.standardize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standardize</span></code></a></p></td>
+<td><p>Standardize a string by applying a series of transformations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.subst.html#eta.util.general.subst" title="eta.util.general.subst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subst</span></code></a></p></td>
+<td><p>Recursively substitute b for a throughout a list.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.substall.html#eta.util.general.substall" title="eta.util.general.substall"><code class="xref py py-obj docutils literal notranslate"><span class="pre">substall</span></code></a></p></td>
+<td><p>Given a set of replacements, make a substitution in a list for each replacement.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.symbolp.html#eta.util.general.symbolp" title="eta.util.general.symbolp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">symbolp</span></code></a></p></td>
+<td><p>Check if a given variable is a &quot;symbol&quot; (i.e., a string).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.general.to_key.html#eta.util.general.to_key" title="eta.util.general.to_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_key</span></code></a></p></td>
+<td><p>Convert a list to a valid dict key consisting of only tuples and strings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.general.variablep.html#eta.util.general.variablep" title="eta.util.general.variablep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variablep</span></code></a></p></td>
+<td><p>Check if a given input is a variable symbol, i.e., starts with '?' or '!'.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.clear_symtab">
+<span class="sig-name descname"><span class="pre">clear_symtab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#clear_symtab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.clear_symtab" title="Link to this definition"></a></dt>
+<dd><p>Clear the symbol table used for creating new symbols.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.gentemp">
+<span class="sig-name descname"><span class="pre">gentemp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#gentemp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.gentemp" title="Link to this definition"></a></dt>
+<dd><p>Generate a unique symbol that hasn’t been used before by appending an integer suffix i and then incrementing i.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – String to use for symbol generation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A “symbol” with a unique integer suffix attached to the given string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This currently relies on an external symbol table stored in a file, which
+exploits the fact that race conditions with a shared file cannot occur with Python multiprocess
+(see: <a class="reference external" href="https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2">https://superfastpython.com/multiprocessing-race-condition-python/#Race_Condition_With_Shared_Data-2</a>)
+However, this is somewhat clumsy/inefficient and should eventually be replaced by a proper solution.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.episode_name">
+<span class="sig-name descname"><span class="pre">episode_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#episode_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.episode_name" title="Link to this definition"></a></dt>
+<dd><p>Generate a new episode name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.episode_var">
+<span class="sig-name descname"><span class="pre">episode_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#episode_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.episode_var" title="Link to this definition"></a></dt>
+<dd><p>Generate a new episode variable.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.escaped_symbol_p">
+<span class="sig-name descname"><span class="pre">escaped_symbol_p</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#escaped_symbol_p"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.escaped_symbol_p" title="Link to this definition"></a></dt>
+<dd><p>Check if a given symbol is an “escaped” symbol, equivalent to vertical bars in LISP.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.symbolp">
+<span class="sig-name descname"><span class="pre">symbolp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#symbolp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.symbolp" title="Link to this definition"></a></dt>
+<dd><p>Check if a given variable is a “symbol” (i.e., a string).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.variablep">
+<span class="sig-name descname"><span class="pre">variablep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#variablep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.variablep" title="Link to this definition"></a></dt>
+<dd><p>Check if a given input is a variable symbol, i.e., starts with ‘?’ or ‘!’.</p>
+<p class="rubric">Notes</p>
+<p>For now, this excludes indexical variables, such as ‘^you’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.dual_var">
+<span class="sig-name descname"><span class="pre">dual_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ep_var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#dual_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.dual_var" title="Link to this definition"></a></dt>
+<dd><p>Given an episode variable like ?e1, return the non-fluent dual of that variable, e.g., !e1 (and vice-versa).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.duplicate_var">
+<span class="sig-name descname"><span class="pre">duplicate_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#duplicate_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.duplicate_var" title="Link to this definition"></a></dt>
+<dd><p>Duplicate a variable by generating a new variable symbol with the initial variable (excluding trailing numbers) as a prefix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.replaceall">
+<span class="sig-name descname"><span class="pre">replaceall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#replaceall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.replaceall" title="Link to this definition"></a></dt>
+<dd><p>Make a list of replacements to a given string in sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – A string whose contents should be replaced.</p></li>
+<li><p><strong>replist</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>]</em>) – <dl class="simple">
+<dt>A list of replacements to make. A replacement is a tuple of one of the following forms:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">(old,</span> <span class="pre">new)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(old,</span> <span class="pre">new,</span> <span class="pre">is_regex)</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<p>If is_regex is given as True for a tuple, the old and new values are interpreted as regex strings.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.indent">
+<span class="sig-name descname"><span class="pre">indent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#indent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.indent" title="Link to this definition"></a></dt>
+<dd><p>Indent a string some number of levels.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.standardize">
+<span class="sig-name descname"><span class="pre">standardize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_parentheticals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#standardize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.standardize" title="Link to this definition"></a></dt>
+<dd><p>Standardize a string by applying a series of transformations.</p>
+<p>Specifically:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Replace – with -, and _ with whitespace.</p></li>
+<li><p>Remove parenthetical content (i.e., […] or <em>…</em>), if <cite>remove_parentheticals</cite> is True.</p></li>
+<li><p>Add whitespace around all punctuation.</p></li>
+<li><p>Collapse all whitespace to a single space.</p></li>
+<li><p>Convert to lowercase.</p></li>
+</ol>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.isquote">
+<span class="sig-name descname"><span class="pre">isquote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#isquote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.isquote" title="Link to this definition"></a></dt>
+<dd><p>Check if a given input is a quoted expression.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.rec_replace">
+<span class="sig-name descname"><span class="pre">rec_replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#rec_replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.rec_replace" title="Link to this definition"></a></dt>
+<dd><p>Recursively replace some old value with a new value throughout a list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.rec_remove">
+<span class="sig-name descname"><span class="pre">rec_remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#rec_remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.rec_remove" title="Link to this definition"></a></dt>
+<dd><p>Recursively remove a given target from a list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.listp">
+<span class="sig-name descname"><span class="pre">listp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#listp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.listp" title="Link to this definition"></a></dt>
+<dd><p>Check whether an input is a list (including the empty list).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.cons">
+<span class="sig-name descname"><span class="pre">cons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#cons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.cons" title="Link to this definition"></a></dt>
+<dd><p>Insert a value to the front of a list or set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lst1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a>) – An object (possibly a sublist) to insert.</p></li>
+<li><p><strong>lst2</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a>) – A list, set, or object to cons the given object to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>] or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.push">
+<span class="sig-name descname"><span class="pre">push</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#push"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.push" title="Link to this definition"></a></dt>
+<dd><p>Insert a value to the end of a list or set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lst1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a>) – An object (possibly a sublist) to insert.</p></li>
+<li><p><strong>lst2</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em>]</em><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a>) – A list, set, or object to push the given object to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>] or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)">object</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.atom">
+<span class="sig-name descname"><span class="pre">atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#atom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.atom" title="Link to this definition"></a></dt>
+<dd><p>Check whether an input is an atom (either empty list or a non-list).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.append" title="Link to this definition"></a></dt>
+<dd><p>Append each sublist within lst together, creating a single combined list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.flatten">
+<span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#flatten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.flatten" title="Link to this definition"></a></dt>
+<dd><p>Recursively flatten a list, creating a single list with no sub-lists.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.remove_duplicates">
+<span class="sig-name descname"><span class="pre">remove_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#remove_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.remove_duplicates" title="Link to this definition"></a></dt>
+<dd><p>Remove duplicate items in a list, preserving the initial order of <cite>order</cite> is given as True.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.remove_nil">
+<span class="sig-name descname"><span class="pre">remove_nil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#remove_nil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.remove_nil" title="Link to this definition"></a></dt>
+<dd><p>Remove any null values from a list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.subst">
+<span class="sig-name descname"><span class="pre">subst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#subst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.subst" title="Link to this definition"></a></dt>
+<dd><p>Recursively substitute b for a throughout a list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.substall">
+<span class="sig-name descname"><span class="pre">substall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#substall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.substall" title="Link to this definition"></a></dt>
+<dd><p>Given a set of replacements, make a substitution in a list for each replacement.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.random_element">
+<span class="sig-name descname"><span class="pre">random_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#random_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.random_element" title="Link to this definition"></a></dt>
+<dd><p>Select a random element from a list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.get_keyword_contents">
+<span class="sig-name descname"><span class="pre">get_keyword_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#get_keyword_contents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.get_keyword_contents" title="Link to this definition"></a></dt>
+<dd><p>Get the contents immediately following each keyword in <cite>keys</cite> from a list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.to_key">
+<span class="sig-name descname"><span class="pre">to_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#to_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.to_key" title="Link to this definition"></a></dt>
+<dd><p>Convert a list to a valid dict key consisting of only tuples and strings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.split_by_cond">
+<span class="sig-name descname"><span class="pre">split_by_cond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cndfn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#split_by_cond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.split_by_cond" title="Link to this definition"></a></dt>
+<dd><p>Split a list by a given condition function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – </p></li>
+<li><p><strong>cndfn</strong> (<em>function</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>filtered</strong> (<em>list</em>) – The input list with elements matching <cite>cndfn</cite> filtered out.</p></li>
+<li><p><strong>matching</strong> (<em>list</em>) – A list of elements from the input list matching <cite>cndfn</cite>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.extract_category">
+<span class="sig-name descname"><span class="pre">extract_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catfn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignfn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#extract_category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.extract_category" title="Link to this definition"></a></dt>
+<dd><p>Recurse through a (possibly nested) list and extract categories that satisfy a given function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lst</strong> (<em>s-expr</em>) – </p></li>
+<li><p><strong>catfn</strong> (<em>function</em>) – A function used to match categories to be extracted.</p></li>
+<li><p><strong>ignfn</strong> (<em>function</em><em>, </em><em>optional</em>) – If given, a function used to ignore matching subexpressions (i.e.,
+avoid recursing within them).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>lst_new</strong> (<em>s-expr</em>) – The input list with matching subexpressions removed.</p></li>
+<li><p><strong>categories</strong> (<em>list[s-expr]</em>) – A list of extracted matching subexpressions.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.rec_find">
+<span class="sig-name descname"><span class="pre">rec_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#rec_find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.rec_find" title="Link to this definition"></a></dt>
+<dd><p>Return subexpressions in a tree that are the same as the given symbol.</p>
+<p>A different binary function can be provided using the <cite>test</cite> argument.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.rec_find_if">
+<span class="sig-name descname"><span class="pre">rec_find_if</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cndfn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#rec_find_if"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.rec_find_if" title="Link to this definition"></a></dt>
+<dd><p>Return subexpressions in a tree that satisfy <cite>cndfn</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.dict_substall_keys">
+<span class="sig-name descname"><span class="pre">dict_substall_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#dict_substall_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.dict_substall_keys" title="Link to this definition"></a></dt>
+<dd><p>Given a set of replacements, make a substitution to the keys in a dict for each replacement.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.cons_dict">
+<span class="sig-name descname"><span class="pre">cons_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#cons_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.cons_dict" title="Link to this definition"></a></dt>
+<dd><p>Add <cite>v</cite> to the list at key <cite>k</cite> in <cite>dct</cite>, creating a new list if none exists.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.dict_get">
+<span class="sig-name descname"><span class="pre">dict_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#dict_get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.dict_get" title="Link to this definition"></a></dt>
+<dd><p>Safe version of dict accessor that returns an empty list if key is not found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.dict_rem_val">
+<span class="sig-name descname"><span class="pre">dict_rem_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#dict_rem_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.dict_rem_val" title="Link to this definition"></a></dt>
+<dd><p>Safe version of dict remove that removes val from the list stored at key (or pops the key if it stores an atom).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.dict_rem">
+<span class="sig-name descname"><span class="pre">dict_rem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#dict_rem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.dict_rem" title="Link to this definition"></a></dt>
+<dd><p>Safe version of dict pop that removes a key from the dict.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.squash">
+<span class="sig-name descname"><span class="pre">squash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#squash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.squash" title="Link to this definition"></a></dt>
+<dd><p>Squash each number within a vector to be within the given range.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.normalize" title="Link to this definition"></a></dt>
+<dd><p>Normalize a vector to sum to 1.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.linsum">
+<span class="sig-name descname"><span class="pre">linsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#linsum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.linsum" title="Link to this definition"></a></dt>
+<dd><p>Compute a linear sum of a list of vectors, scaling each vector by the corresponding coefficient.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.argmax">
+<span class="sig-name descname"><span class="pre">argmax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#argmax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.argmax" title="Link to this definition"></a></dt>
+<dd><p>Select the n top values in a given list, according to a list of scores for each list element.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.certainty_to_period">
+<span class="sig-name descname"><span class="pre">certainty_to_period</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">certainty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#certainty_to_period"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.certainty_to_period" title="Link to this definition"></a></dt>
+<dd><p>Map a certainty in [0,1] to a period (in seconds) that an expected event should occur within.</p>
+<p>The proportion between the period and the quantity <code class="docutils literal notranslate"><span class="pre">-log(1</span> <span class="pre">-</span> <span class="pre">certainty)</span></code> is determined by the global
+constant EXPECTED_STEP_FAILURE_PERIOD_COEFFICIENT, defined in <code class="docutils literal notranslate"><span class="pre">eta.constants</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>certainty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – A certainty value in [0,1]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The period (in seconds), or infinity if the certainty is 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a> or np.inf</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.general.has_elapsed_certainty_period">
+<span class="sig-name descname"><span class="pre">has_elapsed_certainty_period</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">certainty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/general.html#has_elapsed_certainty_period"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.general.has_elapsed_certainty_period" title="Link to this definition"></a></dt>
+<dd><p>Check whether a given time delta has elapsed the period corresponding to a given certainty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The difference between two times (POSIX timestamps).</p></li>
+<li><p><strong>certainty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – A certainty value in [0,1]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.util.file.write_json.html" class="btn btn-neutral float-left" title="eta.util.file.write_json" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.util.general.append.html" class="btn btn-neutral float-right" title="eta.util.general.append" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.core.perception &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.core.perception</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.core.perception</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The core process responsible for perceiving and interpreting inputs and adding them to memory.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+<span class="kn">from</span> <span class="nn">eta.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">eta.util.file</span> <span class="k">as</span> <span class="nn">file</span>
+<span class="kn">from</span> <span class="nn">eta.discourse</span> <span class="kn">import</span> <span class="n">Utterance</span><span class="p">,</span> <span class="n">DialogueTurn</span><span class="p">,</span> <span class="n">get_prior_turn</span>
+<span class="kn">from</span> <span class="nn">eta.util.general</span> <span class="kn">import</span> <span class="n">standardize</span><span class="p">,</span> <span class="n">episode_name</span><span class="p">,</span> <span class="n">append</span><span class="p">,</span> <span class="n">remove_duplicates</span>
+<span class="kn">from</span> <span class="nn">eta.lf</span> <span class="kn">import</span> <span class="n">parse_eventuality</span>
+
+<div class="viewcode-block" id="perception_loop">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.perception.perception_loop.html#eta.core.perception.perception_loop">[docs]</a>
+<span class="k">def</span> <span class="nf">perception_loop</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Observe and interpret inputs from perceptual servers.</span>
+
+<span class="sd">  The resulting observations are added to dialogue context, as well as</span>
+<span class="sd">  to the ``observations`` and ``inferences`` buffers.</span>
+
+<span class="sd">  In the case where the observed input is speech, this also interprets</span>
+<span class="sd">  the input as a gist clause, as well as deriving the underlying semantic</span>
+<span class="sd">  and pragmatic meanings. The input is also interpreted as a reply to</span>
+<span class="sd">  the previous turn in the conversation log, if any. The observed turn</span>
+<span class="sd">  is then added to the conversation log.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">while</span> <span class="n">ds</span><span class="o">.</span><span class="n">do_continue</span><span class="p">():</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="n">SLEEPTIME</span><span class="p">)</span>
+
+    <span class="c1"># Observe all facts from registered perception servers</span>
+    <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_perception_servers</span><span class="p">():</span>
+      <span class="n">inputs</span> <span class="o">=</span> <span class="n">observe</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_io_path</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">IO_IN_DIR</span><span class="si">}{</span><span class="n">source</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">))</span>
+
+      <span class="c1"># Shortcut for quitting conversation</span>
+      <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">input</span> <span class="o">==</span> <span class="s1">&#39;:q&#39;</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]):</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">set_quit_conversation</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+      <span class="c1"># Process utterances/observations</span>
+      <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s1">&#39;speech&#39;</span><span class="p">:</span>
+        <span class="n">observations</span> <span class="o">=</span> <span class="n">process_utterances</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">observations</span> <span class="o">=</span> <span class="n">process_observations</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        
+      <span class="n">ds</span><span class="o">.</span><span class="n">add_to_context</span><span class="p">(</span><span class="n">observations</span><span class="p">)</span>
+      <span class="n">ds</span><span class="o">.</span><span class="n">add_all_to_buffer</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="s1">&#39;observations&#39;</span><span class="p">)</span>
+
+      <span class="c1"># Each observation is a new fact for inference with depth 0</span>
+      <span class="n">new_facts</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;fact&#39;</span><span class="p">:</span><span class="n">o</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">observations</span><span class="p">]</span>
+      <span class="n">ds</span><span class="o">.</span><span class="n">add_all_to_buffer</span><span class="p">(</span><span class="n">new_facts</span><span class="p">,</span> <span class="s1">&#39;inferences&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="observe">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.perception.observe.html#eta.core.perception.observe">[docs]</a>
+<span class="k">def</span> <span class="nf">observe</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Collect all observations from a given perceptual server source.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  source : str</span>
+<span class="sd">    The name of the perceptual server (``speech`` in the special case</span>
+<span class="sd">    of a user utterance).</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[str]</span>
+<span class="sd">    A list of observations, each being either a natural language string</span>
+<span class="sd">    or a LISP-formatted S-expression string representing a logical form.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[]</span>
+  <span class="n">inputs</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read_lines</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+  <span class="n">file</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">inputs</span></div>
+
+
+
+<div class="viewcode-block" id="process_utterances">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.perception.process_utterances.html#eta.core.perception.process_utterances">[docs]</a>
+<span class="k">def</span> <span class="nf">process_utterances</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Process utterances by deriving gist clauses, semantics, pragmatics, and logging each turn.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  inputs : list[str]</span>
+<span class="sd">    A list of speech inputs to process as dialogue turns.</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[Eventuality]</span>
+<span class="sd">    All eventualities derived from the input utterances.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">observations</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+    <span class="n">ep</span> <span class="o">=</span> <span class="n">episode_name</span><span class="p">()</span>
+    <span class="nb">input</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">observations</span> <span class="o">+=</span> <span class="p">[</span><span class="n">parse_eventuality</span><span class="p">([</span><span class="n">YOU</span><span class="p">,</span> <span class="n">SAY_TO</span><span class="p">,</span> <span class="n">ME</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="nb">input</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">],</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">)]</span>
+    <span class="n">utt</span> <span class="o">=</span> <span class="n">Utterance</span><span class="p">(</span><span class="n">YOU</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+
+    <span class="c1"># Interpret gist clauses using conversation log</span>
+    <span class="n">conversation_log</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_conversation_log</span><span class="p">()</span>
+    <span class="n">gists</span> <span class="o">=</span> <span class="n">remove_duplicates</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;gist&#39;</span><span class="p">,</span> <span class="n">utt</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">observations</span> <span class="o">+=</span> <span class="p">[</span><span class="n">parse_eventuality</span><span class="p">([</span><span class="n">YOU</span><span class="p">,</span> <span class="n">PARAPHRASE_TO</span><span class="p">,</span> <span class="n">ME</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">gist</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">],</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">)</span> <span class="k">for</span> <span class="n">gist</span> <span class="ow">in</span> <span class="n">gists</span><span class="p">]</span>
+
+    <span class="c1"># Interpret semantic meanings of gist clauses</span>
+    <span class="n">semantics</span> <span class="o">=</span> <span class="n">remove_duplicates</span><span class="p">(</span><span class="n">append</span><span class="p">([</span><span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;semantic&#39;</span><span class="p">,</span> <span class="n">gist</span><span class="p">)</span> <span class="k">for</span> <span class="n">gist</span> <span class="ow">in</span> <span class="n">gists</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">observations</span> <span class="o">+=</span> <span class="p">[</span><span class="n">parse_eventuality</span><span class="p">([</span><span class="n">YOU</span><span class="p">,</span> <span class="n">ARTICULATE_TO</span><span class="p">,</span> <span class="n">ME</span><span class="p">,</span> <span class="n">semantic</span><span class="p">],</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">)</span> <span class="k">for</span> <span class="n">semantic</span> <span class="ow">in</span> <span class="n">semantics</span><span class="p">]</span>
+
+    <span class="c1"># Interpret pragmatic meanings of gist clauses</span>
+    <span class="n">pragmatics</span> <span class="o">=</span> <span class="n">remove_duplicates</span><span class="p">(</span><span class="n">append</span><span class="p">([</span><span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;pragmatic&#39;</span><span class="p">,</span> <span class="n">gist</span><span class="p">)</span> <span class="k">for</span> <span class="n">gist</span> <span class="ow">in</span> <span class="n">gists</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">observations</span> <span class="o">+=</span> <span class="p">[</span><span class="n">parse_eventuality</span><span class="p">(</span><span class="n">pragmatic</span><span class="p">,</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">)</span> <span class="k">for</span> <span class="n">pragmatic</span> <span class="ow">in</span> <span class="n">pragmatics</span><span class="p">]</span>
+
+    <span class="c1"># An utterance may always be considered a reply to the preceeding Eta turn, if any</span>
+    <span class="n">prior_turn</span> <span class="o">=</span> <span class="n">get_prior_turn</span><span class="p">(</span><span class="n">conversation_log</span><span class="p">,</span> <span class="n">ME</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prior_turn</span><span class="p">:</span>
+      <span class="n">prior_ep</span> <span class="o">=</span> <span class="n">prior_turn</span><span class="o">.</span><span class="n">ep</span>
+      <span class="n">observations</span> <span class="o">+=</span> <span class="p">[</span><span class="n">parse_eventuality</span><span class="p">([</span><span class="n">YOU</span><span class="p">,</span> <span class="n">REPLY_TO</span><span class="p">,</span> <span class="n">prior_ep</span><span class="p">],</span> <span class="n">ep</span><span class="o">=</span><span class="n">ep</span><span class="p">)]</span>
+
+    <span class="c1"># Add user turn to conversation log</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">log_turn</span><span class="p">(</span><span class="n">DialogueTurn</span><span class="p">(</span>
+      <span class="n">utterance</span><span class="o">=</span><span class="n">utt</span><span class="p">,</span>
+      <span class="n">gists</span><span class="o">=</span><span class="n">gists</span><span class="p">,</span>
+      <span class="n">semantics</span><span class="o">=</span><span class="n">semantics</span><span class="p">,</span>
+      <span class="n">pragmatics</span><span class="o">=</span><span class="n">pragmatics</span><span class="p">,</span>
+      <span class="n">ep</span><span class="o">=</span><span class="n">ep</span>
+    <span class="p">))</span>
+
+  <span class="k">return</span> <span class="n">remove_duplicates</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+  
+<div class="viewcode-block" id="process_observations">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.perception.process_observations.html#eta.core.perception.process_observations">[docs]</a>
+<span class="k">def</span> <span class="nf">process_observations</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Process non-speech observations by parsing them as eventualities.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  inputs : list[str]</span>
+<span class="sd">    A list of observed facts, as either natural language strings or</span>
+<span class="sd">    LISP-formatted S-expression strings.</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list[Eventuality]</span>
+<span class="sd">    All eventualities derived from the observations.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">parse_eventuality</span><span class="p">(</span><span class="n">standardize</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

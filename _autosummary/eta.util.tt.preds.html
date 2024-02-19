@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.tt.preds &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.util.tt.preds.affirm_adv" href="eta.util.tt.preds.affirm_adv.html" />
+    <link rel="prev" title="eta.util.tt.parse.readrules" href="eta.util.tt.parse.readrules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.util.html">eta.util</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.util.buffer.html">eta.util.buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.file.html">eta.util.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.general.html">eta.util.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.sexpr.html">eta.util.sexpr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.time.html">eta.util.time</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="eta.util.tt.html">eta.util.tt</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="eta.util.tt.choice.html">eta.util.tt.choice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.tt.parse.html">eta.util.tt.parse</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">eta.util.tt.preds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.ulf.html">eta.util.ulf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.html">eta.util</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.tt.html">eta.util.tt</a></li>
+      <li class="breadcrumb-item active">eta.util.tt.preds</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-eta.util.tt.preds">
+<span id="eta-util-tt-preds"></span><h1>eta.util.tt.preds<a class="headerlink" href="#module-eta.util.tt.preds" title="Link to this heading"></a></h1>
+<p>Definitions for custom evaluable predicates used in TT patterns.</p>
+<p>Definitions for custom evaluable predicates used in TT pattern matching and template filling, based
+on the original LISP definitions:
+<a class="reference external" href="https://github.com/bkane2/eta/blob/master/core/tt/tt-match-predicates.lisp">https://github.com/bkane2/eta/blob/master/core/tt/tt-match-predicates.lisp</a></p>
+<p>Some simplifications were made here, limiting the extensibility and (to a small extent) efficiency
+of custom predicates. First, due to Python lacking a macro system, all predicates must be defined
+here, rather than in domain-specific rule files. Second, predicate functions are invoked based on
+name strings, obtained through manipulation of the corresponding variable strings, rather than through
+the implicit-pred and <a href="#id1"><span class="problematic" id="id2">*</span></a>-variant hash tables.</p>
+<p>Ultimately, this should be reworked to allow custom domain-specific definitions of TT predicates, in
+order to avoid the redundant loading of lexical data into the core code.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.tt.preds.affirm_adv.html#eta.util.tt.preds.affirm_adv" title="eta.util.tt.preds.affirm_adv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">affirm_adv</span></code></a></p></td>
+<td><p>Matches any affirmatory modifier.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.preds.comma.html#eta.util.tt.preds.comma" title="eta.util.tt.preds.comma"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comma</span></code></a></p></td>
+<td><p>Match a comma.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.tt.preds.lex_ulf.html#eta.util.tt.preds.lex_ulf" title="eta.util.tt.preds.lex_ulf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lex_ulf</span></code></a></p></td>
+<td><p>ULF lexicalizer predicate.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.preds.modal.html#eta.util.tt.preds.modal" title="eta.util.tt.preds.modal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modal</span></code></a></p></td>
+<td><p>Matches any modal word.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.tt.preds.non_neg.html#eta.util.tt.preds.non_neg" title="eta.util.tt.preds.non_neg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">non_neg</span></code></a></p></td>
+<td><p>Match any word except for negative polarity items.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.preds.non_neg_mod.html#eta.util.tt.preds.non_neg_mod" title="eta.util.tt.preds.non_neg_mod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">non_neg_mod</span></code></a></p></td>
+<td><p>Matches any word except for negative polarity items or negative modifiers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.tt.preds.prefix_each.html#eta.util.tt.preds.prefix_each" title="eta.util.tt.preds.prefix_each"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prefix_each</span></code></a></p></td>
+<td><p>Cons <cite>prefix</cite> to each list in <cite>lst</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.preds.quote_to_list.html#eta.util.tt.preds.quote_to_list" title="eta.util.tt.preds.quote_to_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quote_to_list</span></code></a></p></td>
+<td><p>Predicate to create a word list from a quoted expression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="eta.util.tt.preds.split_sentences.html#eta.util.tt.preds.split_sentences" title="eta.util.tt.preds.split_sentences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_sentences</span></code></a></p></td>
+<td><p>Predicate to split a word list into multiple word lists for each sentence.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="eta.util.tt.preds.zero.html#eta.util.tt.preds.zero" title="eta.util.tt.preds.zero"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero</span></code></a></p></td>
+<td><p>Match zero.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.comma">
+<span class="sig-name descname"><span class="pre">comma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#comma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.comma" title="Link to this definition"></a></dt>
+<dd><p>Match a comma.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.zero">
+<span class="sig-name descname"><span class="pre">zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.zero" title="Link to this definition"></a></dt>
+<dd><p>Match zero.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.non_neg">
+<span class="sig-name descname"><span class="pre">non_neg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#non_neg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.non_neg" title="Link to this definition"></a></dt>
+<dd><p>Match any word except for negative polarity items.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.non_neg_mod">
+<span class="sig-name descname"><span class="pre">non_neg_mod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#non_neg_mod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.non_neg_mod" title="Link to this definition"></a></dt>
+<dd><p>Matches any word except for negative polarity items or negative modifiers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.affirm_adv">
+<span class="sig-name descname"><span class="pre">affirm_adv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#affirm_adv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.affirm_adv" title="Link to this definition"></a></dt>
+<dd><p>Matches any affirmatory modifier.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.modal">
+<span class="sig-name descname"><span class="pre">modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#modal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.modal" title="Link to this definition"></a></dt>
+<dd><p>Matches any modal word.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.lex_ulf">
+<span class="sig-name descname"><span class="pre">lex_ulf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#lex_ulf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.lex_ulf" title="Link to this definition"></a></dt>
+<dd><p>ULF lexicalizer predicate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.quote_to_list">
+<span class="sig-name descname"><span class="pre">quote_to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#quote_to_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.quote_to_list" title="Link to this definition"></a></dt>
+<dd><p>Predicate to create a word list from a quoted expression.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.split_sentences">
+<span class="sig-name descname"><span class="pre">split_sentences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wordlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#split_sentences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.split_sentences" title="Link to this definition"></a></dt>
+<dd><p>Predicate to split a word list into multiple word lists for each sentence.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eta.util.tt.preds.prefix_each">
+<span class="sig-name descname"><span class="pre">prefix_each</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/tt/preds.html#prefix_each"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.tt.preds.prefix_each" title="Link to this definition"></a></dt>
+<dd><p>Cons <cite>prefix</cite> to each list in <cite>lst</cite>.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.util.tt.parse.readrules.html" class="btn btn-neutral float-left" title="eta.util.tt.parse.readrules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.util.tt.preds.affirm_adv.html" class="btn btn-neutral float-right" title="eta.util.tt.preds.affirm_adv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.util.time.TimePoint &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.util.tt" href="eta.util.tt.html" />
+    <link rel="prev" title="eta.util.time.tuple_from_time_pair" href="eta.util.time.tuple_from_time_pair.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.util.html">eta.util</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.util.buffer.html">eta.util.buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.file.html">eta.util.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.general.html">eta.util.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.sexpr.html">eta.util.sexpr</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="eta.util.time.html">eta.util.time</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.get_elapsed.html">eta.util.time.get_elapsed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.now.html">eta.util.time.now</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.record_from_time_pair.html">eta.util.time.record_from_time_pair</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.time_pair_from_record.html">eta.util.time.time_pair_from_record</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.time_pair_from_tuple.html">eta.util.time.time_pair_from_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.time_pair_p.html">eta.util.time.time_pair_p</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.time_record_p.html">eta.util.time.time_record_p</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.time_tuple_p.html">eta.util.time.time_tuple_p</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.tuple_from_time_pair.html">eta.util.time.tuple_from_time_pair</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">eta.util.time.TimePoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.html#eta.util.time.TimePoint"><code class="docutils literal notranslate"><span class="pre">TimePoint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.html#eta.util.time.get_elapsed"><code class="docutils literal notranslate"><span class="pre">get_elapsed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.html#eta.util.time.time_pair_from_tuple"><code class="docutils literal notranslate"><span class="pre">time_pair_from_tuple()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.html#eta.util.time.time_pair_from_record"><code class="docutils literal notranslate"><span class="pre">time_pair_from_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.html#eta.util.time.tuple_from_time_pair"><code class="docutils literal notranslate"><span class="pre">tuple_from_time_pair()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.html#eta.util.time.record_from_time_pair"><code class="docutils literal notranslate"><span class="pre">record_from_time_pair()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.util.time.html#eta.util.time.now"><code class="docutils literal notranslate"><span class="pre">now()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.tt.html">eta.util.tt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.util.ulf.html">eta.util.ulf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.html">eta.util</a></li>
+          <li class="breadcrumb-item"><a href="eta.util.time.html">eta.util.time</a></li>
+      <li class="breadcrumb-item active">eta.util.time.TimePoint</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-util-time-timepoint">
+<h1>eta.util.time.TimePoint<a class="headerlink" href="#eta-util-time-timepoint" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TimePoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>datetime</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><em>datetime</em><em>, </em><em>datetime</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em><em>, or </em><em>None</em>) – <p>Initialize with a given datetime, or otherwise use the current time. The following formats are supported:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>datetime : a single instantaneous timestamp.</p></li>
+<li><p>(datetime, datetime) : lower and upper bound timestamps for this time point.</p></li>
+<li><p>[$, date+time, &lt;year&gt;, &lt;month&gt;, &lt;day&gt;, &lt;hour&gt;, &lt;minute&gt;, &lt;second&gt;] : a date+time record structure, where
+each slot may be either a number string or a variable string.</p></li>
+<li><p>None : the time point will be initialized to the current time.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.lower">
+<span class="sig-name descname"><span class="pre">lower</span></span><a class="headerlink" href="#eta.util.time.TimePoint.lower" title="Link to this definition"></a></dt>
+<dd><p>A timestamp for the lower bound on this timepoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.upper">
+<span class="sig-name descname"><span class="pre">upper</span></span><a class="headerlink" href="#eta.util.time.TimePoint.upper" title="Link to this definition"></a></dt>
+<dd><p>A timestamp for the upper bound on this timepoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.util.time.TimePoint.format" title="eta.util.time.TimePoint.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a></p></td>
+<td><p>Format this TimePoint as a year/month/day/hour/minute/second representation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.util.time.TimePoint.format_date" title="eta.util.time.TimePoint.format_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_date</span></code></a></p></td>
+<td><p>Format this TimePoint as a human-readable year/month/day/hour/minute/second representation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_duration</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.util.time.TimePoint.to_num" title="eta.util.time.TimePoint.to_num"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_num</span></code></a></p></td>
+<td><p>Convert this TimePoint to a numerical POSIX representation (using the upper bound by default).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.util.time.TimePoint.to_ulf" title="eta.util.time.TimePoint.to_ulf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_ulf</span></code></a></p></td>
+<td><p>Convert this TimePoint to a ULF record structure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.util.time.TimePoint.update" title="eta.util.time.TimePoint.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a></p></td>
+<td><p>Update this TimePoint to the given time (or current if none is given).</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.update" title="Link to this definition"></a></dt>
+<dd><p>Update this TimePoint to the given time (or current if none is given).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.to_num">
+<span class="sig-name descname"><span class="pre">to_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'upper'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.to_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.to_num" title="Link to this definition"></a></dt>
+<dd><p>Convert this TimePoint to a numerical POSIX representation (using the upper bound by default).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.format" title="Link to this definition"></a></dt>
+<dd><p>Format this TimePoint as a year/month/day/hour/minute/second representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.format_date">
+<span class="sig-name descname"><span class="pre">format_date</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.format_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.format_date" title="Link to this definition"></a></dt>
+<dd><p>Format this TimePoint as a human-readable year/month/day/hour/minute/second representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.to_ulf">
+<span class="sig-name descname"><span class="pre">to_ulf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.to_ulf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.to_ulf" title="Link to this definition"></a></dt>
+<dd><p>Convert this TimePoint to a ULF record structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.util.time.TimePoint.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/util/time.html#TimePoint.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.util.time.TimePoint.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.util.time.tuple_from_time_pair.html" class="btn btn-neutral float-left" title="eta.util.time.tuple_from_time_pair" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.util.tt.html" class="btn btn-neutral float-right" title="eta.util.tt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

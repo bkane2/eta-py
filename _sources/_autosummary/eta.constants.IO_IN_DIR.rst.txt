@@ -1,0 +1,6 @@
+eta.constants.IO\_IN\_DIR
+=========================
+
+.. currentmodule:: eta.constants
+
+.. autodata:: IO_IN_DIR

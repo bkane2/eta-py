@@ -1,0 +1,47 @@
+eta.discourse
+=============
+
+.. automodule:: eta.discourse
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      compress
+      decompress
+      get_prior_turn
+      get_prior_words
+      parse_utt_str
+      presubst
+      swap_duals
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      DialogueTurn
+      Utterance
+   
+   
+
+   
+   
+   
+
+
+

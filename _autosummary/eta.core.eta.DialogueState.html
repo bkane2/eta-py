@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.core.eta.DialogueState &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.core.eta.ProcessManager" href="eta.core.eta.ProcessManager.html" />
+    <link rel="prev" title="eta.core.eta.main" href="eta.core.eta.main.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.core.html">eta.core</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="eta.core.eta.html">eta.core.eta</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="eta.core.eta.eta.html">eta.core.eta.eta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.eta.main.html">eta.core.eta.main</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">eta.core.eta.DialogueState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.eta.ProcessManager.html">eta.core.eta.ProcessManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.eta.html#eta.core.eta.DialogueState"><code class="docutils literal notranslate"><span class="pre">DialogueState</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.eta.html#eta.core.eta.ProcessManager"><code class="docutils literal notranslate"><span class="pre">ProcessManager</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.eta.html#eta.core.eta.eta"><code class="docutils literal notranslate"><span class="pre">eta()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="eta.core.eta.html#eta.core.eta.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.core.execution.html">eta.core.execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.core.perception.html">eta.core.perception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.core.planning.html">eta.core.planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.core.reasoning.html">eta.core.reasoning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.memory.html">eta.memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.core.html">eta.core</a></li>
+          <li class="breadcrumb-item"><a href="eta.core.eta.html">eta.core.eta</a></li>
+      <li class="breadcrumb-item active">eta.core.eta.DialogueState</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-core-eta-dialoguestate">
+<h1>eta.core.eta.DialogueState<a class="headerlink" href="#eta-core-eta-dialoguestate" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DialogueState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A representation of the current dialogue state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_agent</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – The config parameters for the agent.</p></li>
+<li><p><strong>config_user</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – The config parameters for the user.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.id" title="Link to this definition"></a></dt>
+<dd><p>A unique ID for this session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.config_agent">
+<span class="sig-name descname"><span class="pre">config_agent</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.config_agent" title="Link to this definition"></a></dt>
+<dd><p>The config parameters for the agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.config_user">
+<span class="sig-name descname"><span class="pre">config_user</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.config_user" title="Link to this definition"></a></dt>
+<dd><p>The config parameters for the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.start_schema">
+<span class="sig-name descname"><span class="pre">start_schema</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.start_schema" title="Link to this definition"></a></dt>
+<dd><p>The schema predicate used to begin the dialogue session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.start_time" title="Link to this definition"></a></dt>
+<dd><p>The starting time of this dialogue session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.util.time.TimePoint.html#eta.util.time.TimePoint" title="eta.util.time.TimePoint">TimePoint</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.io_path">
+<span class="sig-name descname"><span class="pre">io_path</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.io_path" title="Link to this definition"></a></dt>
+<dd><p>The path used to read and write input/output for this session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.me">
+<span class="sig-name descname"><span class="pre">me</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.me" title="Link to this definition"></a></dt>
+<dd><p>The name of the agent for this session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.you">
+<span class="sig-name descname"><span class="pre">you</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.you" title="Link to this definition"></a></dt>
+<dd><p>The name of the user for this session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.output_buffer">
+<span class="sig-name descname"><span class="pre">output_buffer</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.output_buffer" title="Link to this definition"></a></dt>
+<dd><p>A buffer of output utterances that are accumulated until the system is ready
+to write them and listen for user input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.discourse.Utterance.html#eta.discourse.Utterance" title="eta.discourse.Utterance">Utterance</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.step_failure_timer">
+<span class="sig-name descname"><span class="pre">step_failure_timer</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.step_failure_timer" title="Link to this definition"></a></dt>
+<dd><p>A POSIX time record used to track time before failing an expected event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.quit_conversation">
+<span class="sig-name descname"><span class="pre">quit_conversation</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.quit_conversation" title="Link to this definition"></a></dt>
+<dd><p>Whether to quit the current session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.transducers">
+<span class="sig-name descname"><span class="pre">transducers</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.transducers" title="Link to this definition"></a></dt>
+<dd><p>A dict associating Transducer object(s) with named mapping functions (e.g., ‘gist’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference internal" href="eta.transducers.base.Transducer.html#eta.transducers.base.Transducer" title="eta.transducers.base.Transducer">Transducer</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.transducers.base.Transducer.html#eta.transducers.base.Transducer" title="eta.transducers.base.Transducer">Transducer</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.embedder">
+<span class="sig-name descname"><span class="pre">embedder</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.embedder" title="Link to this definition"></a></dt>
+<dd><p>An embedder object used to compute object embeddings and perform retrieval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder">Embedder</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.schemas">
+<span class="sig-name descname"><span class="pre">schemas</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.schemas" title="Link to this definition"></a></dt>
+<dd><p>A library of dialogue, episode, and object schemas that form the agent’s generic knowledge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.schema.SchemaLibrary.html#eta.schema.SchemaLibrary" title="eta.schema.SchemaLibrary">SchemaLibrary</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.concept_aliases">
+<span class="sig-name descname"><span class="pre">concept_aliases</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.concept_aliases" title="Link to this definition"></a></dt>
+<dd><p>TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.concept_sets">
+<span class="sig-name descname"><span class="pre">concept_sets</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.concept_sets" title="Link to this definition"></a></dt>
+<dd><p>TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.init_knowledge">
+<span class="sig-name descname"><span class="pre">init_knowledge</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.init_knowledge" title="Link to this definition"></a></dt>
+<dd><p>A list of initial facts in the agent’s semantic memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality">Eventuality</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.schema_instances">
+<span class="sig-name descname"><span class="pre">schema_instances</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.schema_instances" title="Link to this definition"></a></dt>
+<dd><p>A dict containing all schema instances (keyed on their unique IDs).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.plan">
+<span class="sig-name descname"><span class="pre">plan</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.plan" title="Link to this definition"></a></dt>
+<dd><p>The “currently due” node in the agent’s plan, initialized from the <cite>start_schema</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.plan.PlanNode.html#eta.plan.PlanNode" title="eta.plan.PlanNode">PlanNode</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.buffers">
+<span class="sig-name descname"><span class="pre">buffers</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.buffers" title="Link to this definition"></a></dt>
+<dd><p>The named buffers (i.e., priority queues) for each type of processed data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.reference_list">
+<span class="sig-name descname"><span class="pre">reference_list</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.reference_list" title="Link to this definition"></a></dt>
+<dd><p>TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.equality_sets">
+<span class="sig-name descname"><span class="pre">equality_sets</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.equality_sets" title="Link to this definition"></a></dt>
+<dd><p>TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.conversation_log">
+<span class="sig-name descname"><span class="pre">conversation_log</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.conversation_log" title="Link to this definition"></a></dt>
+<dd><p>A list of turns in the dialogue history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.discourse.DialogueTurn.html#eta.discourse.DialogueTurn" title="eta.discourse.DialogueTurn">DialogueTurn</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.memory">
+<span class="sig-name descname"><span class="pre">memory</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.memory" title="Link to this definition"></a></dt>
+<dd><p>The episodic memory of the agent, initialized from <cite>init_knowledge</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.memory.MemoryStorage.html#eta.memory.MemoryStorage" title="eta.memory.MemoryStorage">MemoryStorage</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.timegraph">
+<span class="sig-name descname"><span class="pre">timegraph</span></span><a class="headerlink" href="#eta.core.eta.DialogueState.timegraph" title="Link to this definition"></a></dt>
+<dd><p>TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.access_from_context" title="eta.core.eta.DialogueState.access_from_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">access_from_context</span></code></a></p></td>
+<td><p>Access facts from context matching a given predicate pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.add_all_to_buffer" title="eta.core.eta.DialogueState.add_all_to_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_all_to_buffer</span></code></a></p></td>
+<td><p>Add all elements in a list to the buffer of the given type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.add_to_buffer" title="eta.core.eta.DialogueState.add_to_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_to_buffer</span></code></a></p></td>
+<td><p>Add an element to the buffer of the given type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.add_to_buffer_if_empty" title="eta.core.eta.DialogueState.add_to_buffer_if_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_to_buffer_if_empty</span></code></a></p></td>
+<td><p>Add an element to the buffer of the given type iff that buffer is currently empty.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.add_to_context" title="eta.core.eta.DialogueState.add_to_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_to_context</span></code></a></p></td>
+<td><p>Add a fact to the context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.add_to_memory" title="eta.core.eta.DialogueState.add_to_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_to_memory</span></code></a></p></td>
+<td><p>Add a fact to the memory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.advance_plan" title="eta.core.eta.DialogueState.advance_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advance_plan</span></code></a></p></td>
+<td><p>Advance the plan to the next step (or signal to quit the conversation if none exists).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.apply_transducer" title="eta.core.eta.DialogueState.apply_transducer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_transducer</span></code></a></p></td>
+<td><p>Apply the transducer(s) of the given type to a list of arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.bind" title="eta.core.eta.DialogueState.bind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bind</span></code></a></p></td>
+<td><p>Bind the given variable symbol to the given value throughout the dialogue state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.buffer_empty" title="eta.core.eta.DialogueState.buffer_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer_empty</span></code></a></p></td>
+<td><p>Check whether the buffer of the given type is empty.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.cost" title="eta.core.eta.DialogueState.cost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cost</span></code></a></p></td>
+<td><p>Compute the accumulated (monetary) cost of each transducer for this session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.do_continue" title="eta.core.eta.DialogueState.do_continue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_continue</span></code></a></p></td>
+<td><p>Check whether to continue with the current dialogue.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.eval_truth_value" title="eta.core.eta.DialogueState.eval_truth_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval_truth_value</span></code></a></p></td>
+<td><p>Evaluate the truth value of a wff in memory/context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.flush_context" title="eta.core.eta.DialogueState.flush_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush_context</span></code></a></p></td>
+<td><p>Flush the dialogue context of &quot;instantaneous&quot; events.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_buffer" title="eta.core.eta.DialogueState.get_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_buffer</span></code></a></p></td>
+<td><p>Get the buffer of the given type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_conversation_log" title="eta.core.eta.DialogueState.get_conversation_log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_conversation_log</span></code></a></p></td>
+<td><p>Get the current conversation history.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_io_path" title="eta.core.eta.DialogueState.get_io_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_io_path</span></code></a></p></td>
+<td><p>Get the path for an IO file (if given) or the IO directory for this session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_log_path" title="eta.core.eta.DialogueState.get_log_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_log_path</span></code></a></p></td>
+<td><p>Get the path for a log file (if given) or the log directory for this session.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_memory" title="eta.core.eta.DialogueState.get_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_memory</span></code></a></p></td>
+<td><p>Get the memory storage object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_perception_servers" title="eta.core.eta.DialogueState.get_perception_servers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_perception_servers</span></code></a></p></td>
+<td><p>Get the registered perception servers for this session.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_plan" title="eta.core.eta.DialogueState.get_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_plan</span></code></a></p></td>
+<td><p>Get the agent's plan.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_quit_conversation" title="eta.core.eta.DialogueState.get_quit_conversation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_quit_conversation</span></code></a></p></td>
+<td><p>Check whether to quit the conversation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_specialist_servers" title="eta.core.eta.DialogueState.get_specialist_servers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_specialist_servers</span></code></a></p></td>
+<td><p>Get the registered specialist servers for this session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_step_failure_timer" title="eta.core.eta.DialogueState.get_step_failure_timer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_step_failure_timer</span></code></a></p></td>
+<td><p>Get the current value of the step failure timer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.get_user_id" title="eta.core.eta.DialogueState.get_user_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_user_id</span></code></a></p></td>
+<td><p>Get the user ID for this session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.has_plan" title="eta.core.eta.DialogueState.has_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_plan</span></code></a></p></td>
+<td><p>Check whether the agent currently has a plan.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.init_plan_from_schema" title="eta.core.eta.DialogueState.init_plan_from_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_plan_from_schema</span></code></a></p></td>
+<td><p>Initialize a plan from a given schema predicate along with a list of arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.instantiate_curr_step" title="eta.core.eta.DialogueState.instantiate_curr_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instantiate_curr_step</span></code></a></p></td>
+<td><p>Instantiate the current plan step.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.is_schema" title="eta.core.eta.DialogueState.is_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_schema</span></code></a></p></td>
+<td><p>Check whether a given predicate exists in the agent's schema library.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.log_turn" title="eta.core.eta.DialogueState.log_turn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_turn</span></code></a></p></td>
+<td><p>Log and write a given DialogueTurn in the conversation log.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.pop_all_buffer" title="eta.core.eta.DialogueState.pop_all_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_all_buffer</span></code></a></p></td>
+<td><p>Pop all elements from the buffer of the given type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.pop_buffer" title="eta.core.eta.DialogueState.pop_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_buffer</span></code></a></p></td>
+<td><p>Pop an element from the buffer of the given type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.print_schema_instances" title="eta.core.eta.DialogueState.print_schema_instances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_schema_instances</span></code></a></p></td>
+<td><p>Print all current schema instances.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.push_output_buffer" title="eta.core.eta.DialogueState.push_output_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">push_output_buffer</span></code></a></p></td>
+<td><p>Push an utterance onto the output buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.remove_from_context" title="eta.core.eta.DialogueState.remove_from_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_from_context</span></code></a></p></td>
+<td><p>Remove a fact from the context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.replace_all_buffer" title="eta.core.eta.DialogueState.replace_all_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_all_buffer</span></code></a></p></td>
+<td><p>Replace the buffer of the given type with a list of elements.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.replace_buffer" title="eta.core.eta.DialogueState.replace_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_buffer</span></code></a></p></td>
+<td><p>Replace the buffer of the given type with a single element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.reset_step_failure_timer" title="eta.core.eta.DialogueState.reset_step_failure_timer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_step_failure_timer</span></code></a></p></td>
+<td><p>Reset the step failure timer to the current time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.retrieve_facts" title="eta.core.eta.DialogueState.retrieve_facts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">retrieve_facts</span></code></a></p></td>
+<td><p>Retrieve and combine facts from the current dialogue schema, relevant episode schemas, and memory.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.set_plan" title="eta.core.eta.DialogueState.set_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_plan</span></code></a></p></td>
+<td><p>Set the agent's plan to a new plan node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.set_quit_conversation" title="eta.core.eta.DialogueState.set_quit_conversation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_quit_conversation</span></code></a></p></td>
+<td><p>Set whether to quit the conversation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.unbind" title="eta.core.eta.DialogueState.unbind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unbind</span></code></a></p></td>
+<td><p>Unbind the given variable symbol throughout the dialogue state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.core.eta.DialogueState.write_output_buffer" title="eta.core.eta.DialogueState.write_output_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_output_buffer</span></code></a></p></td>
+<td><p>Write the output buffer (a list of Utterances) to output files.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_io_path">
+<span class="sig-name descname"><span class="pre">get_io_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_io_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_io_path" title="Link to this definition"></a></dt>
+<dd><p>Get the path for an IO file (if given) or the IO directory for this session.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_log_path">
+<span class="sig-name descname"><span class="pre">get_log_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_log_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_log_path" title="Link to this definition"></a></dt>
+<dd><p>Get the path for a log file (if given) or the log directory for this session.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_perception_servers">
+<span class="sig-name descname"><span class="pre">get_perception_servers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_perception_servers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_perception_servers" title="Link to this definition"></a></dt>
+<dd><p>Get the registered perception servers for this session.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_specialist_servers">
+<span class="sig-name descname"><span class="pre">get_specialist_servers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_specialist_servers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_specialist_servers" title="Link to this definition"></a></dt>
+<dd><p>Get the registered specialist servers for this session.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_user_id">
+<span class="sig-name descname"><span class="pre">get_user_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_user_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_user_id" title="Link to this definition"></a></dt>
+<dd><p>Get the user ID for this session.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_step_failure_timer">
+<span class="sig-name descname"><span class="pre">get_step_failure_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_step_failure_timer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_step_failure_timer" title="Link to this definition"></a></dt>
+<dd><p>Get the current value of the step failure timer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.reset_step_failure_timer">
+<span class="sig-name descname"><span class="pre">reset_step_failure_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.reset_step_failure_timer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.reset_step_failure_timer" title="Link to this definition"></a></dt>
+<dd><p>Reset the step failure timer to the current time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_quit_conversation">
+<span class="sig-name descname"><span class="pre">get_quit_conversation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_quit_conversation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_quit_conversation" title="Link to this definition"></a></dt>
+<dd><p>Check whether to quit the conversation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.set_quit_conversation">
+<span class="sig-name descname"><span class="pre">set_quit_conversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.set_quit_conversation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.set_quit_conversation" title="Link to this definition"></a></dt>
+<dd><p>Set whether to quit the conversation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.is_schema">
+<span class="sig-name descname"><span class="pre">is_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.is_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.is_schema" title="Link to this definition"></a></dt>
+<dd><p>Check whether a given predicate exists in the agent’s schema library.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.has_plan">
+<span class="sig-name descname"><span class="pre">has_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.has_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.has_plan" title="Link to this definition"></a></dt>
+<dd><p>Check whether the agent currently has a plan.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_plan">
+<span class="sig-name descname"><span class="pre">get_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_plan" title="Link to this definition"></a></dt>
+<dd><p>Get the agent’s plan.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.set_plan">
+<span class="sig-name descname"><span class="pre">set_plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.set_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.set_plan" title="Link to this definition"></a></dt>
+<dd><p>Set the agent’s plan to a new plan node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.do_continue">
+<span class="sig-name descname"><span class="pre">do_continue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.do_continue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.do_continue" title="Link to this definition"></a></dt>
+<dd><p>Check whether to continue with the current dialogue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.init_plan_from_schema">
+<span class="sig-name descname"><span class="pre">init_plan_from_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.init_plan_from_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.init_plan_from_schema" title="Link to this definition"></a></dt>
+<dd><p>Initialize a plan from a given schema predicate along with a list of arguments.</p>
+<p>This instantiates the generic schema as a schema instance, binding variables occurring in
+the header to the supplied arguments, if any. It then instantiates a plan structure from
+the episodes list of that schema.</p>
+<p class="rubric">Notes</p>
+<p>TODO: the plan structure created when instantiating a schema is currently
+“flat” - in the future, we might want to add support for annotating abstraction
+hierarchies in the schema, in which case these would be added as supersteps to
+the steps of the plan-nodes that are created.</p>
+<p>TODO: by default, we assume that the episodes of the schema define sequential steps.
+However, the episode-relations in the schema should be used to impose a different
+ordering on the resulting plan.</p>
+<p>TODO: immediately following schema instantiation, we should also attempt to (a) bind
+variables in the schema occurring within the :types section to possible values in the
+dialogue context, as well as inferring the facts from the other schema sections, i.e.,
+adding them to the context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.advance_plan">
+<span class="sig-name descname"><span class="pre">advance_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.advance_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.advance_plan" title="Link to this definition"></a></dt>
+<dd><p>Advance the plan to the next step (or signal to quit the conversation if none exists).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.instantiate_curr_step">
+<span class="sig-name descname"><span class="pre">instantiate_curr_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.instantiate_curr_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.instantiate_curr_step" title="Link to this definition"></a></dt>
+<dd><p>Instantiate the current plan step.</p>
+<p>This binds the episode variable for the current plan step with a newly created episode
+constant throughout the dialogue state. The event is also added to context, unless it is
+an expectation step, in which case it would have already been matched to an event in context.</p>
+<p>This process recurs for any superstep such that the current step “completes” that superstep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.add_to_buffer">
+<span class="sig-name descname"><span class="pre">add_to_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.add_to_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.add_to_buffer" title="Link to this definition"></a></dt>
+<dd><p>Add an element to the buffer of the given type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.add_to_buffer_if_empty">
+<span class="sig-name descname"><span class="pre">add_to_buffer_if_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.add_to_buffer_if_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.add_to_buffer_if_empty" title="Link to this definition"></a></dt>
+<dd><p>Add an element to the buffer of the given type iff that buffer is currently empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.add_all_to_buffer">
+<span class="sig-name descname"><span class="pre">add_all_to_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.add_all_to_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.add_all_to_buffer" title="Link to this definition"></a></dt>
+<dd><p>Add all elements in a list to the buffer of the given type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.replace_buffer">
+<span class="sig-name descname"><span class="pre">replace_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.replace_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.replace_buffer" title="Link to this definition"></a></dt>
+<dd><p>Replace the buffer of the given type with a single element.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.replace_all_buffer">
+<span class="sig-name descname"><span class="pre">replace_all_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.replace_all_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.replace_all_buffer" title="Link to this definition"></a></dt>
+<dd><p>Replace the buffer of the given type with a list of elements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_buffer">
+<span class="sig-name descname"><span class="pre">get_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_buffer" title="Link to this definition"></a></dt>
+<dd><p>Get the buffer of the given type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.buffer_empty">
+<span class="sig-name descname"><span class="pre">buffer_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.buffer_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.buffer_empty" title="Link to this definition"></a></dt>
+<dd><p>Check whether the buffer of the given type is empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.pop_buffer">
+<span class="sig-name descname"><span class="pre">pop_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.pop_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.pop_buffer" title="Link to this definition"></a></dt>
+<dd><p>Pop an element from the buffer of the given type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.pop_all_buffer">
+<span class="sig-name descname"><span class="pre">pop_all_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.pop_all_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.pop_all_buffer" title="Link to this definition"></a></dt>
+<dd><p>Pop all elements from the buffer of the given type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_conversation_log">
+<span class="sig-name descname"><span class="pre">get_conversation_log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_conversation_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_conversation_log" title="Link to this definition"></a></dt>
+<dd><p>Get the current conversation history.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.log_turn">
+<span class="sig-name descname"><span class="pre">log_turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">turn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.log_turn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.log_turn" title="Link to this definition"></a></dt>
+<dd><p>Log and write a given DialogueTurn in the conversation log.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.add_to_memory">
+<span class="sig-name descname"><span class="pre">add_to_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fact</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.add_to_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.add_to_memory" title="Link to this definition"></a></dt>
+<dd><p>Add a fact to the memory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.add_to_context">
+<span class="sig-name descname"><span class="pre">add_to_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fact</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.add_to_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.add_to_context" title="Link to this definition"></a></dt>
+<dd><p>Add a fact to the context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.remove_from_context">
+<span class="sig-name descname"><span class="pre">remove_from_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fact</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.remove_from_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.remove_from_context" title="Link to this definition"></a></dt>
+<dd><p>Remove a fact from the context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.access_from_context">
+<span class="sig-name descname"><span class="pre">access_from_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_patt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.access_from_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.access_from_context" title="Link to this definition"></a></dt>
+<dd><p>Access facts from context matching a given predicate pattern.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.flush_context">
+<span class="sig-name descname"><span class="pre">flush_context</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.flush_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.flush_context" title="Link to this definition"></a></dt>
+<dd><p>Flush the dialogue context of “instantaneous” events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.get_memory">
+<span class="sig-name descname"><span class="pre">get_memory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.get_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.get_memory" title="Link to this definition"></a></dt>
+<dd><p>Get the memory storage object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.eval_truth_value">
+<span class="sig-name descname"><span class="pre">eval_truth_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.eval_truth_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.eval_truth_value" title="Link to this definition"></a></dt>
+<dd><p>Evaluate the truth value of a wff in memory/context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.apply_transducer">
+<span class="sig-name descname"><span class="pre">apply_transducer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.apply_transducer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.apply_transducer" title="Link to this definition"></a></dt>
+<dd><p>Apply the transducer(s) of the given type to a list of arguments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.bind">
+<span class="sig-name descname"><span class="pre">bind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.bind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.bind" title="Link to this definition"></a></dt>
+<dd><p>Bind the given variable symbol to the given value throughout the dialogue state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.unbind">
+<span class="sig-name descname"><span class="pre">unbind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.unbind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.unbind" title="Link to this definition"></a></dt>
+<dd><p>Unbind the given variable symbol throughout the dialogue state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.cost">
+<span class="sig-name descname"><span class="pre">cost</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.cost" title="Link to this definition"></a></dt>
+<dd><p>Compute the accumulated (monetary) cost of each transducer for this session.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.retrieve_facts">
+<span class="sig-name descname"><span class="pre">retrieve_facts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_schema_facts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.retrieve_facts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.retrieve_facts" title="Link to this definition"></a></dt>
+<dd><p>Retrieve and combine facts from the current dialogue schema, relevant episode schemas, and memory.</p>
+<p>The facts are divided into two subsets for facts that are “backgrounded” and those that are “foregrounded”,
+which may be leveraged by downstream tasks (e.g., in generation, we may assume that foregrounded facts should
+be used in the generated response in some way, whereas backgrounded facts may condition the generation without
+being directly used).</p>
+<p>Currently, it is assumed that background facts correspond to the current dialogue schema conditions, whereas
+foregrounded facts are retrieved from relevant episode schemas and memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The query string to use for retrieval. If not given, the previous user turn will be used.</p></li>
+<li><p><strong>n_schema</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=1</em>) – The number of schemas to retrieve.</p></li>
+<li><p><strong>n_schema_facts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=3</em>) – The number of facts to use from the retrieved schemas (in addition to schema headers).</p></li>
+<li><p><strong>n_memories</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=3</em>) – The number of facts to use from memory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>facts_bg</strong> (<em>list[Eventuality]</em>) – The retrieved background facts.</p></li>
+<li><p><strong>facts_fg</strong> (<em>list[Eventuality]</em>) – The retrieved foreground facts.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.write_output_buffer">
+<span class="sig-name descname"><span class="pre">write_output_buffer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.write_output_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.write_output_buffer" title="Link to this definition"></a></dt>
+<dd><p>Write the output buffer (a list of Utterances) to output files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.push_output_buffer">
+<span class="sig-name descname"><span class="pre">push_output_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.push_output_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.push_output_buffer" title="Link to this definition"></a></dt>
+<dd><p>Push an utterance onto the output buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.core.eta.DialogueState.print_schema_instances">
+<span class="sig-name descname"><span class="pre">print_schema_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/core/eta.html#DialogueState.print_schema_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.core.eta.DialogueState.print_schema_instances" title="Link to this definition"></a></dt>
+<dd><p>Print all current schema instances.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.core.eta.main.html" class="btn btn-neutral float-left" title="eta.core.eta.main" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.core.eta.ProcessManager.html" class="btn btn-neutral float-right" title="eta.core.eta.ProcessManager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

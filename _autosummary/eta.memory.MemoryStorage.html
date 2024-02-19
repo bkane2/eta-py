@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.memory.MemoryStorage &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eta.plan" href="eta.plan.html" />
+    <link rel="prev" title="eta.memory.Memory" href="eta.memory.Memory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="eta.html">Eta documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eta.config.html">eta.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.constants.html">eta.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.core.html">eta.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.discourse.html">eta.discourse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.embedding.html">eta.embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.lf.html">eta.lf</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="eta.memory.html">eta.memory</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="eta.memory.Memory.html">eta.memory.Memory</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">eta.memory.MemoryStorage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eta.memory.MemoryStorage"><code class="docutils literal notranslate"><span class="pre">MemoryStorage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eta.memory.html#eta.memory.Memory"><code class="docutils literal notranslate"><span class="pre">Memory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="eta.memory.html#eta.memory.MemoryStorage"><code class="docutils literal notranslate"><span class="pre">MemoryStorage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eta.plan.html">eta.plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.schema.html">eta.schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.transducers.html">eta.transducers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eta.util.html">eta.util</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="eta.html">eta</a></li>
+          <li class="breadcrumb-item"><a href="eta.memory.html">eta.memory</a></li>
+      <li class="breadcrumb-item active">eta.memory.MemoryStorage</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eta-memory-memorystorage">
+<h1>eta.memory.MemoryStorage<a class="headerlink" href="#eta-memory-memorystorage" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MemoryStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Stores memories and a context of “true now” facts, keyed on both episode names and predicates for efficient lookup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embedder</strong> (<a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder"><em>Embedder</em></a><em>, </em><em>optional</em>) – If provided, an embedder to embed all memories that are added to storage.</p></li>
+<li><p><strong>importance_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The threshold to place on importance values when retrieving memories (i.e.,
+only memories above this threshold will be retrieved). If not given, the
+default threshold defined in eta.constants will be used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.memories">
+<span class="sig-name descname"><span class="pre">memories</span></span><a class="headerlink" href="#eta.memory.MemoryStorage.memories" title="Link to this definition"></a></dt>
+<dd><p>A set containing all stored memories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)">set</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.ep_ht">
+<span class="sig-name descname"><span class="pre">ep_ht</span></span><a class="headerlink" href="#eta.memory.MemoryStorage.ep_ht" title="Link to this definition"></a></dt>
+<dd><p>A hash table mapping episode variables/constants to memories of events that characterize those episodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.wff_ht">
+<span class="sig-name descname"><span class="pre">wff_ht</span></span><a class="headerlink" href="#eta.memory.MemoryStorage.wff_ht" title="Link to this definition"></a></dt>
+<dd><p>A hash table mapping tuples of wff keys to memories of events with wffs matching those keys.
+Valid keys may be:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A single predicate string, e.g., <code class="docutils literal notranslate"><span class="pre">pred</span></code>.</p></li>
+<li><p>A binary predicate tuple, e.g., <code class="docutils literal notranslate"><span class="pre">(subj,</span> <span class="pre">pred)</span></code>.</p></li>
+<li><p>A tuple containing the predicate of a wff with one other argument, with other arguments being replaced with <code class="docutils literal notranslate"><span class="pre">None</span></code>, e.g.,</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(subj,</span> <span class="pre">pred,</span> <span class="pre">None,</span> <span class="pre">None,</span> <span class="pre">...)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">pred,</span> <span class="pre">obj1,</span> <span class="pre">None,</span> <span class="pre">...)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">pred,</span> <span class="pre">None,</span> <span class="pre">obj2,</span> <span class="pre">...)</span></code></p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>, <a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.context">
+<span class="sig-name descname"><span class="pre">context</span></span><a class="headerlink" href="#eta.memory.MemoryStorage.context" title="Link to this definition"></a></dt>
+<dd><p>A set containing all memories that are “true now”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)">set</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.embedder">
+<span class="sig-name descname"><span class="pre">embedder</span></span><a class="headerlink" href="#eta.memory.MemoryStorage.embedder" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="eta.embedding.Embedder.html#eta.embedding.Embedder" title="eta.embedding.Embedder">Embedder</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.importance_threshold">
+<span class="sig-name descname"><span class="pre">importance_threshold</span></span><a class="headerlink" href="#eta.memory.MemoryStorage.importance_threshold" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.access" title="eta.memory.MemoryStorage.access"><code class="xref py py-obj docutils literal notranslate"><span class="pre">access</span></code></a></p></td>
+<td><p>&quot;Access&quot; a memory (or list of memories) by updating the most recent access date of that memory.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.does_characterize_episode" title="eta.memory.MemoryStorage.does_characterize_episode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">does_characterize_episode</span></code></a></p></td>
+<td><p>Check whether a given predicate pattern matches a memory characterizing a given episode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.flush_context" title="eta.memory.MemoryStorage.flush_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush_context</span></code></a></p></td>
+<td><p>Remove from <cite>context</cite> all &quot;telic&quot; events (i.e., events that we regard as essentially instantaneous).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.forget" title="eta.memory.MemoryStorage.forget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forget</span></code></a></p></td>
+<td><p>Evict some facts from memory in order to reduce memory size (TBC).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.get_characterizing_episode" title="eta.memory.MemoryStorage.get_characterizing_episode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_characterizing_episode</span></code></a></p></td>
+<td><p>Get all memories that both match a given predicate pattern and characterize a given episode.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.get_episode" title="eta.memory.MemoryStorage.get_episode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_episode</span></code></a></p></td>
+<td><p>Get memories that characterize a specific episode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.get_from_context" title="eta.memory.MemoryStorage.get_from_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_from_context</span></code></a></p></td>
+<td><p>Get a memory from <cite>context</cite> matching a given predicate pattern potentially containing variables.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.get_matching" title="eta.memory.MemoryStorage.get_matching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_matching</span></code></a></p></td>
+<td><p>Get memories matching a given predicate pattern potentially containing variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.instantiate" title="eta.memory.MemoryStorage.instantiate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instantiate</span></code></a></p></td>
+<td><p>Instantiate an event (or list of events) as a new memory and store it.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.remove" title="eta.memory.MemoryStorage.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a></p></td>
+<td><p>Remove a memory (or list of memories) from all sets and hash tables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.remove_episode" title="eta.memory.MemoryStorage.remove_episode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_episode</span></code></a></p></td>
+<td><p>Remove all memories characterizing a given episode.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.remove_episode_from_context" title="eta.memory.MemoryStorage.remove_episode_from_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_episode_from_context</span></code></a></p></td>
+<td><p>Remove all memories from <cite>context</cite> characterizing a given episode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.remove_from_context" title="eta.memory.MemoryStorage.remove_from_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_from_context</span></code></a></p></td>
+<td><p>Remove a memory (or list of memories) from <cite>context</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.remove_matching" title="eta.memory.MemoryStorage.remove_matching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_matching</span></code></a></p></td>
+<td><p>Remove all memories matching a given predicate pattern potentially containing variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.remove_matching_from_context" title="eta.memory.MemoryStorage.remove_matching_from_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_matching_from_context</span></code></a></p></td>
+<td><p>Remove all memories from <cite>context</cite> matching a given predicate pattern potentially containing variables.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.retrieve" title="eta.memory.MemoryStorage.retrieve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">retrieve</span></code></a></p></td>
+<td><p>Retrieve some number of relevant memories according to recency, importance, and salience.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#eta.memory.MemoryStorage.store" title="eta.memory.MemoryStorage.store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">store</span></code></a></p></td>
+<td><p>Store a memory (or list of memories), adding to each hash table as well as to <cite>context</cite>.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.access">
+<span class="sig-name descname"><span class="pre">access</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.access"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.access" title="Link to this definition"></a></dt>
+<dd><p>“Access” a memory (or list of memories) by updating the most recent access date of that memory.</p>
+<p>If the event is telic (i.e., assumed to be “instantaneous”), remove it from <cite>context</cite> as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>memory</strong> (<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.store">
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.store" title="Link to this definition"></a></dt>
+<dd><p>Store a memory (or list of memories), adding to each hash table as well as to <cite>context</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>memory</strong> (<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em>]</em>) – </p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=True</em>) – Whether to store the given memory in context.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>TODO: this should be extended so that storing a fact such as <code class="docutils literal notranslate"><span class="pre">(not</span> <span class="pre">&lt;wff&gt;)</span></code> actually removes
+the embedded wff from <cite>context</cite>. However, in addition to removing the negated WFF,
+should the negative WFF then be kept in <cite>context</cite>? In that case, we would need to
+remove the negative WFF once the positive version is added, and so on…
+It seems like, in general, we need some sort of contradiction detection for removing
+facts from <cite>context</cite> once contradicting facts are added.</p>
+<p>TODO: in the case of events with duplicate wffs but different episode constants being inserted
+(e.g., <code class="docutils literal notranslate"><span class="pre">(^you</span> <span class="pre">reply-to.v</span> <span class="pre">E1)</span> <span class="pre">**</span> <span class="pre">E3</span></code> and <code class="docutils literal notranslate"><span class="pre">(^you</span> <span class="pre">reply-to.v</span> <span class="pre">E1)</span> <span class="pre">**</span> <span class="pre">E4)</span></code>), we should probably merge them
+into a single memory/event with a new episode constant, e.g., E5. We may then either replace all
+other occurrences of E3 and E4 throughout memory with E5, or we may somehow store that E3 and E4
+are both sub-events of E5.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove a memory (or list of memories) from all sets and hash tables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>memory</strong> (<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.remove_from_context">
+<span class="sig-name descname"><span class="pre">remove_from_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.remove_from_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.remove_from_context" title="Link to this definition"></a></dt>
+<dd><p>Remove a memory (or list of memories) from <cite>context</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>memory</strong> (<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory"><em>Memory</em></a><em>]</em>) – </p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>TODO: currently, this only removes the individual memory from <cite>context</cite>. However, since multiple memories
+may characterize the same episode, if one memory characterizing a particular episode is removed from
+<cite>context</cite>, should all memories characterizing the same episode be removed from <cite>context</cite>? This is currently
+unclear; in the future, we may need to add partial characterization (i.e., <code class="docutils literal notranslate"><span class="pre">(&lt;wff&gt;</span> <span class="pre">*</span> <span class="pre">&lt;ep&gt;)</span></code>) to account for this.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.instantiate">
+<span class="sig-name descname"><span class="pre">instantiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.instantiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.instantiate" title="Link to this definition"></a></dt>
+<dd><p>Instantiate an event (or list of events) as a new memory and store it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality"><em>Eventuality</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference internal" href="eta.lf.Eventuality.html#eta.lf.Eventuality" title="eta.lf.Eventuality"><em>Eventuality</em></a><em>]</em>) – The eventuality object(s) to store as new memories.</p></li>
+<li><p><strong>importance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – The importance value(s) to assign to each new memory.</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=True</em>) – Whether to store the instantiated memory in context.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.get_episode">
+<span class="sig-name descname"><span class="pre">get_episode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.get_episode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.get_episode" title="Link to this definition"></a></dt>
+<dd><p>Get memories that characterize a specific episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An episode symbol.</p></li>
+<li><p><strong>access</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Whether to update the last access time of the memories.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.get_matching">
+<span class="sig-name descname"><span class="pre">get_matching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_patt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.get_matching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.get_matching" title="Link to this definition"></a></dt>
+<dd><p>Get memories matching a given predicate pattern potentially containing variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred_patt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>s-expr</em>) – A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
+at the top level, e.g., <code class="docutils literal notranslate"><span class="pre">between.p</span></code> or <code class="docutils literal notranslate"><span class="pre">[Block1,</span> <span class="pre">between.p,</span> <span class="pre">?x,</span> <span class="pre">Block2]</span></code>.</p></li>
+<li><p><strong>access</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Whether to update the last access time of the memories.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>TODO: currently, due to the indexing scheme used by <cite>wff_ht</cite>, we only allow variables in the
+top level of a predication (i.e., variables may not be nested within an S-expression). In
+the future, we may wish to allow for more general matching.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.get_from_context">
+<span class="sig-name descname"><span class="pre">get_from_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_patt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.get_from_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.get_from_context" title="Link to this definition"></a></dt>
+<dd><p>Get a memory from <cite>context</cite> matching a given predicate pattern potentially containing variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred_patt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>s-expr</em>) – A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
+at the top level, e.g., <code class="docutils literal notranslate"><span class="pre">between.p</span></code> or <code class="docutils literal notranslate"><span class="pre">[Block1,</span> <span class="pre">between.p,</span> <span class="pre">?x,</span> <span class="pre">Block2]</span></code>.</p></li>
+<li><p><strong>access</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>default=False</em>) – Whether to update the last access time of the memories.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.remove_episode">
+<span class="sig-name descname"><span class="pre">remove_episode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.remove_episode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.remove_episode" title="Link to this definition"></a></dt>
+<dd><p>Remove all memories characterizing a given episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An episode symbol.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.remove_matching">
+<span class="sig-name descname"><span class="pre">remove_matching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_patt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.remove_matching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.remove_matching" title="Link to this definition"></a></dt>
+<dd><p>Remove all memories matching a given predicate pattern potentially containing variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pred_patt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>s-expr</em>) – A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
+at the top level, e.g., <code class="docutils literal notranslate"><span class="pre">between.p</span></code> or <code class="docutils literal notranslate"><span class="pre">[Block1,</span> <span class="pre">between.p,</span> <span class="pre">?x,</span> <span class="pre">Block2]</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.remove_episode_from_context">
+<span class="sig-name descname"><span class="pre">remove_episode_from_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.remove_episode_from_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.remove_episode_from_context" title="Link to this definition"></a></dt>
+<dd><p>Remove all memories from <cite>context</cite> characterizing a given episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An episode symbol.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.remove_matching_from_context">
+<span class="sig-name descname"><span class="pre">remove_matching_from_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_patt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.remove_matching_from_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.remove_matching_from_context" title="Link to this definition"></a></dt>
+<dd><p>Remove all memories from <cite>context</cite> matching a given predicate pattern potentially containing variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pred_patt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>s-expr</em>) – A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
+at the top level, e.g., <code class="docutils literal notranslate"><span class="pre">between.p</span></code> or <code class="docutils literal notranslate"><span class="pre">[Block1,</span> <span class="pre">between.p,</span> <span class="pre">?x,</span> <span class="pre">Block2]</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.flush_context">
+<span class="sig-name descname"><span class="pre">flush_context</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.flush_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.flush_context" title="Link to this definition"></a></dt>
+<dd><p>Remove from <cite>context</cite> all “telic” events (i.e., events that we regard as essentially instantaneous).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.get_characterizing_episode">
+<span class="sig-name descname"><span class="pre">get_characterizing_episode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_patt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.get_characterizing_episode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.get_characterizing_episode" title="Link to this definition"></a></dt>
+<dd><p>Get all memories that both match a given predicate pattern and characterize a given episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred_patt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>s-expr</em>) – A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
+at the top level, e.g., <code class="docutils literal notranslate"><span class="pre">between.p</span></code> or <code class="docutils literal notranslate"><span class="pre">[Block1,</span> <span class="pre">between.p,</span> <span class="pre">?x,</span> <span class="pre">Block2]</span></code>.</p></li>
+<li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An episode symbol.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.does_characterize_episode">
+<span class="sig-name descname"><span class="pre">does_characterize_episode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_patt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.does_characterize_episode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.does_characterize_episode" title="Link to this definition"></a></dt>
+<dd><p>Check whether a given predicate pattern matches a memory characterizing a given episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred_patt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>s-expr</em>) – A predicate symbol or predicate pattern, i.e., an S-expression possibly containing variables
+at the top level, e.g., <code class="docutils literal notranslate"><span class="pre">between.p</span></code> or <code class="docutils literal notranslate"><span class="pre">[Block1,</span> <span class="pre">between.p,</span> <span class="pre">?x,</span> <span class="pre">Block2]</span></code>.</p></li>
+<li><p><strong>ep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An episode symbol.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.retrieve">
+<span class="sig-name descname"><span class="pre">retrieve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">1.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.retrieve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.retrieve" title="Link to this definition"></a></dt>
+<dd><p>Retrieve some number of relevant memories according to recency, importance, and salience.</p>
+<p>The following three sub-criteria are used to determine which memories are retrieved:
+- recency : the latest access time of each memory.
+- importance : the importance values assigned to each memory.
+- salience : the embedding similarity between each memory and a query (if given).</p>
+<p>Each sub-criteria score is mapped to a score in [0,1], and the final score is a linear sum of
+each sub-score multiplied by the respective coefficient in ‘coeffs’. The highest scoring memories
+are returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The query to use in computing salience scores. If no query is given, or if
+no embedder is defined, the salience score will be <code class="docutils literal notranslate"><span class="pre">1</span></code> for every memory.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>default=5</em>) – The number of memories to retrieve.</p></li>
+<li><p><strong>coeffs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>]</em><em>, </em><em>default=</em><em>(</em><em>1.</em><em>, </em><em>1.</em><em>, </em><em>1.</em><em>)</em>) – A tuple of coefficients to be used to weight each respective sub-score.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[<a class="reference internal" href="eta.memory.Memory.html#eta.memory.Memory" title="eta.memory.Memory">Memory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.forget">
+<span class="sig-name descname"><span class="pre">forget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.forget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.forget" title="Link to this definition"></a></dt>
+<dd><p>Evict some facts from memory in order to reduce memory size (TBC).</p>
+<p class="rubric">Notes</p>
+<p>TODO: this function should be implemented to permanently evict facts from memory as memory
+sizes become too large for tractable retrieval. It should remove facts where the combined relevance
+and importance values fall below some threshold.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eta.memory.MemoryStorage.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eta/memory.html#MemoryStorage.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eta.memory.MemoryStorage.__str__" title="Link to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eta.memory.Memory.html" class="btn btn-neutral float-left" title="eta.memory.Memory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eta.plan.html" class="btn btn-neutral float-right" title="eta.plan" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

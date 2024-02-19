@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eta.core.planning &mdash; eta-py 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/my_theme.css?v=5df1763a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            eta-py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/eta.html">Eta documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">eta-py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">eta.core.planning</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for eta.core.planning</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The core process responsible for using schemas and memory to modify the plan.</span>
+
+<span class="sd">Modifying the plan includes adding possible actions to the plan, expanding plan steps,</span>
+<span class="sd">merging plan steps, and reordering plan steps.</span>
+
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+<span class="sd">Currently, the ``plans`` buffer is handled differently from the other buffers, in that we</span>
+<span class="sd">assume it only holds one element at a time, and this element is simply replaced whenever</span>
+<span class="sd">the plan is modified in some way.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+<span class="kn">from</span> <span class="nn">eta.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">eta.util.general</span> <span class="kn">import</span> <span class="n">listp</span>
+<span class="kn">from</span> <span class="nn">eta.lf</span> <span class="kn">import</span> <span class="n">Condition</span><span class="p">,</span> <span class="n">Repetition</span><span class="p">,</span> <span class="n">parse_eventuality</span><span class="p">,</span> <span class="n">extract_set</span><span class="p">,</span> <span class="n">is_set</span><span class="p">,</span> <span class="n">set_union</span><span class="p">,</span> <span class="n">atom</span>
+<span class="kn">from</span> <span class="nn">eta.plan</span> <span class="kn">import</span> <span class="n">init_plan_from_eventualities</span><span class="p">,</span> <span class="n">insert_before_plan_node</span><span class="p">,</span> <span class="n">expand_plan_node</span><span class="p">,</span> <span class="n">merge_plan_nodes</span>
+
+<div class="viewcode-block" id="planning_loop">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.planning_loop.html#eta.core.planning.planning_loop">[docs]</a>
+<span class="k">def</span> <span class="nf">planning_loop</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Make modifications to the dialogue plan.</span>
+
+<span class="sd">  First, all suggested actions are popped from the ``actions`` buffer, and used to create a new</span>
+<span class="sd">  plan. The plan of the current dialogue state is updated, and the contents of the ``plans`` buffer</span>
+<span class="sd">  is replaced with the updated plan.</span>
+
+<span class="sd">  Second, this attempts to modify the plan in the ``plans`` buffer. This consists of the following substeps:</span>
+<span class="sd">    1. Attempt to expand top-level steps in the plan into substeps.</span>
+<span class="sd">    2. Merge equivalent steps in the plan.</span>
+<span class="sd">    3. Reorder plan steps according to constraints.</span>
+
+<span class="sd">  If the plan was modified by the previous step, it is used to update the plan of the current dialogue state,</span>
+<span class="sd">  and is re-added to the ``plans`` buffer.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">while</span> <span class="n">ds</span><span class="o">.</span><span class="n">do_continue</span><span class="p">():</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="n">SLEEPTIME</span><span class="p">)</span>
+
+    <span class="c1"># Pop from buffer of possible actions and attempt to add to plan</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pop_all_buffer</span><span class="p">(</span><span class="s1">&#39;actions&#39;</span><span class="p">)</span>
+    <span class="n">new_plan</span> <span class="o">=</span> <span class="n">add_possible_actions_to_plan</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">set_plan</span><span class="p">(</span><span class="n">new_plan</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">replace_buffer</span><span class="p">(</span><span class="n">new_plan</span><span class="p">,</span> <span class="s1">&#39;plans&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Attempt to modify current plan by expanding, merging, and reordering steps</span>
+    <span class="n">plan</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pop_buffer</span><span class="p">(</span><span class="s1">&#39;plans&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">plan</span><span class="p">:</span>
+      <span class="n">new_plan</span> <span class="o">=</span> <span class="n">expand_plan_steps</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+      <span class="n">new_plan</span> <span class="o">=</span> <span class="n">merge_plan_steps</span><span class="p">(</span><span class="n">new_plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+      <span class="n">new_plan</span> <span class="o">=</span> <span class="n">reorder_plan_steps</span><span class="p">(</span><span class="n">new_plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+      <span class="n">ds</span><span class="o">.</span><span class="n">set_plan</span><span class="p">(</span><span class="n">new_plan</span><span class="p">)</span>
+      <span class="n">ds</span><span class="o">.</span><span class="n">replace_buffer</span><span class="p">(</span><span class="n">new_plan</span><span class="p">,</span> <span class="s1">&#39;plans&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="add_possible_actions_to_plan">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.add_possible_actions_to_plan.html#eta.core.planning.add_possible_actions_to_plan">[docs]</a>
+<span class="k">def</span> <span class="nf">add_possible_actions_to_plan</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Given a list of possible actions, attempt to add actions into the current plan.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  actions : list[str]</span>
+<span class="sd">    A list of possible actions (as natural language strings or LISP-formatted S-expression strings).</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: some possible future improvements:</span>
+<span class="sd">    1. For now, we assume that only the first action in a set of possible actions is used.</span>
+<span class="sd">       In the future, this might be extended with a policy for attempting to add the top K possible actions.</span>
+<span class="sd">    2. This currently adds the action unconditionally; ultimately, the system should verify that the action</span>
+<span class="sd">       can be added to the plan. This may be done by way of a pattern transducer.</span>
+<span class="sd">    3. The action is currently inserted as the current step, but ultimately we should be able to insert actions</span>
+<span class="sd">       elsewhere in the plan as well.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">actions</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  <span class="n">action</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">plan_node</span> <span class="o">=</span> <span class="n">init_plan_from_eventualities</span><span class="p">([</span><span class="n">parse_eventuality</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">expectation</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
+  <span class="n">new_plan</span> <span class="o">=</span> <span class="n">insert_before_plan_node</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_plan</span><span class="p">(),</span> <span class="n">plan_node</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">new_plan</span></div>
+
+
+
+<div class="viewcode-block" id="expand_plan_steps">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.expand_plan_steps.html#eta.core.planning.expand_plan_steps">[docs]</a>
+<span class="k">def</span> <span class="nf">expand_plan_steps</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Attempt to expand the surface steps in the plan using one of:</span>
+<span class="sd">    1. A keyword step, which have special expansion behavior</span>
+<span class="sd">    2. A schema whose header matches the step WFF (unifying any schema args)</span>
+<span class="sd">    3. A &quot;primitive&quot; type of plan step whose expansion is directly supported</span>
+<span class="sd">    4. A pattern transduction tree mapping the step WFF to substep WFF(s)</span>
+<span class="sd">     </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan : PlanNode or None</span>
+<span class="sd">    The plan to expand (if one exists).</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: some possible future improvements:</span>
+<span class="sd">    1. currently, this only attempts to expand the currently due step; however,</span>
+<span class="sd">       it may be possible to expand certain other steps in the plan as well.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">plan</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  
+  <span class="n">event</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">event</span>
+  <span class="n">schema</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">schemas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">plan</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">schemas</span> <span class="k">else</span> <span class="kc">None</span>
+  <span class="n">wff</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Condition</span><span class="p">):</span>
+    <span class="n">subplan</span> <span class="o">=</span> <span class="n">expand_condition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">Repetition</span><span class="p">):</span>
+    <span class="n">subplan</span> <span class="o">=</span> <span class="n">expand_repetition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">schema_step</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="n">predicate</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">split_schema_step</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span>
+    <span class="n">subplan</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">init_plan_from_schema</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">subplan</span> <span class="o">=</span> <span class="n">expand_primitive_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">subplan</span><span class="p">:</span>
+      <span class="n">subplans</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;subplan&#39;</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+      <span class="n">subplan</span> <span class="o">=</span> <span class="n">subplans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">subplans</span> <span class="k">else</span> <span class="kc">None</span>
+
+  <span class="k">if</span> <span class="n">subplan</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">expand_plan_node</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_plan</span><span class="p">(),</span> <span class="n">subplan</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="merge_plan_steps">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.merge_plan_steps.html#eta.core.planning.merge_plan_steps">[docs]</a>
+<span class="k">def</span> <span class="nf">merge_plan_steps</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Merge steps in the plan that are equivalent or unifiable.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan : PlanNode or None</span>
+<span class="sd">    The plan to expand (if one exists).</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: the behavior of this function is currently hard-coded to merge directly</span>
+<span class="sd">  adjacent reply-to steps in the plan. It should be generalized using a transducer</span>
+<span class="sd">  that maps a plan to a new plan with merged steps, possibly making use of retrieved</span>
+<span class="sd">  equivalency knowledge (allowing for, e.g., a neural network or LLM to potentially</span>
+<span class="sd">  perform this step instead).</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">plan</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  
+  <span class="n">wff1</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">plan</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+    <span class="n">wff2</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">equivalent_speech_acts</span><span class="p">(</span><span class="n">wff1</span><span class="p">,</span> <span class="n">wff2</span><span class="p">):</span>
+      <span class="n">subj</span> <span class="o">=</span> <span class="n">wff1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="n">predicate</span> <span class="o">=</span> <span class="n">wff1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      <span class="n">obj</span> <span class="o">=</span> <span class="n">set_union</span><span class="p">(</span><span class="n">wff1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">wff2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+      <span class="n">subplan</span> <span class="o">=</span> <span class="n">init_plan_from_eventualities</span><span class="p">([</span><span class="n">parse_eventuality</span><span class="p">([</span><span class="n">subj</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">obj</span><span class="p">],</span> <span class="n">expectation</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
+      <span class="k">return</span> <span class="n">merge_plan_nodes</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">plan</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">subplan</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">plan</span></div>
+
+
+
+<div class="viewcode-block" id="reorder_plan_steps">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.reorder_plan_steps.html#eta.core.planning.reorder_plan_steps">[docs]</a>
+<span class="k">def</span> <span class="nf">reorder_plan_steps</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Reorder steps in the plan according to imposed constraints.</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  plan : PlanNode or None</span>
+<span class="sd">    The plan to expand (if one exists).</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: this is a stub that needs implementation.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">plan</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  
+  <span class="c1"># TODO</span>
+  <span class="k">return</span> <span class="n">plan</span></div>
+
+
+
+<div class="viewcode-block" id="expand_condition_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.expand_condition_step.html#eta.core.planning.expand_condition_step">[docs]</a>
+<span class="k">def</span> <span class="nf">expand_condition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Expand a step containing a condition eventuality depending on the truth value of its condition.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Condition</span>
+<span class="sd">    The condition eventuality to expand.</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  schema : Schema, optional</span>
+<span class="sd">    The schema (if any) to inherit from when instantiating the sub-eventualities.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">eventualities</span><span class="p">)</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">conditions</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">condition</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">ds</span><span class="o">.</span><span class="n">eval_truth_value</span><span class="p">(</span><span class="n">condition</span><span class="o">.</span><span class="n">get_formula</span><span class="p">()):</span>
+      <span class="k">return</span> <span class="n">init_plan_from_eventualities</span><span class="p">(</span><span class="n">eventualities</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span>
+  <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="expand_repetition_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.expand_repetition_step.html#eta.core.planning.expand_repetition_step">[docs]</a>
+<span class="k">def</span> <span class="nf">expand_repetition_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Expand a step containing a repetition eventuality depending on the truth value of its condition.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Repetition</span>
+<span class="sd">    The repetition eventuality to expand.</span>
+<span class="sd">  ds : DialogueState</span>
+<span class="sd">  schema : Schema, optional</span>
+<span class="sd">    The schema (if any) to inherit from when instantiating the sub-eventualities.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  TODO: some modifications still need to be made to the method of unbinding local variables, since it</span>
+<span class="sd">  may be possible that a variable within a :repeat-until section of a schema first appeared within an</span>
+<span class="sd">  episode outside of the :repeat-until section, yet not within the participants list of the schema.</span>
+<span class="sd">  This means that these variables will be unbound in memory following execution of the repeating episode,</span>
+<span class="sd">  although typically the repetition itself still executes as intended.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">condition</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">condition</span>
+  <span class="n">eventualities</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">eventualities</span>
+  <span class="c1"># If termination has been reached, do nothing</span>
+  <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">eval_truth_value</span><span class="p">(</span><span class="n">condition</span><span class="o">.</span><span class="n">get_formula</span><span class="p">()):</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  <span class="c1"># Otherwise, unbind all variables within each of the embedded</span>
+  <span class="c1"># eventualities and return the repetition step as a new subplan</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">local_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eventualities</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+    <span class="c1"># This is a bit of a hack to ensure that only variables bound in the course</span>
+    <span class="c1"># of execution of the embedded eventualities (e.g., ?words) are unbound</span>
+    <span class="k">if</span> <span class="n">schema</span><span class="p">:</span>
+      <span class="n">local_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">local_vars</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">participants</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">ds</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">local_vars</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eventualities</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">local_vars</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">local_vars</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">schema</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">local_vars</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">init_plan_from_eventualities</span><span class="p">(</span><span class="n">eventualities</span><span class="o">+</span><span class="p">[</span><span class="n">event</span><span class="p">],</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="expand_primitive_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.expand_primitive_step.html#eta.core.planning.expand_primitive_step">[docs]</a>
+<span class="k">def</span> <span class="nf">expand_primitive_step</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Expand a primitive step, i.e., one whose expansion method is supported directly.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  event : Eventuality</span>
+<span class="sd">    The condition eventuality to expand.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">ep</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_ep</span><span class="p">()</span>
+  <span class="n">wff</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get_wff</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">paraphrase_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">plan_paraphrase</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ds</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">respond_step</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">or</span> <span class="n">reply_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">plan_respond</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ds</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">answer_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">plan_answer</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ds</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">ask_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">plan_ask</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ds</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">react_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">plan_react</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ds</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+  
+
+<div class="viewcode-block" id="plan_paraphrase">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.plan_paraphrase.html#eta.core.planning.plan_paraphrase">[docs]</a>
+<span class="k">def</span> <span class="nf">plan_paraphrase</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Generate a subplan for a paraphrase step using the paraphrase transducer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  expr : s-expr</span>
+<span class="sd">    The wff for the paraphrase step.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">expr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&quot;&#39;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">expr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span>
+  <span class="n">gist</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+  <span class="n">conversation_log</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_conversation_log</span><span class="p">()</span>
+  <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">retrieve_facts</span><span class="p">()</span>
+  <span class="n">utts</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;paraphrase&#39;</span><span class="p">,</span> <span class="n">gist</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">say_to_step_from_utts</span><span class="p">(</span><span class="n">utts</span><span class="p">)</span> <span class="k">if</span> <span class="n">utts</span> <span class="k">else</span> <span class="n">say_to_step_from_utt</span><span class="p">(</span><span class="n">gist</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plan_respond">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.plan_respond.html#eta.core.planning.plan_respond">[docs]</a>
+<span class="k">def</span> <span class="nf">plan_respond</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Generate a subplan for a respond-to step using the response transducer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  expr : s-expr</span>
+<span class="sd">    The wff for the response step.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">conversation_log</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_conversation_log</span><span class="p">()</span>
+  <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">retrieve_facts</span><span class="p">()</span>
+  <span class="n">utts</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">say_to_step_from_utts</span><span class="p">(</span><span class="n">utts</span><span class="p">)</span> <span class="k">if</span> <span class="n">utts</span> <span class="k">else</span> <span class="n">say_to_step_from_utt</span><span class="p">(</span><span class="s1">&#39;NIL Response .&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plan_answer">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.plan_answer.html#eta.core.planning.plan_answer">[docs]</a>
+<span class="k">def</span> <span class="nf">plan_answer</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Generate a subplan for an answer step using the answer transducer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  expr : s-expr</span>
+<span class="sd">    The wff for the answer step.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">conversation_log</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_conversation_log</span><span class="p">()</span>
+  <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">retrieve_facts</span><span class="p">()</span>
+  <span class="n">utts</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;answer&#39;</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">say_to_step_from_utts</span><span class="p">(</span><span class="n">utts</span><span class="p">)</span> <span class="k">if</span> <span class="n">utts</span> <span class="k">else</span> <span class="n">say_to_step_from_utt</span><span class="p">(</span><span class="s1">&#39;NIL Answer .&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plan_ask">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.plan_ask.html#eta.core.planning.plan_ask">[docs]</a>
+<span class="k">def</span> <span class="nf">plan_ask</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Generate a subplan for an ask step using the ask transducer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  expr : s-expr</span>
+<span class="sd">    The wff for the ask step.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">conversation_log</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_conversation_log</span><span class="p">()</span>
+  <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">retrieve_facts</span><span class="p">()</span>
+  <span class="n">utts</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;ask&#39;</span><span class="p">,</span> <span class="n">conversation_log</span><span class="p">,</span> <span class="n">facts_bg</span><span class="p">,</span> <span class="n">facts_fg</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">say_to_step_from_utts</span><span class="p">(</span><span class="n">utts</span><span class="p">)</span> <span class="k">if</span> <span class="n">utts</span> <span class="k">else</span> <span class="n">say_to_step_from_utt</span><span class="p">(</span><span class="s1">&#39;NIL Question ?&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plan_react">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.plan_react.html#eta.core.planning.plan_react">[docs]</a>
+<span class="k">def</span> <span class="nf">plan_react</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Generate a subplan for a react-to step using the reaction transducer.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  expr : s-expr</span>
+<span class="sd">    The wff for the react-to step.</span>
+<span class="sd">  ds : DialogueState</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  PlanNode or None</span>
+<span class="sd">    The updated plan, if successful.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">eps</span> <span class="o">=</span> <span class="n">extract_set</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+  <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">event</span> <span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="n">eps</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_memory</span><span class="p">()</span><span class="o">.</span><span class="n">get_episode</span><span class="p">(</span><span class="n">ep</span><span class="p">)]</span>
+  <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+    <span class="n">actions</span> <span class="o">+=</span> <span class="n">ds</span><span class="o">.</span><span class="n">apply_transducer</span><span class="p">(</span><span class="s1">&#39;reaction&#39;</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">actions</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">init_plan_from_eventualities</span><span class="p">([</span><span class="n">parse_eventuality</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">expectation</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="say_to_step_from_utt">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.say_to_step_from_utt.html#eta.core.planning.say_to_step_from_utt">[docs]</a>
+<span class="k">def</span> <span class="nf">say_to_step_from_utt</span><span class="p">(</span><span class="n">utt</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Generate a say-to subplan from an utterance.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">init_plan_from_eventualities</span><span class="p">([</span><span class="n">parse_eventuality</span><span class="p">([</span><span class="n">ME</span><span class="p">,</span> <span class="n">SAY_TO</span><span class="p">,</span> <span class="n">YOU</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">utt</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">],</span> <span class="n">expectation</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span></div>
+
+
+
+<div class="viewcode-block" id="say_to_step_from_utts">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.say_to_step_from_utts.html#eta.core.planning.say_to_step_from_utts">[docs]</a>
+<span class="k">def</span> <span class="nf">say_to_step_from_utts</span><span class="p">(</span><span class="n">utts</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Generate a say-to subplan from a list of utterances.</span>
+<span class="sd">  </span>
+<span class="sd">  NOTE: currently this just splits off the first utterance in the list.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="n">utts</span> <span class="ow">and</span> <span class="n">utts</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">say_to_step_from_utt</span><span class="p">(</span><span class="n">utts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="schema_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.schema_step.html#eta.core.planning.schema_step">[docs]</a>
+<span class="k">def</span> <span class="nf">schema_step</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Check whether a given step wff corresponds to a dialogue schema in Eta&#39;s schema library.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="p">((</span><span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ds</span><span class="o">.</span><span class="n">is_schema</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;dial&#39;</span><span class="p">))</span> <span class="ow">or</span> <span class="n">ds</span><span class="o">.</span><span class="n">is_schema</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;dial&#39;</span><span class="p">)))</span>
+          <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ds</span><span class="o">.</span><span class="n">is_schema</span><span class="p">(</span><span class="n">wff</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;dial&#39;</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="split_schema_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.split_schema_step.html#eta.core.planning.split_schema_step">[docs]</a>
+<span class="k">def</span> <span class="nf">split_schema_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Split a schema step wff into the schema predicate and the arguments list for the schema.&quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">wff</span><span class="p">,</span> <span class="p">[]</span>
+  
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[]</span>
+  <span class="n">predicate</span> <span class="o">=</span> <span class="n">wff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">args</span> <span class="o">=</span> <span class="n">extract_set</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+  <span class="k">return</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">args</span></div>
+
+
+
+<div class="viewcode-block" id="paraphrase_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.paraphrase_step.html#eta.core.planning.paraphrase_step">[docs]</a>
+<span class="k">def</span> <span class="nf">paraphrase_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">PARAPHRASE_TO</span><span class="p">,</span> <span class="n">YOU</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="respond_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.respond_step.html#eta.core.planning.respond_step">[docs]</a>
+<span class="k">def</span> <span class="nf">respond_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">RESPOND_TO</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="reply_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.reply_step.html#eta.core.planning.reply_step">[docs]</a>
+<span class="k">def</span> <span class="nf">reply_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">REPLY_TO</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="react_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.react_step.html#eta.core.planning.react_step">[docs]</a>
+<span class="k">def</span> <span class="nf">react_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">REACT_TO</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="answer_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.answer_step.html#eta.core.planning.answer_step">[docs]</a>
+<span class="k">def</span> <span class="nf">answer_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">ANSWER</span><span class="p">,</span> <span class="n">YOU</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ask_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.ask_step.html#eta.core.planning.ask_step">[docs]</a>
+<span class="k">def</span> <span class="nf">ask_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">ME</span><span class="p">,</span> <span class="n">ASK</span><span class="p">,</span> <span class="n">YOU</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="relative_speech_act_step">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.relative_speech_act_step.html#eta.core.planning.relative_speech_act_step">[docs]</a>
+<span class="k">def</span> <span class="nf">relative_speech_act_step</span><span class="p">(</span><span class="n">wff</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">listp</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">wff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">SPEECH_ACTS</span> <span class="ow">and</span> <span class="p">(</span><span class="n">atom</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="n">is_set</span><span class="p">(</span><span class="n">wff</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span></div>
+
+
+<div class="viewcode-block" id="equivalent_speech_acts">
+<a class="viewcode-back" href="../../../_autosummary/eta.core.planning.equivalent_speech_acts.html#eta.core.planning.equivalent_speech_acts">[docs]</a>
+<span class="k">def</span> <span class="nf">equivalent_speech_acts</span><span class="p">(</span><span class="n">wff1</span><span class="p">,</span> <span class="n">wff2</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">relative_speech_act_step</span><span class="p">(</span><span class="n">wff1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">relative_speech_act_step</span><span class="p">(</span><span class="n">wff2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">wff1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">wff2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">wff1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">wff2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Benjamin Kane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+         .wy-nav-content { max-width: none; }
+  </style>
+
+
+
+</body>
+</html>

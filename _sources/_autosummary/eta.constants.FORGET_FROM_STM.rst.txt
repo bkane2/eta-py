@@ -1,0 +1,6 @@
+eta.constants.FORGET\_FROM\_STM
+===============================
+
+.. currentmodule:: eta.constants
+
+.. autodata:: FORGET_FROM_STM

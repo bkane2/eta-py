@@ -1,0 +1,6 @@
+eta.util.general.certainty\_to\_period
+======================================
+
+.. currentmodule:: eta.util.general
+
+.. autofunction:: certainty_to_period
