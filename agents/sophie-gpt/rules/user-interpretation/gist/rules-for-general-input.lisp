@@ -8,6 +8,8 @@
   ; Detect question forms
   1 (0 ?) ; anything ending with ?
     2 *question-input* (0 :subtree)
+  1 (.WH_ .NP_ 0) ; statements like "what I think is ..."
+    2 *statement-input* (0 :subtree)
   1 (.WH_ 0) ; wh or how question
     2 *question-input* (0 :subtree)
   1 (.AUX .NP_ 0) ; modal question

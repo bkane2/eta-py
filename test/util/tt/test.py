@@ -128,6 +128,12 @@ def sophie_test():
                           feats,
                           preds))
   
+  print(choose_result_for([[], "yeah , i can imagine . that's been really hard , sophie . so if it's ok , i'm just gonna . i'm gonna tell you what i think we should do . what i think we should do is say the treatment's not working and we should really focus exclusively on your comfort .".split()],
+                          '*gist*',
+                          trees,
+                          feats,
+                          preds))
+  
 
 def main():
   sep = '\n----------------------------\n'
