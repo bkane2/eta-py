@@ -70,10 +70,9 @@
         ?e11 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
         ?e12 (^me say-bye-to.v ^you))))
 
-  ; Once the user is empowering, end module
-  ?e13 (^me paraphrase-to.v ^you '(Knowing that you have my values in mind helps make me more confident about my options \.
-                                   I appreciate that \.))
-  ?e14 (^you reply-to.v ?e13)
+  ; If the user was empowering, acknowledge it and close the conversation
+  ?e13 ((set-of ^me ^you) acknowledge-empowering.v)
+
   ?e15 (^me say-to.v ^you '([NEUTRAL] Let\'s pause here for feedback on this conversation \.))
   ?e16 (^me say-bye-to.v ^you)
 

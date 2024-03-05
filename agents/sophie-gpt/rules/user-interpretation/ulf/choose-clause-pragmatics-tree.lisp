@@ -250,9 +250,6 @@
 
   ; Empowering
   1 (:or
-    ;;; Treatment options
-    (0 .AUX-BASE 2 .SELF 3 .QUESTION 5 .TREATMENT-OPTION 0 ?)
-    (0 .WH_ 1 .SELF 1 .KNOW 5 .TREATMENT-OPTION 0 ?)
     ;;; Treatment goals
     (0 .WH_ 1 .BE 4 .CANCER-GOALS 0 ?)
     (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 4 .CANCER-FIGHT 0 ?)
@@ -263,6 +260,18 @@
     (0 .WH_ .AUX 1 .WANT-GEN 1 .AVOID 3 .TREATMENT-OPTION 0 ?)
     (0 .DOCTOR-PRON .WANT-GEN 1 give 1 .RECOMMENDATION 2 .YOUR-REF .TREATMENT-OPTION 0)
     (0 .AUX-BASE 2 .SELF 3 .MORE-INFO 6 .CANCER-GOALS 0 ?)
+    ;;; Open-ended
+    (0 .WH_ 2 .BE 5 .IMPORTANT 5 future 0 ?)
+    (0 .WH_ 8 .BE 5 .IMPORTANT 2 .MY-REF 0 ?)
+    (0 .WH_ 8 .BE 5 .MEANS 1 most 2 .MY-REF 0 ?)
+    (0 .WH_ 3 .HELP .SELF 8 ?)
+  )
+    2 ((^you be.v empowering.a) and (^you ask.v ^me (about.p-arg ((^me 's) (plur value.n))))) (0 :ulf)
+
+  1 (:or
+    ;;; Treatment options
+    (0 .AUX-BASE 2 .SELF 3 .QUESTION 5 .TREATMENT-OPTION 0 ?)
+    (0 .WH_ 1 .SELF 1 .KNOW 5 .TREATMENT-OPTION 0 ?)
     ;;; Test results
     (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 3 .FAMILY 3 .AVAILABLE 8 .DIAGNOSIS-TESTS 0 ?)
     (0 .AUX-BASE 2 .SELF 3 .WANT-GEN 3 .SOMEONE 3 .AVAILABLE 8 .DIAGNOSIS-TESTS 0 ?)
@@ -306,10 +315,6 @@
     (0 how .DO 3 .SOUND 4 ?)
     (0 .WH_ 1 .AUX-BASE 2 .SELF 3 .KNOW-GEN 0 ?)
     (0 .WH_ 2 .INFORMATION-GEN 3 .WANT-GEN 0 ?)
-    (0 .WH_ 2 .BE 5 .IMPORTANT 5 future 0 ?)
-    (0 .WH_ 8 .BE 5 .IMPORTANT 2 .MY-REF 0 ?)
-    (0 .WH_ 8 .BE 5 .MEANS 1 most 2 .MY-REF 0 ?)
-    (0 .WH_ 3 .HELP .SELF 8 ?)
     (0 .BE 2 following 1 WH_ .DOCTOR-PRON say 0 ?)
     (0 .SELF 2 .TELL 3 .MORE-INFO 0 ?)
   )
