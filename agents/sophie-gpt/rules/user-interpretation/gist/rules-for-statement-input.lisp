@@ -328,6 +328,15 @@
   ; You don't have long left to live.
   1 (0 you 1 .NEG 2 .HAVE 3 .LONG 2 .CANCER-LIVE 0)
     2 ((The prognosis is that I do not have long left to live \.)) (0 :gist)
+  ; I want to understand what you know about your condition/prognosis
+  1 (0 .CHEMOTHERAPY-CONSULT 3 .YOU-REF 1 .KNOW-GEN 3 .YOU-REF 1 .CANCER-ILLNESS 0)
+    2 ((Do I understand my prognosis ?)) (0 :gist)
+  1 (0 .KNOW-GEN 3 .YOU-REF 1 .KNOW-GEN 3 .YOU-REF 1 .CANCER-ILLNESS 0)
+    2 ((Do I understand my prognosis ?)) (0 :gist)
+  1 (0 .CHEMOTHERAPY-CONSULT 3 .YOU-REF 1 .KNOW-GEN 3 .YOU-REF 1 .PROGNOSIS-WORD 0)
+    2 ((Do I understand my prognosis ?)) (0 :gist)
+  1 (0 .KNOW-GEN 3 .YOU-REF 1 .KNOW-GEN 3 .YOU-REF 1 .PROGNOSIS-WORD 0)
+    2 ((Do I understand my prognosis ?)) (0 :gist)
 
 ; ````````````````````     sleep-poorly      ```````````````````````
 ; ``````````````````````````````````````````````````````````````````
@@ -572,6 +581,11 @@
   ; Let's discuss your test results
   1 (5 .DISCUSS 6 .DIAGNOSIS-TESTS 5)
     2 ((You intend to explain my test results to me \.) (Test-results)) (0 :gist)
+  ; I want to understand what you know about your test results
+  1 (0 .CHEMOTHERAPY-CONSULT 3 .YOU-REF 1 .KNOW-GEN 3 .YOU-REF 1 .DIAGNOSIS-TESTS 0)
+    2 ((Do I know what the tests say ?) (Test-results)) (0 :gist)
+  1 (0 .KNOW-GEN 3 .YOU-REF 1 .KNOW-GEN 3 .YOU-REF 1 .DIAGNOSIS-TESTS 0)
+    2 ((Do I know what the tests say ?) (Test-results)) (0 :gist)
 
 ; ````````````````````   treatment-option    ```````````````````````
 ; ``````````````````````````````````````````````````````````````````
@@ -611,7 +625,11 @@
 ; ````````````````````    treatment-goals    ```````````````````````
 ; ``````````````````````````````````````````````````````````````````
 
-
+  ; I want to talk about your priorities
+  1 (0 .CHEMOTHERAPY-CONSULT 3 .YOU-REF 1 .CANCER-GOALS 0)
+    2 ((What are my treatment goals ?) (Options)) (0 :gist)
+  1 (0 .KNOW-GEN 3 .YOU-REF 1 .CANCER-GOALS 0)
+    2 ((What are my treatment goals ?) (Options)) (0 :gist)
 
 ; ```````````````````` experimental-therapy  ```````````````````````
 ; ``````````````````````````````````````````````````````````````````

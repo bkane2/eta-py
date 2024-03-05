@@ -299,7 +299,7 @@
   (CHEMOTHERAPY-INJECTION injection injections vein veins needle needles)
   (CHEMOTHERAPY-IV iv tube tubes)
   (MEDIPORT infusaport port)
-  (CHEMOTHERAPY-CONSULT consult consulting ask ASKING DISCUSS discussing TALK TALKING)
+  (CHEMOTHERAPY-CONSULT consult consulting ask ASKING DISCUSS discussing TALK TALKING SHARE)
   ; Diagnosis details
   (SYMPTOM-WEIGHT weight skinny skinnier heavy heavier fat)
   (SYMPTOM-APPETITE appetite eating)
